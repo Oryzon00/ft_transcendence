@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+
+  #------------------------- FRONTEND -------------------------
+  frontend:
+    container_name: frontend
+  build:
+    context: srcs/frontend/
+    dockerfile: Dockerfile
+  volumes:
+    #a definir
+
+networks:
+  transcendance
