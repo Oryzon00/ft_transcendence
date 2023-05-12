@@ -1,0 +1,12 @@
+# IDEs and editors
+.vscode
+.sublime-workspace
+
+# Credentials, API keys, env variable
+.env
+
+# Dependencies
+nodes_modules/
+
+# Production
+
