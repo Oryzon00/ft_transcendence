@@ -2,6 +2,7 @@ version: '3.9'
 
 services:
 
+#post gre --> utiliser debian apparemment, alpine est bugue
   #------------------------- FRONTEND -------------------------
   frontend:
     container_name: frontend
@@ -12,4 +13,6 @@ services:
     #a definir
 
 networks:
-  transcendance
+  transcendance:
+  driver: bridge
+  name: transcendance_network
