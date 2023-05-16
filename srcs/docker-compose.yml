@@ -6,13 +6,25 @@ services:
   #------------------------- FRONTEND -------------------------
   frontend:
     container_name: frontend
-  build:
-    context: srcs/frontend/
-    dockerfile: Dockerfile
-  volumes:
-    #a definir
+    build:
+      context: srcs/frontend/
+      dockerfile: Dockerfile
+    volumes: 
+      - frontend:/app
+    networks:
+      - transcendance
+    ports: 
+      - 8000:8000
 
+volumes:
+  frontend:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: bind
+      device: "$PWD/srcs/frontend/app"
+    
 networks:
   transcendance:
-  driver: bridge
-  name: transcendance_network
+    driver: bridge
+    name: transcendance
