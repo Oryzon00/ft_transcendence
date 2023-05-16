@@ -1,6 +1,6 @@
 # IDEs and editors
-.vscode
-.sublime-workspace
+.vscode*
+.idea*
 
 # Credentials, API keys, env variable
 .env
@@ -9,4 +9,4 @@
 nodes_modules/
 
 # Production
-
+dist/
