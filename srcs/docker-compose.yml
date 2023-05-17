@@ -1,30 +1,71 @@
-version: '3.9'
+version: "3.9"
 
 services:
+    database:
+        container_name: database
+        image: postgres:15.3
+        volumes:
+            - type: volume
+              source: database
+              target: /var/lib/postgresql/data
+        networks:
+            - transcendance
+        env_file: .env
 
-#post gre --> utiliser debian apparemment, alpine est bugue
-  #------------------------- FRONTEND -------------------------
-  frontend:
-    container_name: frontend
-    build:
-      context: srcs/frontend/
-      dockerfile: Dockerfile
-    volumes: 
-      - frontend:/app
-    networks:
-      - transcendance
-    ports: 
-      - 8000:8000
+    api:
+        container_name: api
+        depends_on:
+            - database
+        build:
+            context: srcs/backend/
+            dockerfile: Dockerfile
+        volumes:
+            - type: volume
+              source: api
+              target: /api
+        networks:
+            - transcendance
+        ports:
+          - 5432:5432
+        env_file: .env
+
+    frontend:
+        container_name: frontend
+        depends_on:
+            - api
+        build:
+            context: srcs/frontend/
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        volumes:
+            - type: volume
+              source: frontend
+              target: /app
+        networks:
+            - transcendance
+        ports:
+            - 8000:8000
+        env_file: .env
 
 volumes:
-  frontend:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: bind
-      device: "$PWD/srcs/frontend/app"
-    
+    database:
+        driver: local
+
+    api:
+        driver: local
+        driver_opts:
+            type: "none"
+            o: bind
+            device: "$PWD/srcs/backend/api"
+
+    frontend:
+        driver: local
+        driver_opts:
+            type: "none"
+            o: bind
+            device: "$PWD/srcs/frontend/app"
+
 networks:
-  transcendance:
-    driver: bridge
-    name: transcendance
+    transcendance:
+        driver: bridge
+        name: transcendance
