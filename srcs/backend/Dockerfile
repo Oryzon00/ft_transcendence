@@ -1,5 +1,11 @@
-FROM	node:16
+FROM		node:16
 
-WORKDIR /api
+WORKDIR		/script
 
-CMD		["/bin/bash", "-c", "npm install && ls -la"]
+COPY		initBack.sh	/script
+
+RUN			chmod 777 initBack.sh
+
+WORKDIR		/api	
+
+ENTRYPOINT	["/bin/bash", "../script/initBack.sh"]
