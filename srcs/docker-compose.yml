@@ -3,30 +3,40 @@ version: "3.9"
 services:
     database:
         container_name: database
+        restart: unless-stopped
         image: postgres:15.3
         volumes:
             - type: volume
               source: database
               target: /var/lib/postgresql/data
+        env_file: database.env
         networks:
             - transcendance
-        restart: unless-stopped
-        env_file: database.env
-    
+        ports:
+            - 5432:5432
+
     pgAdmin:
         container_name: pg_admin
-        image: dpage/pgadmin4:7.1
-        networks:
-          - transcendance
-        depends_on:
-          - database
-        ports:
-          - 8080:8080
         restart: unless-stopped
-        
+        depends_on:
+            - database
+        image: dpage/pgadmin4:7.1
+        volumes:
+            - type: volume
+              source: pgAdmin
+              target: /var/lib/pgadmin
+        env_file:
+            - pgAdmin.env
+        networks:
+            - transcendance
+        links:
+            - "database:pgsql-server"
+        ports:
+            - 8080:80
 
     api:
         container_name: api
+        # restart: unless-stopped
         depends_on:
             - database
         build:
@@ -36,33 +46,34 @@ services:
             - type: volume
               source: api
               target: /api
+        env_file: .env
         networks:
             - transcendance
-        ports:
-            - 5432:5432
-        # restart: unless-stopped
-        env_file: .env
+        #ports:
 
     frontend:
         container_name: frontend
+        restart: unless-stopped
         depends_on:
             - api
         build:
             context: srcs/frontend/
             dockerfile: Dockerfile
-        restart: unless-stopped
         volumes:
             - type: volume
               source: frontend
               target: /app
+        env_file: .env
         networks:
             - transcendance
         ports:
             - 8000:8000
-        env_file: .env
 
 volumes:
     database:
+        driver: local
+
+    pgAdmin:
         driver: local
 
     api:
