@@ -8,10 +8,10 @@ build	:
 	docker compose -f $(DOCKER-COMPOSE) build
 
 up		:
-	docker compose -f $(DOCKER-COMPOSE) up --detach
+	docker compose -f $(DOCKER-COMPOSE) up --build --detach
 
 logs	:
-	docker compose -f $(DOCKER-COMPOSE) up
+	docker compose -f $(DOCKER-COMPOSE) up --build
 
 stop	:
 	docker compose -f $(DOCKER-COMPOSE) stop
