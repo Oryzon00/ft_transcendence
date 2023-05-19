@@ -12,6 +12,18 @@ services:
             - transcendance
         restart: unless-stopped
         env_file: database.env
+    
+    pgAdmin:
+        container_name: pg_admin
+        image: dpage/pgadmin4:7.1
+        networks:
+          - transcendance
+        depends_on:
+          - database
+        ports:
+          - 8080:8080
+        restart: unless-stopped
+        
 
     api:
         container_name: api
@@ -28,7 +40,7 @@ services:
             - transcendance
         ports:
             - 5432:5432
-        restart: unless-stopped
+        # restart: unless-stopped
         env_file: .env
 
     frontend:
