@@ -3,7 +3,7 @@
 .idea*
 
 # Credentials, API keys, env variable
-.env
+*.env
 
 # Dependencies
 nodes_modules/

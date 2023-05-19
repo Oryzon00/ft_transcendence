@@ -10,7 +10,8 @@ services:
               target: /var/lib/postgresql/data
         networks:
             - transcendance
-        env_file: .env
+        restart: unless-stopped
+        env_file: database.env
 
     api:
         container_name: api
@@ -26,7 +27,8 @@ services:
         networks:
             - transcendance
         ports:
-          - 5432:5432
+            - 5432:5432
+        restart: unless-stopped
         env_file: .env
 
     frontend:
