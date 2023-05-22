@@ -1,5 +1,3 @@
-echo "LANCEMENT DU SCIPT"
-
 npm install
 # npx prisma init --datasource-provider postgres
 

@@ -2,6 +2,7 @@ import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
+import { db_adress } from "./db_adress";
 
 function App() {
 	const [count, setCount] = useState(0);
@@ -9,9 +10,9 @@ function App() {
 
 	function callBack(event: any) {
 		event.preventDefault();
-		// fetch non bloquant
-		fetch("http://localhost:3000", {
-			// a mettre dans une variable a import -- export
+		// fetch est non bloquant --> besoin de then
+		fetch("db_adress", {
+			// a mettre dans une variable a import // export
 			method: "GET"
 		})
 			.then((response) => {
