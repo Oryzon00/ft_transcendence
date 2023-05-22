@@ -2,7 +2,7 @@ DOCKER-COMPOSE	=	srcs/docker-compose.yml
 
 VOL				=	$(shell docker volume ls --quiet)
 
-all		:	logs
+all		:	up
 
 build	:
 	docker compose -f $(DOCKER-COMPOSE) build
@@ -29,11 +29,11 @@ clean	:
 
 restart	:
 	make stop
-	make logs
+	make up
 
 re		:
 	make clean
-	make logs
+	make up
 
 
 .PHONY:	all, build, up, log, stop, purge, restart, re

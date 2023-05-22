@@ -9,34 +9,13 @@ services:
             - type: volume
               source: database
               target: /var/lib/postgresql/data
-        env_file: database.env
+        env_file: env_files/database.env
         networks:
             - transcendance
-        ports:
-            - 5432:5432
-
-    pgAdmin:
-        container_name: pg_admin
-        restart: unless-stopped
-        depends_on:
-            - database
-        image: dpage/pgadmin4:7.1
-        volumes:
-            - type: volume
-              source: pgAdmin
-              target: /var/lib/pgadmin
-        env_file:
-            - pgAdmin.env
-        networks:
-            - transcendance
-        links:
-            - "database:pgsql-server"
-        ports:
-            - 8080:80
 
     api:
         container_name: api
-        # restart: unless-stopped
+        restart: unless-stopped
         depends_on:
             - database
         build:
@@ -46,10 +25,13 @@ services:
             - type: volume
               source: api
               target: /api
-        env_file: .env
+        env_file: env_files/api.env
         networks:
             - transcendance
-        #ports:
+        ports:
+            - 5555:5555
+            - 3000:3000
+
 
     frontend:
         container_name: frontend
@@ -63,7 +45,7 @@ services:
             - type: volume
               source: frontend
               target: /app
-        env_file: .env
+        # env_file: .env
         networks:
             - transcendance
         ports:
