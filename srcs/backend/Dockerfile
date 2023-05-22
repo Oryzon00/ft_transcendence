@@ -7,5 +7,6 @@ COPY		initBack.sh	/script
 RUN			chmod 777 initBack.sh
 
 WORKDIR		/api	
+EXPOSE	3000
 
 ENTRYPOINT	["/bin/bash", "../script/initBack.sh"]
