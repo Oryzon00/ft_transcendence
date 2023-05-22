@@ -11,7 +11,7 @@ function App() {
 	function callBack(event: any) {
 		event.preventDefault();
 		// fetch est non bloquant --> besoin de then
-		fetch("db_adress", {
+		fetch(db_adress, {
 			// a mettre dans une variable a import // export
 			method: "GET"
 		})
