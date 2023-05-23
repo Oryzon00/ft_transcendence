@@ -12,7 +12,6 @@ function App() {
 		event.preventDefault();
 		// fetch est non bloquant --> besoin de then
 		fetch(db_adress, {
-			// a mettre dans une variable a import // export
 			method: "GET"
 		})
 			.then((response) => {
@@ -51,7 +50,7 @@ function App() {
 				Click on the Vite and React logos to learn more
 			</p>
 			<button onClick={callBack}>Call back</button>
-			{users}
+			<div>First user is {users}</div>
 		</>
 	);
 }

@@ -32,7 +32,6 @@ services:
             - 5555:5555 # prisma studio
             - 3000:3000 # nestJS
 
-
     frontend:
         container_name: frontend
         restart: unless-stopped
@@ -45,7 +44,6 @@ services:
             - type: volume
               source: frontend
               target: /app
-        # env_file: .env
         networks:
             - transcendance
         ports:
@@ -53,9 +51,6 @@ services:
 
 volumes:
     database:
-        driver: local
-
-    pgAdmin:
         driver: local
 
     api:
