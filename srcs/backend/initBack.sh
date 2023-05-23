@@ -1,20 +1,10 @@
-echo "LANCEMENT DU SCRIPT"
+npm install
 
-#npm install
-#npx prisma init --datasource-provider postgres
-#npx prisma migrate dev --name init#
-
-
-
-
-
- #npm install -g @nestjs/cli --save-dev
-# npm install @prisma/client prisma
-# export PATH="$PATH:$(npm bin -g)"
-# npx prisma db push
-# npx prisma generate
- #npx prisma db seed
- #npm run start:dev
-
-npm install prisma @prisma/client
+#set up database a parti du shema prisma
 npx prisma migrate dev --name init
+
+#Start nest
+npm run start:dev 
+
+# pour avoir prisma studio en localhost:5555
+#	docker exec -it api bash --> npx prisma studio 
