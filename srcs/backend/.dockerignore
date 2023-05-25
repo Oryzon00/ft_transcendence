@@ -1,2 +1,3 @@
-node_modules
-migrations
+api/node_modules
+api/migrations
+api/dist
