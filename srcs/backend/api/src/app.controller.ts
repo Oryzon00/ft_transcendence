@@ -7,11 +7,16 @@ import path from "path";
 export class AppController {
 	constructor(private readonly appService: AppService) {}
 
-	
 	@Get()
-	async getHello(): Promise<User[]> {
+	async getHello(): Promise<string> {
 		return await this.appService.getHello();
 	}
+
+	@Get("nbUsers")
+	async getNbUsers(): Promise<number> {
+		return await this.appService.getNbUsers();
+	}
+
 	@Get("test")
 	async getTest(): Promise<String> {
 		return "test";
