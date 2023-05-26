@@ -6,7 +6,7 @@
 # *.env
 
 # Dependencies
-nodes_modules/
+node_modules/
 
 # Production
 dist/

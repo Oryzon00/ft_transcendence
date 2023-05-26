@@ -28,14 +28,9 @@ services:
         env_file: env_files/api.env
         networks:
             - transcendance
-<<<<<<< HEAD
-        # ports:
-=======
-        ports:
+       ports:
             - 5555:5555 # prisma studio
             - 3000:3000 # nestJS
-
->>>>>>> main
 
     frontend:
         container_name: frontend
@@ -49,7 +44,6 @@ services:
             - type: volume
               source: frontend
               target: /app
-        # env_file: .env
         networks:
             - transcendance
         ports:
@@ -57,9 +51,6 @@ services:
 
 volumes:
     database:
-        driver: local
-
-    pgAdmin:
         driver: local
 
     api:
