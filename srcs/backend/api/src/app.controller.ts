@@ -23,18 +23,16 @@ export class AppController {
 	}
 
 	@Get("/name/:name")
-	getUserByName(@Param("name") name: string) : Promise<User> {
+	getUserByName(@Param("name") name: string): Promise<User> {
 		console.log(`name is : ${name}`);
 		return this.appService.getUserByName(name);
 	}
 
 	@Get("/id/:id")
-	getUserById( @Param("id") id: string) : Promise<User> {
+	getUserById(@Param("id") id: string): Promise<User> {
 		console.log(`id is: ${id}`);
 		return this.appService.getUserById(Number(id));
 	}
-
-	
 }
 
 @Controller("test2")

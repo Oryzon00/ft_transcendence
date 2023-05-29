@@ -22,7 +22,7 @@ export class AppService {
 
 	async getUserByName(NAME: string): Promise<User> {
 		const user = await this.prisma.user.findFirst({
-			where : {
+			where: {
 				name: NAME
 			}
 		});
@@ -32,9 +32,9 @@ export class AppService {
 	async getUserById(id: number): Promise<User> {
 		const user = await this.prisma.user.findFirst({
 			where: {
-				id: id,
+				id: id
 			}
 		});
-		return user
+		return user;
 	}
 }
