@@ -5,7 +5,7 @@ npm install
 # # migrate vs db push ?
 npx prisma migrate dev --name init
 
-npx prisma generate
+# npx prisma generate
 
 #Start nest
 npm run start:dev &
