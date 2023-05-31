@@ -1,4 +1,4 @@
-rm -rf dist/ migrations/ nodes_modules/
+rm -rf dist/ nodes_modules/ src/prisma/migrations/
 
 npm install
 
