@@ -1,16 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AppController, AppController2 } from './app.controller';
-import { AppService } from './app.service';
-import { PrismaService } from './prisma.service';
+import { AuthModule } from './auth/auth.service';
+import { UserModule } from './user/user.service';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
-  imports: [],
-  controllers: [AppController, AppController2],
-  providers: [AppService, PrismaService],
+  imports: [AuthService, UserModule, PrismaModule],
 })
 export class AppModule {}
-
-// Controller --> Verificateur (if)
-// Service --> action 
-
-// front va appeler un des differents controllers
