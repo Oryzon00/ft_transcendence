@@ -1,17 +1,38 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import { db_adress } from "./db_adress";
+import Auth  from "./Auth/Auth.tsx"
+
+
+let testBool = false;
 
 function App() {
 	const [count, setCount] = useState(0);
 	const [users, setUsers] = useState("");
 
+
+	if (window.location.pathname === "/auth"  && !testBool) {//&& login === "Not Connected") {
+		testBool = true;
+		const params = new URLSearchParams(window.location.search);
+		const url = "http://localhost:3000/auth?" + ( params ).toString();
+		fetch(url, {
+			method: "GET"
+		})
+			.then((response) => {
+				return(response.json());
+			})
+			.then((user) => {
+				console.log(user.name);
+				document.cookie= `name=${user.name};path=/`;
+				console.log(document.cookie);
+				self.location.href = "http://localhost:8000";
+			})
+	}
+
 	function callBack(event: any) {
 		event.preventDefault();
 		// fetch est non bloquant --> besoin de then
-		fetch(db_adress, {
+		fetch(db_adress + "/users", {
 			method: "GET"
 		})
 			.then((response) => {
@@ -25,32 +46,14 @@ function App() {
 
 	return (
 		<>
-			<div>
-				<a href="https://vitejs.dev" target="_blank">
-					<img src={viteLogo} className="logo" alt="Vite logo" />
-				</a>
-				<a href="https://react.dev" target="_blank">
-					<img
-						src={reactLogo}
-						className="logo react"
-						alt="React logo"
-					/>
-				</a>
-			</div>
-			<h1>Vite + React</h1>
 			<div className="card">
 				<button onClick={() => setCount((count) => count + 1)}>
 					truc {count}
 				</button>
-				<p>
-					Edit <code>src/App.tsx</code> and save to test HMR
-				</p>
 			</div>
-			<p className="read-the-docs">
-				Click on the Vite and React logos to learn more
-			</p>
 			<button onClick={callBack}>Call back</button>
 			<div>First user is {users}</div>
+			<Auth></Auth>
 		</>
 	);
 }

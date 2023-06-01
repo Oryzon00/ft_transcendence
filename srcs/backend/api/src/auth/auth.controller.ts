@@ -1,10 +1,19 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { AuthDto } from "./dto";
+import { User } from "@prisma/client";
 
 @Controller("auth")
 export class AuthController {
 	constructor(private authService: AuthService) {}
+
+	@Get()
+	async getTestLogin(@Query() query: { code: string, error: string}) : Promise<User> {
+		if (query.error === undefined && query.code !== undefined) {
+			const result = await this.authService.authUser(query.code);
+			return (result);
+		}
+	}
 
 	@Post("signup")
 	signup(@Body() dto: AuthDto) {

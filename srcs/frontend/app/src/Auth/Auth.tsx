@@ -8,7 +8,7 @@ function Auth() {
 		console.log(login);
 		return (
 			<div>
-				<button>Authentified as {login}</button>
+				<button>Authentified as: {login}</button>
 			</div>
 		);
 	}
