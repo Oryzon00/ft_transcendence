@@ -2,9 +2,11 @@ import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
+import { Chat } from "./chat/chat.tsx";
 import { db_adress } from "./db_adress";
 
 function App() {
+	/*
 	const [count, setCount] = useState(0);
 	const [users, setUsers] = useState("");
 
@@ -52,6 +54,10 @@ function App() {
 			<button onClick={callBack}>Call back</button>
 			<div>First user is {users}</div>
 		</>
+	);
+	*/
+	return (
+			< Chat />	
 	);
 }
 

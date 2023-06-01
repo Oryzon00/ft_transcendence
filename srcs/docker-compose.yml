@@ -28,7 +28,7 @@ services:
         env_file: env_files/api.env
         networks:
             - transcendance
-       ports:
+        ports:
             - 5555:5555 # prisma studio
             - 3000:3000 # nestJS
 

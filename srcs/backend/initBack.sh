@@ -1,5 +1,6 @@
 rm -rf dist/ migrations/ nodes_modules/
 
+npm install ws
 npm install
 
 # # migrate vs db push ?
