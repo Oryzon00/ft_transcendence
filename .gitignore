@@ -11,3 +11,4 @@ nodes_modules/
 # Production
 dist/
 migrations/
+node_modules
