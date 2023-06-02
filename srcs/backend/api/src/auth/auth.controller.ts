@@ -7,10 +7,10 @@ import { User } from "@prisma/client";
 export class AuthController {
 	constructor(private authService: AuthService) {}
 
-	@Get()
-	async getTestLogin(@Query() query: { code: string, error: string}) : Promise<User> {
+	@Get() //changer en POST
+	auth(@Query() query: { code: string, error: string}) : Promise<User> {
 		if (query.error === undefined && query.code !== undefined) {
-			const result = await this.authService.authUser(query.code);
+			const result = this.authService.authUser(query.code);
 			return (result);
 		}
 	}
