@@ -54,7 +54,7 @@ function App() {
 			</p>
 			<button onClick={callBack}>Call back</button>
 			<div>First user is {users}</div>
-			<Pong canvasWidth={800} canvasHeight={800} padWidth={10} padHeight={100} ballRad={10} user1='USER1' user2='USER2' />
+			<Pong canvasWidth={800} canvasHeight={800} padWidth={10} padHeight={100} ballRad={10} user1={0} user2={0} />
 		</>
 	);
 }
