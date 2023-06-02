@@ -67,12 +67,12 @@ function bresenhamAlgorithm(start: Point, end: Point): Array<Point> {
     return points
 }
 
-function collisionDetectionBallPaddle(ball: Ball, pad: Paddle) {
-	
-	let points: Array<Point> = bresenhamAlgorithm(ball.pos, {x: ball.pos.x + ball.speedX, y: ball.pos.y + ball.speedY});
-
-		
-}
+// function collisionDetectionBallPaddle(ball: Ball, pad: Paddle) {
+	// 
+	// let points: Array<Point> = bresenhamAlgorithm(ball.pos, {x: ball.pos.x + ball.speedX, y: ball.pos.y + ball.speedY});
+// 
+		// 
+// }
 
 export default function Pong({
 	canvasWidth,
@@ -247,10 +247,10 @@ export default function Pong({
 
 	setInterval(draw, 16);
 
+	
 	return (
 		<>
-			<canvas ref={canvasRef} width={canvasWidth} height={canvasHeight} />
-			
+			<canvas ref={canvasRef} width={canvasWidth} height={canvasHeight} />			
 		</>
 	);
 }
