@@ -10,9 +10,10 @@ export class AuthController {
 	@Get() //changer en POST
 	auth(@Query() query: { code: string, error: string}) : Promise<User> {
 		if (query.error === undefined && query.code !== undefined) {
-			const result = this.authService.authUser(query.code);
+			const result = this.authService.auth(query.code);
 			return (result);
 		}
+		//else throw error?
 	}
 
 	@Post("signup")
