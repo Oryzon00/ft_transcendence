@@ -4,11 +4,10 @@ function isEmptyString(str: string) {
 
 function Auth() {
 	if (!isEmptyString(document.cookie)) {
-		let login = decodeURIComponent(document.cookie).split("=")[1];
-		console.log(login);
+		let name = decodeURIComponent(document.cookie).split("=")[1];
 		return (
 			<div>
-				<button>Authentified as: {login}</button>
+				<button>Authentified as: {name}</button>
 			</div>
 		);
 	}

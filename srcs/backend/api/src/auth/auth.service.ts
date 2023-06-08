@@ -9,12 +9,15 @@ import { lastValueFrom, map } from "rxjs";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import * as process from "process";
 import { UserData42Dto } from "./dto/userData42.dto";
+import { JwtService } from "@nestjs/jwt";
+import { TokenDto } from "./dto/token.dto";
 
 @Injectable()
 export class AuthService {
 	constructor(
 		private prisma: PrismaService,
-		private httpService: HttpService
+		private httpService: HttpService,
+		private jwt: JwtService
 	) {}
 
 	async signup(dto: AuthDto) {
@@ -35,35 +38,7 @@ export class AuthService {
 		}
 	}
 
-	signin() {
-		return "signin route";
-	}
-
-	// async createUser(id42: string, name: string): Promise<User> {
-	// 	try {
-	// 		const user = await this.prisma.user.create({
-	// 			data: {
-	// 				name: name,
-	// 				id42: Number(id42)
-	// 			}
-	// 		});
-	// 		return user;
-	// 	} catch (error) {
-	// 		if (error instanceof Prisma.PrismaClientKnownRequestError) {
-	// 			if (error.code === "P2002") {
-	// 				const user = await this.prisma.user.findUnique({
-	// 					where: {
-	// 						id42: Number(id42),
-	// 						name: name
-	// 					}
-	// 				});
-	// 			}
-	// 		}
-	// 		throw error;
-	// 	}
-	// }
-
-	//////////////////////////////////////////////////////////////////////////////////////////////
+	/*-------------------------------------------------------------------------------------*/
 
 	async getToken42(code: string) {
 		const requestConfig: AxiosRequestConfig = {
@@ -143,14 +118,34 @@ export class AuthService {
 		}
 	}
 
-	async auth(code: string): Promise<User> {
-		const token42 = await this.getToken42(code);
-		// handle execption
+	async signToken(user: User): Promise<TokenDto> {
+		const payload = {
+			sub: user.id,
+			name: user.name
+		};
 
-		const userData42: UserData42Dto = await this.getUserData42(token42);
+		const token = await this.jwt.signAsync(payload, {
+			expiresIn: "60m",
+			secret: process.env.JWT_SECRET
+		});
+
+		return {
+			access_token: token
+		};
+	}
+
+	async auth(code: string): Promise<TokenDto> {
+		const token42 = await this.getToken42(code);
+		// handle exception
+
+		const userData42 = await this.getUserData42(token42);
 		//handle exception
 
-		const user: User = await this.login(userData42);
-		return user;
+		const user = await this.login(userData42);
+
+		const token = await this.signToken(user);
+		return token;
 	}
 }
+
+/*-------------------------------------------------------------------------------------*/
