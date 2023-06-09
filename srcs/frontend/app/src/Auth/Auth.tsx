@@ -7,7 +7,7 @@ function Auth() {
 		let name = decodeURIComponent(document.cookie).split("=")[1];
 		return (
 			<div>
-				<button>Authentified as: {name}</button>
+				<button>Jwt: {name}</button>
 			</div>
 		);
 	}
