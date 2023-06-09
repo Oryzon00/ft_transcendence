@@ -25,26 +25,34 @@ function User() {
 		fetch(url, {
 			method: "GET",
 			headers: {
-				"Authorization": "Bearer " + getJwtTokenFromCookie()
+				Authorization: "Bearer " + getJwtTokenFromCookie()
 			}
 		})
-			.then((response) => {
-				console.log(`response: ${response}`);
-				if (response.ok) {
-					console.log("SUCCESS");
-				} else {
-					console.log("FAILURE");
+			.then(function (response) {
+				if (!response.ok) {
+					console.log("response not ok");
+					throw new Error(
+						"Request failed with status " + response.status
+					);
 				}
 				return response.json();
 			})
-			.then((data) => {
+			.then(function (data) {
 				console.log(`private info: ${data}`);
 				setUserInfo(data.private);
+			})
+			.catch(function (error) {
+				console.log("in .catch");
+				if (error instanceof Error) {
+					const message: string = error.message;
+					setUserInfo(message);
+				}
 			});
 	}
 	return (
 		<div>
-			<button onClick={getUserInfo}> {userInfo} </button>
+			<button onClick={getUserInfo}> getUserInfo </button>
+			<div> User info: {userInfo} </div>
 		</div>
 	);
 }
