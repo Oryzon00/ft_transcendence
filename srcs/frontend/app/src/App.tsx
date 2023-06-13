@@ -64,7 +64,6 @@ function App() {
 	if (window.location.pathname === "/auth" && !testBool) {
 		testBool = true;
 		const params = new URLSearchParams(window.location.search);
-		//envoyer params dans body et pas query
 		const url = "http://localhost:3000/auth?" + params.toString();
 		fetch(url, {
 			method: "GET" //changer en post
@@ -82,12 +81,10 @@ function App() {
 
 	function callBack(event: any) {
 		event.preventDefault();
-		// fetch est non bloquant --> besoin de then
 		fetch(db_adress + "/users", {
 			method: "GET"
 		})
 			.then((response) => {
-				//Transforme le contenu de la reponse en JSON
 				return response.json();
 			})
 			.then((data) => {

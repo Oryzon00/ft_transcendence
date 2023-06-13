@@ -11,6 +11,7 @@ import * as process from "process";
 import { UserData42Dto } from "./dto/userData42.dto";
 import { JwtService } from "@nestjs/jwt";
 import { TokenDto } from "./dto/token.dto";
+import { UnauthorizedException } from "@nestjs/common";
 
 @Injectable()
 export class AuthService {
@@ -19,26 +20,6 @@ export class AuthService {
 		private httpService: HttpService,
 		private jwt: JwtService
 	) {}
-
-	async signup(dto: AuthDto) {
-		try {
-			// const hash = await argon.hash(dto.password);
-			const user = await this.prisma.user.create({
-				data: {
-					name: dto.name
-				}
-			});
-			return user;
-		} catch (error) {
-			if (error instanceof Prisma.PrismaClientKnownRequestError) {
-				if (error.code === "P2002")
-					throw new ForbiddenException("Credentials taken");
-			}
-			throw error;
-		}
-	}
-
-	/*-------------------------------------------------------------------------------------*/
 
 	async getToken42(code: string) {
 		const requestConfig: AxiosRequestConfig = {
@@ -52,42 +33,29 @@ export class AuthService {
 		};
 		const responseData = await lastValueFrom(
 			this.httpService
-				.post(
-					"https://api.intra.42.fr/oauth/token",
-					null,
-					requestConfig
-				)
+				.post("https://api.intra.42.fr/oauth/token", null, requestConfig)
 				.pipe(
-					//pourquoi?
 					map((response: AxiosResponse) => {
 						return response.data;
 					})
 				)
 		);
-		// console.log("--- Token ---"); //delete
-		// console.log(responseData); //delete
 		return responseData;
 	}
 
 	async getUserData42(token: any): Promise<UserData42Dto> {
-		//type token
 		const requestConfig: AxiosRequestConfig = {
 			headers: {
 				Authorization: `Bearer ${token.access_token}`
 			}
 		};
 		const responseData = await lastValueFrom(
-			this.httpService
-				.get("https://api.intra.42.fr/v2/me", requestConfig)
-				.pipe(
-					map((response: AxiosResponse) => {
-						return response.data;
-					})
-				)
+			this.httpService.get("https://api.intra.42.fr/v2/me", requestConfig).pipe(
+				map((response: AxiosResponse) => {
+					return response.data;
+				})
+			)
 		);
-		// console.log("--- Public Data ---"); //delete
-		// console.log(responseData.login); //delete
-		// console.log(responseData.id); //delete
 		const userData42: UserData42Dto = {
 			id: responseData.id,
 			login: responseData.login
@@ -136,16 +104,15 @@ export class AuthService {
 
 	async auth(code: string): Promise<TokenDto> {
 		const token42 = await this.getToken42(code);
-		// handle exception
+		if (!token42) throw new UnauthorizedException();
 
 		const userData42 = await this.getUserData42(token42);
-		//handle exception
+		if (!userData42) throw new UnauthorizedException();
 
 		const user = await this.login(userData42);
+		if (!user) throw new UnauthorizedException();
 
 		const token = await this.signToken(user);
 		return token;
 	}
 }
-
-/*-------------------------------------------------------------------------------------*/
