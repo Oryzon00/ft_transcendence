@@ -48,7 +48,7 @@ function bresenhamAlgorithm(start: Point, end: Point): Array<Point> {
     const horizontalStep: number = (start.x < end.x) ? 1 : -1;
     const verticalStep: number = (start.y < end.y) ? 1 : -1;
     
-    const points: Array<Point> = Array<Point>();
+    const points: Array<Point> = Array<Point>(start);
     
     let difference: number = deltaX - deltaY;
     
@@ -64,15 +64,48 @@ function bresenhamAlgorithm(start: Point, end: Point): Array<Point> {
         points.push(point);
     }    
     
-    return points
+    return (points);
 }
 
-// function collisionDetectionBallPaddle(ball: Ball, pad: Paddle) {
-	// 
-	// let points: Array<Point> = bresenhamAlgorithm(ball.pos, {x: ball.pos.x + ball.speedX, y: ball.pos.y + ball.speedY});
-// 
-		// 
-// }
+function multiplePosSpeed(start: Point, speedX: number, speedY: number): Array<Point> {
+	let points: Array<Point> = Array<Point>();
+
+	for(let i : number = 0; i < 50; i++)
+	{
+		points.push({x: start.x + 0.02 * i * speedX, y: start.y + 0.02 * i * speedY});
+	}
+	return (points);
+}
+
+function intersects(ball: Ball, pad: Paddle): boolean
+{
+    let testX: number = ball.pos.x;
+    let testY: number = ball.pos.y;
+
+	if (ball.pos.x < pad.pos.x) { testX = pad.pos.x}
+	else if (ball.pos.x > pad.pos.x + pad.width) { testX = pad.pos.x + pad.width }
+
+	if (ball.pos.y < pad.pos.y) { testY = pad.pos.y}
+	else if (ball.pos.y > pad.pos.y + pad.height) { testY = pad.pos.y + pad.height }
+	
+
+	return (Math.sqrt( Math.pow(ball.pos.x - testX, 2) + Math.pow(ball.pos.y - testY, 2)) <= ball.rad);
+}
+
+function collisionDetectionBallPaddle(ball: Ball, pad: Paddle): Point | false {
+	let i: 				number		 = 0;
+	// let points: 		Array<Point> = bresenhamAlgorithm(ball.pos, {x: ball.pos.x + ball.speedX, y: ball.pos.y + ball.speedY});
+	let points: 		Array<Point> = multiplePosSpeed(ball.pos, ball.speedX, ball.speedY);
+	let tmpBall: 		Ball		 = ball;
+	let intersection: 	boolean		 = intersects(tmpBall, pad);
+
+	while (!intersection && i < points.length)
+	{
+		tmpBall.pos = points[i++];
+		intersection = intersects(tmpBall, pad);
+	}
+	return (intersection ? tmpBall.pos : false);
+}
 
 export default function Pong({
 	canvasWidth,
@@ -106,8 +139,8 @@ export default function Pong({
 	});
 	const [ball, setBall] = useState<Ball>({
 		pos: { x: canvasWidth / 2, y: canvasHeight / 2 },
-		speedX: (Math.random() > 0.5 ? 2 : -2),
-		speedY:	-6 + Math.random() * 12,
+		speedX: (Math.random() > 0.5 ? 8 : -8),
+		speedY:	/*-6 + Math.random() * 12*/ 0,
 		rad: ballRad
 	});
 
@@ -121,26 +154,49 @@ export default function Pong({
 	// tearing
 	// 
 	function updateBallTrajectory(ball: Ball) {
-		ball.pos.x += ball.speedX;
-		ball.pos.y += ball.speedY;
-		if (ball.pos.x + ball.speedX > lPad.pos.x + ball.rad && ball.pos.x + ball.speedX < lPad.pos.x + lPad.width + ball.rad && ball.pos.y <= lPad.pos.y + lPad.height && ball.pos.y >= lPad.pos.y)
-		{	
-			ball.speedX = -(ball.speedX - 0.7);
+		// ball.pos.x += ball.speedX;
+		// ball.pos.y += ball.speedY;
+		// if (ball.pos.x + ball.speedX > lPad.pos.x + ball.rad && ball.pos.x + ball.speedX < lPad.pos.x + lPad.width + ball.rad && ball.pos.y <= lPad.pos.y + lPad.height && ball.pos.y >= lPad.pos.y)
+		// {	
+		// 	ball.speedX = -(ball.speedX - 0.7);
+		// }
+		// if (ball.pos.x + ball.speedX > rPad.pos.x - ball.rad && ball.pos.x + ball.speedX < rPad.pos.x - ball.rad + rPad.width && ball.pos.y <= rPad.pos.y + rPad.height && ball.pos.y >= rPad.pos.y)
+		// {
+		// 	ball.speedX = -(ball.speedX + 0.7);
+		// }
+		
+		
+
+		let collision: Point | false = false;
+
+		if (ball.speedX > 0) {
+			collision = collisionDetectionBallPaddle(ball, rPad);
+		} else {
+			collision = collisionDetectionBallPaddle(ball, lPad);
 		}
-		if (ball.pos.x + ball.speedX > rPad.pos.x - ball.rad && ball.pos.x + ball.speedX < rPad.pos.x - ball.rad + rPad.width && ball.pos.y <= rPad.pos.y + rPad.height && ball.pos.y >= rPad.pos.y)
+		
+		if (collision !== false){
+			ball.pos = collision;
+			// ball.speedX = (ball.speedX > 0) ? -(ball.speedX + 0.7) : -(ball.speedX - 0.7);
+			ball.speedX *= -1;
+			ball.pos.Y += ball.speedY;
+		}
+		else
 		{
-			ball.speedX = -(ball.speedX + 0.7);
+			ball.pos.x += ball.speedX;
+			ball.pos.y += ball.speedY;
 		}
+		collision = false;
 		if ( ball.pos.x + ball.speedX > canvasWidth - ball.rad || ball.pos.x + ball.speedX < ball.rad)
 		{
 			ball.pos.x = canvasWidth / 2;
 			ball.pos.y = canvasHeight / 2;
 			if (ball.speedX > 0) {
-				ball.speedX = 2;
+				ball.speedX = 29;
 				user1++;
 			}
 			else {
-				ball.speedX = -2;
+				ball.speedX = -29;
 				user2++;
 			}
 			ball.speedY = -6 + Math.random() * 12;		
@@ -220,7 +276,7 @@ export default function Pong({
 				rPad.down = true;
 				e.preventDefault();
 			}
-			if (e.key === "w")
+			if (e.key === "z")
 				lPad.up = true;
 			if (e.key === "s")
 				lPad.down = true;
@@ -231,7 +287,7 @@ export default function Pong({
 				rPad.up = false;
 			if (e.key === "Down" || e.key === "ArrowDown")
 				rPad.down = false;
-			if (e.key === "w")
+			if (e.key === "z")
 				lPad.up = false;
 			if (e.key === "s")
 				lPad.down = false;
