@@ -9,22 +9,8 @@ import { UnauthorizedException } from "@nestjs/common";
 export class AuthController {
 	constructor(private authService: AuthService) {}
 
-	// @Get()
-	// async auth(
-	// 	@Query() query: { code: string; error: string }
-	// ): Promise<TokenDto> {
-	// 	if (query.error === undefined && query.code !== undefined) {
-	// 		const token = await this.authService.auth(query.code);
-	// 		return token;
-	// 	}
-	// 	//else throw error?
-	// }
-
 	@Post()
 	async auth(@Body() body: AuthDto): Promise<TokenDto> {
-		if (body.error !== undefined) {
-			throw new UnauthorizedException(); 
-		}
 		const token = await this.authService.auth(body.code);
 		return token;
 	}

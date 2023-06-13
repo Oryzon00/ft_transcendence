@@ -6,7 +6,7 @@ export class UserController {
 
 	@UseGuards(AuthGuard("jwt"))
 	@Get("me")
-	getMe(){
+	getMe(@Req() req){
 		console.log("in /user/me");
 		// comment recuperer user dans request ?
 		const userInfo = {

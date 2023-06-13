@@ -2,37 +2,38 @@ import { authProtection } from "../cookieProtection.ts";
 import { useLoaderData } from "react-router-dom";
 import { api_adress } from "../../api_adress.ts";
 
-let testBool = false
 export async function authLoader() {
-    const params = new URLSearchParams(window.location.search);
-    if (params !== null && testBool === false ) {
-        testBool = true;
-        const url = "http://localhost:3000/auth";
+	const params = new URLSearchParams(window.location.search);
 
-        const res = await fetch(url);
-        if (!res.ok)
-            throw new Response("Auth Error", { status: 401 });
-        else {
-            await res.json()
-                .then((token) => {
-                    console.log(`token = ${token}`);
-                    document.cookie = `JWT=${token.access_token};path=/`;
-                    console.log(document.cookie);
-                })
-        }
-    }
-    return (null)
+	if (params.get("error")) throw new Response("Auth Error", { status: 401 });
+	else if (params.get("code")) {
+		const url = api_adress + "/auth";
+		const body = JSON.stringify({
+			code: params.get("code")
+		});
+		const res = await fetch(url, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: body
+		});
+		if (!res.ok) throw new Response("Auth Error", { status: 401 });
+		else {
+			await res.json().then(function (token) {
+				document.cookie = `JWT=${token.access_token};path=/`;
+			});
+		}
+	} else throw new Response("Auth Error", { status: 401 });
+	return null;
 }
 function Auth() {
-    authProtection();
-    const test:any = useLoaderData();
-
-    console.log(test);
-    return (
-        <>
-            <div>Loading</div>
-        </>
-    );
+	authProtection();
+	return (
+		<>
+			<div>Loading</div>
+		</>
+	);
 }
 
 export default Auth;

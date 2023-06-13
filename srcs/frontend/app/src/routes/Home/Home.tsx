@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./Home.styles.css";
-import { api_adress } from "../../api_adress";
+import { api_adress } from "../../api_adress.ts";
 import { cookieProtection } from "../cookieProtection.ts";
 
 function getJwtTokenFromCookie(): string | null {
@@ -9,11 +9,10 @@ function getJwtTokenFromCookie(): string | null {
 		const cookie = cookies[i].trim();
 		if (cookie.startsWith("JWT" + "=")) {
 			const token = cookie.substring("JWT".length + 1);
-			console.log(`token: ${decodeURIComponent(token)}`);
 			return decodeURIComponent(token);
 		}
 	}
-	return null; // Return null if the cookie is not found
+	return null;
 }
 
 function User() {
@@ -28,17 +27,14 @@ function User() {
 		})
 			.then(function (response) {
 				if (!response.ok) {
-					console.log("response not ok");
 					throw new Error("Request failed with status " + response.status);
 				}
 				return response.json();
 			})
 			.then(function (data) {
-				console.log(`private info: ${data}`);
 				setUserInfo(data.private);
 			})
 			.catch(function (error) {
-				console.log("in .catch");
 				if (error instanceof Error) {
 					const message: string = error.message;
 					setUserInfo(message);
