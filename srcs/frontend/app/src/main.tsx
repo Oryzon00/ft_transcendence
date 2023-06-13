@@ -12,7 +12,8 @@ import  Root from "./routes/root/root.tsx"
 import  Homepage from "./routes/Home/Home"
 import  Auth from "./routes/Auth/Auth"
 import  RootError from "./routes/root/rootError.tsx";
-//import AuthError from "./routes/Auth/AuthError.tsx";
+import AuthError from "./routes/Auth/AuthError.tsx";
+import {authLoader} from "./routes/Auth/Auth";
 
 const router = createBrowserRouter([
     {
@@ -35,7 +36,8 @@ const router = createBrowserRouter([
     {
         path: "/auth",
         element: <Auth />,
-        //errorElement: <AuthError />
+        loader: authLoader,
+        errorElement: <AuthError />
     },
 ]);
 

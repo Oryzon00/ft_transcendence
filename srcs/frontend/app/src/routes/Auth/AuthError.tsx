@@ -9,6 +9,9 @@ function AuthError () {
             <p>
                 <i>{error.statusText || error.message}</i>
             </p>
+            <form action="http://localhost:8000">
+                <input type="submit" value="Try Again !" />
+            </form>
         </>
     );
 }
