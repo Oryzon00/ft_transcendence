@@ -1,12 +1,13 @@
 import { authProtection } from "../cookieProtection.ts";
 import { useLoaderData } from "react-router-dom";
+import { api_adress } from "../../api_adress.ts";
 
 let testBool = false
 export async function authLoader() {
     const params = new URLSearchParams(window.location.search);
     if (params !== null && testBool === false ) {
         testBool = true;
-        const url = "http://localhost:3000/auth?" + (params).toString();
+        const url = "http://localhost:3000/auth";
 
         const res = await fetch(url);
         if (!res.ok)
