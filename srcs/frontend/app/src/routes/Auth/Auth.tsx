@@ -13,9 +13,9 @@ export async function authLoader() {
             throw new Response("Auth Error", { status: 401 });
         else {
             await res.json()
-                .then((user) => {
-                    console.log(user.name);
-                    document.cookie = `name=${user.name};path=/`;
+                .then((token) => {
+                    console.log(`token = ${token}`);
+                    document.cookie = `JWT=${token.access_token};path=/`;
                     console.log(document.cookie);
                 })
         }
