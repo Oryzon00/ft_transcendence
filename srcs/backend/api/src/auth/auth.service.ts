@@ -74,6 +74,7 @@ export class AuthService {
 			return user;
 		} catch (error) {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				console.log(error.code);
 				if (error.code === "P2002") {
 					const user = await this.prisma.user.findUnique({
 						where: {
@@ -111,7 +112,6 @@ export class AuthService {
 
 		const user = await this.login(userData42);
 		if (!user) throw new UnauthorizedException();
-
 		const token = await this.signToken(user);
 		return token;
 	}
