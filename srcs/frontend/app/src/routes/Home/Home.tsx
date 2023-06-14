@@ -32,7 +32,7 @@ function User() {
 				return response.json();
 			})
 			.then(function (data) {
-				setUserInfo(data.private);
+				setUserInfo(data.name);
 			})
 			.catch(function (error) {
 				if (error instanceof Error) {
