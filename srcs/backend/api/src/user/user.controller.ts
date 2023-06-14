@@ -8,10 +8,7 @@ export class UserController {
 	@Get("me")
 	getMe(@Req() req){
 		console.log("in /user/me");
-		// comment recuperer user dans request ?
-		const userInfo = {
-			private: "privateUserInfo"
-		}
-		return userInfo
+		console.log({user : req.user});
+		return req.user;
 	}
 }
