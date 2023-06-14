@@ -84,7 +84,7 @@ function Home() {
 			</div>
 			<button onClick={callBack}>Call back</button>
 			<div>First user is {users}</div>
-			<div>Welcome home {decodeURIComponent(document.cookie).split("=")[1]}</div>
+			<div>Welcome home !</div>
 			<User></User>
 			<button onClick={() => deleteCookie()}>Delete Cookie</button>
 		</>
