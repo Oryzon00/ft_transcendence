@@ -1,5 +1,3 @@
-import { authProtection } from "../cookieProtection.ts";
-import { useLoaderData } from "react-router-dom";
 import { api_adress } from "../../api_adress.ts";
 
 export async function authLoader() {
@@ -22,13 +20,13 @@ export async function authLoader() {
 		else {
 			await res.json().then(function (token) {
 				document.cookie = `JWT=${token.access_token};path=/`;
+				self.location.href = 'http://localhost:8000/home'
 			});
 		}
 	} else throw new Response("Auth Error", { status: 401 });
 	return null;
 }
 function Auth() {
-	authProtection();
 	return (
 		<>
 			<div>Loading</div>
@@ -37,3 +35,4 @@ function Auth() {
 }
 
 export default Auth;
+

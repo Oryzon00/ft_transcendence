@@ -1,8 +1,14 @@
 #root {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 2rem;
-    text-align: center;
+    height: inherit;
+    width: inherit;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+    /* max-width: 1280px; */
+    /* margin: 0 auto; */
+    /* padding: 2rem; */
+    /* text-align: center; */
 }
 
 .logo {
@@ -29,14 +35,41 @@
 
 @media (prefers-reduced-motion: no-preference) {
     a:nth-of-type(2) .logo {
-        animation: logo-spin infinite 20s linear;
+        animation: logo-spin infinite 20s linear;margin-top: 2%;
+        margin-bottom: 2%;
     }
 }
 
 .card {
     padding: 2em;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
 }
 
 .read-the-docs {
     color: #888;
+}
+
+.profile-button {
+    display: flex;
+    align-self: flex-end;
+
+}
+
+.main-site {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.my-footer {
+    width: 100vw;
+    height: 5vh;
+    background-color:gray;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }

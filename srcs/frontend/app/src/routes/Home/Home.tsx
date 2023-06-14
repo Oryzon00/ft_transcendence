@@ -42,7 +42,7 @@ function User() {
 			});
 	}
 	return (
-		<div>
+		<div className="card">
 			<button onClick={getUserInfo}> getUserInfo </button>
 			<div> User info: {userInfo} </div>
 		</div>
@@ -53,22 +53,6 @@ function Home() {
 	cookieProtection();
 
 	const [count, setCount] = useState(0);
-	const [users, setUsers] = useState("");
-
-	function callBack(event: any) {
-		event.preventDefault();
-		// fetch est non bloquant --> besoin de then
-		fetch(api_adress + "/users", {
-			method: "GET"
-		})
-			.then((response) => {
-				//Transforme le contenu de la reponse en JSON
-				return response.json();
-			})
-			.then((data) => {
-				setUsers(data[0].name);
-			});
-	}
 
 	function deleteCookie() {
 		document.cookie = "JWT=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -77,16 +61,23 @@ function Home() {
 
 	return (
 		<>
-			<div className="card">
-				<button onClick={() => setCount((count) => count + 1)}>
-					truc {count}
-				</button>
+			<div className="profile-button">
+				<button>Profile</button>
 			</div>
-			<button onClick={callBack}>Call back</button>
-			<div>First user is {users}</div>
-			<div>Welcome home {decodeURIComponent(document.cookie).split("=")[1]}</div>
-			<User></User>
-			<button onClick={() => deleteCookie()}>Delete Cookie</button>
+			<div className="main-site">
+				<div className="card">
+					<button onClick={() => setCount((count) => count + 1)}>
+						truc {count}
+					</button>
+				</div>
+				<div>Welcome home !</div>
+				<User></User>
+				<button onClick={() => deleteCookie()}>Delete Cookie</button>
+			</div>
+			<div className="my-footer">
+				Footer
+			</div>
+
 		</>
 	);
 }
