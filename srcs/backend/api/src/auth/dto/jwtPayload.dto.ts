@@ -1,4 +1,4 @@
 export class JwtPayload {
-	sub: string;
+	sub: number;
 	name: string;
 }

@@ -56,6 +56,7 @@ export class AuthService {
 				})
 			)
 		);
+		console.log(`type of id42: ${typeof responseData.id}`);
 		const userData42: UserData42Dto = {
 			id: responseData.id,
 			login: responseData.login
@@ -68,7 +69,7 @@ export class AuthService {
 			const user = await this.prisma.user.create({
 				data: {
 					name: userData42.login,
-					id42: Number(userData42.id)
+					id42: userData42.id
 				}
 			});
 			return user;
@@ -77,7 +78,7 @@ export class AuthService {
 				if (error.code === "P2002") {
 					const user = await this.prisma.user.findUnique({
 						where: {
-							id42: Number(userData42.id)
+							id42: userData42.id
 						}
 					});
 					return user;

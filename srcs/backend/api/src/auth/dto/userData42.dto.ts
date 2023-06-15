@@ -1,4 +1,4 @@
 export class UserData42Dto {
-	id: string;
+	id: number;
 	login: string;
 }
