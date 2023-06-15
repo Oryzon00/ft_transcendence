@@ -53,22 +53,6 @@ function Home() {
 	cookieProtection();
 
 	const [count, setCount] = useState(0);
-	const [users, setUsers] = useState("");
-
-	function callBack(event: any) {
-		event.preventDefault();
-		// fetch est non bloquant --> besoin de then
-		fetch(api_adress + "/users", {
-			method: "GET"
-		})
-			.then((response) => {
-				//Transforme le contenu de la reponse en JSON
-				return response.json();
-			})
-			.then((data) => {
-				setUsers(data[0].name);
-			});
-	}
 
 	function deleteCookie() {
 		document.cookie = "JWT=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -82,8 +66,6 @@ function Home() {
 					truc {count}
 				</button>
 			</div>
-			<button onClick={callBack}>Call back</button>
-			<div>First user is {users}</div>
 			<div>Welcome home !</div>
 			<User></User>
 			<button onClick={() => deleteCookie()}>Delete Cookie</button>

@@ -23,16 +23,16 @@ export async function authLoader() {
 	else {
 		await res.json().then(function (token) {
 			document.cookie = `JWT=${token.access_token};path=/`;
+			self.location.href = "http://localhost:8000/home"
 		});
 	}
 	return null;
 }
 
 function Auth() {
-	authProtection();
 	return (
 		<>
-			<div>Loading</div>
+			<div>Auth loading</div>
 		</>
 	);
 }

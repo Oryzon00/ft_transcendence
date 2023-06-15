@@ -5,13 +5,13 @@ function isEmptyString(str: string) {
 }
 
 function Root() {
-    if (isEmptyString(document.cookie))
+    if (isEmptyString(document.cookie)) //to modify and check jwt
         self.location.href = api42_adress;
     else
         self.location.href = "http://localhost:8000/home"
     return (
         <>
-            <div>Lol</div>
+            <div>Animation de chargement qui pedale // hamstere de roue</div>
         </>
     );
 }

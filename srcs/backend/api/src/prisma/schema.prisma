@@ -12,7 +12,7 @@ datasource db {
 
 model	User {
 	id			Int			@id @default(autoincrement()) //change to string ?
-	id42		Int?		@unique //enlever le ?
+	id42		Int			@unique
  
 	name		String		@unique
 	gameProfile	GameProfile?
