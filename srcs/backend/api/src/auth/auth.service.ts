@@ -56,7 +56,6 @@ export class AuthService {
 				})
 			)
 		);
-		console.log(`type of id42: ${typeof responseData.id}`);
 		const userData42: UserData42Dto = {
 			id: responseData.id,
 			login: responseData.login
