@@ -2,6 +2,8 @@ import { useState } from "react";
 import "./Home.styles.css";
 import { api_adress } from "../../api_adress.ts";
 import { cookieProtection } from "../cookieProtection.ts";
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 
 function getJwtTokenFromCookie(): string | null {
 	const cookies = document.cookie.split(";");
@@ -62,7 +64,7 @@ function Home() {
 	return (
 		<>
 			<div className="profile-button">
-				<button>Profile</button>
+				<Button variant="contained" href="/home/profile">Profile</Button>
 			</div>
 			<div className="main-site">
 				<div className="card">
@@ -73,6 +75,17 @@ function Home() {
 				<div>Welcome home !</div>
 				<User></User>
 				<button onClick={() => deleteCookie()}>Delete Cookie</button>
+				<Box
+    			  sx={{
+    			    width: 300,
+    			    height: 300,
+    			    backgroundColor: 'primary.dark',
+    			    '&:hover': {
+    			      backgroundColor: 'primary.main',
+    			      opacity: [0.9, 0.8, 0.7],
+    			    },
+    			  }}
+    			/>
 			</div>
 			<div className="my-footer">
 				Footer
