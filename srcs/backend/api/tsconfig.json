@@ -1,10 +1,6 @@
 {
   "compilerOptions": {
-<<<<<<< HEAD
     "lib": ["DOM","es2015"],
-  }
-}
-=======
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
@@ -24,4 +20,3 @@
     "noFallthroughCasesInSwitch": false
   }
 }
->>>>>>> main

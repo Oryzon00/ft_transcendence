@@ -1,15 +1,12 @@
 rm -rf dist/ migrations/ nodes_modules/
 
-npm install ws
 npm install
 
 # # migrate vs db push ?
-npx prisma migrate dev --name init
+#npx prisma migrate dev --name init
 # # npx db push
 
-npx prisma generate
+#npx prisma generate
 
 #Start nest
-npm run start:dev &
-npx prisma studio
-
+npm run start:dev
