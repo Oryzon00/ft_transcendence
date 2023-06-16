@@ -1,8 +1,5 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import { AuthDto } from "./dto";
-
-// import * as argon from "argon2";
 import { Prisma, User } from "@prisma/client";
 import { HttpService } from "@nestjs/axios";
 import { lastValueFrom, map } from "rxjs";
@@ -12,6 +9,10 @@ import { UserData42Dto } from "./dto/userData42.dto";
 import { JwtService } from "@nestjs/jwt";
 import { TokenDto } from "./dto/token.dto";
 import { UnauthorizedException } from "@nestjs/common";
+import { authenticator } from "otplib";
+import { TwoFADTO } from "./dto/twoFA.dto";
+import { toDataURL } from 'qrcode';
+
 
 @Injectable()
 export class AuthService {
@@ -20,6 +21,33 @@ export class AuthService {
 		private httpService: HttpService,
 		private jwt: JwtService
 	) {}
+
+	async generateTwoFASecret(user: User) : Promise<TwoFADTO> {
+		const twoFASecret = authenticator.generateSecret();
+		const otpAuthUrl = authenticator.keyuri(user.name, "Transcendance", twoFASecret);
+		try {
+			await this.prisma.user.update({
+				where: {
+					id: user.id
+				},
+				data: {
+					twoFASecret: twoFASecret
+				}
+			});
+		} catch {
+			throw new InternalServerErrorException();
+		}
+		return {
+			twoFASecret,
+			otpAuthUrl
+		};
+	}
+
+	async generateQRCodeDataURL(otpAuthUrl: string) : Promise<String> {
+		return toDataURL(otpAuthUrl);
+	}
+
+/* ---------------------------------------------------------------------------------------------- */
 
 	async getToken42(code: string) {
 		const requestConfig: AxiosRequestConfig = {

@@ -17,7 +17,7 @@ model	User {
 	name		String		@unique
 	gameProfile	GameProfile?
 	twoFA		Boolean		@default(false)
-	
+	twoFASecret	String?
 	createdAt	DateTime	@default(now())
 	updatedAt	DateTime	@updatedAt
 	
