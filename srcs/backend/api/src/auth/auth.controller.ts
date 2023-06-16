@@ -7,7 +7,6 @@ import { UnauthorizedException } from "@nestjs/common";
 export class AuthController {
 	constructor(private authService: AuthService) {}
 
-	@HttpCode(HttpStatus.CREATED)
 	@Post()
 	async auth(@Body() body): Promise<TokenDto> {
 		if (body.error || !body.code) throw new UnauthorizedException();
