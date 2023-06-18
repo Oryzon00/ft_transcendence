@@ -33,3 +33,23 @@ model	GameProfile {
 
 	@@map("gameProfile")
 }
+
+model Channel {
+	channelId	Int @unique
+
+	admins		User[]
+	users		User[]
+
+	messages	Message[]
+	@@map("channels")
+}
+
+model Message {
+	id			Int @unique
+
+	authorId	Int @unique
+	author		User @relation(fields: [authorId], references: [id])
+
+	content		String
+	@@map("messages")
+}
