@@ -8,11 +8,9 @@ import * as process from "process";
 import { UserData42Dto } from "./dto/userData42.dto";
 import { JwtService } from "@nestjs/jwt";
 import { TokenDto } from "./dto/token.dto";
-import { UnauthorizedException } from "@nestjs/common";
 import { authenticator } from "otplib";
 import { TwoFADto } from "./dto/twoFA.dto";
-import { toDataURL } from 'qrcode';
-
+import { toDataURL } from "qrcode";
 
 @Injectable()
 export class AuthService {
@@ -22,11 +20,15 @@ export class AuthService {
 		private jwt: JwtService
 	) {}
 
-/* 2FA */
+	/* 2FA */
 
-	async generateTwoFASecret(user: User) : Promise<TwoFADto> {
+	async generateTwoFASecret(user: User): Promise<TwoFADto> {
 		const twoFASecret = authenticator.generateSecret();
-		const otpAuthUrl = authenticator.keyuri(user.name, "Transcendance", twoFASecret);
+		const otpAuthUrl = authenticator.keyuri(
+			user.name,
+			"Transcendance",
+			twoFASecret
+		);
 		try {
 			await this.prisma.user.update({
 				where: {
@@ -45,13 +47,36 @@ export class AuthService {
 		};
 	}
 
-	async generateQRCodeDataURL(otpAuthUrl: string) : Promise<String> {
+	async generateQRCodeDataURL(otpAuthUrl: string): Promise<String> {
 		return toDataURL(otpAuthUrl);
 	}
 
-/* ---------------------------------------------------------------------------------------------- */
+	checkTwoFATokenValid(user: User, twoFAToken: string): boolean {
+		return authenticator.verify({
+			token: twoFAToken,
+			secret: user.twoFASecret
+		});
+	}
 
-/* AUTH */
+	async turnOnOffTwoFA(user: User, status: boolean) {
+		try {
+			await this.prisma.user.update({
+				where: {
+					id: user.id
+				},
+				data: {
+					twoFA: status
+				}
+			});
+		} catch {
+			throw new InternalServerErrorException();
+		}
+		return status;
+	}
+
+	/* ---------------------------------------------------------------------------------------------- */
+
+	/* AUTH */
 
 	async getToken42(code: string) {
 		const requestConfig: AxiosRequestConfig = {
@@ -65,7 +90,11 @@ export class AuthService {
 		};
 		const responseData = await lastValueFrom(
 			this.httpService
-				.post("https://api.intra.42.fr/oauth/token", null, requestConfig)
+				.post(
+					"https://api.intra.42.fr/oauth/token",
+					null,
+					requestConfig
+				)
 				.pipe(
 					map((response: AxiosResponse) => {
 						return response.data;
@@ -82,11 +111,13 @@ export class AuthService {
 			}
 		};
 		const responseData = await lastValueFrom(
-			this.httpService.get("https://api.intra.42.fr/v2/me", requestConfig).pipe(
-				map((response: AxiosResponse) => {
-					return response.data;
-				})
-			)
+			this.httpService
+				.get("https://api.intra.42.fr/v2/me", requestConfig)
+				.pipe(
+					map((response: AxiosResponse) => {
+						return response.data;
+					})
+				)
 		);
 		const userData42: UserData42Dto = {
 			id: responseData.id,
@@ -96,32 +127,35 @@ export class AuthService {
 	}
 
 	async login(userData42: UserData42Dto): Promise<User> {
+		let user: User;
 		try {
-			const user = await this.prisma.user.create({
+			user = await this.prisma.user.create({
 				data: {
 					name: userData42.login,
 					id42: userData42.id
 				}
 			});
-			return user;
+			
 		} catch (error) {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === "P2002") {
-					const user = await this.prisma.user.findUnique({
+					user = await this.prisma.user.findUnique({
 						where: {
 							id42: userData42.id
 						}
 					});
-					return user;
 				}
 			} else throw error;
 		}
+		
+		return user;
 	}
 
 	async signToken(user: User): Promise<TokenDto> {
 		const payload = {
 			sub: user.id,
-			name: user.name
+			name: user.name,
+			twoFA: user.twoFA
 		};
 
 		const token = await this.jwt.signAsync(payload, {
@@ -132,20 +166,5 @@ export class AuthService {
 		return {
 			access_token: token
 		};
-	}
-
-	async auth(code: string): Promise<TokenDto> {
-		const token42 = await this.getToken42(code);
-		if (!token42) throw new UnauthorizedException();
-
-		const userData42 = await this.getUserData42(token42);
-		if (!userData42) throw new UnauthorizedException();
-
-		const user = await this.login(userData42);
-		if (!user) throw new UnauthorizedException();
-
-		const token = await this.signToken(user);
-		
-		return token;
 	}
 }

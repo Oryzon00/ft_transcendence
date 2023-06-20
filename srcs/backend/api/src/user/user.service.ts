@@ -5,19 +5,5 @@ import { Prisma, User } from "@prisma/client";
 export class UserService {
 	constructor(private prisma: PrismaService) {}
 
-	async turnOnOffTwoFA(user: User, status: boolean) {
-		try {
-			await this.prisma.user.update({
-				where: {
-					id: user.id
-				},
-				data: {
-					twoFA: status
-				}
-			});
-		} catch {
-			throw new InternalServerErrorException();
-		}
-		return status;
-	}
+	
 }

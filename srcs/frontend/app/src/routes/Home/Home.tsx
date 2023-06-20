@@ -89,7 +89,7 @@ function TwoFA() {
 		} else if (twoFAStatus === "On") status = false;
 		else status = true;
 
-		const url = api_adress + "/user/twoFA";
+		const url = api_adress + "/auth/twoFA/turn-on";
 		fetch(url, {
 			method: "PATCH",
 			headers: {
