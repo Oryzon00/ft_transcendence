@@ -2,8 +2,7 @@ import { useState } from "react";
 import "./Home.styles.css";
 import { api_adress } from "../../api_adress.ts";
 import { cookieProtection } from "../cookieProtection.ts";
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
+import { Outlet } from "react-router-dom";
 
 function getJwtTokenFromCookie(): string | null {
 	const cookies = document.cookie.split(";");
@@ -51,6 +50,8 @@ function User() {
 	);
 }
 
+
+
 function Home() {
 	cookieProtection();
 
@@ -61,11 +62,21 @@ function Home() {
 		self.location.href = "http://localhost:8000";
 	}
 
+	function profileButton() {
+		if (self.location.href !== "http://localhost:8000/home/profile")
+			self.location.href = "/home/profile";
+		else
+			self.location.href = "/home";
+	}
+	
 	return (
 		<>
 			<div className="profile-button">
-				<Button variant="contained" href="/home/profile">Profile</Button>
+				<button onClick={() => profileButton()}>
+					Profile
+				</button>
 			</div>
+			<Outlet />
 			<div className="main-site">
 				<div className="card">
 					<button onClick={() => setCount((count) => count + 1)}>
@@ -75,17 +86,6 @@ function Home() {
 				<div>Welcome home !</div>
 				<User></User>
 				<button onClick={() => deleteCookie()}>Delete Cookie</button>
-				<Box
-    			  sx={{
-    			    width: 300,
-    			    height: 300,
-    			    backgroundColor: 'primary.dark',
-    			    '&:hover': {
-    			      backgroundColor: 'primary.main',
-    			      opacity: [0.9, 0.8, 0.7],
-    			    },
-    			  }}
-    			/>
 			</div>
 			<div className="my-footer">
 				Footer

@@ -53,8 +53,11 @@
 
 .profile-button {
     display: flex;
-    align-self: flex-end;
-
+    z-index: 2;
+	background-color:dimgray;
+    width: 100vw;
+    height: 5vh;
+    flex-direction: row-reverse;
 }
 
 .main-site {

@@ -58,7 +58,8 @@ export class AuthService {
 		);
 		const userData42: UserData42Dto = {
 			id: responseData.id,
-			login: responseData.login
+			login: responseData.login,
+			image: responseData.image.link
 		};
 		return userData42;
 	}
@@ -68,7 +69,8 @@ export class AuthService {
 			const user = await this.prisma.user.create({
 				data: {
 					name: userData42.login,
-					id42: Number(userData42.id)
+					id42: Number(userData42.id),
+					image: userData42.image
 				}
 			});
 			return user;

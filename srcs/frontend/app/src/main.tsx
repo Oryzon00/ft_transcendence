@@ -14,6 +14,8 @@ import  Auth from "./routes/Auth/Auth"
 import  RootError from "./routes/root/rootError.tsx";
 import AuthError from "./routes/Auth/AuthError.tsx";
 import {authLoader} from "./routes/Auth/Auth";
+import { ProfileMenuLoader } from './routes/Profile/ProfileMenu.tsx';
+import ProfileMenu from './routes/Profile/ProfileMenu.tsx';
 
 const router = createBrowserRouter([
     {
@@ -32,6 +34,13 @@ const router = createBrowserRouter([
     {
         path: "/home",
         element: <Homepage />,
+        children : [
+            {
+                path: "/home/profile/",
+                element: <ProfileMenu />,
+                loader: ProfileMenuLoader,
+            },
+        ],
     },
     {
         path: "/auth",
