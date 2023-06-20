@@ -10,7 +10,7 @@ import { JwtService } from "@nestjs/jwt";
 import { TokenDto } from "./dto/token.dto";
 import { UnauthorizedException } from "@nestjs/common";
 import { authenticator } from "otplib";
-import { TwoFADTO } from "./dto/twoFA.dto";
+import { TwoFADto } from "./dto/twoFA.dto";
 import { toDataURL } from 'qrcode';
 
 
@@ -22,7 +22,9 @@ export class AuthService {
 		private jwt: JwtService
 	) {}
 
-	async generateTwoFASecret(user: User) : Promise<TwoFADTO> {
+/* 2FA */
+
+	async generateTwoFASecret(user: User) : Promise<TwoFADto> {
 		const twoFASecret = authenticator.generateSecret();
 		const otpAuthUrl = authenticator.keyuri(user.name, "Transcendance", twoFASecret);
 		try {
@@ -48,6 +50,8 @@ export class AuthService {
 	}
 
 /* ---------------------------------------------------------------------------------------------- */
+
+/* AUTH */
 
 	async getToken42(code: string) {
 		const requestConfig: AxiosRequestConfig = {

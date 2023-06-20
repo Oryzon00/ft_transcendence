@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException,  } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { Prisma, User } from "@prisma/client";
 @Injectable()
@@ -18,5 +18,6 @@ export class UserService {
 		} catch {
 			throw new InternalServerErrorException();
 		}
+		return status;
 	}
 }
