@@ -139,7 +139,9 @@ export class AuthService {
 
 		const user = await this.login(userData42);
 		if (!user) throw new UnauthorizedException();
+
 		const token = await this.signToken(user);
+		
 		return token;
 	}
 }
