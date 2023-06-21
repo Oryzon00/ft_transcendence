@@ -1,10 +1,10 @@
 import { Patch, Controller, Get, UseGuards, Body } from "@nestjs/common";
 import { User } from "@prisma/client";
 import { GetUser } from "src/auth/decorator";
-import { JwtGuard } from "src/auth/guard";
+import { Jwt2FAGuard } from "src/auth/guard";
 import { UserService } from "./user.service";
 
-@UseGuards(JwtGuard)
+@UseGuards(Jwt2FAGuard)
 @Controller("user")
 export class UserController {
 	constructor(private userService: UserService) {}

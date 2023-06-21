@@ -51,9 +51,10 @@ export class AuthService {
 		return toDataURL(otpAuthUrl);
 	}
 
-	checkTwoFATokenValid(user: User, twoFAToken: string): boolean {
+		//verify TOTOPValid
+	verifyTOTPValid(user: User, TOTP: string): boolean {
 		return authenticator.verify({
-			token: twoFAToken,
+			token: TOTP,
 			secret: user.twoFASecret
 		});
 	}
@@ -151,11 +152,12 @@ export class AuthService {
 		return user;
 	}
 
-	async signToken(user: User): Promise<TokenDto> {
+	async signToken(user: User, twoFAAuth: boolean): Promise<TokenDto> {
 		const payload = {
 			sub: user.id,
 			name: user.name,
-			twoFA: user.twoFA
+			twoFA: user.twoFA,
+			twoFAAuth: twoFAAuth
 		};
 
 		const token = await this.jwt.signAsync(payload, {
