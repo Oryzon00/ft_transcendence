@@ -8,4 +8,3 @@ npx prisma generate
 
 #Start nest
 npm run start:dev
-# npx prisma studio

@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
-import { WebsocketContext } from "../contexts/WebsocketContext";
+import { socket, WebsocketContext, WebsocketProvider } from "../../contexts/WebsocketContext";
+import "./chat.css"
 
 type MessagePayload = {
 	content: string;
@@ -35,19 +36,19 @@ export function Chat() {
 	};
 
 	return ( 
-	<>
-		<div id="message-box">
-			{
-			messages.map((msg) => 
-			<div>
-				<p>{msg.content}</p>
+		<WebsocketProvider value={socket}>
+			<div id="message-box">
+				{
+				messages.map((msg) => 
+				<div>
+					<p>{msg.content}</p>
+				</div>
+					)}
 			</div>
-				)}
-		</div>
-		<div id="message-bar">
-			<input type="text" value={value} placeholder="Envoyer un message dans le channel" onChange={(e) => setValue(e.target.value)}  />
-			<button onClick={onSubmit}>Submit</button>
-		</div>
-	</>
+			<div id="message-bar">
+				<input type="text" value={value} placeholder="Envoyer un message dans le channel" onChange={(e) => setValue(e.target.value)}  />
+				<button onClick={onSubmit}>Submit</button>
+			</div>
+		</WebsocketProvider>
 	);
 }

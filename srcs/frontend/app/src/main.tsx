@@ -12,7 +12,7 @@ import  Root from "./routes/root/root.tsx"
 import  Homepage from "./routes/Home/Home"
 import  Auth from "./routes/Auth/Auth"
 import  RootError from "./routes/root/rootError.tsx";
-import { Chat } from "./chat/chat";
+import { Chat } from "./routes/chat/chat";
 import AuthError from "./routes/Auth/AuthError.tsx";
 import {authLoader} from "./routes/Auth/Auth";
 
@@ -43,8 +43,8 @@ const router = createBrowserRouter([
     {
         path: "/chat",
         element: <Chat />,
-        loader: authLoader,
-        errorElement: <AuthError />
+        //loader: authLoader,
+        //errorElement: <AuthError />
     },
 ]);
 
