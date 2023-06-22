@@ -82,38 +82,38 @@ function TwoFA() {
 			});
 	}
 
-	function patchTwoFAStatus() {
-		let status: boolean;
-		if (twoFAStatus !== "On" && twoFAStatus !== "Off") {
-			return;
-		} else if (twoFAStatus === "On") status = false;
-		else status = true;
+	// function patchTwoFAStatus() {
+	// 	let status: boolean;
+	// 	if (twoFAStatus !== "On" && twoFAStatus !== "Off") {
+	// 		return;
+	// 	} else if (twoFAStatus === "On") status = false;
+	// 	else status = true;
 
-		const url = api_adress + "/auth/twoFA/turn-on";
-		fetch(url, {
-			method: "PATCH",
-			headers: {
-				Authorization: "Bearer " + getJwtTokenFromCookie(),
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify({
-				status: status
-			})
-		})
-			.then(function (response) {
-				if (!response.ok)
-					throw new Error("Error status: " + response.status );
-				else return response.json();
-			})
-			.then(function (data) {
-				console.log(data.status);
-				if (data.status === true) setTwoFAStatus("On");
-				else setTwoFAStatus("Off");
-			})
-			.catch(function (error) {
-				console.log(error);
-			});
-	}
+	// 	const url = api_adress + "/auth/twoFA/turn-on";
+	// 	fetch(url, {
+	// 		method: "PATCH",
+	// 		headers: {
+	// 			Authorization: "Bearer " + getJwtTokenFromCookie(),
+	// 			"Content-Type": "application/json"
+	// 		},
+	// 		body: JSON.stringify({
+	// 			status: status
+	// 		})
+	// 	})
+	// 		.then(function (response) {
+	// 			if (!response.ok)
+	// 				throw new Error("Error status: " + response.status );
+	// 			else return response.json();
+	// 		})
+	// 		.then(function (data) {
+	// 			console.log(data.status);
+	// 			if (data.status === true) setTwoFAStatus("On");
+	// 			else setTwoFAStatus("Off");
+	// 		})
+	// 		.catch(function (error) {
+	// 			console.log(error);
+	// 		});
+	// }
 	return (
 		<div>
 			<button onClick={getTwoFAStatus}>get 2FA status </button>
