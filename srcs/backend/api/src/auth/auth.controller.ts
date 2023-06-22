@@ -2,7 +2,7 @@ import { Body, Controller, Post, Patch, UseGuards, Get } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { TokenDto } from "./dto/token.dto";
 import { UnauthorizedException } from "@nestjs/common";
-import { Jwt2FAGuard } from "src/auth/guard";
+import { JwtGuard } from "src/auth/guard";
 import { GetUser } from "src/auth/decorator";
 import { User } from "@prisma/client";
 
@@ -11,7 +11,7 @@ export class AuthController {
 	constructor(private authService: AuthService) {}
 
 	@Post()
-	async auth(@Body() body): Promise<TokenDto> {
+	async auth(@Body() body): Promise<TokenDto | { user: User }> {
 		if (body.error || !body.code) throw new UnauthorizedException();
 
 		const token42 = await this.authService.getToken42(body.code);
@@ -23,46 +23,54 @@ export class AuthController {
 		const user = await this.authService.login(userData42);
 
 		if (user.twoFA) {
-			const isTokenValid = this.authService.verifyTOTPValid(
-				user,
-				body.TOTP
-			);
-			if (!isTokenValid) throw new UnauthorizedException();
-			return await this.authService.signToken(user, true);
+			return { user };
 		} else {
-			return await this.authService.signToken(user, false);
+			return await this.authService.signToken(user);
 		}
 	}
 
-	@UseGuards(Jwt2FAGuard)
+	@Post("twoFA/verify")
+	async verifyTOTP(@Body() body): Promise<TokenDto> {
+		const isTOTPValid = this.authService.verifyTOTPValid(
+			body.user,
+			body.TOTP
+		);
+		if (!isTOTPValid) throw new UnauthorizedException();
+		return await this.authService.signToken(body.user);
+	}
+
+	@UseGuards(JwtGuard)
+	@Post("twoFA/generate")
+	async generateTwoFA(@GetUser() user: User): Promise<{ qrCodeUrl: string }> {
+		const otpAuthUrl = await this.authService.generateTwoFASecretQRCode(
+			user
+		);
+		const qrCodeUrl = await this.authService.generateQRCodeDataURL(
+			otpAuthUrl
+		);
+		return {
+			qrCodeUrl
+		};
+	}
+
+	@UseGuards(JwtGuard)
 	@Patch("twoFA/turn-on")
 	async turnOnTwoFA(
 		@GetUser() user: User,
 		@Body() body
 	): Promise<{ status: boolean }> {
-		const isTokenValid = this.authService.verifyTOTPValid(
-			user,
-			body.TOTP
-		);
-		if (!isTokenValid) throw new UnauthorizedException();
+		const isTOTPValid = this.authService.verifyTOTPValid(user, body.TOTP);
+		if (!isTOTPValid) throw new UnauthorizedException();
 		const status = await this.authService.turnOnOffTwoFA(user, true);
 		return { status: status };
 	}
 
-	@UseGuards(Jwt2FAGuard)
-	@Get("twoFA/generate") //POST? 
-	async generateTwoFA(@GetUser() user: User) {
-		const obj = await this.authService.generateTwoFASecret(user);
-		const twoFASecret = obj.twoFASecret;
-		const qrCodeUrl = this.authService.generateQRCodeDataURL(
-			obj.otpAuthUrl
-		);
-
-		return {
-			twoFASecret, //envoyer secret dans payload token ? non necessaire?
-			qrCodeUrl
-		};
+	@UseGuards(JwtGuard)
+	@Patch("twoFA/turn-off")
+	async turnOffTwoFA(@GetUser() user: User): Promise<{ status: boolean }> {
+		const status = await this.authService.turnOnOffTwoFA(user, false);
+		return { status: status };
 	}
 
-
+	
 }

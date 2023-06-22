@@ -6,7 +6,7 @@ import { JwtPayload } from "../dto/jwtPayload.dto";
 import { User } from "@prisma/client";
 
 @Injectable()
-export class Jwt2FAStrategy extends PassportStrategy(Strategy, "jwt-2fa") {
+export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
 	constructor(private readonly prisma: PrismaService) {
 		super({
 			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -22,8 +22,7 @@ export class Jwt2FAStrategy extends PassportStrategy(Strategy, "jwt-2fa") {
 			}
 		});
 		if (!user) throw new UnauthorizedException();
-		if (user.twoFA === true && payload.twoFAAuth === false)
-			throw new UnauthorizedException();
+		
 		return user;
 	}
 }

@@ -22,13 +22,8 @@ export class AuthService {
 
 	/* 2FA */
 
-	async generateTwoFASecret(user: User): Promise<TwoFADto> {
+	async generateTwoFASecretQRCode(user: User): Promise<string> {
 		const twoFASecret = authenticator.generateSecret();
-		const otpAuthUrl = authenticator.keyuri(
-			user.name,
-			"Transcendance",
-			twoFASecret
-		);
 		try {
 			await this.prisma.user.update({
 				where: {
@@ -41,13 +36,15 @@ export class AuthService {
 		} catch {
 			throw new InternalServerErrorException();
 		}
-		return {
-			twoFASecret,
-			otpAuthUrl
-		};
+		const otpAuthUrl = authenticator.keyuri(
+			user.name,
+			"Transcendance",
+			twoFASecret
+		);
+		return otpAuthUrl;
 	}
 
-	async generateQRCodeDataURL(otpAuthUrl: string): Promise<String> {
+	async generateQRCodeDataURL(otpAuthUrl: string): Promise<string> {
 		return toDataURL(otpAuthUrl);
 	}
 
@@ -152,12 +149,11 @@ export class AuthService {
 		return user;
 	}
 
-	async signToken(user: User, twoFAAuth: boolean): Promise<TokenDto> {
+	async signToken(user: User): Promise<TokenDto> {
 		const payload = {
 			sub: user.id,
 			name: user.name,
 			twoFA: user.twoFA,
-			twoFAAuth: twoFAAuth
 		};
 
 		const token = await this.jwt.signAsync(payload, {
