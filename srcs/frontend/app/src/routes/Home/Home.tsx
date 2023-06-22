@@ -102,7 +102,7 @@ function TwoFA() {
 		})
 			.then(function (response) {
 				if (!response.ok)
-					throw new Response("Error", { status: response.status });
+					throw new Error("Error status: " + response.status );
 				else return response.json();
 			})
 			.then(function (data) {
@@ -118,7 +118,7 @@ function TwoFA() {
 		<div>
 			<button onClick={getTwoFAStatus}>get 2FA status </button>
 			<div> 2fa status : {twoFAStatus} </div>
-			<button onClick={patchTwoFAStatus}>Change status 2fa</button>
+			{/* <button onClick={patchTwoFAStatus}>Change status 2fa</button> */}
 		</div>
 	);
 }
