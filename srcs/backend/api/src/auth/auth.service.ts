@@ -22,15 +22,15 @@ export class AuthService {
 
 	/* 2FA */
 
-	async generateTwoFASecretQRCode(user: User): Promise<string> {
-		const twoFASecret = authenticator.generateSecret();
+	async generate2FASecretQRCode(user: User): Promise<string> {
+		const secret2FA = authenticator.generateSecret();
 		try {
 			await this.prisma.user.update({
 				where: {
 					id: user.id
 				},
 				data: {
-					twoFASecret: twoFASecret
+					secret2FA: secret2FA
 				}
 			});
 		} catch {
@@ -39,7 +39,7 @@ export class AuthService {
 		const otpAuthUrl = authenticator.keyuri(
 			user.name,
 			"Transcendance",
-			twoFASecret
+			secret2FA
 		);
 		return otpAuthUrl;
 	}
@@ -48,22 +48,21 @@ export class AuthService {
 		return toDataURL(otpAuthUrl);
 	}
 
-		//verify TOTOPValid
 	verifyTOTPValid(user: User, TOTP: string): boolean {
 		return authenticator.verify({
 			token: TOTP,
-			secret: user.twoFASecret
+			secret: user.secret2FA
 		});
 	}
 
-	async turnOnOffTwoFA(user: User, status: boolean) {
+	async turnOnOff2FA(user: User, status: boolean) {
 		try {
 			await this.prisma.user.update({
 				where: {
 					id: user.id
 				},
 				data: {
-					twoFA: status
+					is2FAOn: status
 				}
 			});
 		} catch {
@@ -153,7 +152,7 @@ export class AuthService {
 		const payload = {
 			sub: user.id,
 			name: user.name,
-			twoFA: user.twoFA,
+			is2FAOn: user.is2FAOn,
 		};
 
 		const token = await this.jwt.signAsync(payload, {

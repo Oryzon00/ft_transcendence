@@ -22,14 +22,14 @@ export class AuthController {
 
 		const user = await this.authService.login(userData42);
 
-		if (user.twoFA) {
+		if (user.is2FAOn) {
 			return { user };
 		} else {
 			return await this.authService.signToken(user);
 		}
 	}
 
-	@Post("twoFA/verify")
+	@Post("2FA/verify")
 	async verifyTOTP(@Body() body): Promise<TokenDto> {
 		const isTOTPValid = this.authService.verifyTOTPValid(
 			body.user,
@@ -40,9 +40,10 @@ export class AuthController {
 	}
 
 	@UseGuards(JwtGuard)
-	@Post("twoFA/generate")
-	async generateTwoFA(@GetUser() user: User): Promise<{ qrCodeUrl: string }> {
-		const otpAuthUrl = await this.authService.generateTwoFASecretQRCode(
+	@Post("2FA/generate")
+	async generate2FA(@GetUser() user: User): Promise<{ qrCodeUrl: string }> {
+		console.log(`2FA/generate: ${user.name}`);
+		const otpAuthUrl = await this.authService.generate2FASecretQRCode(
 			user
 		);
 		const qrCodeUrl = await this.authService.generateQRCodeDataURL(
@@ -54,21 +55,21 @@ export class AuthController {
 	}
 
 	@UseGuards(JwtGuard)
-	@Patch("twoFA/turn-on")
-	async turnOnTwoFA(
+	@Patch("2FA/turn-on")
+	async turnOn2FA(
 		@GetUser() user: User,
 		@Body() body
 	): Promise<{ status: boolean }> {
 		const isTOTPValid = this.authService.verifyTOTPValid(user, body.TOTP);
 		if (!isTOTPValid) throw new UnauthorizedException();
-		const status = await this.authService.turnOnOffTwoFA(user, true);
+		const status = await this.authService.turnOnOff2FA(user, true);
 		return { status: status };
 	}
 
 	@UseGuards(JwtGuard)
-	@Patch("twoFA/turn-off")
-	async turnOffTwoFA(@GetUser() user: User): Promise<{ status: boolean }> {
-		const status = await this.authService.turnOnOffTwoFA(user, false);
+	@Patch("2FA/turn-off")
+	async turnOff2FA(@GetUser() user: User): Promise<{ status: boolean }> {
+		const status = await this.authService.turnOnOff2FA(user, false);
 		return { status: status };
 	}
 
