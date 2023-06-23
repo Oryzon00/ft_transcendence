@@ -31,7 +31,7 @@ export async function authLoader() {
 function Auth() {
 	return (
 		<>
-			<div>Loading</div>
+			<div>Auth loading</div>
 		</>
 	);
 }

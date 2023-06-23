@@ -1,12 +1,21 @@
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Patch, Controller, Get, UseGuards, Body } from "@nestjs/common";
+import { User } from "@prisma/client";
+import { GetUser } from "src/auth/decorator";
+import { JwtGuard } from "src/auth/guard";
+import { UserService } from "./user.service";
 
-@Controller('user')
+@UseGuards(JwtGuard)
+@Controller("user")
 export class UserController {
-
-	@UseGuards(AuthGuard("jwt"))
+	constructor(private userService: UserService) {}
 	@Get("me")
-	getMe(@Req() req){
-		return req.user;
+	getMe(@GetUser() user: User) {
+		return user;
+	}
+
+	@Patch("twoFA")
+	async upDateTwoFAStatus(@GetUser() user: User, @Body() body): Promise<void> {
+		await this.userService.turnOnOffTwoFA(user, body.twoFA);
+		return;
 	}
 }

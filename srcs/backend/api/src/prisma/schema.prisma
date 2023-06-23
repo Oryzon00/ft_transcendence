@@ -11,13 +11,15 @@ datasource db {
 }
 
 model	User {
-	id			Int			@id @default(autoincrement()) //change to string ?
-	id42		Int?		@unique //enlever le ?
+	id			Int			@id @default(autoincrement())
+	id42		Int			@unique
  
 	name		String		@unique
 	gameProfile	GameProfile?
 	image		String
 	
+	twoFA		Boolean		@default(false)
+	twoFASecret	String?
 	createdAt	DateTime	@default(now())
 	updatedAt	DateTime	@updatedAt
 	
