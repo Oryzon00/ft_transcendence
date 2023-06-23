@@ -3,9 +3,7 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 import { db_adress } from "./db_adress";
-import Pong from "./Pong.tsx";
-
-
+import Pong from "./Pong";
 
 function App() {
 	const [count, setCount] = useState(0);
@@ -54,11 +52,17 @@ function App() {
 			</p>
 			<button onClick={callBack}>Call back</button>
 			<div>First user is {users}</div>
-			<Pong canvasWidth={600} canvasHeight={600} padWidth={4} padHeight={100} ballRad={7} user1={0} user2={0} />
+			<Pong
+				canvasWidth={600}
+				canvasHeight={600}
+				padWidth={4}
+				padHeight={100}
+				ballRad={7}
+				user1={0}
+				user2={0}
+			/>
 		</>
 	);
 }
-
-
 
 export default App;

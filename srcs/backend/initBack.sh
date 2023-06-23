@@ -1,3 +1,4 @@
+npm install --save @nestjs/platform-socket.io @nestjs/websockets
 npm install
 
 #set up database a parti du shema prisma

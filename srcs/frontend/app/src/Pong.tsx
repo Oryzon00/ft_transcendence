@@ -7,8 +7,8 @@ import {
 } from "react";
 import "./App.css";
 import * as React from "react";
-import Ball from "./Ball.tsx";
-import Paddle from "./Paddle.tsx";
+import Ball  from "./Ball";
+import Paddle from "./Paddle";
 
 interface PongProps {
 	canvasWidth: number;

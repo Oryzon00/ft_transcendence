@@ -1,6 +1,6 @@
-import Point from './Point.tsx'
-import Vector from './Vector.tsx'
-import Paddle from './Paddle.tsx'
+import Point from './Point'
+import Vector from './Vector'
+import Paddle from './Paddle'
 
 export default class Ball {
     pos: Point;
