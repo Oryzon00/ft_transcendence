@@ -25,7 +25,10 @@ services:
             - type: volume
               source: api
               target: /api
-        env_file: env_files/api.env
+        env_file:
+            - env_files/api.env
+            - env_files/42.api.env
+            - env_files/api.secret.env
         networks:
             - transcendance
         ports:

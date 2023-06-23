@@ -6,9 +6,12 @@
 # *.env
 
 # Dependencies
-nodes_modules/
+node_modules/
 
 # Production
 dist/
 migrations/
-node_modules
+
+# Secret 42 API
+42.api.env
+api.secret.env

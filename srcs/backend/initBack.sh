@@ -1,11 +1,10 @@
 npm install --save @nestjs/platform-socket.io @nestjs/websockets
+rm -rf dist/ nodes_modules/
 npm install
 
-#set up database a parti du shema prisma
+# npx prisma db push --accept-data-loss
 npx prisma migrate dev --name init
+npx prisma generate
 
 #Start nest
-npm run start:dev 
-
-# pour avoir prisma studio en localhost:5555
-#	docker exec -it api bash --> npx prisma studio 
+npm run start:dev & npx prisma studio
