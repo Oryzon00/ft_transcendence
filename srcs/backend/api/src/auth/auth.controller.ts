@@ -11,7 +11,7 @@ export class AuthController {
 	constructor(private authService: AuthService) {}
 
 	@Post()
-	async auth(@Body() body): Promise<TokenDto | { user: User }> {
+	async auth(@Body() body): Promise<TokenDto | { twoFA: boolean }> {
 		if (body.error || !body.code) throw new UnauthorizedException();
 
 		const token42 = await this.authService.getToken42(body.code);
@@ -23,7 +23,7 @@ export class AuthController {
 		const user = await this.authService.login(userData42);
 
 		if (user.is2FAOn) {
-			return { user };
+			return { twoFA: true };
 		} else {
 			return await this.authService.signToken(user);
 		}
@@ -42,10 +42,7 @@ export class AuthController {
 	@UseGuards(JwtGuard)
 	@Post("2FA/generate")
 	async generate2FA(@GetUser() user: User): Promise<{ qrCodeUrl: string }> {
-		console.log(`2FA/generate: ${user.name}`);
-		const otpAuthUrl = await this.authService.generate2FASecretQRCode(
-			user
-		);
+		const otpAuthUrl = await this.authService.generate2FASecretQRCode(user);
 		const qrCodeUrl = await this.authService.generateQRCodeDataURL(
 			otpAuthUrl
 		);
@@ -53,7 +50,6 @@ export class AuthController {
 			qrCodeUrl
 		};
 	}
-
 	@UseGuards(JwtGuard)
 	@Patch("2FA/turn-on")
 	async turnOn2FA(
@@ -72,6 +68,4 @@ export class AuthController {
 		const status = await this.authService.turnOnOff2FA(user, false);
 		return { status: status };
 	}
-
-	
 }

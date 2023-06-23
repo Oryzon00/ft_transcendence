@@ -1,26 +1,24 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom/client';
+import * as React from "react";
+import * as ReactDOM from "react-dom/client";
 //import App from './App.tsx'
-import './index.css'
+import "./index.css";
 
-import {
-    createBrowserRouter,
-    RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import  Root from "./routes/root/root.tsx"
-import  Homepage from "./routes/Home/Home"
-import  Auth from "./routes/Auth/Auth"
-import  RootError from "./routes/root/rootError.tsx";
+import Root from "./routes/root/root.tsx";
+import Homepage from "./routes/Home/Home";
+import Auth from "./routes/Auth/Auth";
+import RootError from "./routes/root/rootError.tsx";
 import AuthError from "./routes/Auth/AuthError.tsx";
-import {authLoader} from "./routes/Auth/Auth";
+import { authLoader } from "./routes/Auth/Auth";
+import TwoFA from "./routes/TwoFA/TwoFA.tsx";
 
 const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <Root />,
-        errorElement: <RootError />,
-        /*loader: rootLoader,
+	{
+		path: "/",
+		element: <Root />,
+		errorElement: <RootError />
+		/*loader: rootLoader,
         action: rootAction,
         children: [
             {
@@ -28,21 +26,25 @@ const router = createBrowserRouter([
                 element: <Contact />,
             },
         ],*/
-    },
-    {
-        path: "/home",
-        element: <Homepage />,
-    },
-    {
-        path: "/auth",
-        element: <Auth />,
-        loader: authLoader,
-        errorElement: <AuthError />
-    },
+	},
+	{
+		path: "/home",
+		element: <Homepage />
+	},
+	{
+		path: "/auth",
+		element: <Auth />,
+		loader: authLoader,
+		errorElement: <AuthError />
+	},
+	{
+		path: "/2FA",
+		element: <TwoFA />
+	}
 ]);
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-      <RouterProvider router={router} />
-  </React.StrictMode>,
-)
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+	<React.StrictMode>
+		<RouterProvider router={router} />
+	</React.StrictMode>
+);
