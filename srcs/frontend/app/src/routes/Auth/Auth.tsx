@@ -1,5 +1,4 @@
-import { authProtection } from "../cookieProtection.ts";
-import { api_adress } from "../../api_adress.ts";
+import apiAddress from "../../utils/apiAddress";
 
 function paramsToJSON(iterator: IterableIterator<[string, string]>) {
 	const result: Record<string, string> = {};
@@ -11,7 +10,7 @@ function paramsToJSON(iterator: IterableIterator<[string, string]>) {
 
 export async function authLoader() {
 	const urlParams = new URLSearchParams(window.location.search);
-	const url = api_adress + "/auth";
+	const url = apiAddress + "/auth";
 	const res = await fetch(url, {
 		method: "POST",
 		headers: {
@@ -23,7 +22,7 @@ export async function authLoader() {
 	else {
 		await res.json().then(function (token) {
 			document.cookie = `JWT=${token.access_token};path=/`;
-			self.location.href = "http://localhost:8000/home"
+			self.location.href = "http://localhost:8000/home";
 		});
 	}
 	return null;

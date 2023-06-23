@@ -1,12 +1,12 @@
 import getJwtTokenFromCookie from "../../utils/getJWT";
-import { api_adress } from "../../api_adress";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import apiAddress from "../../utils/apiAddress";
 
 function ButtonRegister() {
 	const [qrCode, setQrCode] = useState("");
 	function register2FA() {
-		const url = api_adress + "/auth/2FA/generate";
+		const url = apiAddress + "/auth/2FA/generate";
 		fetch(url, {
 			method: "POST",
 			headers: {
@@ -70,7 +70,7 @@ function ButtonTurnOn() {
 	}
 
 	function turnOn2FA() {
-		const url = api_adress + api_adress;
+		const url = apiAddress + apiAddress;
 		fetch(url, {
 			method: "PATCH",
 			headers: {
@@ -116,7 +116,7 @@ function ButtonTurnOn() {
 function Status2FA() {
 	const [twoFAStatus, setTwoFAStatus] = useState("No info on 2fa");
 	function getTwoFAStatus() {
-		const url = api_adress + "/user/me";
+		const url = apiAddress + "/user/me";
 		fetch(url, {
 			method: "GET",
 			headers: {
