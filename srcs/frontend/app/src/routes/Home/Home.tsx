@@ -48,7 +48,7 @@ function Button2FA() {
 	}
 	return (
 		<div>
-			<button onClick={goTo2FA}> 2FA parameters </button>
+			<button onClick={goTo2FA}> Go to 2FA </button>
 		</div>
 	);
 }
