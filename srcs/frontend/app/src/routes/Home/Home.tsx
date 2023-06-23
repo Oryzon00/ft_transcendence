@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./Home.styles.css";
 import { api_adress } from "../../api_adress.ts";
 import { cookieProtection } from "../cookieProtection.ts";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
 function getJwtTokenFromCookie(): string | null {
 	const cookies = document.cookie.split(";");
@@ -55,6 +55,7 @@ function User() {
 function Home() {
 	cookieProtection();
 
+	const navigate = useNavigate();
 	const [count, setCount] = useState(0);
 
 	function deleteCookie() {
@@ -64,9 +65,9 @@ function Home() {
 
 	function profileButton() {
 		if (self.location.href !== "http://localhost:8000/home/profile")
-			self.location.href = "/home/profile";
+			navigate("/home/profile")
 		else
-			self.location.href = "/home";
+			navigate("/home")
 	}
 	
 	return (

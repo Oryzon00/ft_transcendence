@@ -41,7 +41,6 @@ export function ProfileMenuLoader () {
 
 function ProfileMenu (/*{toggle}: ProfileButtonProps*/) {
 	const userData :any = useLoaderData();
-	console.log(userData);
 	if (userData) {	
 		return (
 			<>
