@@ -10,26 +10,60 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model	User {
-	id			Int			@id @default(autoincrement())
-	id42		Int			@unique
- 
-	name		String		@unique
-	gameProfile	GameProfile?
-	twoFA		Boolean		@default(false)
-	twoFASecret	String?
-	createdAt	DateTime	@default(now())
-	updatedAt	DateTime	@updatedAt
-	
-	@@map("users")
+model User {
+  id   Int @id @default(autoincrement())
+  id42 Int @unique
+
+  name        String       @unique
+  gameProfile GameProfile?
+  twoFA       Boolean      @default(false)
+  twoFASecret String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  Channel     Channel[]
+  Message     Message?
+
+  @@map("users")
 }
 
-model	GameProfile {
-	userId		Int		@unique
-	user		User	@relation(fields: [userId], references: [id])
+model GameProfile {
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id])
 
-	wins		Int
-	loss		Int	
+  wins Int
+  loss Int
 
-	@@map("gameProfile")
+  @@map("gameProfile")
+}
+
+model Channel {
+  id Int @id @unique @default(autoincrement())
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  users   User @relation(fields: [usersId], references: [id])
+  usersId Int
+
+  messagesId Int[]    @unique
+  Message    Message?
+
+  @@map("channels")
+}
+
+model Message {
+  id Int @unique @default(autoincrement())
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  channel   Channel @relation(fields: [channelId], references: [id])
+  channelId Int     @unique
+
+  authors  User @relation(fields: [authorId], references: [id])
+  authorId Int  @unique
+
+  content String @db.VarChar(2000)
+
+  @@map("messages")
 }

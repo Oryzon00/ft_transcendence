@@ -14,6 +14,7 @@ import  Auth from "./routes/Auth/Auth"
 import  RootError from "./routes/root/rootError.tsx";
 import AuthError from "./routes/Auth/AuthError.tsx";
 import {authLoader} from "./routes/Auth/Auth";
+import { Chat } from "./routes/chat/chat";
 
 const router = createBrowserRouter([
     {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
         element: <Auth />,
         loader: authLoader,
         errorElement: <AuthError />
+    },
+    {
+        path: "/chat",
+        element: <Chat />,
     },
 ]);
 

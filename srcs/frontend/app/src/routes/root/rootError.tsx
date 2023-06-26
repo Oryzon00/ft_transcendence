@@ -5,7 +5,7 @@ function RootError() {
 
     return (
         <>
-            <div>Error :'(</div>
+            <div>Error :</div>
             <p>
                 <i>{error.statusText || error.message}</i>
             </p>
