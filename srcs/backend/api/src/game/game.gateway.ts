@@ -7,7 +7,7 @@ import { SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
 import { UsePipes, ValidationPipe } from "@nestjs/common";
 import { LobbyManager } from "./Lobby/LobbyManager";
 import { AuthenticatedSocket } from "./types/AuthenticatedSocket ";
-import { LobbyCreateDto } from "./Lobby/lobby.types";
+import { LobbyCreateDto, LobbyJoinDto } from "./Lobby/lobby.types";
 import { ServerResponseDTO } from "./types/ServerResponseDTO";
 
 @WebSocketGateway()
@@ -26,7 +26,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayInit, OnGatewa
 	}
 
 	async handleDisconnect(client: AuthenticatedSocket): Promise<void> {
-		
+		this.lobbyManager.endSocket(client);
 	}
 
 	@SubscribeMessage(ClientEvents.Ping)
@@ -39,14 +39,34 @@ export class GameGateway implements OnGatewayConnection, OnGatewayInit, OnGatewa
 		};
 	}
 
-	@SubscribeMessage(ClientEvents.LobbyJoin)
+	@SubscribeMessage(ClientEvents.LobbyCreate)
 	onLobbyCreate(client: AuthenticatedSocket, data: LobbyCreateDto): WsResponse<ServerResponseDTO[ServerEvents.GameMessage]> {
 		const lobby = this.lobbyManager.createLobby(data.mode);
 		lobby.addClient(client);
 		
 		return {
 			event: ServerEvents.GameMessage,
-			data: {message: 'Lobby Joined'}
+			data: {
+				message: 'Lobby Created'
+			}
 		};
+	}
+
+	@SubscribeMessage(ClientEvents.LobbyJoin)
+	onLobbyJoin(client: AuthenticatedSocket, data: LobbyJoinDto): WsResponse<ServerResponseDTO[ServerEvents.GameMessage]> {
+		this.lobbyManager.joinLobby(client, data.lobbyId);
+
+		return {
+			event: ServerEvents.GameMessage,
+			data: {
+				message: 'Lobby Joined'
+			}
+		};
+	}
+
+	@SubscribeMessage(ClientEvents.LobbyLeave)
+	onLobbyLeave(client: AuthenticatedSocket): void
+	{
+		client.data.lobby?.removeClient(client);
 	}
 }

@@ -1,6 +1,15 @@
+import { IsString } from "class-validator";
+
 export class LobbyCreateDto
 {
-  mode: LobbyMode
+	@IsString()
+	mode: LobbyMode
+}
+
+export class LobbyJoinDto
+{
+	@IsString()
+	lobbyId: string
 }
 
 export type LobbyMode = 'PvE' | 'PvP';
