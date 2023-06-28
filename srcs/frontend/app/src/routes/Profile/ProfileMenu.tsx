@@ -1,18 +1,6 @@
-//import ProfileButtonProps from "./TProfileButton";
 import './ProfileMenu.styles.css'
 import { useLoaderData } from 'react-router';
-
-function getJwtTokenFromCookie(): string | null {
-	const cookies = document.cookie.split(";");
-	for (let i = 0; i < cookies.length; i++) {
-		const cookie = cookies[i].trim();
-		if (cookie.startsWith("JWT" + "=")) {
-			const token = cookie.substring("JWT".length + 1);
-			return decodeURIComponent(token);
-		}
-	}
-	return null;
-}
+import { getJwtTokenFromCookie } from '../cookieProtection';
 
 export function ProfileMenuLoader () {
 	const url = "http://localhost:3000/user/me";
@@ -40,6 +28,7 @@ export function ProfileMenuLoader () {
 }
 
 function ProfileMenu (/*{toggle}: ProfileButtonProps*/) {
+
 	const userData :any = useLoaderData();
 	if (userData) {	
 		return (

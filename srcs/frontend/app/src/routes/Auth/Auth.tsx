@@ -1,4 +1,6 @@
 import { api_adress } from "../../api_adress.ts";
+import { getUserPathTokenFromCookie } from "../cookieProtection";
+
 
 function paramsToJSON(iterator: IterableIterator<[string, string]>) {
 	const result: Record<string, string> = {};
@@ -21,8 +23,12 @@ export async function authLoader() {
 	if (!res.ok) throw new Response("Auth Error", { status: 401 });
 	else {
 		await res.json().then(function (token) {
-			document.cookie = `JWT=${token.access_token};path=/`;
-			self.location.href = "http://localhost:8000/home"
+			document.cookie = `JWT=${token.access_token};Path=/`;
+			let tmp :string | null = getUserPathTokenFromCookie();
+			if (tmp)
+				self.location.href = tmp;
+			else
+				self.location.href = "http://localhost:8000/home"
 		});
 	}
 	return null;

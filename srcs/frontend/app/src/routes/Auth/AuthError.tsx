@@ -5,7 +5,7 @@ function AuthError () {
 
     return(
         <>
-            <div>Auth Error :'(</div>
+            <div>Auth Error</div>
             <p>
                 <i>{error.statusText || error.message}</i>
             </p>

@@ -3,18 +3,7 @@ import "./Home.styles.css";
 import { api_adress } from "../../api_adress.ts";
 import { cookieProtection } from "../cookieProtection.ts";
 import { Outlet, useNavigate } from "react-router-dom";
-
-function getJwtTokenFromCookie(): string | null {
-	const cookies = document.cookie.split(";");
-	for (let i = 0; i < cookies.length; i++) {
-		const cookie = cookies[i].trim();
-		if (cookie.startsWith("JWT" + "=")) {
-			const token = cookie.substring("JWT".length + 1);
-			return decodeURIComponent(token);
-		}
-	}
-	return null;
-}
+import { getJwtTokenFromCookie } from '../cookieProtection';
 
 function User() {
 	const [userInfo, setUserInfo] = useState("No user info");
@@ -60,6 +49,7 @@ function Home() {
 
 	function deleteCookie() {
 		document.cookie = "JWT=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+		document.cookie = "userPath=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 		self.location.href = "http://localhost:8000";
 	}
 
@@ -71,7 +61,7 @@ function Home() {
 	}
 	
 	return (
-		<>
+		<div className="home-root">
 			<div className="profile-button">
 				<button onClick={() => profileButton()}>
 					Profile
@@ -92,7 +82,7 @@ function Home() {
 				Footer
 			</div>
 
-		</>
+		</div>
 	);
 }
 
