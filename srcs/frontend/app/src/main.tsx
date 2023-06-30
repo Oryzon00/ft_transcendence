@@ -14,6 +14,7 @@ import {authLoader} from "./routes/Auth/Auth";
 import { ProfileMenuLoader } from './routes/Profile/ProfileMenu.tsx';
 import ProfileMenu from './routes/Profile/ProfileMenu.tsx';
 import TwoFA from "./routes/TwoFA/TwoFA.tsx";
+import LoginPage from "./views/LoginPage/LoginPage.tsx";
 
 const router = createBrowserRouter([
 	{
@@ -49,7 +50,11 @@ const router = createBrowserRouter([
 	{
 		path: "/2FA",
 		element: <TwoFA />
-	}
+	},
+    {
+        path: "/test/login",
+        element: <LoginPage />
+    }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
