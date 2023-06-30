@@ -12,6 +12,7 @@ node_modules/
 dist/
 migrations/
 
+
 # Secret 42 API
 42.api.env
 api.secret.env

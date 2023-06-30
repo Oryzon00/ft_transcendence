@@ -13,9 +13,5 @@ export class UserController {
 		return user;
 	}
 
-	@Patch("twoFA")
-	async upDateTwoFAStatus(@GetUser() user: User, @Body() body): Promise<void> {
-		await this.userService.turnOnOffTwoFA(user, body.twoFA);
-		return;
-	}
+	
 }

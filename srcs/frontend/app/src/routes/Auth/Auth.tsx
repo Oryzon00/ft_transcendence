@@ -1,6 +1,5 @@
-import { api_adress } from "../../api_adress.ts";
 import { getUserPathTokenFromCookie } from "../cookieProtection";
-
+import apiAddress from "../../utils/apiAddress";
 
 function paramsToJSON(iterator: IterableIterator<[string, string]>) {
 	const result: Record<string, string> = {};
@@ -12,7 +11,7 @@ function paramsToJSON(iterator: IterableIterator<[string, string]>) {
 
 export async function authLoader() {
 	const urlParams = new URLSearchParams(window.location.search);
-	const url = api_adress + "/auth";
+	const url = apiAddress + "/auth";
 	const res = await fetch(url, {
 		method: "POST",
 		headers: {

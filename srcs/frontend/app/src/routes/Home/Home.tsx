@@ -1,14 +1,14 @@
 import { useState } from "react";
 import "./Home.styles.css";
-import { api_adress } from "../../api_adress.ts";
 import { cookieProtection } from "../cookieProtection.ts";
 import { Outlet, useNavigate } from "react-router-dom";
-import { getJwtTokenFromCookie } from '../cookieProtection';
+import getJwtTokenFromCookie from "../../utils/getJWT.ts";
+import apiAddress from "../../utils/apiAddress.ts";
 
 function User() {
 	const [userInfo, setUserInfo] = useState("No user info");
 	function getUserInfo() {
-		const url = api_adress + "/user/me";
+		const url = apiAddress + "/user/me";
 		fetch(url, {
 			method: "GET",
 			headers: {
@@ -17,7 +17,9 @@ function User() {
 		})
 			.then(function (response) {
 				if (!response.ok) {
-					throw new Error("Request failed with status " + response.status);
+					throw new Error(
+						"Request failed with status " + response.status
+					);
 				}
 				return response.json();
 			})
@@ -39,7 +41,17 @@ function User() {
 	);
 }
 
-
+function Button2FA() {
+	const navigate = useNavigate();
+	function goTo2FA() {
+		navigate("/2FA");
+	}
+	return (
+		<div>
+			<button onClick={goTo2FA}> Go to 2FA </button>
+		</div>
+	);
+}
 
 function Home() {
 	cookieProtection();
@@ -76,6 +88,7 @@ function Home() {
 				</div>
 				<div>Welcome home !</div>
 				<User></User>
+				<Button2FA></Button2FA>
 				<button onClick={() => deleteCookie()}>Delete Cookie</button>
 			</div>
 			<div />
