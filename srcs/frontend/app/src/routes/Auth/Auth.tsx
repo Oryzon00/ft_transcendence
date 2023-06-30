@@ -26,7 +26,10 @@ export async function authLoader() {
 			document.cookie = `JWT=${token.access_token};Path=/`;
 			let tmp :string | null = getUserPathTokenFromCookie();
 			if (tmp)
+			{
 				self.location.href = tmp;
+				document.cookie = "userPath=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+			}
 			else
 				self.location.href = "http://localhost:8000/home"
 		});

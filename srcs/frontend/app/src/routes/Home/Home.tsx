@@ -78,10 +78,7 @@ function Home() {
 				<User></User>
 				<button onClick={() => deleteCookie()}>Delete Cookie</button>
 			</div>
-			<div className="my-footer">
-				Footer
-			</div>
-
+			<div />
 		</div>
 	);
 }
