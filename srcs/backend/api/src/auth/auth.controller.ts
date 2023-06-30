@@ -59,6 +59,7 @@ export class AuthController {
 		const isTOTPValid = this.authService.verifyTOTPValid(user, body.TOTP);
 		if (!isTOTPValid) throw new UnauthorizedException();
 		const status = await this.authService.turnOnOff2FA(user, true);
+		console.log(`2fa turned on`);
 		return { status: status };
 	}
 
@@ -66,6 +67,7 @@ export class AuthController {
 	@Patch("2FA/turn-off")
 	async turnOff2FA(@GetUser() user: User): Promise<{ status: boolean }> {
 		const status = await this.authService.turnOnOff2FA(user, false);
+		console.log(`2fa turned off`);
 		return { status: status };
 	}
 }

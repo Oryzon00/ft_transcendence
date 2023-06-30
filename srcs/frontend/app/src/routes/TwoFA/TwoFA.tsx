@@ -2,6 +2,7 @@ import getJwtTokenFromCookie from "../../utils/getJWT";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import apiAddress from "../../utils/apiAddress";
+import OtpInput from "react-otp-input";
 
 function ButtonRegister() {
 	const [qrCode, setQrCode] = useState("");
@@ -112,90 +113,94 @@ function ButtonTurnOff() {
 // 	);
 //   };
 
-type TOTPInputProps = {
-	value: string;
-	valueLength: number;
-	onChange: (value: string) => void;
-};
+// type OTPInputProps = {
+// 	value: string;
+// 	valueLength: number;
+// 	onChange: (value: string) => void;
+// };
 
-function TOTPInput({ value, valueLength, onChange }: TOTPInputProps) {
-	function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-		onChange(event.target.value);
-	}
+// function OTPInput({ value, valueLength, onChange }: OTPInputProps) {
+// 	function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+// 		onChange(event.target.value);
+// 	}
 
-	return (
-		<div>
-			{[1, 2, 3, 4, 5, 6].map((digit, idx) => (
-				<input
-					key={idx}
-					type="text"
-					inputMode="numeric"
-					autoComplete="one-time-code"
-					pattern="\d{1}"
-					maxLength={valueLength}
-					className="otp-input"
-					value={digit}
-				/>
-			))}
-		</div>
-	);
+// 	return (
+// 		<div>
+// 			{[1, 2, 3, 4, 5, 6].map((digit, idx) => (
+// 				<input
+// 					key={idx}
+// 					type="text"
+// 					inputMode="numeric"
+// 					autoComplete="one-time-code"
+// 					pattern="\d{1}"
+// 					maxLength={valueLength}
+// 					className="otp-input"
+// 					value={digit}
+// 				/>
+// 			))}
+// 		</div>
+// 	);
+// }
+
+function turnOn2FA(otp: string) {
+	console.log("in fuction 1")
+	const url = apiAddress + "/auth/2FA/turn-on";
+	fetch(url, {
+		method: "PATCH",
+		headers: {
+			Authorization: "Bearer " + getJwtTokenFromCookie(),
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify({
+			TOTP: otp
+		})
+	})
+		.then(function (response) {
+			if (!response.ok)
+				throw new Error(
+					"Request failed with status " + response.status
+				);
+			return response.json();
+		})
+		.then(function (data) {
+			console.log(data);
+		})
+		.catch(function (error) {
+			console.log(error);
+		});
 }
 
 function ButtonTurnOn() {
 	const [showInput, setShowInput] = useState(false);
-	const [TOTP, setTOTP] = useState("");
+	const [OTP, setOTP] = useState("");
+	let inputOTP;
 
-	// function turnOn2FA() {
-	// 	const url = apiAddress + apiAddress;
-	// 	fetch(url, {
-	// 		method: "PATCH",
-	// 		headers: {
-	// 			Authorization: "Bearer " + getJwtTokenFromCookie(),
-	// 			"Content-Type": "application/json"
-	// 		},
-	// 		body: JSON.stringify({
-	// 			TOTP: TOTP
-	// 		})
-	// 	})
-	// 		.then(function (response) {
-	// 			if (!response.ok)
-	// 				throw new Error(
-	// 					"Request failed with status " + response.status
-	// 				);
-	// 			return response.json();
-	// 		})
-	// 		.then(function (data) {
-	// 			//handle data
-	// 		})
-	// 		.catch(function (error) {
-	// 			console.log(error);
-	// 		});
-	// }
-
-	function handleTOTPChange(value: string) {
-		setTOTP(value);
-	}
-
-	function ShowInputTOTP() {
-		if (showInput) {
-			return (
-				<TOTPInput
-					value={TOTP}
-					valueLength={6}
-					onChange={handleTOTPChange}
-				/>
-			);
-		} else return null;
-	}
 
 	function handleClick() {
 		setShowInput(!showInput);
 	}
 
+	if (showInput)
+		inputOTP = (
+			<OtpInput
+				value={OTP}
+				onChange={setOTP}
+				numInputs={6}
+				renderSeparator={<span></span>}
+				renderInput={(props) => <input {...props} />}
+			/>
+		);
+	else inputOTP = null;
+	if (OTP.length == 6) {
+		turnOn2FA(OTP);
+		setOTP("");
+		// appel deux fois, pourquoi?
+	}
+
 	return (
 		<div>
 			<button onClick={handleClick}>Turn on 2FA</button>
-			<ShowInputTOTP />
+			{inputOTP}
 		</div>
 	);
 }
