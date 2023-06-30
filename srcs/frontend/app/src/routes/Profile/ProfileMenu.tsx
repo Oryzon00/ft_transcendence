@@ -1,6 +1,6 @@
+import getJwtTokenFromCookie from '../../utils/getJWT';
 import './ProfileMenu.styles.css'
 import { useLoaderData } from 'react-router';
-import { getJwtTokenFromCookie } from '../cookieProtection';
 
 export function ProfileMenuLoader () {
 	const url = "http://localhost:3000/user/me";
