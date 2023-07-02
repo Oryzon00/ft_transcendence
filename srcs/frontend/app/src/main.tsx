@@ -15,6 +15,7 @@ import { ProfileMenuLoader } from './routes/Profile/ProfileMenu.tsx';
 import ProfileMenu from './routes/Profile/ProfileMenu.tsx';
 import TwoFA from "./routes/TwoFA/TwoFA.tsx";
 import LoginPage from "./views/LoginPage/LoginPage.tsx";
+import TwoFAPage from "./views/2FAPage/2FAPage.tsx";
 
 const router = createBrowserRouter([
 	{
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
     {
         path: "/test/login",
         element: <LoginPage />
+    },
+    {
+        path: "/test/TwoFA",
+        element: <TwoFAPage />
     }
 ]);
 

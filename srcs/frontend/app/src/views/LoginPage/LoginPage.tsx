@@ -1,4 +1,4 @@
-import LoginLayout from "../../layouts/LoginLayout";
+import LoginLayout from "../../layouts/LoginLayout/LoginLayout.tsx";
 
 function LoginPage() {
 	return <LoginLayout />;
