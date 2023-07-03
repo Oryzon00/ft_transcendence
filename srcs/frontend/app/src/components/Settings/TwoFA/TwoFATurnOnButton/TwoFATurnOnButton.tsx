@@ -13,7 +13,7 @@ function TwoFATurnOnButton() {
 	}
 
 	function turnOn2FA(otp: string) {
-		console.log("in fuction 1");
+		console.log("in function 1");
 		const url = apiAddress + "/auth/2FA/turn-on";
 		fetch(url, {
 			method: "PATCH",

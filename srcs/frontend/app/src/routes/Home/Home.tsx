@@ -43,12 +43,12 @@ function User() {
 
 function Button2FA() {
 	const navigate = useNavigate();
-	function goTo2FA() {
-		navigate("/2FA");
+	function goToSettings() {
+		navigate("/settings");
 	}
 	return (
 		<div>
-			<button onClick={goTo2FA}> Go to 2FA </button>
+			<button onClick={goToSettings}> Go to settings </button>
 		</div>
 	);
 }
