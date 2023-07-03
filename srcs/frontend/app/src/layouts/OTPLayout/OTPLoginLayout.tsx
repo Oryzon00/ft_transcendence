@@ -1,6 +1,6 @@
-import './2FALayout.styles.css'
+import './OTPLayout.styles.css'
 
-function TwoFALayout () {
+function OTPLoginLayout () {
     return (
         <div className='main-page'>
             <div className='frame-1'>
@@ -14,4 +14,4 @@ function TwoFALayout () {
     )
 }
 
-export default TwoFALayout;
+export default OTPLoginLayout;
