@@ -1,5 +1,5 @@
-import apiAddress from "../../../utils/apiAddress";
-import getJwtTokenFromCookie from "../../../utils/getJWT";
+import apiAddress from "../../../../utils/apiAddress";
+import getJwtTokenFromCookie from "../../../../utils/getJWT";
 
 function TwoFATurnOffButton() {
 	function turnOff2FA() {
@@ -34,4 +34,4 @@ function TwoFATurnOffButton() {
 	);
 }
 
-export default TwoFATurnOffButton
+export default TwoFATurnOffButton;

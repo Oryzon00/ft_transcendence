@@ -1,6 +1,6 @@
 import { useState } from "react";
-import apiAddress from "../../../utils/apiAddress";
-import getJwtTokenFromCookie from "../../../utils/getJWT";
+import apiAddress from "../../../../utils/apiAddress";
+import getJwtTokenFromCookie from "../../../../utils/getJWT";
 
 function TwoFAStatusButton() {
 	const [twoFAStatus, setTwoFAStatus] = useState("No info on 2fa");

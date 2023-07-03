@@ -1,7 +1,6 @@
 import { useState } from "react";
-import getJwtTokenFromCookie from "../../../utils/getJWT";
-import apiAddress from "../../../utils/apiAddress";
-
+import getJwtTokenFromCookie from "../../../../utils/getJWT";
+import apiAddress from "../../../../utils/apiAddress";
 
 function TwoFARegisterButton() {
 	const [qrCode, setQrCode] = useState("");

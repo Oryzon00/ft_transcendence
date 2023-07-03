@@ -1,6 +1,6 @@
 import { useState } from "react";
-import apiAddress from "../../../utils/apiAddress";
-import getJwtTokenFromCookie from "../../../utils/getJWT";
+import apiAddress from "../../../../utils/apiAddress";
+import getJwtTokenFromCookie from "../../../../utils/getJWT";
 import OtpInput from "react-otp-input";
 
 function TwoFATurnOnButton() {
@@ -8,13 +8,12 @@ function TwoFATurnOnButton() {
 	const [OTP, setOTP] = useState("");
 	let inputOTP;
 
-
 	function handleClick() {
 		setShowInput(!showInput);
 	}
 
 	function turnOn2FA(otp: string) {
-		console.log("in fuction 1")
+		console.log("in fuction 1");
 		const url = apiAddress + "/auth/2FA/turn-on";
 		fetch(url, {
 			method: "PATCH",
