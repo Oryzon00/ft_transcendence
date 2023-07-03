@@ -169,7 +169,11 @@ function TwoFAStatusButton() {
 				return response.json();
 			})
 			.then(function (data) {
-				if (data.twoFA === true) setTwoFAStatus("On");
+				console.log({
+					data
+				})
+				console.log(data.is2FAOn)
+				if (data.is2FAOn === true) setTwoFAStatus("On");
 				else setTwoFAStatus("Off");
 			})
 			.catch(function (error) {
