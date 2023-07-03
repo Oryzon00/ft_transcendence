@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import apiAddress from "../../utils/apiAddress";
 import OtpInput from "react-otp-input";
 
-function ButtonRegister() {
+function TwoFARegisterButton() {
 	const [qrCode, setQrCode] = useState("");
 	function register2FA() {
 		const url = apiAddress + "/auth/2FA/generate";
@@ -40,7 +40,7 @@ function ButtonRegister() {
 	);
 }
 
-function ButtonHome() {
+function NaviguateHomeButton() {
 	const navigate = useNavigate();
 	function goToHome() {
 		navigate("/home");
@@ -52,7 +52,7 @@ function ButtonHome() {
 	);
 }
 
-function ButtonTurnOff() {
+function TwoFATurnOffButton() {
 	function turnOff2FA() {
 		const url = apiAddress + "/auth/2FA/turn-off";
 		fetch(url, {
@@ -85,92 +85,9 @@ function ButtonTurnOff() {
 	);
 }
 
-// type OtpInputProps = {
-// 	value: string;
-// 	onChange: (value: string) => void;
-//   };
 
-//   const OtpInput: React.FC<OtpInputProps> = ({ value, onChange }) => {
-// 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-// 	  onChange(e.target.value);
-// 	};
 
-// 	return (
-// 	  <div>
-// 		{[1, 2, 3, 4, 5, 6].map((digit, idx) => (
-// 		  <input
-// 			key={idx}
-// 			type="text"
-// 			inputMode="numeric"
-// 			autoComplete="one-time-code"
-// 			pattern="\d{1}"
-// 			maxLength={1}
-// 			value={value[idx] || ''}
-// 			onChange={handleInputChange}
-// 		  />
-// 		))}
-// 	  </div>
-// 	);
-//   };
-
-// type OTPInputProps = {
-// 	value: string;
-// 	valueLength: number;
-// 	onChange: (value: string) => void;
-// };
-
-// function OTPInput({ value, valueLength, onChange }: OTPInputProps) {
-// 	function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-// 		onChange(event.target.value);
-// 	}
-
-// 	return (
-// 		<div>
-// 			{[1, 2, 3, 4, 5, 6].map((digit, idx) => (
-// 				<input
-// 					key={idx}
-// 					type="text"
-// 					inputMode="numeric"
-// 					autoComplete="one-time-code"
-// 					pattern="\d{1}"
-// 					maxLength={valueLength}
-// 					className="otp-input"
-// 					value={digit}
-// 				/>
-// 			))}
-// 		</div>
-// 	);
-// }
-
-function turnOn2FA(otp: string) {
-	console.log("in fuction 1")
-	const url = apiAddress + "/auth/2FA/turn-on";
-	fetch(url, {
-		method: "PATCH",
-		headers: {
-			Authorization: "Bearer " + getJwtTokenFromCookie(),
-			"Content-Type": "application/json"
-		},
-		body: JSON.stringify({
-			TOTP: otp
-		})
-	})
-		.then(function (response) {
-			if (!response.ok)
-				throw new Error(
-					"Request failed with status " + response.status
-				);
-			return response.json();
-		})
-		.then(function (data) {
-			console.log(data);
-		})
-		.catch(function (error) {
-			console.log(error);
-		});
-}
-
-function ButtonTurnOn() {
+function TwoFATurnOnButton() {
 	const [showInput, setShowInput] = useState(false);
 	const [OTP, setOTP] = useState("");
 	let inputOTP;
@@ -178,6 +95,34 @@ function ButtonTurnOn() {
 
 	function handleClick() {
 		setShowInput(!showInput);
+	}
+
+	function turnOn2FA(otp: string) {
+		console.log("in fuction 1")
+		const url = apiAddress + "/auth/2FA/turn-on";
+		fetch(url, {
+			method: "PATCH",
+			headers: {
+				Authorization: "Bearer " + getJwtTokenFromCookie(),
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				TOTP: otp
+			})
+		})
+			.then(function (response) {
+				if (!response.ok)
+					throw new Error(
+						"Request failed with status " + response.status
+					);
+				return response.json();
+			})
+			.then(function (data) {
+				console.log(data);
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
 	}
 
 	if (showInput)
@@ -205,7 +150,7 @@ function ButtonTurnOn() {
 	);
 }
 
-function Status2FA() {
+function TwoFAStatusButton() {
 	const [twoFAStatus, setTwoFAStatus] = useState("No info on 2fa");
 	function getTwoFAStatus() {
 		const url = apiAddress + "/user/me";
@@ -245,12 +190,12 @@ function Status2FA() {
 function TwoFA() {
 	return (
 		<>
-			<ButtonHome />
+			<NaviguateHomeButton />
 			<span> Welcome to 2FA settings </span>
-			<Status2FA />
-			<ButtonRegister />
-			<ButtonTurnOn />
-			<ButtonTurnOff />
+			<TwoFAStatusButton />
+			<TwoFARegisterButton />
+			<TwoFATurnOnButton />
+			<TwoFATurnOffButton />
 		</>
 	);
 }

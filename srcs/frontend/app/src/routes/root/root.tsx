@@ -1,5 +1,5 @@
+import getJwtTokenFromCookie from "../../utils/getJWT.ts";
 import {api42_adress} from "./api42_adress.ts";
-import { getJwtTokenFromCookie } from '../cookieProtection';
 import "./root.styles.css"
 
 
