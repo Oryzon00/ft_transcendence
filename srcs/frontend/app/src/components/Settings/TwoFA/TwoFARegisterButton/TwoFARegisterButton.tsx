@@ -9,7 +9,7 @@ function TwoFARegisterButton() {
 		fetch(url, {
 			method: "POST",
 			headers: {
-				Authorization: "Bearer " + getJwtTokenFromCookie,
+				Authorization: "Bearer " + getJwtTokenFromCookie(),
 				"Content-Type": "application/json"
 			},
 			body: JSON.stringify({})
@@ -26,6 +26,7 @@ function TwoFARegisterButton() {
 			})
 			.catch(function (error) {
 				console.log(error);
+				console.log("CHECK")
 			});
 	}
 	return (
@@ -37,5 +38,7 @@ function TwoFARegisterButton() {
 		</div>
 	);
 }
+
+
 
 export default TwoFARegisterButton;

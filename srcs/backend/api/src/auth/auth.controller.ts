@@ -42,6 +42,7 @@ export class AuthController {
 	@UseGuards(JwtGuard)
 	@Post("2FA/generate")
 	async generate2FA(@GetUser() user: User): Promise<{ qrCodeUrl: string }> {
+		console.log("in 2fa/generate");
 		const otpAuthUrl = await this.authService.generate2FASecretQRCode(user);
 		const qrCodeUrl = await this.authService.generateQRCodeDataURL(
 			otpAuthUrl
