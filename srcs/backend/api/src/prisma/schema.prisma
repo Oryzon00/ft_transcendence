@@ -60,7 +60,7 @@ model Message {
   channel   Channel @relation(fields: [channelId], references: [id])
   channelId Int     @unique
 
-  authors  User @relation(fields: [authorId], references: [id])
+  author   User @relation(fields: [authorId], references: [id])
   authorId Int  @unique
 
   content String @db.VarChar(2000)

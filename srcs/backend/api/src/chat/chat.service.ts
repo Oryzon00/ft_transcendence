@@ -1,6 +1,7 @@
 import { OnModuleInit } from '@nestjs/common';
 import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer } from '@nestjs/websockets';
 import { Server } from 'socket.io';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @WebSocketGateway({
 	cors: {
@@ -8,6 +9,8 @@ import { Server } from 'socket.io';
 	}
 })
 export class ChatService implements OnModuleInit{ 
+	constructor(private prisma: PrismaService) {}
+
 	@WebSocketServer()
 	server : Server;
 
@@ -19,11 +22,21 @@ export class ChatService implements OnModuleInit{
 	}
 	@SubscribeMessage('newMessage')
 	onNewMessage(@MessageBody() body : any) {
-		console.log(body);
+		this.stockMessages(body)
 		this.server.emit('onMessage', {
 			msg: "New message",
 			content: body,
 		}
 		)
+	}
+
+	async stockMessages(message : any) {
+		const messages = await this.prisma.message.create({
+			data: {
+				channel: message.channel,
+				author: message.author,
+				content: message.content
+			}
+		})
 	}
 }
