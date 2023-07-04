@@ -11,7 +11,9 @@ export class AuthController {
 	constructor(private authService: AuthService) {}
 
 	@Post()
-	async auth(@Body() body): Promise<TokenDto | { twoFA: boolean }> {
+	async auth(
+		@Body() body
+	): Promise<TokenDto | { twoFA: boolean; user: User }> {
 		if (body.error || !body.code) throw new UnauthorizedException();
 
 		const token42 = await this.authService.getToken42(body.code);
@@ -22,8 +24,9 @@ export class AuthController {
 
 		const user = await this.authService.login(userData42);
 
+		console.log(`user.is2FAOn = ${user.is2FAOn}`);
 		if (user.is2FAOn) {
-			return { twoFA: true };
+			return { twoFA: true, user: user };
 		} else {
 			return await this.authService.signToken(user);
 		}
@@ -31,11 +34,11 @@ export class AuthController {
 
 	@Post("2FA/verify")
 	async verifyTOTP(@Body() body): Promise<TokenDto> {
-		const isTOTPValid = this.authService.verifyTOTPValid(
+		const isOTPValid = this.authService.verifyTOTPValid(
 			body.user,
-			body.TOTP
+			body.OTP
 		);
-		if (!isTOTPValid) throw new UnauthorizedException();
+		if (!isOTPValid) throw new UnauthorizedException();
 		return await this.authService.signToken(body.user);
 	}
 
@@ -56,7 +59,9 @@ export class AuthController {
 		@GetUser() user: User,
 		@Body() body
 	): Promise<{ status: boolean }> {
+		console.log(`body.OTP = ${body.TOTP}`);
 		const isTOTPValid = this.authService.verifyTOTPValid(user, body.TOTP);
+		console.log(`is OTP valid: ${isTOTPValid}`);
 		if (!isTOTPValid) throw new UnauthorizedException();
 		const status = await this.authService.turnOnOff2FA(user, true);
 		return { status: status };
