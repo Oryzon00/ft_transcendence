@@ -1,11 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { socket, WebsocketContext, WebsocketProvider } from "../../contexts/WebsocketContext";
-import "./chat.css"
-import { ChannelBar } from "./ChannelBar";
+import "./chat.css";
 
 type MessagePayload = {
 	channel: string;
-	user: string;
+	author: string;
 	content: string;
 };
 
@@ -34,13 +33,13 @@ export function Chat() {
 	}, []);
 
 	const onSubmit = () => {
-		sockets.emit('newMessage', value);
+		let sendMessages = {author: 'me', channel: undefined, content: value}
+		sockets.emit('newMessage', sendMessages);
 		setValue('');
 	};
 
 	return ( 
 		<section id="chat">
-			<ChannelBar/>
 			<WebsocketProvider value={socket}>
 				<div id="message-box">
 					{

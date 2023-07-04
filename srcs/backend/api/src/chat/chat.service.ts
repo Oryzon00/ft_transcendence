@@ -22,10 +22,11 @@ export class ChatService implements OnModuleInit{
 	}
 	@SubscribeMessage('newMessage')
 	onNewMessage(@MessageBody() body : any) {
-		this.stockMessages(body)
+		console.log(body);
+		//this.stockMessages(body)
 		this.server.emit('onMessage', {
 			msg: "New message",
-			content: body,
+			content: body.content,
 		}
 		)
 	}
