@@ -2,13 +2,13 @@ import './OTPLayout.styles.css'
 
 function OTPLoginLayout () {
     return (
-        <div className='main-page'>
-            <div className='frame-1'>
-                <span className='text-1'>Enter your One Time Password</span>
+        <div className='OTPmain-page'>
+            <div className='OTPframe-1'>
+                <span className='OTPtext-1'>Enter your One Time Password</span>
                 <input/>
             </div>
-            <button className='error-button'>
-                <span className='text-2'>Error: Wrong OTP</span>
+            <button className='OTPerror-button'>
+                <span className='OTPtext-2'>Error: Wrong OTP</span>
             </button>
         </div>
     )

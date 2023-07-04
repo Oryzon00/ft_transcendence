@@ -34,7 +34,7 @@
 
 @media only screen and (max-width: 992px) {
 	.text-1 {
-		width: 50%;
+		width: 100%;
 		font-family: 'Roboto';
 		font-style: normal;
 		font-weight: 400;
@@ -43,7 +43,6 @@
 		text-align: center;
 
 		color: #F2F2F2;
-		padding: 5vh;
 	}
 
 	/* SignIn Button */
@@ -82,7 +81,7 @@
 
 @media only screen and (min-width: 992px) {
 	.text-1 {
-		width: 50%;
+		width: 100%;
 		font-family: 'Roboto';
 		font-style: normal;
 		font-weight: 400;
@@ -91,7 +90,6 @@
 		text-align: center;
 
 		color: #F2F2F2;
-		padding: 5vh;
 	}
 
 	/* SignIn Button */
@@ -130,7 +128,7 @@
 
 @media only screen and (min-width: 1200px) {
 	.text-1 {
-		width: 50%;
+		width: 100%;
 		font-family: 'Roboto';
 		font-style: normal;
 		font-weight: 400;
@@ -139,7 +137,6 @@
 		text-align: center;
 
 		color: #F2F2F2;
-		padding: 5vh;
 	}
 
 	/* SignIn Button */

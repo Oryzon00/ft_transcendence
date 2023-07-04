@@ -6,7 +6,10 @@ function LoginLayout() {
 		<div className="main-page">
 			<div className="frame-1">
 				<span className="text-1">
-					Welcome to Transcendence Please sign in to continue
+					Welcome to Transcendence
+				</span>
+				<span className="text-1" style={{ paddingBottom:5 +'vh' }}>
+					Please sign in to continue
 				</span>
 				<LoginButton />
 			</div>
