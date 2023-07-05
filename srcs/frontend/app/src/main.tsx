@@ -2,13 +2,9 @@ import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Homepage from "./routes/Home/Home";
 import Auth from "./routes/Auth/Auth";
-import RootError from "./routes/root/rootError.tsx";
 import AuthError from "./routes/Auth/AuthError.tsx";
 import { authLoader } from "./routes/Auth/Auth";
-import { ProfileMenuLoader } from "./routes/Profile/ProfileMenu.tsx";
-import ProfileMenu from "./routes/Profile/ProfileMenu.tsx";
 import TwoFA from "./routes/TwoFA/TwoFA.tsx";
 import LoginPage from "./views/LoginPage/LoginPage.tsx";
 import TwoFAPage from "./views/OTPPopup/OTPLoginPopup.tsx";
@@ -16,27 +12,26 @@ import SettingsPage from "./views/SettingsPage/SettingsPage.tsx";
 import HomePage from "./views/HomePage/HomePage.tsx";
 import OTPLoginPopup from "./views/OTPPopup/OTPLoginPopup.tsx";
 import OTPSettingsPopup from "./views/OTPPopup/OTPSettingsPopup.tsx";
+import { ProfileLayoutLoader } from "./layouts/ProfileLayout/ProfileLayoutLoader.tsx";
+import ProfileLayout from "./layouts/ProfileLayout/ProfileLayout.tsx";
+import LoginPageError from "./views/LoginPage/LoginErrorPage.tsx";
 
 const router = createBrowserRouter([
 	{
 		path: "/",
 		element: <LoginPage />,
-		errorElement: <RootError />
+		errorElement: <LoginPageError />
 	},
 	{
 		path: "/home",
-		element: <Homepage />, // HomePage != Homepage
+		element: <HomePage />, // HomePage != Homepage
 		children: [
 			{
 				path: "/home/profile/",
-				element: <ProfileMenu />,
-				loader: ProfileMenuLoader
+				element: <ProfileLayout />,
+				loader: ProfileLayoutLoader
 			}
 		]
-	},
-	{
-		path: "/test/home",
-		element: <HomePage /> // HomePage != Homepage
 	},
 	{
 		path: "/auth",
