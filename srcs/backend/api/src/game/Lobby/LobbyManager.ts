@@ -1,13 +1,13 @@
 import { Server, Socket } from "socket.io";
 import { LobbyMode } from "./lobby.types";
 import { Lobby } from "./Lobby";
-import { AuthenticatedSocket } from "../types/AuthenticatedSocket ";
+import { AuthenticatedSocket } from "../types/AuthenticatedSocket";
 import { WsException } from "@nestjs/websockets";
 
 export class LobbyManager {
 	public server: Server;
 
-	private readonly lobbies: Map<Lobby['Id'], Lobby> = new Map<Lobby['Id'], Lobby>();
+	private readonly lobbies: Map<Lobby["Id"], Lobby> = new Map<Lobby["Id"], Lobby>();
 
 	public initSocket(client: AuthenticatedSocket): void {
 		client.data.lobby = null;
@@ -31,15 +31,13 @@ export class LobbyManager {
 		const lobby: Lobby | undefined = this.lobbies.get(id);
 
 		if (!lobby) {
-			throw new WsException('lobby not found.');
+			throw new WsException("lobby not found.");
 		}
 
 		if (lobby.clients.size >= lobby.maxClients) {
-			throw new WsException('lobby is already full.');
+			throw new WsException("lobby is already full.");
 		}
 
 		lobby.addClient(client);
 	}
-
-	
 }

@@ -6,7 +6,7 @@ import { ClientEvents } from "./types/ClientEvents";
 import { SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
 import { UsePipes, ValidationPipe } from "@nestjs/common";
 import { LobbyManager } from "./Lobby/LobbyManager";
-import { AuthenticatedSocket } from "./types/AuthenticatedSocket ";
+import { AuthenticatedSocket } from "./types/AuthenticatedSocket";
 import { LobbyCreateDto, LobbyJoinDto } from "./Lobby/lobby.types";
 import { ServerResponseDTO } from "./types/ServerResponseDTO";
 

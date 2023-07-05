@@ -1,26 +1,23 @@
-import {Server} from 'socket.io'
-import { v4 } from 'uuid'
-import { Socket } from 'socket.io';
-import { AuthenticatedSocket } from '../types/AuthenticatedSocket ';
+import { Server } from "socket.io";
+import { v4 } from "uuid";
+import { Socket } from "socket.io";
+import { AuthenticatedSocket } from "../types/AuthenticatedSocket";
 
 export class Lobby {
-
 	public readonly Id: string = v4();
 
-	public readonly clients : Map<Socket['id'], AuthenticatedSocket> = new Map<Socket['id'], AuthenticatedSocket>();
+	public readonly clients: Map<Socket["id"], AuthenticatedSocket> = new Map<
+		Socket["id"],
+		AuthenticatedSocket
+	>();
 
-	constructor(private readonly server: Server, public readonly maxClients : number) {
-	}
+	constructor(private readonly server: Server, public readonly maxClients: number) {}
 
-	public removeClient(client: AuthenticatedSocket) : void {
+	public removeClient(client: AuthenticatedSocket): void {}
 
-	}
+	private startGame(mode: number) {}
 
-	private startGame(mode: number) {
-		
-	}
-
-	public addClient(client: AuthenticatedSocket) : void {
+	public addClient(client: AuthenticatedSocket): void {
 		this.clients.set(client.id, client);
 		client.join(this.Id);
 		client.data.lobby = this;
