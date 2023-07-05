@@ -34,6 +34,13 @@ export class AuthController {
 
 	@Post("2FA/verify")
 	async verifyTOTP(@Body() body): Promise<TokenDto> {
+		let user = body.user
+		console.log(`body.user.name = ${body.user.name}`);
+		console.log({
+			user
+		})
+		console.log(`body.OTP = ${body.OTP}`);
+
 		const isOTPValid = this.authService.verifyTOTPValid(
 			body.user,
 			body.OTP
