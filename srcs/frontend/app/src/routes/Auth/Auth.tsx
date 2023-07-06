@@ -14,42 +14,76 @@ function paramsToJSON(iterator: IterableIterator<[string, string]>) {
 	return JSON.stringify(result);
 }
 
+// export async function authLoader() {
+// 	console.log("in auth loader");
+// 	const urlParams = new URLSearchParams(window.location.search);
+// 	const url = apiAddress + "/auth";
+// 	const res = await fetch(url, {
+// 		method: "POST",
+// 		headers: {
+// 			"Content-Type": "application/json"
+// 		},
+// 		body: paramsToJSON(urlParams.entries())
+// 	});
+// 	if (!res.ok) {
+// 		throw new Response("Auth Error", { status: 401 });
+// 	}
+
+// 	const data = await res.json().then(function (data) {
+// 		if (data.twoFA) {
+// 			console.log(`data.twoFA=${data.twoFA}`);
+// 			return data;
+// 		}
+// 		document.cookie = `JWT=${data.access_token};Path=/`;
+// 		let tmp: string | null = getUserPathTokenFromCookie();
+// 		if (tmp) {
+// 			self.location.href = tmp;
+// 			document.cookie =
+// 				"userPath=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+// 		} else self.location.href = "http://localhost:8000/home";
+// 	});
+
+// 	return data;
+// }
+
 export async function authLoader() {
-	console.log("in auth loader");
 	const urlParams = new URLSearchParams(window.location.search);
 	const url = apiAddress + "/auth";
-	const res = await fetch(url, {
+	const data = fetch(url, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json"
 		},
 		body: paramsToJSON(urlParams.entries())
-	});
-	if (!res.ok) {
-		throw new Response("Auth Error", { status: 401 });
-	}
+	})
+		.then(function (response) {
+			if (!response.ok)
+				throw new Error(
+					"Request failed with status " + response.status
+				);
+			return response.json();
+		})
+		.then(function (data) {
+			if (data.twoFA) {
+				return data;
+			}
+			document.cookie = `JWT=${data.access_token};Path=/`;
+			self.location.href = "http://localhost:8000/home"; // navigute?
+		})
+		.catch(function (error) {
+			throw new Error(error.message);
+		});
 
-	const data = await res.json().then(function (data) {
-		if (data.twoFA) {
-			console.log(`data.twoFA=${data.twoFA}`);
-			return data;
-		}
-		document.cookie = `JWT=${data.access_token};Path=/`;
-		let tmp: string | null = getUserPathTokenFromCookie();
-		if (tmp) {
-			self.location.href = tmp;
-			document.cookie =
-				"userPath=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-		} else self.location.href = "http://localhost:8000/home";
-	});
-	
+
 	return data;
 }
 
+/*--------------------------------------------------------------------------------------------*/
+
 function Modal2FA(data: any) {
-	console.log("in modal2fa")
-	console.log(`data.data.user.name=${data.data.user.name}`);
-	
+	console.log("in modal2fa");
+	// console.log(`data.data.user.name=${data.data.user.name}`);
+
 	const [open, setOpen] = useState(true);
 	const [OTP, setOTP] = useState("");
 
@@ -79,14 +113,9 @@ function Modal2FA(data: any) {
 				return response.json();
 			})
 			.then(function (data) {
-				console.log("in data fetch auth");
+				// console.log("in data fetch auth");
 				document.cookie = `JWT=${data.access_token};Path=/`;
-				let tmp: string | null = getUserPathTokenFromCookie();
-				if (tmp) {
-					self.location.href = tmp;
-					document.cookie =
-						"userPath=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-				} else self.location.href = "http://localhost:8000/home";
+				self.location.href = "http://localhost:8000/home";
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -122,16 +151,12 @@ function Modal2FA(data: any) {
 }
 
 function Auth() {
-
 	const data: any = useLoaderData();
-	console.log("in auth")
-	console.log(`data.twoFA=${data.twoFA}`);
-	console.log(`data.user.name=${data.user.name}`);
+	console.log("in auth");
 
 	if (data) {
 		return <Modal2FA data={data} />;
 	} else {
-		console.log("no data auth loader");
 		return <div>Auth loading no data.twoFA</div>;
 	}
 }
