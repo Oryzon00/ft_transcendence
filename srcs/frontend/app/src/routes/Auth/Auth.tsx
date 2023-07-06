@@ -68,30 +68,32 @@ export async function authLoader() {
 				return data;
 			}
 			document.cookie = `JWT=${data.access_token};Path=/`;
-			self.location.href = "http://localhost:8000/home"; // navigute?
+			self.location.href = "http://localhost:8000/home"; // naviguate?
 		})
 		.catch(function (error) {
 			throw new Error(error.message);
 		});
-
 
 	return data;
 }
 
 /*--------------------------------------------------------------------------------------------*/
 
-function Modal2FA(data: any) {
-	console.log("in modal2fa");
-	// console.log(`data.data.user.name=${data.data.user.name}`);
+function Modal2FA({ data } : any) {
 
 	const [open, setOpen] = useState(true);
 	const [OTP, setOTP] = useState("");
+	if (OTP.length == 6) {
+		verifyOTP();
+		closeModal();
+		// appel deux fois, pourquoi?
+	}
 
 	function closeModal() {
 		setOpen(false);
 		setOTP("");
 	}
-
+	
 	function verifyOTP() {
 		const url = apiAddress + "/auth/2FA/verify";
 		fetch(url, {
@@ -101,7 +103,7 @@ function Modal2FA(data: any) {
 				"Content-Type": "application/json"
 			},
 			body: JSON.stringify({
-				user: data.data.user, // a modifier
+				user: data.user, // a modifier
 				OTP: OTP
 			})
 		})
@@ -113,19 +115,13 @@ function Modal2FA(data: any) {
 				return response.json();
 			})
 			.then(function (data) {
-				// console.log("in data fetch auth");
+				// use naviguate ?
 				document.cookie = `JWT=${data.access_token};Path=/`;
 				self.location.href = "http://localhost:8000/home";
 			})
 			.catch(function (error) {
 				console.log(error);
 			});
-	}
-
-	if (OTP.length == 6) {
-		verifyOTP();
-		closeModal();
-		// appel deux fois, pourquoi?
 	}
 
 	return (
@@ -152,12 +148,11 @@ function Modal2FA(data: any) {
 
 function Auth() {
 	const data: any = useLoaderData();
-	console.log("in auth");
 
 	if (data) {
 		return <Modal2FA data={data} />;
 	} else {
-		return <div>Auth loading no data.twoFA</div>;
+		return <div>Auth loading</div>;
 	}
 }
 
