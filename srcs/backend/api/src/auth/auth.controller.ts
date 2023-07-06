@@ -5,15 +5,17 @@ import { UnauthorizedException } from "@nestjs/common";
 import { JwtGuard } from "src/auth/guard";
 import { GetUser } from "src/auth/decorator";
 import { User } from "@prisma/client";
+import { UserService } from "src/user/user.service";
 
 @Controller("auth")
 export class AuthController {
-	constructor(private authService: AuthService) {}
+	constructor(
+		private authService: AuthService,
+		private userService: UserService
+	) {}
 
 	@Post()
-	async auth(
-		@Body() body
-	): Promise<TokenDto | { twoFA: boolean; user: User }> {
+	async auth(@Body() body): Promise<TokenDto | User> {
 		if (body.error || !body.code) throw new UnauthorizedException();
 
 		const token42 = await this.authService.getToken42(body.code);
@@ -26,7 +28,7 @@ export class AuthController {
 
 		console.log(`user.is2FAOn = ${user.is2FAOn}`);
 		if (user.is2FAOn) {
-			return { twoFA: true, user: user };
+			return this.userService.getUserSafe(user);
 		} else {
 			return await this.authService.signToken(user);
 		}
@@ -34,17 +36,15 @@ export class AuthController {
 
 	@Post("2FA/verify")
 	async verifyTOTP(@Body() body): Promise<TokenDto> {
-		let user = body.user
+		let user = body.user;
 		console.log(`body.user.name = ${body.user.name}`);
 		console.log({
 			user
-		})
+		});
 		console.log(`body.OTP = ${body.OTP}`);
 
-		const isOTPValid = this.authService.verifyTOTPValid(
-			body.user,
-			body.OTP
-		);
+		const trueUser = await this.userService.getTrueUser(body.user);
+		const isOTPValid = this.authService.verifyTOTPValid(trueUser, body.OTP);
 		if (!isOTPValid) throw new UnauthorizedException();
 		return await this.authService.signToken(body.user);
 	}

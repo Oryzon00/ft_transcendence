@@ -64,11 +64,14 @@ export async function authLoader() {
 			return response.json();
 		})
 		.then(function (data) {
-			if (data.twoFA) {
+			if (data.is2FAOn === true) {
 				return data;
 			}
-			document.cookie = `JWT=${data.access_token};Path=/`;
-			self.location.href = "http://localhost:8000/home"; // naviguate?
+			if (data.access_token) {
+				document.cookie = `JWT=${data.access_token};Path=/`;
+				self.location.href = "http://localhost:8000/home"; // naviguate?
+			}
+			throw new Error("Unexpected error has occured");
 		})
 		.catch(function (error) {
 			throw new Error(error.message);
@@ -79,8 +82,10 @@ export async function authLoader() {
 
 /*--------------------------------------------------------------------------------------------*/
 
-function Modal2FA({ data } : any) {
-
+function Modal2FA({ user }: any) {
+	console.log({
+		user
+	});
 	const [open, setOpen] = useState(true);
 	const [OTP, setOTP] = useState("");
 	if (OTP.length == 6) {
@@ -93,7 +98,7 @@ function Modal2FA({ data } : any) {
 		setOpen(false);
 		setOTP("");
 	}
-	
+
 	function verifyOTP() {
 		const url = apiAddress + "/auth/2FA/verify";
 		fetch(url, {
@@ -103,7 +108,7 @@ function Modal2FA({ data } : any) {
 				"Content-Type": "application/json"
 			},
 			body: JSON.stringify({
-				user: data.user, // a modifier
+				user: user,
 				OTP: OTP
 			})
 		})
@@ -147,10 +152,14 @@ function Modal2FA({ data } : any) {
 }
 
 function Auth() {
-	const data: any = useLoaderData();
-
-	if (data) {
-		return <Modal2FA data={data} />;
+	const user: any = useLoaderData();
+	console.log("in auth");
+	console.log({
+		user
+	}
+	)
+	if (user) {
+		return <Modal2FA user={user} />;
 	} else {
 		return <div>Auth loading</div>;
 	}
