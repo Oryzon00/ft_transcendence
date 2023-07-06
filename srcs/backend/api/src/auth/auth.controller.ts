@@ -26,7 +26,6 @@ export class AuthController {
 
 		const user = await this.authService.login(userData42);
 
-		console.log(`user.is2FAOn = ${user.is2FAOn}`);
 		if (user.is2FAOn) {
 			return this.userService.getUserSafe(user);
 		} else {
@@ -36,13 +35,6 @@ export class AuthController {
 
 	@Post("2FA/verify")
 	async verifyTOTP(@Body() body): Promise<TokenDto> {
-		let user = body.user;
-		console.log(`body.user.name = ${body.user.name}`);
-		console.log({
-			user
-		});
-		console.log(`body.OTP = ${body.OTP}`);
-
 		const trueUser = await this.userService.getTrueUser(body.user);
 		const isOTPValid = this.authService.verifyTOTPValid(trueUser, body.OTP);
 		if (!isOTPValid) throw new UnauthorizedException();
@@ -66,9 +58,7 @@ export class AuthController {
 		@GetUser() user: User,
 		@Body() body
 	): Promise<{ status: boolean }> {
-		console.log(`body.OTP = ${body.TOTP}`);
 		const isTOTPValid = this.authService.verifyTOTPValid(user, body.TOTP);
-		console.log(`is OTP valid: ${isTOTPValid}`);
 		if (!isTOTPValid) throw new UnauthorizedException();
 		const status = await this.authService.turnOnOff2FA(user, true);
 		return { status: status };

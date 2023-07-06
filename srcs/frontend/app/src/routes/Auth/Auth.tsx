@@ -1,4 +1,3 @@
-import { getUserPathTokenFromCookie } from "../cookieProtection";
 import apiAddress from "../../utils/apiAddress";
 import { useState } from "react";
 import Popup from "reactjs-popup";
@@ -13,38 +12,6 @@ function paramsToJSON(iterator: IterableIterator<[string, string]>) {
 	}
 	return JSON.stringify(result);
 }
-
-// export async function authLoader() {
-// 	console.log("in auth loader");
-// 	const urlParams = new URLSearchParams(window.location.search);
-// 	const url = apiAddress + "/auth";
-// 	const res = await fetch(url, {
-// 		method: "POST",
-// 		headers: {
-// 			"Content-Type": "application/json"
-// 		},
-// 		body: paramsToJSON(urlParams.entries())
-// 	});
-// 	if (!res.ok) {
-// 		throw new Response("Auth Error", { status: 401 });
-// 	}
-
-// 	const data = await res.json().then(function (data) {
-// 		if (data.twoFA) {
-// 			console.log(`data.twoFA=${data.twoFA}`);
-// 			return data;
-// 		}
-// 		document.cookie = `JWT=${data.access_token};Path=/`;
-// 		let tmp: string | null = getUserPathTokenFromCookie();
-// 		if (tmp) {
-// 			self.location.href = tmp;
-// 			document.cookie =
-// 				"userPath=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-// 		} else self.location.href = "http://localhost:8000/home";
-// 	});
-
-// 	return data;
-// }
 
 export async function authLoader() {
 	const urlParams = new URLSearchParams(window.location.search);
@@ -83,9 +50,7 @@ export async function authLoader() {
 /*--------------------------------------------------------------------------------------------*/
 
 function Modal2FA({ user }: any) {
-	console.log({
-		user
-	});
+
 	const [open, setOpen] = useState(true);
 	const [OTP, setOTP] = useState("");
 	if (OTP.length == 6) {
@@ -153,11 +118,7 @@ function Modal2FA({ user }: any) {
 
 function Auth() {
 	const user: any = useLoaderData();
-	console.log("in auth");
-	console.log({
-		user
-	}
-	)
+
 	if (user) {
 		return <Modal2FA user={user} />;
 	} else {

@@ -49,9 +49,6 @@ export class AuthService {
 	}
 
 	verifyTOTPValid(user: User, TOTP: string): boolean {
-		console.log("in verify");
-		console.log(`otp = ${TOTP}`);
-		console.log(`secret = ${user.secret2FA}`)
 		return authenticator.verify({
 			token: TOTP,
 			secret: user.secret2FA
