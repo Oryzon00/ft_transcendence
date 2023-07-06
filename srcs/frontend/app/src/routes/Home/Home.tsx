@@ -60,24 +60,23 @@ function Home() {
 	const [count, setCount] = useState(0);
 
 	function deleteCookie() {
-		document.cookie = "JWT=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-		document.cookie = "userPath=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+		document.cookie =
+			"JWT=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+		document.cookie =
+			"userPath=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 		self.location.href = "http://localhost:8000";
 	}
 
 	function profileButton() {
 		if (self.location.href !== "http://localhost:8000/home/profile")
-			navigate("/home/profile")
-		else
-			navigate("/home")
+			navigate("/home/profile");
+		else navigate("/home");
 	}
-	
+
 	return (
 		<div className="home-root">
 			<div className="profile-button">
-				<button onClick={() => profileButton()}>
-					Profile
-				</button>
+				<button onClick={() => profileButton()}>Profile</button>
 			</div>
 			<Outlet />
 			<div className="main-site">
