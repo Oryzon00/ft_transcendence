@@ -9,6 +9,9 @@ export class AuthController {
 
 	@Post()
 	async auth(@Body() body): Promise<TokenDto> {
+		console.log({
+			body
+		})
 		if (body.error || !body.code) throw new UnauthorizedException();
 		const token = await this.authService.auth(body.code);
 		return token;
