@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
-import { cookieProtection } from "../../routes/cookieProtection.ts";
+import { cookieProtection } from "../../utils/cookieProtection.ts";
 import Button2FA from "../../components/Home/Button2FA.tsx";
 import User from "../../components/Home/User.tsx";
 import ButtonDeleteCookie from "../../components/Home/ButtonDeleteCookie.tsx";

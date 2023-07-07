@@ -5,13 +5,17 @@ import { UnauthorizedException } from "@nestjs/common";
 import { JwtGuard } from "src/auth/guard";
 import { GetUser } from "src/auth/decorator";
 import { User } from "@prisma/client";
+import { UserService } from "src/user/user.service";
 
 @Controller("auth")
 export class AuthController {
-	constructor(private authService: AuthService) {}
+	constructor(
+		private authService: AuthService,
+		private userService: UserService
+	) {}
 
 	@Post()
-	async auth(@Body() body): Promise<TokenDto | { twoFA: boolean }> {
+	async auth(@Body() body): Promise<TokenDto | User> {
 		if (body.error || !body.code) throw new UnauthorizedException();
 
 		const token42 = await this.authService.getToken42(body.code);
@@ -23,7 +27,7 @@ export class AuthController {
 		const user = await this.authService.login(userData42);
 
 		if (user.is2FAOn) {
-			return { twoFA: true };
+			return this.userService.getUserSafe(user);
 		} else {
 			return await this.authService.signToken(user);
 		}
@@ -31,11 +35,9 @@ export class AuthController {
 
 	@Post("2FA/verify")
 	async verifyTOTP(@Body() body): Promise<TokenDto> {
-		const isTOTPValid = this.authService.verifyTOTPValid(
-			body.user,
-			body.TOTP
-		);
-		if (!isTOTPValid) throw new UnauthorizedException();
+		const trueUser = await this.userService.getTrueUser(body.user);
+		const isOTPValid = this.authService.verifyTOTPValid(trueUser, body.OTP);
+		if (!isOTPValid) throw new UnauthorizedException();
 		return await this.authService.signToken(body.user);
 	}
 
@@ -59,7 +61,6 @@ export class AuthController {
 		const isTOTPValid = this.authService.verifyTOTPValid(user, body.TOTP);
 		if (!isTOTPValid) throw new UnauthorizedException();
 		const status = await this.authService.turnOnOff2FA(user, true);
-		console.log(`2fa turned on`);
 		return { status: status };
 	}
 
@@ -67,7 +68,6 @@ export class AuthController {
 	@Patch("2FA/turn-off")
 	async turnOff2FA(@GetUser() user: User): Promise<{ status: boolean }> {
 		const status = await this.authService.turnOnOff2FA(user, false);
-		console.log(`2fa turned off`);
 		return { status: status };
 	}
 }

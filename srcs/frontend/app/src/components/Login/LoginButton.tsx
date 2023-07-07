@@ -1,13 +1,12 @@
 import api42Address from "../../utils/api42Address";
-import getJwtTokenFromCookie from "../../utils/getJWT";
 import "./LoginButton.styles.css";
+import getJwtTokenFromCookie from "../../utils/getJWT.ts";
 
 function LoginButton() {
 	function goToApi42() {
 		self.location.href = api42Address;
 	}
-
-	if (getJwtTokenFromCookie())
+	 if (getJwtTokenFromCookie())
 		self.location.href = "http://localhost:8000/home";
 	return (
 		<button className="signin-button" onClick={goToApi42}>

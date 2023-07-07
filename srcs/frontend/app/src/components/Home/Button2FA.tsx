@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 function Button2FA() {
 	const navigate = useNavigate();
 	function goTo2FA() {
-		navigate("/2FA");
+		navigate("/settings");
 	}
 	return (
 		<div>

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import apiAddress from "../../../utils/apiAddress";
-import getJwtTokenFromCookie from "../../../utils/getJWT";
+import apiAddress from "../../../../utils/apiAddress";
+import getJwtTokenFromCookie from "../../../../utils/getJWT";
 
 function TwoFAStatusButton() {
 	const [twoFAStatus, setTwoFAStatus] = useState("No info on 2fa");
@@ -21,7 +21,7 @@ function TwoFAStatusButton() {
 				return response.json();
 			})
 			.then(function (data) {
-				if (data.twoFA === true) setTwoFAStatus("On");
+				if (data.is2FAOn === true) setTwoFAStatus("On");
 				else setTwoFAStatus("Off");
 			})
 			.catch(function (error) {
