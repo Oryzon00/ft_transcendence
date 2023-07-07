@@ -1,40 +1,12 @@
-import { useState } from "react";
-import apiAddress from "../../../../utils/apiAddress";
-import getJwtTokenFromCookie from "../../../../utils/getJWT";
+import useUser from "../../../../utils/hooks/useUser";
 
 function TwoFAStatusButton() {
-	const [twoFAStatus, setTwoFAStatus] = useState("No info on 2fa");
-	function getTwoFAStatus() {
-		const url = apiAddress + "/user/me";
-		fetch(url, {
-			method: "GET",
-			headers: {
-				Authorization: "Bearer " + getJwtTokenFromCookie()
-			}
-		})
-			.then(function (response) {
-				if (!response.ok) {
-					throw new Error(
-						"Request failed with status " + response.status
-					);
-				}
-				return response.json();
-			})
-			.then(function (data) {
-				if (data.is2FAOn === true) setTwoFAStatus("On");
-				else setTwoFAStatus("Off");
-			})
-			.catch(function (error) {
-				if (error instanceof Error) {
-					const message: string = error.message;
-					setTwoFAStatus(message);
-				}
-			});
-	}
+	const user = useUser();
+	console.log(user);
+	console.log(user?.is2FAOn)
 	return (
 		<div>
-			<button onClick={getTwoFAStatus}>get 2FA status </button>
-			<div> 2fa status : {twoFAStatus} </div>
+			<div> 2fa status : {user?.is2FAOn} </div>
 		</div>
 	);
 }

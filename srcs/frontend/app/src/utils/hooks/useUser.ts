@@ -29,8 +29,8 @@ async function getUserAPI(): Promise<User> {
 	return user;
 }
 
-function useUser() {
-	const [user, setUser] = useState< User | undefined>();
+function useUser(): User | undefined {
+	const [user, setUser] = useState<User>();
 	async function fetchUser() {
 		const user: User = await getUserAPI();
 		setUser(user);
