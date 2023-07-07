@@ -1,14 +1,12 @@
 import useUser from "../../../../utils/hooks/useUser";
 
-function TwoFAStatusButton() {
+function TwoFAStatus() {
 	const user = useUser();
-	console.log(user);
-	console.log(user?.is2FAOn)
 	return (
 		<div>
-			<div> 2fa status : {user?.is2FAOn} </div>
+			<div> 2fa status : {user?.is2FAOn ? "true" : "false"} </div>
 		</div>
 	);
 }
 
-export default TwoFAStatusButton;
+export default TwoFAStatus;
