@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import {
+	Injectable,
+	InternalServerErrorException,
+	UnauthorizedException
+} from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { Prisma, User } from "@prisma/client";
 import { HttpService } from "@nestjs/axios";
@@ -11,6 +15,7 @@ import { TokenDto } from "./dto/token.dto";
 import { authenticator } from "otplib";
 import { TwoFADto } from "./dto/twoFA.dto";
 import { toDataURL } from "qrcode";
+import { error } from "console";
 
 @Injectable()
 export class AuthService {
@@ -85,20 +90,25 @@ export class AuthService {
 				redirect_uri: "http://localhost:8000/auth"
 			}
 		};
-		const responseData = await lastValueFrom(
-			this.httpService
-				.post(
-					"https://api.intra.42.fr/oauth/token",
-					null,
-					requestConfig
-				)
-				.pipe(
-					map((response: AxiosResponse) => {
-						return response.data;
-					})
-				)
-		);
-		return responseData;
+		try {
+			const responseData = await lastValueFrom(
+				this.httpService
+					.post(
+						"https://api.intra.42.fr/oauth/token",
+						null,
+						requestConfig
+					)
+					.pipe(
+						map((response: AxiosResponse) => {
+							console.log(response);
+							return response.data;
+						})
+					)
+			);
+			return responseData;
+		} catch (error) {
+			throw new UnauthorizedException();
+		}
 	}
 
 	async getUserData42(token: any): Promise<UserData42Dto> {
@@ -134,7 +144,6 @@ export class AuthService {
 					id42: userData42.id
 				}
 			});
-			
 		} catch (error) {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === "P2002") {
@@ -146,7 +155,7 @@ export class AuthService {
 				}
 			} else throw error;
 		}
-		
+
 		return user;
 	}
 
@@ -154,7 +163,7 @@ export class AuthService {
 		const payload = {
 			sub: user.id,
 			name: user.name,
-			is2FAOn: user.is2FAOn,
+			is2FAOn: user.is2FAOn
 		};
 
 		const token = await this.jwt.signAsync(payload, {
