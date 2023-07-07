@@ -1,7 +1,8 @@
-import useUser from "../../../../utils/hooks/useUser";
+import { useContext } from "react";
+import UserContext from "../../../../utils/contexts/userContext";
 
 function TwoFAStatus() {
-	const user = useUser();
+	const user = useContext(UserContext)
 	return (
 		<div>
 			<div> 2fa status : {user?.is2FAOn ? "true" : "false"} </div>
