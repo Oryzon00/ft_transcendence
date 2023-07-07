@@ -2,9 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Auth from "./routes/Auth/Auth";
-import AuthError from "./routes/Auth/AuthError.tsx";
-import { authLoader } from "./routes/Auth/Auth";
+import AuthError from "./views/AuthPage/AuthError.tsx";
 import NotFoundPage from "./views/NotFoundPage/NotFoundPage.tsx";
 import SettingsPage from "./views/SettingsPage/SettingsPage.tsx";
 import HomePage from "./views/HomePage/HomePage.tsx";
@@ -12,6 +10,8 @@ import { ProfileLayoutLoader } from "./layouts/ProfileLayout/ProfileLayoutLoader
 import ProfileLayout from "./layouts/ProfileLayout/ProfileLayout.tsx";
 import OTPLoginPopup from "./views/OTPPopup/OTPLoginPopup.tsx";
 import LoginPage from "./views/LoginPage/LoginPage.tsx";
+import AuthPage from "./views/AuthPage/AuthPage.tsx";
+import { authLoader} from "./layouts/AuthLayout/AuthLoader.tsx";
 
 const router = createBrowserRouter([
 	{
@@ -32,7 +32,7 @@ const router = createBrowserRouter([
 	},
 	{
 		path: "/auth",
-		element: <Auth />,
+		element: <AuthPage />,
 		loader: authLoader,
 		errorElement: <AuthError />
 	},
