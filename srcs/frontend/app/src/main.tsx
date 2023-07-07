@@ -5,19 +5,19 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Auth from "./routes/Auth/Auth";
 import AuthError from "./routes/Auth/AuthError.tsx";
 import { authLoader } from "./routes/Auth/Auth";
-import LoginPage from "./views/LoginPage/LoginPage.tsx";
+import NotFoundPage from "./views/NotFoundPage/NotFoundPage.tsx";
 import SettingsPage from "./views/SettingsPage/SettingsPage.tsx";
 import HomePage from "./views/HomePage/HomePage.tsx";
 import { ProfileLayoutLoader } from "./layouts/ProfileLayout/ProfileLayoutLoader.tsx";
 import ProfileLayout from "./layouts/ProfileLayout/ProfileLayout.tsx";
-import LoginPageError from "./views/LoginPage/LoginErrorPage.tsx";
 import OTPLoginPopup from "./views/OTPPopup/OTPLoginPopup.tsx";
+import LoginPage from "./views/LoginPage/LoginPage.tsx";
 
 const router = createBrowserRouter([
 	{
 		path: "/",
 		element: <LoginPage />,
-		errorElement: <LoginPageError />
+		errorElement: <NotFoundPage />
 	},
 	{
 		path: "/home",
