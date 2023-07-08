@@ -4,16 +4,9 @@ export type MessagePayload = {
 	content: string;
 };
 
-export type sendMessage = {
-
-}
-
-export type userData = {
-	
-}
-
 export type ChannelPayload = {
+	id: number;
 	name: string;
-	userId: number;
+	ownerId: number;
 	message: MessagePayload[];
 }
