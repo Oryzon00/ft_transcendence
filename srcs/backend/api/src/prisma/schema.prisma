@@ -22,19 +22,11 @@ model User {
   updatedAt   DateTime     @updatedAt
 
   // Connexion from another table
-  channel UsersOnChannels[]
+  //channelOwn Channel[] @relation("owners")
+  channel Channel[] @relation("users")
   message Message[]
 
   @@map("users")
-}
-
-model UsersOnChannels {
-  channel   Channel @relation(fields: [channelId], references: [id])
-  channelId Int
-  user      User    @relation(fields: [userId], references: [id])
-  userId    Int
-
-  @@id([userId, channelId])
 }
 
 model GameProfile {
@@ -51,17 +43,21 @@ model Channel {
   id Int @id @unique @default(autoincrement())
 
   // This is not urgent
-  // name string
-  // avatar string
-  // description string
-  createdAt DateTime @default(now())
-  updateAt  DateTime @default(now()) @updatedAt
+  name        String?
+  avatar      String?
+  description String?
+  createdAt   DateTime @default(now())
+  updateAt    DateTime @default(now()) @updatedAt
 
-  users   UsersOnChannels[]
-  ownerId Int
+  //owner   User @relation("owners", fields: [ownerId], references: [id])
+  //ownerId Int
+
+  users User[] @relation("users")
 
   messagesId Int[]
   Message    Message[]
+  //User       User[] @relation("users")
+  userId     Int?
 
   @@map("channels")
 }
@@ -73,10 +69,10 @@ model Message {
   updateAt  DateTime @updatedAt
 
   channel   Channel @relation(fields: [channelId], references: [id])
-  channelId Int
+  channelId Int     @unique
 
   author   User @relation(fields: [authorId], references: [id])
-  authorId Int
+  authorId Int  @unique
 
   content String @db.VarChar(2000)
 

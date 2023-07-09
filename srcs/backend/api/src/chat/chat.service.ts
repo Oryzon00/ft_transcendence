@@ -1,5 +1,5 @@
 import { OnModuleInit } from '@nestjs/common';
-import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer } from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, ConnectedSocket } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { MessagePayload, ChannelPayload } from './chat';
@@ -11,7 +11,7 @@ import { Channel, Message } from '@prisma/client';
 	}
 })
 export class ChatService implements OnModuleInit{ 
-	constructor(private prisma: PrismaService, /*, public socketId : string*/) {}
+	constructor(private prisma: PrismaService) {}
 
 	@WebSocketServer()
 	server : Server;
@@ -23,25 +23,29 @@ export class ChatService implements OnModuleInit{
 	}
 
 	@SubscribeMessage('newMessage')
-	async onNewMessage(client: Socket, @MessageBody() body : MessagePayload) {
-		console.log(body);
+	async onNewMessage(@ConnectedSocket() client: Socket, @MessageBody() body : MessagePayload) {
 		let res = await this.stockMessages(body);
-		//this.server.emit('onMessage', res);
+		console.log(body);
+		this.server.to(String(body.channelId)).emit('onMessage', res);
 	}
 
+	// If i put the functionnality to modify an already send message
 	@SubscribeMessage('changeMessage')
-	onChangeMessage(client: Socket, @MessageBody() body : MessagePayload) {}
+	onChangeMessage(@ConnectedSocket() client: Socket, @MessageBody() body : MessagePayload) {}
 
 	@SubscribeMessage('newChannel')
-	async onNewChannel(client: Socket, @MessageBody() body : ChannelPayload) {
+	async onNewChannel(@ConnectedSocket() client: Socket, @MessageBody() body : ChannelPayload) {
 		let channel : Channel = await this.createChannel(body);
-		//this.server.on('connection', () => { client.join(String(channel.id)); });
-		this.server.emit('newChannel', channel);
+		client.join(String(channel.id));
+		this.server.to(String(channel.id)).emit('newChannel', channel);
 	}
 
+	// New config for a channel
 	@SubscribeMessage('changeChannel')
-	async onChangeChannel(client: Socket, @MessageBody() body : ChannelPayload) {}
+	async onChangeChannel(@ConnectedSocket() client: Socket, @MessageBody() body : ChannelPayload) {}
 
+	@SubscribeMessage('quitChannel')
+	async onQuitChannel(@ConnectedSocket() client: Socket, @MessageBody() body : ChannelPayload) {}
 
 	// Write in Databse part //
 	async getUserData(userId) {
@@ -58,10 +62,18 @@ export class ChatService implements OnModuleInit{
 	};
 
 	async stockMessages(message : MessagePayload) : Promise<Message>{
-		const messages = await this.prisma.message.create({
+		const messages: Message = await this.prisma.message.create({
 			data: {
-				channelId: message.channelId,
-				authorId: message.authorId,
+				channel: {
+					connect: {
+						id: message.channelId,
+					}
+				},
+				author: {
+					connect: {
+						id: message.authorId,
+					}
+				},
 				content: message.content,
 			}
 		})
@@ -71,7 +83,10 @@ export class ChatService implements OnModuleInit{
 	async createChannel(channel : ChannelPayload) : Promise<Channel> {
 		const res : Channel = await this.prisma.channel.create({
 			data: {
-				ownerId: 1, // Temp
+				users: {
+					connect: { id: channel.ownerId },
+				},
+				//name: channel.name,
 			},
 		});
 		return (res);

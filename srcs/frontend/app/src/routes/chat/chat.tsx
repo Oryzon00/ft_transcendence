@@ -14,7 +14,6 @@ function Discussion({channel, current} : CurrentChannel)
 {
 	if (current <= 0)
 		return (<p>No channel</p>);
-	console.log(channel[current]);
 	return ( 
 		<div id="message-box">
 		{
@@ -30,7 +29,9 @@ function Discussion({channel, current} : CurrentChannel)
 
 export function Chat() {
 	const [current, setCurrent] = useState(0);
+	const [name, setName] = useState('');
 	const [value, setValue] = useState('');
+	const [room, setRoom] = useState('');
 	const [channel, setChannel] = useState<{[key: number]: ChannelPayload}>({});
 	const sockets = useContext(WebsocketContext);
 	
@@ -53,6 +54,7 @@ export function Chat() {
 
 		// Create new channel
 		sockets.on('newChannel', (data: any) => {
+			console.log(data);
 			setCurrent(data.id);
 			setChannel((prev) => {
 				prev[data.id] = data;
@@ -74,37 +76,37 @@ export function Chat() {
 	};
 
 	const createChannel = () => {
-		socket.emit('newChannel', {userId: 1})
+		socket.emit('newChannel', {ownerId: 1, name: room})
+		setName(room);
+		setRoom('');
 	};
 
+	const inviteFriend = () => {};
 	const modifyMessage = () => {};
 	const modifyChannel = () => {};
 
 	return ( 
 		<section id="chat">
 			<WebsocketProvider value={socket}>
-				<div id="chat-parameters">
-					<button id="create-channel" onClick={createChannel}>
-						<img src={chat}/>
-					</button>
+				<div id="header">
+					<p>{name}</p>
 				</div>
-
-				<div id="search-block">
-					<span>
-						<img src={search} alt="" />
-						<input type="text" />
-					</span>
-				</div>
-
 				<div id="discussion">
 					<Discussion channel={channel} current={current}/>
-
-					<div id="message-bar">
-						<input type="text" value={value} placeholder="Taper un message" onChange={(e) => setValue(e.target.value)}  />
-						<button onClick={sendMessage}>
-							<img src={send}/>
-						</button>
-					</div>
+				</div>
+				<div id="message">
+					<p>Message</p>
+					<input type="text" value={value} placeholder="Taper un message" onChange={(e) => setValue(e.target.value)} maxLength={2000} />
+					<button onClick={sendMessage}>
+						Send
+					</button>
+				</div>
+				<div id="room">
+					<p>Room</p>
+					<input type="text" value={room} placeholder="Taper le nom de la room" onChange={(e) => setRoom(e.target.value)} maxLength={10}/>
+					<button onClick={createChannel}>
+						Room
+					</button>
 				</div>
 			</WebsocketProvider>
 		</section>
