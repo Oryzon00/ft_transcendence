@@ -6,6 +6,7 @@ import { cookieProtection } from "../../utils/cookieProtection.ts";
 
 function SettingsLayout() {
 	cookieProtection();
+
 	return (
 		<>
 			<h1> User Settings</h1>

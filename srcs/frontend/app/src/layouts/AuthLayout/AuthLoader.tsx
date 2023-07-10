@@ -1,5 +1,5 @@
 import apiAddress from "../../utils/apiAddress.ts";
-import { goToLastPath } from "../../utils/cookieProtection.ts";
+import { useNavigate } from "react-router-dom";
 
 function paramsToJSON(iterator: IterableIterator<[string, string]>) {
 	const result: Record<string, string> = {};
@@ -12,6 +12,7 @@ function paramsToJSON(iterator: IterableIterator<[string, string]>) {
 export async function authLoader() {
 	const urlParams = new URLSearchParams(window.location.search);
 	const url = apiAddress + "/auth";
+
 	const data = fetch(url, {
 		method: "POST",
 		headers: {
@@ -32,7 +33,7 @@ export async function authLoader() {
 			}
 			if (data.access_token) {
 				document.cookie = `JWT=${data.access_token};Path=/`;
-				goToLastPath();
+				self.location.href = "home";
 			}
 			throw new Error("Unexpected error has occured");
 		})

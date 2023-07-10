@@ -1,9 +1,9 @@
 import { useState } from "react";
 import apiAddress from "../../utils/apiAddress.ts";
 import getJwtTokenFromCookie from "../../utils/getJWT.ts";
-import { goToLastPath } from "../../utils/cookieProtection.ts";
 import Popup from "reactjs-popup";
 import OtpInput from "react-otp-input";
+import { useNavigate } from "react-router-dom";
 
 function Modal2FA({ user }: any) {
 
@@ -22,6 +22,7 @@ function Modal2FA({ user }: any) {
 
 	function verifyOTP() {
 		const url = apiAddress + "/auth/2FA/verify";
+
 		fetch(url, {
 			method: "POST",
 			headers: {
@@ -43,7 +44,7 @@ function Modal2FA({ user }: any) {
 			.then(function (data) {
 				// use naviguate ?
 				document.cookie = `JWT=${data.access_token};Path=/`;
-				goToLastPath();
+				self.location.href = "home";
 			})
 			.catch(function (error) {
 				console.log(error);
