@@ -33,10 +33,12 @@ async function getUserAPI(): Promise<User> {
 
 function useUser() : UserHook {
 	const [user, setUser] = useState<User>({} as User);
+
 	async function fetchUser() {
 		const user: User = await getUserAPI();
 		setUser(user);
 	}
+
 	useEffect(function () {
 		fetchUser();
 	}, []);

@@ -39,8 +39,7 @@ function TwoFATurnOnButton() {
 				return response.json();
 			})
 			.then(function (data) {
-				if (data.status === true) {
-					
+				if (data.status === true) {	
 					userHook.setUser({
 						...userHook.user,
 						is2FAOn: true

@@ -25,7 +25,6 @@ function TwoFATurnOffButton() {
 			})
 			.then(function (data) {
 				if (data.status === false) {
-					
 					userHook.setUser({
 						...userHook.user,
 						is2FAOn: false
