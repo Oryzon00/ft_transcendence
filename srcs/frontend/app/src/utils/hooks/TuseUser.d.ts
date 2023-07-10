@@ -7,3 +7,7 @@ export type User = {
 	updatedAt: string
 }
 
+export type UserHook = {
+	user: User,
+	setUser: React.Dispatch<React.SetStateAction<User>>
+}

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { cookieProtection } from "../../utils/cookieProtection.ts";
-import Button2FA from "../../components/Home/Button2FA.tsx";
+import ButtonSettings from "../../components/Home/Button2FA.tsx";
 import User from "../../components/Home/User.tsx";
 import ButtonDeleteCookie from "../../components/Home/ButtonDeleteCookie.tsx";
 import ProfileButton from "../../components/Home/ProfileButton.tsx";
@@ -25,7 +25,7 @@ function HomeLayout() {
 				</div>
 				<div>Welcome home !</div>
 				<User></User>
-				<Button2FA></Button2FA>
+				<ButtonSettings />
 				<ButtonDeleteCookie />
 			</div>
 			<div />

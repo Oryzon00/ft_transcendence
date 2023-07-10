@@ -58,9 +58,10 @@ export class AuthController {
 		@GetUser() user: User,
 		@Body() body
 	): Promise<{ status: boolean }> {
-		const isTOTPValid = this.authService.verifyTOTPValid(user, body.TOTP);
+		const isTOTPValid = await this.authService.verifyTOTPValid(user, body.TOTP);
 		if (!isTOTPValid) throw new UnauthorizedException();
 		const status = await this.authService.turnOnOff2FA(user, true);
+
 		return { status: status };
 	}
 

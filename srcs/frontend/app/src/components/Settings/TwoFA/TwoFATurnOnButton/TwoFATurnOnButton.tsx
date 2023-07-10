@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import apiAddress from "../../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../../utils/getJWT";
 import OtpInput from "react-otp-input";
 import Popup from "reactjs-popup";
 import "./TwoFATurnOnButton.styles.css";
+import UserContext from "../../../../utils/contexts/userContext";
 
 function TwoFATurnOnButton() {
 	const [open, setOpen] = useState(false);
 	const [OTP, setOTP] = useState("");
+	const userHook = useContext(UserContext); 
 
 	function openModal() {
 		setOpen(true);
@@ -18,7 +20,6 @@ function TwoFATurnOnButton() {
 	}
 
 	function turnOn2FA(otp: string) {
-		console.log("in function 1");
 		const url = apiAddress + "/auth/2FA/turn-on";
 		fetch(url, {
 			method: "PATCH",
@@ -38,7 +39,13 @@ function TwoFATurnOnButton() {
 				return response.json();
 			})
 			.then(function (data) {
-				console.log(data);
+				if (data.status === true) {
+					
+					userHook.setUser({
+						...userHook.user,
+						is2FAOn: true
+					});
+				}
 			})
 			.catch(function (error) {
 				console.log(error);

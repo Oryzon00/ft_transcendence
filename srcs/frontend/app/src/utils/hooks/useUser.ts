@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { User } from "./TuseUser";
+import { UserHook } from "./TuseUser";
 import apiAddress from "../apiAddress";
 import getJwtTokenFromCookie from "../getJWT";
 
 async function getUserAPI(): Promise<User> {
+	console.log("call fetch")
 	const url = apiAddress + "/user/me";
 	const user = fetch(url, {
 		method: "GET",
@@ -29,8 +31,8 @@ async function getUserAPI(): Promise<User> {
 	return user;
 }
 
-function useUser(): User | undefined {
-	const [user, setUser] = useState<User>();
+function useUser() : UserHook {
+	const [user, setUser] = useState<User>({} as User);
 	async function fetchUser() {
 		const user: User = await getUserAPI();
 		setUser(user);
@@ -39,7 +41,11 @@ function useUser(): User | undefined {
 		fetchUser();
 	}, []);
 
-	return user;
+	const userHook = {
+		user,
+		setUser
+	};
+	return userHook;
 }
 
 export default useUser;

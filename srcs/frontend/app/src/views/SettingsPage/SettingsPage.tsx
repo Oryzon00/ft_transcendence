@@ -4,10 +4,10 @@ import useUser from "../../utils/hooks/useUser";
 
 function SettingsPage() {
 
-const user = useUser();
+const userHook = useUser();
 
 	return (
-		<UserContext.Provider value={user}>
+		<UserContext.Provider value={userHook}>
 			<SettingsLayout />
 		</UserContext.Provider>
 	);

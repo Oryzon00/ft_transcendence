@@ -53,7 +53,7 @@ export class AuthService {
 		return toDataURL(otpAuthUrl);
 	}
 
-	verifyTOTPValid(user: User, TOTP: string): boolean {
+	async verifyTOTPValid(user: User, TOTP: string): Promise<boolean> {
 		return authenticator.verify({
 			token: TOTP,
 			secret: user.secret2FA

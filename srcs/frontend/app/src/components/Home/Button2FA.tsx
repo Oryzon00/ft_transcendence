@@ -1,15 +1,15 @@
 import { useNavigate } from "react-router-dom";
 
-function Button2FA() {
+function ButtonSettings() {
 	const navigate = useNavigate();
 	function goTo2FA() {
 		navigate("/settings");
 	}
 	return (
 		<div>
-			<button onClick={goTo2FA}> Go to 2FA </button>
+			<button onClick={goTo2FA}> Go to Settings </button>
 		</div>
 	);
 }
 
-export default Button2FA;
+export default ButtonSettings;
