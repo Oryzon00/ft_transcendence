@@ -44,10 +44,23 @@ export class ChatService implements OnModuleInit{
 	@SubscribeMessage('changeChannel')
 	async onChangeChannel(@ConnectedSocket() client: Socket, @MessageBody() body : ChannelPayload) {}
 
+	/*
 	@SubscribeMessage('quitChannel')
-	async onQuitChannel(@ConnectedSocket() client: Socket, @MessageBody() body : ChannelPayload) {}
+	async onQuitChannel(@ConnectedSocket() client: Socket, @MessageBody() body : ChannelPayload) {
+		this.quitChannel(body);
+		client.leave(String(body.id));
+		this.server.emit('quitChannel', );
+	}
+	*/
 
+	/* Function to make
+		ExpulseUsers
+		BanUsers
+		BlockUsers
+		DirectMessage
+	*/
 	// Write in Databse part //
+	/*
 	async getUserData(userId) {
 		const res = await this.prisma.user.findUnique({
 				where: {
@@ -60,6 +73,13 @@ export class ChatService implements OnModuleInit{
 		})
 		return (res);
 	};
+	*/
+
+	/*
+	async quitChannel(message: MessagePayload) : Promise<Message> {
+		return 
+	}
+	*/
 
 	async stockMessages(message : MessagePayload) : Promise<Message>{
 		const messages: Message = await this.prisma.message.create({
@@ -80,15 +100,33 @@ export class ChatService implements OnModuleInit{
 		return (messages);
 	};
 
+	// Demo of the creation of a channel
 	async createChannel(channel : ChannelPayload) : Promise<Channel> {
-		const res : Channel = await this.prisma.channel.create({
-			data: {
-				users: {
-					connect: { id: channel.ownerId },
-				},
-				//name: channel.name,
-			},
-		});
-		return (res);
-	};
+			const res : Channel = await this.prisma.channel.create({
+					data: {
+						name: channel.name,
+						owner: {
+							connect: { id: channel.ownerId, }
+						}
+					},
+					/*
+					include: {
+						users: true,
+					}
+					*/
+			});
+			await this.prisma.member.create({
+				data: {
+					channel: {
+						connect: {id: res.id},
+					},
+					user: {
+						connect: {id: res.ownerId},
+					}
+
+				}
+			}
+			)
+			return (res);
+		}
 }

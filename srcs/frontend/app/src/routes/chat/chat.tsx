@@ -1,8 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import { socket, WebsocketContext, WebsocketProvider } from "../../contexts/WebsocketContext";
-import send from '../../assets/send.png'
-import chat from '../../assets/channel.png'
-import search from '../../assets/search.png'
 import { MessagePayload, ChannelPayload } from "./chat.d"
 import "./chat.css";
 
@@ -10,9 +7,10 @@ type CurrentChannel = {
 	channel: {[key: number]: ChannelPayload},
 	current: number
 }
+
 function Discussion({channel, current} : CurrentChannel)
 {
-	if (current <= 0)
+	if (current == 0)
 		return (<p>No channel</p>);
 	return ( 
 		<div id="message-box">
@@ -42,14 +40,13 @@ export function Chat() {
 
 		// Received new message
 		sockets.on('onMessage', (data: MessagePayload) => {
-			if (data.content != "") {
-				
+			console.log(data);
 				// Add the new received messages in the right channel
 				setChannel((prev) => { 
-					prev[data.channelId].message.push(data);
+					prev[data.channelId].messagesId.push(data);
 					return prev;
 				});
-			}
+			console.log("channel : ", channel, ";current : ", current);
 		});
 
 		// Create new channel
@@ -60,6 +57,7 @@ export function Chat() {
 				prev[data.id] = data;
 				return prev;
 			});
+			console.log("channel: ", channel);
 		});
 
 		return () => {
