@@ -5,7 +5,7 @@ import UserContext from "../../../../utils/contexts/userContext";
 
 function TwoFATurnOffButton() {
 	const userHook = useContext(UserContext);
-	
+
 	function turnOff2FA() {
 		const url = apiAddress + "/auth/2FA/turn-off";
 		fetch(url, {
@@ -33,7 +33,7 @@ function TwoFATurnOffButton() {
 				}
 			})
 			.catch(function (error) {
-				console.log(error);
+				console.error(error);
 			});
 	}
 
