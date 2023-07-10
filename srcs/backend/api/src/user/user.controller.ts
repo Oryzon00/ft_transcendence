@@ -1,4 +1,4 @@
-import { Patch, Controller, Get, UseGuards, Body } from "@nestjs/common";
+import { Patch, Controller, Get, UseGuards, Body, Query } from "@nestjs/common";
 import { User } from "@prisma/client";
 import { GetUser } from "src/auth/decorator";
 import { JwtGuard } from "src/auth/guard";
@@ -15,7 +15,17 @@ export class UserController {
 	}
 
 	@Patch("update/image")
-	async updateImage(@GetUser() user: User, @Body() body) {
+	async updateImage(@GetUser() user: User, @Body() body) : Promise<string> {
+		return await this.userService.updateUserImage(user, body.image);
+	}
 
+	@Patch("update/name")
+	async updateName(@GetUser() user: User, @Body() body) : Promise<string> {
+		return this.userService.updateUserName(user, body.name);
+	}
+
+	@Get("find")
+	async findUser(@Query("username") username: string) : Promise<UserSafeDTO> {
+		return this.userService.findUser(username);
 	}
 }
