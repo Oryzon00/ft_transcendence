@@ -6,6 +6,7 @@ import { JwtGuard } from "src/auth/guard";
 import { GetUser } from "src/auth/decorator";
 import { User } from "@prisma/client";
 import { UserService } from "src/user/user.service";
+import { UserSafeDTO } from "src/user/dto";
 
 @Controller("auth")
 export class AuthController {
@@ -15,7 +16,7 @@ export class AuthController {
 	) {}
 
 	@Post()
-	async auth(@Body() body): Promise<TokenDto | User> {
+	async auth(@Body() body): Promise<TokenDto | UserSafeDTO> {
 		if (body.error || !body.code) throw new UnauthorizedException();
 
 		const token42 = await this.authService.getToken42(body.code);
