@@ -10,23 +10,29 @@ import { UserSafeDTO } from "./dto";
 export class UserController {
 	constructor(private userService: UserService) {}
 	@Get("me")
-	getMe(@GetUser() user: User) : UserSafeDTO {
+	getMe(@GetUser() user: User): UserSafeDTO {
 		return this.userService.getUserSafe(user);
 	}
 
 	@Patch("update/image")
-	async updateImage(@GetUser() user: User, @Body() body) : Promise<{image: string}> {
+	async updateImage(
+		@GetUser() user: User,
+		@Body() body
+	): Promise<{ image: string }> {
 		return await this.userService.updateUserImage(user, body.image);
 	}
 
 	@Patch("update/name")
-	async updateName(@GetUser() user: User, @Body() body) : Promise<{name: string}> {
+	async updateName(
+		@GetUser() user: User,
+		@Body() body
+	): Promise<{ name: string }> {
 		console.log("in update/name");
 		return this.userService.updateUserName(user, body.name);
 	}
 
 	@Get("find")
-	async findUser(@Query("username") username: string) : Promise<UserSafeDTO> {
+	async findUser(@Query("username") username: string): Promise<UserSafeDTO> {
 		return this.userService.findUser(username);
 	}
 }
