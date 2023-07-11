@@ -15,12 +15,13 @@ export class UserController {
 	}
 
 	@Patch("update/image")
-	async updateImage(@GetUser() user: User, @Body() body) : Promise<string> {
+	async updateImage(@GetUser() user: User, @Body() body) : Promise<{image: string}> {
 		return await this.userService.updateUserImage(user, body.image);
 	}
 
 	@Patch("update/name")
-	async updateName(@GetUser() user: User, @Body() body) : Promise<string> {
+	async updateName(@GetUser() user: User, @Body() body) : Promise<{name: string}> {
+		console.log("in update/name");
 		return this.userService.updateUserName(user, body.name);
 	}
 
