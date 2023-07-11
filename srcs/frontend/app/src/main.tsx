@@ -11,7 +11,9 @@ import ProfileLayout from "./layouts/ProfileLayout/ProfileLayout.tsx";
 import OTPLoginPopup from "./views/OTPPopup/OTPLoginPopup.tsx";
 import LoginPage from "./views/LoginPage/LoginPage.tsx";
 import AuthPage from "./views/AuthPage/AuthPage.tsx";
-import { authLoader} from "./layouts/AuthLayout/AuthLoader.tsx";
+import { authLoader } from "./layouts/AuthLayout/AuthLoader.tsx";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const router = createBrowserRouter([
 	{
@@ -47,6 +49,7 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+	
 	<React.StrictMode>
 		<RouterProvider router={router} />
 	</React.StrictMode>
