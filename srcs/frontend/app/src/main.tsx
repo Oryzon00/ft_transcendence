@@ -14,7 +14,7 @@ import  Auth from "./routes/Auth/Auth"
 import  RootError from "./routes/root/rootError.tsx";
 import AuthError from "./routes/Auth/AuthError.tsx";
 import {authLoader} from "./routes/Auth/Auth";
-import { Chat } from "./routes/chat/chat";
+import { Chat } from "./chat/chat.tsx";
 
 const router = createBrowserRouter([
     {
@@ -47,7 +47,7 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
+  //<React.StrictMode>
       <RouterProvider router={router} />
-  </React.StrictMode>,
+  //</React.StrictMode>,
 )

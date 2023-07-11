@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { socket, WebsocketContext, WebsocketProvider } from "../../contexts/WebsocketContext";
+import { socket, WebsocketContext, WebsocketProvider } from "../contexts/WebsocketContext";
 import { MessagePayload, ChannelPayload } from "./chat.d"
 import "./chat.css";
 
@@ -12,12 +12,13 @@ function Discussion({channel, current} : CurrentChannel)
 {
 	if (current == 0)
 		return (<p>No channel</p>);
+	console.log(channel);
 	return ( 
 		<div id="message-box">
 		{
 			channel[current].messagesId.map((msg : MessagePayload) => 
 			<div>
-				<p>{msg.content}</p>
+				<p>{msg.authorId} {msg.content}</p>
 			</div>
 			)
 		}
@@ -40,34 +41,37 @@ export function Chat() {
 
 		// Received new message
 		sockets.on('onMessage', (data: MessagePayload) => {
-			console.log(data);
 				// Add the new received messages in the right channel
 				setChannel((prev) => { 
 					prev[data.channelId].messagesId.push(data);
 					return prev;
 				});
-			console.log("channel : ", channel, ";current : ", current);
 		});
 
 		// Create new channel
-		sockets.on('newChannel', (data: any) => {
-			console.log(data);
-			setCurrent(data.id);
-			setChannel((prev) => {
-				prev[data.id] = data;
-				return prev;
-			});
-			console.log("channel: ", channel);
+		sockets.on('onChannel', (data: any) => {
+			setCurrent(() => { return data.id });
+			console.log(data.id);
+			console.log(channel[data.id])
+			if (channel[data.id] == undefined)
+			{
+				setChannel((prev) => {
+					prev[data.id] = data;
+					return prev;
+				});
+			}
 		});
 
 		return () => {
 			console.log('Unregistered events...');
 			sockets.off('connect');
 			sockets.off('onMessage');
+			sockets.off('onChannel');
 		};
-	}, []);
+	}, [channel]);
 
 	const sendMessage = () => {
+		console.log("yo");
 		let sendMessages = {authorId: 1, channelId: current, content: value};
 		sockets.emit('newMessage', sendMessages) ;
 		setValue('');

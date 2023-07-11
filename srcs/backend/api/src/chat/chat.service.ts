@@ -3,7 +3,7 @@ import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, Conne
 import { Socket, Server } from 'socket.io';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { MessagePayload, ChannelPayload } from './chat';
-import { Channel, Message } from '@prisma/client';
+import { Channel, Member, Message } from '@prisma/client';
 
 @WebSocketGateway({
 	cors: {
@@ -25,7 +25,7 @@ export class ChatService implements OnModuleInit{
 	@SubscribeMessage('newMessage')
 	async onNewMessage(@ConnectedSocket() client: Socket, @MessageBody() body : MessagePayload) {
 		let res = await this.stockMessages(body);
-		console.log(body);
+		console.log(res);
 		this.server.to(String(body.channelId)).emit('onMessage', res);
 	}
 
@@ -37,7 +37,8 @@ export class ChatService implements OnModuleInit{
 	async onNewChannel(@ConnectedSocket() client: Socket, @MessageBody() body : ChannelPayload) {
 		let channel : Channel = await this.createChannel(body);
 		client.join(String(channel.id));
-		this.server.to(String(channel.id)).emit('newChannel', channel);
+		console.log(channel.id);
+		this.server.to(String(channel.id)).emit('onChannel', channel);
 	}
 
 	// New config for a channel
@@ -82,39 +83,54 @@ export class ChatService implements OnModuleInit{
 	*/
 
 	async stockMessages(message : MessagePayload) : Promise<Message>{
-		const messages: Message = await this.prisma.message.create({
+		const res: Message = await this.prisma.message.create({
 			data: {
+				content: message.content,
 				channel: {
-					connect: {
-						id: message.channelId,
-					}
+					connect: { id: message.channelId }
 				},
 				author: {
-					connect: {
-						id: message.authorId,
-					}
-				},
-				content: message.content,
+					connect: { id: message.authorId}
+				}
 			}
 		})
-		return (messages);
+		return (res);
 	};
 
 	// Demo of the creation of a channel
 	async createChannel(channel : ChannelPayload) : Promise<Channel> {
-			const res : Channel = await this.prisma.channel.create({
+		// Search if the channel doesn't already exist
+		let res : Channel;
+		const search : Channel[] = await this.prisma.channel.findMany({
+			where: {
+				name: channel.name
+			},
+		});
+		console.log(search);
+		if (search.length == 0) // create if doesn't find
+		{
+			res = await this.prisma.channel.create({
 					data: {
 						name: channel.name,
 						owner: {
 							connect: { id: channel.ownerId, }
 						}
 					},
-					/*
-					include: {
-						users: true,
-					}
-					*/
 			});
+		}
+		else
+		{
+			res = search[0];
+			console.log(res);
+		}
+		let member: Member[] = await this.prisma.member.findMany({
+			where: {
+				channelId: res.id,
+				userId: channel.ownerId,
+			}
+		});
+		if (member.length == 0)
+		{
 			await this.prisma.member.create({
 				data: {
 					channel: {
@@ -127,6 +143,7 @@ export class ChatService implements OnModuleInit{
 				}
 			}
 			)
-			return (res);
 		}
+		return (res);
+	}
 }

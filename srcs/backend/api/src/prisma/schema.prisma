@@ -113,10 +113,10 @@ model Message {
   updateAt  DateTime @updatedAt
 
   channel   Channel @relation(fields: [channelId], references: [id])
-  channelId Int     @unique
+  channelId Int
 
   author   User @relation(fields: [authorId], references: [id])
-  authorId Int  @unique
+  authorId Int
 
   content String @db.VarChar(2000)
 
