@@ -4,12 +4,12 @@ import getJwtTokenFromCookie from "../../../../utils/getJWT";
 import OtpInput from "react-otp-input";
 import Popup from "reactjs-popup";
 import "./TwoFATurnOnButton.styles.css";
-import UserContext from "../../../../utils/contexts/userContext";
+import { UserContext } from "../../../../utils/contexts/userContext/userContext";
 
 function TwoFATurnOnButton() {
 	const [open, setOpen] = useState(false);
 	const [OTP, setOTP] = useState("");
-	const userHook = useContext(UserContext); 
+	const userHook = useContext(UserContext);
 
 	function openModal() {
 		setOpen(true);
@@ -39,7 +39,7 @@ function TwoFATurnOnButton() {
 				return response.json();
 			})
 			.then(function (data) {
-				if (data.status === true) {	
+				if (data.status === true) {
 					userHook.setUser({
 						...userHook.user,
 						is2FAOn: true

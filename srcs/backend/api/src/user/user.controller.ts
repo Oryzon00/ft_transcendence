@@ -27,7 +27,6 @@ export class UserController {
 		@GetUser() user: User,
 		@Body() body
 	): Promise<{ name: string }> {
-		console.log("in update/name");
 		return this.userService.updateUserName(user, body.name);
 	}
 

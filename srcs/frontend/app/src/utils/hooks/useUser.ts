@@ -22,12 +22,16 @@ async function getUserAPI(): Promise<User> {
 			return response.json();
 		})
 		.then(function (data) {
+			console.log("in getUserAPI");
+		console.log(data.name);
 			return data;
 		})
 		.catch(function (error) {
 			//handle error
+			console.log("error in getUserAPI")
 			console.log(error);
 		});
+		
 	return user;
 }
 
@@ -47,6 +51,8 @@ function useUser() : UserHook {
 		user,
 		setUser
 	};
+	console.log("in use User");
+	console.log(userHook.user.name);
 	return userHook;
 }
 

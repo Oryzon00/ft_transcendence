@@ -15,7 +15,7 @@ function SettingsLayout() {
 			<TwoFATurnOnButton />
 			<TwoFATurnOffButton />
 			<TwoFARegisterButton />
-			<UpdateUsernameButton />
+			{/* <UpdateUsernameButton /> */}
 		</>
 	);
 }
