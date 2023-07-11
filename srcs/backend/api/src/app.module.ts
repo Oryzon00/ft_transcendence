@@ -1,16 +1,15 @@
-import { Module } from '@nestjs/common';
-import { AppController, AppController2 } from './app.controller';
-import { AppService } from './app.service';
-import { PrismaService } from './prisma.service';
+import { Module } from "@nestjs/common";
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
+import { AuthModule } from "./auth/auth.module";
+import { UserModule } from "./user/user.module";
+import { PrismaModule } from "./prisma/prisma.module";
+import { GameModule } from './game/game.module';
+
 
 @Module({
-  imports: [],
-  controllers: [AppController, AppController2],
-  providers: [AppService, PrismaService],
+	imports: [AuthModule, GameModule, UserModule, PrismaModule],
+	controllers: [AppController],
+	providers: [AppService]
 })
 export class AppModule {}
-
-// Controller --> Verificateur (if)
-// Service --> action 
-
-// front va appeler un des differents controllers

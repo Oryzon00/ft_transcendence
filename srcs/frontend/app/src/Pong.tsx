@@ -7,6 +7,8 @@ import {
 } from "react";
 import "./App.css";
 import * as React from "react";
+import Ball  from "./Ball";
+import Paddle from "./Paddle";
 
 interface PongProps {
 	canvasWidth: number;
@@ -18,6 +20,7 @@ interface PongProps {
 	user2: number;
 }
 
+<<<<<<< HEAD
 interface Ball {
 	pos: Point;
 	speedX: number;
@@ -107,6 +110,8 @@ function collisionDetectionBallPaddle(ball: Ball, pad: Paddle): Point | false {
 	return (intersection ? tmpBall.pos : false);
 }
 
+=======
+>>>>>>> e49b0be71c731891f628bf5b7f183a3d91df2ca6
 export default function Pong({
 	canvasWidth,
 	canvasHeight,
@@ -137,12 +142,16 @@ export default function Pong({
 		up: false,
 		down: false
 	});
+<<<<<<< HEAD
 	const [ball, setBall] = useState<Ball>({
 		pos: { x: canvasWidth / 2, y: canvasHeight / 2 },
 		speedX: (Math.random() > 0.5 ? 8 : -8),
 		speedY:	/*-6 + Math.random() * 12*/ 0,
 		rad: ballRad
 	});
+=======
+	const [ball, setBall] = useState<Ball>(new Ball(canvasWidth, canvasHeight, ballRad));
+>>>>>>> e49b0be71c731891f628bf5b7f183a3d91df2ca6
 
 	function drawPaddle(ctx: CanvasRenderingContext2D, pad: Paddle) {
 		ctx.fillStyle = "white";
@@ -154,6 +163,7 @@ export default function Pong({
 	// tearing
 	// 
 	function updateBallTrajectory(ball: Ball) {
+<<<<<<< HEAD
 		// ball.pos.x += ball.speedX;
 		// ball.pos.y += ball.speedY;
 		// if (ball.pos.x + ball.speedX > lPad.pos.x + ball.rad && ball.pos.x + ball.speedX < lPad.pos.x + lPad.width + ball.rad && ball.pos.y <= lPad.pos.y + lPad.height && ball.pos.y >= lPad.pos.y)
@@ -206,11 +216,22 @@ export default function Pong({
 		{
 			ball.speedY = -ball.speedY;
 		}
+=======
+		
+		if ( ball.speed.angle > Math.PI / 2 || ball.speed.angle < -Math.PI / 2)
+			ball.checkBounce(lPad);
+		else
+			ball.checkBounce(rPad);
+
+		let score = ball.respawn();
+		if (score === 'right') user1++;
+		else if (score === 'left') user2++;
+>>>>>>> e49b0be71c731891f628bf5b7f183a3d91df2ca6
 	}
 
 
 	function drawBall(ctx: CanvasRenderingContext2D, ball: Ball) {
-		ctx.fillStyle = "white";
+		ctx.fillStyle = "#b32225";
 		ctx.beginPath();
 		ctx.arc(ball.pos.x, ball.pos.y, ball.rad, 0, 2 * Math.PI);
 		ctx.fill();
