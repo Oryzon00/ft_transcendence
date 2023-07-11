@@ -26,7 +26,7 @@ export class UserService {
 		return trueUser;
 	}
 
-	async updateUserImage(user: User, newImage: string): Promise<string> {
+	async updateUserImage(user: User, newImage: string): Promise<{ image: string} > {
 		await this.prisma.user.update({
 			where: {
 				id: user.id
@@ -35,10 +35,10 @@ export class UserService {
 				image: newImage
 			}
 		});
-		return newImage;
+		return {image: newImage};
 	}
 
-	async updateUserName(user: User, newName: string): Promise<string> {
+	async updateUserName(user: User, newName: string): Promise< {name: string}> {
 		await this.prisma.user.update({
 			where: {
 				id: user.id
@@ -47,7 +47,7 @@ export class UserService {
 				name: newName
 			}
 		});
-		return newName;
+		return {name: newName};
 	}
 
 	async findUser(username: string): Promise<UserSafeDTO> {

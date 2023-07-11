@@ -3,6 +3,7 @@ import TwoFAStatus from "../../components/Settings/TwoFA/TwoFAStatusButton/TwoFA
 import TwoFATurnOffButton from "../../components/Settings/TwoFA/TwoFATurnOffButton/TwoFATurnOffButton";
 import TwoFATurnOnButton from "../../components/Settings/TwoFA/TwoFATurnOnButton/TwoFATurnOnButton";
 import { cookieProtection } from "../../utils/cookieProtection.ts";
+import UpdateUsernameButton from "../../components/Settings/UpdateUsernameButton/UpdateUsernameButton.tsx";
 
 function SettingsLayout() {
 	cookieProtection();
@@ -14,6 +15,7 @@ function SettingsLayout() {
 			<TwoFATurnOnButton />
 			<TwoFATurnOffButton />
 			<TwoFARegisterButton />
+			<UpdateUsernameButton />
 		</>
 	);
 }
