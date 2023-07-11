@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { UserContext } from "../../../utils/contexts/userContext/userContext.tsx";
+import { UserContext } from "../../../utils/contexts/userContext.tsx";
 import apiAddress from "../../../utils/apiAddress.ts";
 import getJwtTokenFromCookie from "../../../utils/getJWT.ts";
 

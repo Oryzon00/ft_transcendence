@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { UserContext } from "../../../../utils/contexts/userContext/userContext";
+import { UserContext } from "../../../../utils/contexts/userContext";
 
 function TwoFAStatus() {
 	const userHook = useContext(UserContext);

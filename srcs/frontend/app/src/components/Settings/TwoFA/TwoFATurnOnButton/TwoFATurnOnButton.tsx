@@ -4,7 +4,7 @@ import getJwtTokenFromCookie from "../../../../utils/getJWT";
 import OtpInput from "react-otp-input";
 import Popup from "reactjs-popup";
 import "./TwoFATurnOnButton.styles.css";
-import { UserContext } from "../../../../utils/contexts/userContext/userContext";
+import { UserContext } from "../../../../utils/contexts/userContext";
 
 function TwoFATurnOnButton() {
 	const [open, setOpen] = useState(false);
