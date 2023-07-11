@@ -1,11 +1,12 @@
 import { Server, Socket } from "socket.io";
-import { MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, WsResponse, SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
+import { MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, WsResponse, SubscribeMessage, WebSocketGateway, WsException } from "@nestjs/websockets";
 import { ServerEvents } from "./types/ServerEvents";
 import { ClientEvents } from "./types/ClientEvents";
 import { LobbyManager } from "./Lobby/LobbyManager";
 import { AuthenticatedSocket } from "./types/AuthenticatedSocket";
 import { LobbyCreateDto, LobbyJoinDto } from "./Lobby/lobby.types";
 import { ServerResponseDTO } from "./types/ServerResponseDTO";
+import { GameUpdateDto } from "./Pong/GameUpdateDTO";
 
 @WebSocketGateway({
 	cors: {
@@ -79,6 +80,13 @@ export class GameGateway implements OnGatewayConnection, OnGatewayInit, OnGatewa
 				mode: 'PvE'
 			}
 		};
+	}
+
+	@SubscribeMessage(ClientEvents.GameUpdate)
+	onGameUpdate(client: AuthenticatedSocket, data: GameUpdateDto): void {
+		if (!client.data.lobby)
+			throw new WsException('You are not in a lobby');
+		client.data.lobby?.game.updateState(data);
 	}
 
 	@SubscribeMessage(ClientEvents.LobbyLeave)

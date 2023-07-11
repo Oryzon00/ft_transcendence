@@ -56,7 +56,7 @@ export default function Game() {
 
 	return (
 	  <div>
-		<SocketWrapperProvider value={sm.socket}>
+		<SocketWrapperProvider value={sm}>
 			<button onClick={() => onNewGame('PvE')}>Play VS Bot</button>
 			<button onClick={() => onNewGame('PvP')}>Play 1v1</button>
 			<button onClick={onPing}>ping</button>
