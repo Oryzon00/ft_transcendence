@@ -1,4 +1,5 @@
 import {
+	ForbiddenException,
 	Injectable,
 	InternalServerErrorException,
 	NotFoundException
@@ -39,15 +40,19 @@ export class UserService {
 	}
 
 	async updateUserName(user: User, newName: string): Promise<string> {
-		await this.prisma.user.update({
-			where: {
-				id: user.id
-			},
-			data: {
-				name: newName
-			}
-		});
-		return newName;
+		try {
+			await this.prisma.user.update({
+				where: {
+					id: user.id
+				},
+				data: {
+					name: newName
+				}
+			});
+			return newName;
+		} catch {
+			throw new ForbiddenException();
+		}
 	}
 
 	async findUser(username: string): Promise<UserSafeDTO> {
