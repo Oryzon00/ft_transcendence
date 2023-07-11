@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import Point from './Point.tsx'
 import Vector from './Vector.tsx'
 import Paddle from './Paddle.tsx'
@@ -7,22 +8,34 @@ import Point from './Point'
 import Vector from './Vector'
 import Paddle from './Paddle'
 >>>>>>> e49b0be71c731891f628bf5b7f183a3d91df2ca6
+=======
+import Point from './Point'
+import Vector from './Vector'
+import Paddle from './Paddle'
+>>>>>>> 713711a906f5e375bf231914628f952534ee7b50
 
 export default class Ball {
     pos: Point;
 	speed: Vector;
 	rad: number;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 	private CanWidth: number;
 	private CanHeight: number;
 
 >>>>>>> e49b0be71c731891f628bf5b7f183a3d91df2ca6
+=======
+	private CanWidth: number;
+	private CanHeight: number;
+
+>>>>>>> 713711a906f5e375bf231914628f952534ee7b50
 
     constructor(width: number, height: number, rad: number) {
         this.pos = { x: width/2, y: height/2};
         this.speed = {angle: -Math.PI + (Math.random() * 2 * Math.PI), length: 4};
         this.rad = rad;
+<<<<<<< HEAD
 <<<<<<< HEAD
     }
 
@@ -32,6 +45,12 @@ export default class Ball {
 		this.CanHeight = height;
     }
 
+=======
+		this.CanWidth = width;
+		this.CanHeight = height;
+    }
+
+>>>>>>> 713711a906f5e375bf231914628f952534ee7b50
 	respawn(): 'left' | 'right' | undefined  {
 		if (this.pos.x < 0)
 		{
@@ -48,15 +67,21 @@ export default class Ball {
 	}
 
     private continuePath() {
+<<<<<<< HEAD
 >>>>>>> e49b0be71c731891f628bf5b7f183a3d91df2ca6
+=======
+>>>>>>> 713711a906f5e375bf231914628f952534ee7b50
         this.pos.x += Math.cos(this.speed.angle) * this.speed.length;
         this.pos.y += Math.sin(this.speed.angle) * this.speed.length;
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     bounce(pad: Paddle) {
         
 =======
+=======
+>>>>>>> 713711a906f5e375bf231914628f952534ee7b50
 	private bounceCanvas() {
 		if (this.nextPos('y') > this.CanHeight - this.rad)
 			this.pos = this.bounceEdges('bot');
@@ -163,6 +188,9 @@ export default class Ball {
 			else
 				this.bounceCanvas();
 		}
+<<<<<<< HEAD
 >>>>>>> e49b0be71c731891f628bf5b7f183a3d91df2ca6
+=======
+>>>>>>> 713711a906f5e375bf231914628f952534ee7b50
     }
 }

@@ -21,6 +21,7 @@ interface PongProps {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 interface Ball {
 	pos: Point;
 	speedX: number;
@@ -112,6 +113,8 @@ function collisionDetectionBallPaddle(ball: Ball, pad: Paddle): Point | false {
 
 =======
 >>>>>>> e49b0be71c731891f628bf5b7f183a3d91df2ca6
+=======
+>>>>>>> 713711a906f5e375bf231914628f952534ee7b50
 export default function Pong({
 	canvasWidth,
 	canvasHeight,
@@ -143,6 +146,7 @@ export default function Pong({
 		down: false
 	});
 <<<<<<< HEAD
+<<<<<<< HEAD
 	const [ball, setBall] = useState<Ball>({
 		pos: { x: canvasWidth / 2, y: canvasHeight / 2 },
 		speedX: (Math.random() > 0.5 ? 8 : -8),
@@ -152,6 +156,9 @@ export default function Pong({
 =======
 	const [ball, setBall] = useState<Ball>(new Ball(canvasWidth, canvasHeight, ballRad));
 >>>>>>> e49b0be71c731891f628bf5b7f183a3d91df2ca6
+=======
+	const [ball, setBall] = useState<Ball>(new Ball(canvasWidth, canvasHeight, ballRad));
+>>>>>>> 713711a906f5e375bf231914628f952534ee7b50
 
 	function drawPaddle(ctx: CanvasRenderingContext2D, pad: Paddle) {
 		ctx.fillStyle = "white";
@@ -164,6 +171,7 @@ export default function Pong({
 	// 
 	function updateBallTrajectory(ball: Ball) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 		// ball.pos.x += ball.speedX;
 		// ball.pos.y += ball.speedY;
 		// if (ball.pos.x + ball.speedX > lPad.pos.x + ball.rad && ball.pos.x + ball.speedX < lPad.pos.x + lPad.width + ball.rad && ball.pos.y <= lPad.pos.y + lPad.height && ball.pos.y >= lPad.pos.y)
@@ -174,24 +182,13 @@ export default function Pong({
 		// {
 		// 	ball.speedX = -(ball.speedX + 0.7);
 		// }
+=======
+>>>>>>> 713711a906f5e375bf231914628f952534ee7b50
 		
-		
-
-		let collision: Point | false = false;
-
-		if (ball.speedX > 0) {
-			collision = collisionDetectionBallPaddle(ball, rPad);
-		} else {
-			collision = collisionDetectionBallPaddle(ball, lPad);
-		}
-		
-		if (collision !== false){
-			ball.pos = collision;
-			// ball.speedX = (ball.speedX > 0) ? -(ball.speedX + 0.7) : -(ball.speedX - 0.7);
-			ball.speedX *= -1;
-			ball.pos.Y += ball.speedY;
-		}
+		if ( ball.speed.angle > Math.PI / 2 || ball.speed.angle < -Math.PI / 2)
+			ball.checkBounce(lPad);
 		else
+<<<<<<< HEAD
 		{
 			ball.pos.x += ball.speedX;
 			ball.pos.y += ball.speedY;
@@ -221,12 +218,17 @@ export default function Pong({
 		if ( ball.speed.angle > Math.PI / 2 || ball.speed.angle < -Math.PI / 2)
 			ball.checkBounce(lPad);
 		else
+=======
+>>>>>>> 713711a906f5e375bf231914628f952534ee7b50
 			ball.checkBounce(rPad);
 
 		let score = ball.respawn();
 		if (score === 'right') user1++;
 		else if (score === 'left') user2++;
+<<<<<<< HEAD
 >>>>>>> e49b0be71c731891f628bf5b7f183a3d91df2ca6
+=======
+>>>>>>> 713711a906f5e375bf231914628f952534ee7b50
 	}
 
 
@@ -297,7 +299,7 @@ export default function Pong({
 				rPad.down = true;
 				e.preventDefault();
 			}
-			if (e.key === "z")
+			if (e.key === "w")
 				lPad.up = true;
 			if (e.key === "s")
 				lPad.down = true;
@@ -308,7 +310,7 @@ export default function Pong({
 				rPad.up = false;
 			if (e.key === "Down" || e.key === "ArrowDown")
 				rPad.down = false;
-			if (e.key === "z")
+			if (e.key === "w")
 				lPad.up = false;
 			if (e.key === "s")
 				lPad.down = false;
