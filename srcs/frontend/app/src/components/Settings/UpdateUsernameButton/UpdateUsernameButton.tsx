@@ -25,7 +25,6 @@ function UpdateUsernameButton() {
 			})
 		})
 			.then(function (response) {
-				console.log(`response status = ${response.status}`);
 				if (!response.ok)
 					throw new Error(
 						"Request failed with status " + response.status
@@ -33,7 +32,6 @@ function UpdateUsernameButton() {
 				return response.json();
 			})
 			.then(function (data) {
-				console.log("in response ok");
 				userHook.setUser({
 					...userHook.user,
 					name: data.name
@@ -45,7 +43,6 @@ function UpdateUsernameButton() {
 	}
 	const handleClick = (event: any) => {
 		if (event.key == "Enter") {
-			console.log(`message = ${message}`);
 			lol(message);
 		}
 	};

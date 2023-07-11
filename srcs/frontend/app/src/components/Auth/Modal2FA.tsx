@@ -3,7 +3,6 @@ import apiAddress from "../../utils/apiAddress.ts";
 import getJwtTokenFromCookie from "../../utils/getJWT.ts";
 import Popup from "reactjs-popup";
 import OtpInput from "react-otp-input";
-import { useNavigate } from "react-router-dom";
 
 function Modal2FA({ user }: any) {
 

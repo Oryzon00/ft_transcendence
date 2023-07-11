@@ -5,7 +5,6 @@ import apiAddress from "../apiAddress";
 import getJwtTokenFromCookie from "../getJWT";
 
 async function getUserAPI(): Promise<User> {
-	console.log("call fetch")
 	const url = apiAddress + "/user/me";
 	const user = fetch(url, {
 		method: "GET",
@@ -22,13 +21,10 @@ async function getUserAPI(): Promise<User> {
 			return response.json();
 		})
 		.then(function (data) {
-			console.log("in getUserAPI");
-		console.log(data.name);
 			return data;
 		})
 		.catch(function (error) {
 			//handle error
-			console.log("error in getUserAPI")
 			console.log(error);
 		});
 		
@@ -51,8 +47,6 @@ function useUser() : UserHook {
 		user,
 		setUser
 	};
-	console.log("in use User");
-	console.log(userHook.user.name);
 	return userHook;
 }
 

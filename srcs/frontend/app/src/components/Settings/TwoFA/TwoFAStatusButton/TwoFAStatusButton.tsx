@@ -3,9 +3,6 @@ import { UserContext } from "../../../../utils/contexts/userContext/userContext"
 
 function TwoFAStatus() {
 	const userHook = useContext(UserContext);
-	console.log({
-		userHook
-	})
 	if (!userHook) return null;
 	return (
 		<div>

@@ -13,8 +13,6 @@ export const UserProvider: React.FC<PropsWithChildren<unknown>> = function ({
 	children
 }) {
 	const userHook = useUser();
-	console.log("in Provider");
-	console.log(userHook.user.name);
 	return (
 		<UserContext.Provider value={userHook}>{children}</UserContext.Provider>
 	);
