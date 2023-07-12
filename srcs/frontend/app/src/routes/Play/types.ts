@@ -8,8 +8,9 @@ export enum ClientEvents
   // Lobby
   LobbyCreate = 'client.lobby.create',
   LobbyJoin = 'client.lobby.join',
-  LobbyLeave = 'client.lobby.leave'
+  LobbyLeave = 'client.lobby.leave',
 
+  MovePaddle = 'client.game.movePaddle'
 }
 
 export enum ServerEvents

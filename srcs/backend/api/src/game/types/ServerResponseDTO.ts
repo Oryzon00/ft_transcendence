@@ -1,10 +1,7 @@
 import { LobbyMode } from "../Lobby/lobby.types";
+import { Point } from "../Pong/types/Point";
 import { ServerEvents } from "./ServerEvents";
 
-export default class Point {
-    x: number = 0;
-    y: number = 0;
-}
 
 export type ServerResponseDTO = {
 	[ServerEvents.LobbyState]: {
@@ -14,6 +11,8 @@ export type ServerResponseDTO = {
 		hasFinished: boolean,
 		isPaused: boolean,
 		playersCount: number,
+		gameWidth: number,
+		gameHeight: number,
 		ballPosition: Point,
 		padPositions: Record<string, Point>,
 		scores: Record<string, number>,

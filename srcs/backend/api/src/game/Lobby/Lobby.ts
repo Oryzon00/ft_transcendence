@@ -5,6 +5,8 @@ import { AuthenticatedSocket } from "../types/AuthenticatedSocket";
 import { Pong } from "../Pong/Pong";
 import { ServerEvents } from "../types/ServerEvents";
 import { ServerResponseDTO } from "../types/ServerResponseDTO";
+import { Paddle } from "../Pong/types/Paddle";
+import { Point } from "../Pong/types/Point";
 
 export class Lobby {
 	public readonly Id: string = v4();
@@ -21,6 +23,14 @@ export class Lobby {
 	public removeClient(client: AuthenticatedSocket): void {}
 
 	public sendLobbyState(): void {
+		function convertMapToRecord(map: Map<string, Paddle>): Record<string, Point> {
+			let newRecord: Record<string, Point> = {}
+			for (let [key, value] of map) {
+			  newRecord[key] = value.pos;
+			}
+			return newRecord;
+		}
+		
 		const payload: ServerResponseDTO[ServerEvents.LobbyState] = {
 			lobbyId: this.Id,
 			lobbyMode: this.maxClients === 1 ? 'PvE' : 'PvP',
@@ -28,6 +38,10 @@ export class Lobby {
 			hasFinished: this.game.hasFinished,
 			isPaused: this.game.isPaused,
 			playersCount: this.clients.size,
+			gameWidth: this.game.width,
+			gameHeight: this.game.height,
+			ballPosition: this.game.ball.pos,
+			padPositions: convertMapToRecord(this.game.paddles),
 			scores: this.game.scores,
 		}
 

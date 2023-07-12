@@ -1,4 +1,4 @@
-import Point from './Point.tsx'
+import Point from './Point'
 
 export default class Paddle {
 	pos: Point = {x: 0, y: 0};
