@@ -16,6 +16,8 @@ export class Pong {
 
 	public countdown: number = 0;
 
+	private startTimer: number;
+
 	private lastUpdate: number = (new Date()).getTime();
 
 	//Game Components Infos
@@ -51,22 +53,22 @@ export class Pong {
 
 		//countdown 5
 		
+		this.startTimer = (new Date().getTime());
 		//gameLoop
 		while(!this.hasFinished)
 		{
 			setTimeout(() => {this.nextFrame()}, 16);
+			if ((new Date()).getTime() - this.startTimer === this.endTimer)
+				this.end();
 		}
 
 		//send event winner + update players MMR
-
-		this.end()
 	}
 
 	private nextFrame() {
 		
 		if (this.countdown === 0) {
 			//updateball
-			//update score
 		} else {
 			this.countdown -= ((new Date()).getTime() - this.lastUpdate);
 		}
