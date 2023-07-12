@@ -23,7 +23,7 @@ const router = createBrowserRouter([
 	},
 	{
 		path: "/home",
-		element: <HomePage />, // HomePage != Homepage
+		element: <HomePage />,
 		children: [
 			{
 				path: "/home/profile/",
