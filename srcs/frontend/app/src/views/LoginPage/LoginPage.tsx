@@ -1,7 +1,7 @@
 import LoginLayout from "../../layouts/LoginLayout/LoginLayout.tsx";
 
-function NotFoundPage() { //pourquoi NotfoundPge
+function LoginPage() {
 	return <LoginLayout />;
 }
 
-export default NotFoundPage;
+export default LoginPage;
