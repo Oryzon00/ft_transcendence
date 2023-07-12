@@ -4,6 +4,7 @@ import apiAddress from "../../../../utils/apiAddress";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
 import "./TwoFARegisterButton.styles.css";
+import { notifyError } from "../../../../utils/notify";
 
 function TwoFARegisterButton() {
 	const [qrCode, setQrCode] = useState("");
@@ -30,7 +31,7 @@ function TwoFARegisterButton() {
 				setOpen(true);
 			})
 			.catch(function (error) {
-				console.log(error);
+				notifyError(error.message);
 			});
 	}
 	function closeModal() {

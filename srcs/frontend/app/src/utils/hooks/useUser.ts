@@ -3,6 +3,7 @@ import { User } from "./TuseUser";
 import { UserHook } from "./TuseUser";
 import apiAddress from "../apiAddress";
 import getJwtTokenFromCookie from "../getJWT";
+import { notifyError } from "../notify";
 
 async function getUserAPI(): Promise<User> {
 	const url = apiAddress + "/user/me";
@@ -24,8 +25,7 @@ async function getUserAPI(): Promise<User> {
 			return data;
 		})
 		.catch(function (error) {
-			//handle error
-			console.log(error);
+			notifyError(error.message);
 		});
 		
 	return user;

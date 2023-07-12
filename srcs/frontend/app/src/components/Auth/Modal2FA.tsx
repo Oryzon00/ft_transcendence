@@ -3,6 +3,7 @@ import apiAddress from "../../utils/apiAddress.ts";
 import getJwtTokenFromCookie from "../../utils/getJWT.ts";
 import Popup from "reactjs-popup";
 import OtpInput from "react-otp-input";
+import { notifyError } from "../../utils/notify.ts";
 
 function Modal2FA({ user }: any) {
 
@@ -46,7 +47,7 @@ function Modal2FA({ user }: any) {
 				self.location.href = "home";
 			})
 			.catch(function (error) {
-				console.log(error);
+				notifyError(error.message);
 			});
 	}
 

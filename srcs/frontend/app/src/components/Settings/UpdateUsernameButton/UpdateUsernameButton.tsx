@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { UserContext } from "../../../utils/contexts/userContext.tsx";
 import apiAddress from "../../../utils/apiAddress.ts";
 import getJwtTokenFromCookie from "../../../utils/getJWT.ts";
+import { notifyError } from "../../../utils/notify.ts";
 
 function UpdateUsernameButton() {
 	const userHook = useContext(UserContext);
@@ -38,7 +39,7 @@ function UpdateUsernameButton() {
 				});
 			})
 			.catch(function (error) {
-				console.log(error);
+				notifyError(error.message);
 			});
 	}
 	const handleClick = (event: any) => {

@@ -5,6 +5,7 @@ import OtpInput from "react-otp-input";
 import Popup from "reactjs-popup";
 import "./TwoFATurnOnButton.styles.css";
 import { UserContext } from "../../../../utils/contexts/userContext";
+import { notifyError } from "../../../../utils/notify";
 
 function TwoFATurnOnButton() {
 	const [open, setOpen] = useState(false);
@@ -47,7 +48,7 @@ function TwoFATurnOnButton() {
 				}
 			})
 			.catch(function (error) {
-				console.log(error);
+				notifyError(error.message);
 			});
 	}
 
