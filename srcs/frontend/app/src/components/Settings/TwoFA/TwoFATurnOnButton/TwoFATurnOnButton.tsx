@@ -32,7 +32,7 @@ function TwoFATurnOnButton() {
 				TOTP: otp
 			})
 		})
-			.then(function (response) {
+			.then(function (response: Response) {
 				if (!response.ok)
 					throw new Error(
 						"Request failed with status " + response.status
@@ -47,7 +47,7 @@ function TwoFATurnOnButton() {
 					});
 				}
 			})
-			.catch(function (error) {
+			.catch(function (error: Error) {
 				notifyError(error.message);
 			});
 	}

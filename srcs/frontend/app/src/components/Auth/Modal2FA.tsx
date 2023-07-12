@@ -10,8 +10,9 @@ function Modal2FA({ user }: any) {
 	const [open, setOpen] = useState(true);
 	const [OTP, setOTP] = useState("");
 	if (OTP.length == 6) {
-		verifyOTP();
-		closeModal();
+		verifyOTPBack();
+		console.log()
+		setTimeout(closeModal, 5000);
 		// appel deux fois, pourquoi?
 	}
 
@@ -20,7 +21,7 @@ function Modal2FA({ user }: any) {
 		setOTP("");
 	}
 
-	function verifyOTP() {
+	function verifyOTPBack() {
 		const url = apiAddress + "/auth/2FA/verify";
 
 		fetch(url, {
