@@ -16,7 +16,7 @@ export class Pong {
 
 	public countdown: number = 0;
 
-	private intervalID;
+	private lastUpdate: number = (new Date()).getTime();
 
 	//Game Components Infos
 	public readonly height: number = 800;
@@ -50,21 +50,34 @@ export class Pong {
 		);
 
 		//countdown 5
+		
+		//gameLoop
+		while(!this.hasFinished)
+		{
+			setTimeout(() => {this.nextFrame()}, 16);
+		}
 
-		this.intervalID = setInterval(() => this.nextFrame(), 17);
+		//send event winner + update players MMR
 
-		this.end();
+		this.end()
 	}
 
 	private nextFrame() {
-		// this.ball.update(Object.entries(paddles));
+		
+		if (this.countdown === 0) {
+			//updateball
+			//update score
+		} else {
+			this.countdown -= ((new Date()).getTime() - this.lastUpdate);
+		}
+		
+		this.lastUpdate = (new Date().getTime());
 	}
 
 	public end(): void {
 		if (this.hasFinished || !this.hasStarted) return;
 
 		this.hasFinished = true;
-		clearInterval(this.intervalID);
 
 		this.lobby.sendEvent<ServerResponseDTO[ServerEvents.GameMessage]>(
 			ServerEvents.GameMessage,
@@ -77,9 +90,11 @@ export class Pong {
 
 	public movePaddle(data: MovePaddleDTO): void {
 		let pad: Paddle = this.paddles[data.clientId];
+		
 		if (pad.isCheatedPosition(data.padPosition)) {
 			pad.newPosition(data.padPosition);
 		}
+		
 		this.lobby.sendLobbyState();
 	}
 }
