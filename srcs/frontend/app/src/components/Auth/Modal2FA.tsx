@@ -4,21 +4,19 @@ import getJwtTokenFromCookie from "../../utils/getJWT.ts";
 import Popup from "reactjs-popup";
 import OtpInput from "react-otp-input";
 import { notifyError } from "../../utils/notify.ts";
+import { Modal2FAProps } from "./TModal2FA";
 
-function Modal2FA({ user }: any) {
-
+function Modal2FA({ user }: Modal2FAProps) {
 	const [open, setOpen] = useState(true);
 	const [OTP, setOTP] = useState("");
 	if (OTP.length == 6) {
-		verifyOTPBack();
-		console.log()
-		setTimeout(closeModal, 5000);
-		// appel deux fois, pourquoi?
+		setTimeout(verifyOTPBack, 300);
+		setTimeout(clearModal, 300);
 	}
 
-	function closeModal() {
-		setOpen(false);
+	function clearModal() {
 		setOTP("");
+		console.log("in clear modal");
 	}
 
 	function verifyOTPBack() {
@@ -43,7 +41,6 @@ function Modal2FA({ user }: any) {
 				return response.json();
 			})
 			.then(function (data) {
-				// use naviguate ?
 				document.cookie = `JWT=${data.access_token};Path=/`;
 				self.location.href = "home";
 			})
@@ -55,9 +52,9 @@ function Modal2FA({ user }: any) {
 	return (
 		<>
 			<div>Auth loading</div>
-			<Popup modal nested open={open} onClose={closeModal}>
+			<Popup modal nested open={open} onClose={clearModal}>
 				<div className="modal">
-					<button className="close" onClick={closeModal}>
+					<button className="close" onClick={clearModal}>
 						&times;
 					</button>
 					<h2>Enter your OTP</h2>

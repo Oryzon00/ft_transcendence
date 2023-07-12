@@ -37,7 +37,7 @@ export class AuthController {
 	@Post("2FA/verify")
 	async verifyTOTP(@Body() body): Promise<TokenDto> {
 		const trueUser = await this.userService.getTrueUser(body.user);
-		const isOTPValid = this.authService.verifyTOTPValid(trueUser, body.OTP);
+		const isOTPValid = await this.authService.verifyTOTPValid(trueUser, body.OTP);
 		if (!isOTPValid) throw new UnauthorizedException();
 		return await this.authService.signToken(body.user);
 	}

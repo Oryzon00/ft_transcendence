@@ -55,7 +55,6 @@ function TwoFATurnOnButton() {
 	if (OTP.length == 6) {
 		turnOn2FA(OTP);
 		closeModal();
-		// appel deux fois, pourquoi?
 	}
 
 	return (
