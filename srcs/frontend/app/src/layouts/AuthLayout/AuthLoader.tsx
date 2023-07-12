@@ -1,5 +1,4 @@
 import apiAddress from "../../utils/apiAddress.ts";
-import { useNavigate } from "react-router-dom";
 import { notifyError } from "../../utils/notify.ts";
 
 function paramsToJSON(iterator: IterableIterator<[string, string]>) {
