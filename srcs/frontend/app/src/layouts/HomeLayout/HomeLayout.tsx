@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import ButtonSettings from "../../components/Home/Button2FA.tsx";
 import User from "../../components/Home/User.tsx";
-import ButtonDeleteCookie from "../../components/Home/ButtonDeleteCookie.tsx";
 import ProfileButton from "../../components/Home/ProfileButton.tsx";
 import './HomeLayout.styles.css'
 import { cookieProtection } from "../../utils/cookieProtection.ts";
@@ -26,7 +25,6 @@ function HomeLayout() {
 				<div>Welcome home !</div>
 				<User></User>
 				<ButtonSettings />
-				<ButtonDeleteCookie />
 			</div>
 			<div />
 		</div>
