@@ -16,14 +16,7 @@ export class AuthController {
 	) {}
 
 	@Post()
-<<<<<<< HEAD
-	async auth(@Body() body): Promise<TokenDto> {
-		console.log({
-			body
-		})
-=======
 	async auth(@Body() body): Promise<TokenDto | UserSafeDTO> {
->>>>>>> origin/main
 		if (body.error || !body.code) throw new UnauthorizedException();
 
 		const token42 = await this.authService.getToken42(body.code);

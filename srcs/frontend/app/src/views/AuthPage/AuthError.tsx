@@ -5,11 +5,7 @@ function AuthError () {
 
     return(
         <>
-<<<<<<< HEAD:srcs/frontend/app/src/routes/root/rootError.tsx
-            <div>Error :</div>
-=======
             <div>Auth Error</div>
->>>>>>> origin/main:srcs/frontend/app/src/views/AuthPage/AuthError.tsx
             <p>
                 <i>{error.statusText || error.message}</i>
             </p>
