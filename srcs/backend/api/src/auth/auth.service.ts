@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import {
+	Injectable,
+	InternalServerErrorException,
+	UnauthorizedException
+} from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { Prisma, User } from "@prisma/client";
 import { HttpService } from "@nestjs/axios";
@@ -8,11 +12,10 @@ import * as process from "process";
 import { UserData42Dto } from "./dto/userData42.dto";
 import { JwtService } from "@nestjs/jwt";
 import { TokenDto } from "./dto/token.dto";
-import { UnauthorizedException } from "@nestjs/common";
 import { authenticator } from "otplib";
-import { TwoFADTO } from "./dto/twoFA.dto";
-import { toDataURL } from 'qrcode';
-
+import { TwoFADto } from "./dto/twoFA.dto";
+import { toDataURL } from "qrcode";
+import { error } from "console";
 
 @Injectable()
 export class AuthService {
@@ -22,32 +25,60 @@ export class AuthService {
 		private jwt: JwtService
 	) {}
 
-	async generateTwoFASecret(user: User) : Promise<TwoFADTO> {
-		const twoFASecret = authenticator.generateSecret();
-		const otpAuthUrl = authenticator.keyuri(user.name, "Transcendance", twoFASecret);
+	/* 2FA */
+
+	async generate2FASecretQRCode(user: User): Promise<string> {
+		const secret2FA = authenticator.generateSecret();
 		try {
 			await this.prisma.user.update({
 				where: {
 					id: user.id
 				},
 				data: {
-					twoFASecret: twoFASecret
+					secret2FA: secret2FA
 				}
 			});
 		} catch {
 			throw new InternalServerErrorException();
 		}
-		return {
-			twoFASecret,
-			otpAuthUrl
-		};
+		const otpAuthUrl = authenticator.keyuri(
+			user.name,
+			"Transcendance",
+			secret2FA
+		);
+		return otpAuthUrl;
 	}
 
-	async generateQRCodeDataURL(otpAuthUrl: string) : Promise<String> {
+	async generateQRCodeDataURL(otpAuthUrl: string): Promise<string> {
 		return toDataURL(otpAuthUrl);
 	}
 
-/* ---------------------------------------------------------------------------------------------- */
+	async verifyTOTPValid(user: User, TOTP: string): Promise<boolean> {
+		return authenticator.verify({
+			token: TOTP,
+			secret: user.secret2FA
+		});
+	}
+
+	async turnOnOff2FA(user: User, status: boolean) {
+		try {
+			await this.prisma.user.update({
+				where: {
+					id: user.id
+				},
+				data: {
+					is2FAOn: status
+				}
+			});
+		} catch {
+			throw new InternalServerErrorException();
+		}
+		return status;
+	}
+
+	/* ---------------------------------------------------------------------------------------------- */
+
+	/* AUTH */
 
 	async getToken42(code: string) {
 		const requestConfig: AxiosRequestConfig = {
@@ -59,16 +90,24 @@ export class AuthService {
 				redirect_uri: "http://localhost:8000/auth"
 			}
 		};
-		const responseData = await lastValueFrom(
-			this.httpService
-				.post("https://api.intra.42.fr/oauth/token", null, requestConfig)
-				.pipe(
-					map((response: AxiosResponse) => {
-						return response.data;
-					})
-				)
-		);
-		return responseData;
+		try {
+			const responseData = await lastValueFrom(
+				this.httpService
+					.post(
+						"https://api.intra.42.fr/oauth/token",
+						null,
+						requestConfig
+					)
+					.pipe(
+						map((response: AxiosResponse) => {
+							return response.data;
+						})
+					)
+			);
+			return responseData;
+		} catch (error) {
+			throw new UnauthorizedException();
+		}
 	}
 
 	async getUserData42(token: any): Promise<UserData42Dto> {
@@ -78,46 +117,52 @@ export class AuthService {
 			}
 		};
 		const responseData = await lastValueFrom(
-			this.httpService.get("https://api.intra.42.fr/v2/me", requestConfig).pipe(
-				map((response: AxiosResponse) => {
-					return response.data;
-				})
-			)
+			this.httpService
+				.get("https://api.intra.42.fr/v2/me", requestConfig)
+				.pipe(
+					map((response: AxiosResponse) => {
+						return response.data;
+					})
+				)
 		);
 		const userData42: UserData42Dto = {
 			id: responseData.id,
-			login: responseData.login
+			login: responseData.login,
+			image: responseData.image.link
 		};
 		return userData42;
 	}
 
 	async login(userData42: UserData42Dto): Promise<User> {
+		let user: User;
 		try {
-			const user = await this.prisma.user.create({
+			user = await this.prisma.user.create({
 				data: {
 					name: userData42.login,
+					image: userData42.image,
 					id42: userData42.id
 				}
 			});
-			return user;
 		} catch (error) {
 			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === "P2002") {
-					const user = await this.prisma.user.findUnique({
+					user = await this.prisma.user.findUnique({
 						where: {
 							id42: userData42.id
 						}
 					});
-					return user;
 				}
 			} else throw error;
 		}
+
+		return user;
 	}
 
 	async signToken(user: User): Promise<TokenDto> {
 		const payload = {
 			sub: user.id,
-			name: user.name
+			name: user.name,
+			is2FAOn: user.is2FAOn
 		};
 
 		const token = await this.jwt.signAsync(payload, {
@@ -128,20 +173,5 @@ export class AuthService {
 		return {
 			access_token: token
 		};
-	}
-
-	async auth(code: string): Promise<TokenDto> {
-		const token42 = await this.getToken42(code);
-		if (!token42) throw new UnauthorizedException();
-
-		const userData42 = await this.getUserData42(token42);
-		if (!userData42) throw new UnauthorizedException();
-
-		const user = await this.login(userData42);
-		if (!user) throw new UnauthorizedException();
-
-		const token = await this.signToken(user);
-		
-		return token;
 	}
 }

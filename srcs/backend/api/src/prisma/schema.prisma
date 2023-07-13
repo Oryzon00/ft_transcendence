@@ -17,13 +17,16 @@ enum Status {
 }
 
 model User {
-  id   Int @id @default(autoincrement())
-  id42 Int @unique
+  id    Int    @id @default(autoincrement())
+  id42  Int    @unique
+  image String
 
   name        String       @unique
   gameProfile GameProfile?
   twoFA       Boolean      @default(false)
   twoFASecret String?
+  is2FAOn     Boolean      @default(false)
+  secret2FA   String?
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 
