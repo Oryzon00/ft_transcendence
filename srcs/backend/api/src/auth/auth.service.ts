@@ -1,4 +1,5 @@
 import {
+	ForbiddenException,
 	Injectable,
 	InternalServerErrorException,
 	UnauthorizedException
@@ -40,7 +41,7 @@ export class AuthService {
 					}
 				});
 			} catch {
-				throw new InternalServerErrorException();
+				throw new ForbiddenException();
 			}
 		}
 
@@ -74,7 +75,7 @@ export class AuthService {
 				}
 			});
 		} catch {
-			throw new InternalServerErrorException();
+			throw new ForbiddenException();
 		}
 		return status;
 	}
