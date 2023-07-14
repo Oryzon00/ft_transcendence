@@ -13,11 +13,11 @@ function SettingsLayout() {
 		<>
 			<h1> User Settings</h1>
 			<LogOutButton />
-			<TwoFAStatus />
 			<TwoFATurnOnButton />
 			<TwoFATurnOffButton />
 			<TwoFARegisterButton />
 			<UpdateUsernameButton />
+			<TwoFAStatus />
 		</>
 	);
 }
