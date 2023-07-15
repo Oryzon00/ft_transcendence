@@ -14,6 +14,7 @@ import AuthPage from "./views/AuthPage/AuthPage.tsx";
 import { authLoader } from "./layouts/AuthLayout/AuthLoader.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Chat } from "./views/chat/chat.tsx";
 
 const router = createBrowserRouter([
 	{
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
 	{
 		path: "/test/settingsCSS",
 		element: <OTPLoginPopup />
+	},
+	{
+		path: "/chat",
+		element: <Chat />
 	}
 ]);
 

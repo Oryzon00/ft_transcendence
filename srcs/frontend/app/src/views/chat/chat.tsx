@@ -1,7 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { socket, WebsocketContext, WebsocketProvider } from "../contexts/WebsocketContext";
+import { socket, WebsocketContext, WebsocketProvider } from "../../contexts/WebsocketContext";
 import { MessagePayload, ChannelPayload } from "./chat.d"
 import "./chat.css";
+import { UserHook } from "../../utils/hooks/TuseUser";
+import useUser from "../../utils/hooks/useUser";
 
 type CurrentChannel = {
 	channel: {[key: number]: ChannelPayload},
@@ -33,6 +35,7 @@ export function Chat() {
 	const [room, setRoom] = useState('');
 	const [channel, setChannel] = useState<{[key: number]: ChannelPayload}>({});
 	const sockets = useContext(WebsocketContext);
+	const user : UserHook = useUser();
 	
 	useEffect(() => {
 		sockets.on('connect', () => {
@@ -71,14 +74,13 @@ export function Chat() {
 	}, [channel]);
 
 	const sendMessage = () => {
-		console.log("yo");
-		let sendMessages = {authorId: 1, channelId: current, content: value};
+		let sendMessages = {authorId: user.user.id, channelId: current, content: value};
 		sockets.emit('newMessage', sendMessages) ;
 		setValue('');
 	};
 
 	const createChannel = () => {
-		socket.emit('newChannel', {ownerId: 1, name: room})
+		socket.emit('newChannel', {ownerId: user.user.id , name: room})
 		setName(room);
 		setRoom('');
 	};
