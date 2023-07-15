@@ -3,8 +3,10 @@ import apiAddress from "../../utils/apiAddress.ts";
 import getJwtTokenFromCookie from "../../utils/getJWT.ts";
 import Popup from "reactjs-popup";
 import OtpInput from "react-otp-input";
+import { useNavigate } from "react-router";
 
 function Modal2FA({ user }: any) {
+	const navigate = useNavigate();
 
 	const [open, setOpen] = useState(true);
 	const [OTP, setOTP] = useState("");
@@ -43,7 +45,7 @@ function Modal2FA({ user }: any) {
 			.then(function (data) {
 				// use naviguate ?
 				document.cookie = `JWT=${data.access_token};Path=/`;
-				self.location.replace("home");
+				navigate("/home", { replace: true });
 			})
 			.catch(function (error) {
 				console.log(error);
