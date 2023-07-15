@@ -17,7 +17,7 @@ function Modal2FA({ user }: Modal2FAProps) {
 		setTimeout(clearModal, 300);
 	}
 
-	function clearModal() {
+	function clearModal() { //Sinon faire arrow function avec un bool dedans
 		setOTP("");
 		console.log("in clear modal");
 	}
@@ -55,11 +55,9 @@ function Modal2FA({ user }: Modal2FAProps) {
 	return (
 		<>
 			<div>Auth loading</div>
-			<Popup modal nested open={open} onClose={clearModal}>
+			<span>Faire fake page qui sera jamais accessible</span>
+			<Popup modal nested disabled open={open} onClose={clearModal}>
 				<div className="modal">
-					<button className="close" onClick={clearModal}>
-						&times;
-					</button>
 					<h2>Enter your OTP</h2>
 					<OtpInput
 						value={OTP}
