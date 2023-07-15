@@ -1,5 +1,4 @@
 import apiAddress from "../../utils/apiAddress.ts";
-import { useNavigate } from "react-router-dom";
 
 function paramsToJSON(iterator: IterableIterator<[string, string]>) {
 	const result: Record<string, string> = {};
@@ -33,7 +32,7 @@ export async function authLoader() {
 			}
 			if (data.access_token) {
 				document.cookie = `JWT=${data.access_token};Path=/`;
-				self.location.href = "home";
+				self.location.replace("home");
 			}
 			throw new Error("Unexpected error has occured");
 		})
