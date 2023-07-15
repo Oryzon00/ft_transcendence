@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 
-function ButtonDeleteCookie () {
+export function LogOutButton () {
 	const navigate = useNavigate();
 
 	function deleteCookie() {
@@ -9,7 +9,5 @@ function ButtonDeleteCookie () {
 		navigate("/");
 	}
 
-	return <button onClick={deleteCookie}>Delete Cookie</button>
+	return <button onClick={deleteCookie}>Log Out</button>
 }
-
-export default ButtonDeleteCookie;

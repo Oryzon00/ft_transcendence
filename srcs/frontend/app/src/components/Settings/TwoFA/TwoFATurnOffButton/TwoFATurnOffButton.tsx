@@ -1,12 +1,14 @@
 import { useContext } from "react";
 import apiAddress from "../../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../../utils/getJWT";
-import UserContext from "../../../../utils/contexts/userContext";
+import { UserContext } from "../../../../utils/contexts/userContext";
+import { notifyError } from "../../../../utils/notify";
 
 function TwoFATurnOffButton() {
 	const userHook = useContext(UserContext);
 
 	function turnOff2FA() {
+		// notifyError("test");
 		const url = apiAddress + "/auth/2FA/turn-off";
 		fetch(url, {
 			method: "PATCH",
@@ -32,7 +34,7 @@ function TwoFATurnOffButton() {
 				}
 			})
 			.catch(function (error) {
-				console.error(error);
+				notifyError(error.message);
 			});
 	}
 

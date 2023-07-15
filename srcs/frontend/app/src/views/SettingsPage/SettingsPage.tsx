@@ -1,15 +1,11 @@
 import SettingsLayout from "../../layouts/SettingsLayout/SettingsLayout";
-import UserContext from "../../utils/contexts/userContext";
-import useUser from "../../utils/hooks/useUser";
+import { UserProvider } from "../../utils/contexts/userContext";
 
 function SettingsPage() {
-
-const userHook = useUser();
-
 	return (
-		<UserContext.Provider value={userHook}>
+		<UserProvider>
 			<SettingsLayout />
-		</UserContext.Provider>
+		</UserProvider>
 	);
 }
 

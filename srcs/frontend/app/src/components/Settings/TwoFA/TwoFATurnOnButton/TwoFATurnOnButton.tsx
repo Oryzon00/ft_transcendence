@@ -4,12 +4,13 @@ import getJwtTokenFromCookie from "../../../../utils/getJWT";
 import OtpInput from "react-otp-input";
 import Popup from "reactjs-popup";
 import "./TwoFATurnOnButton.styles.css";
-import UserContext from "../../../../utils/contexts/userContext";
+import { UserContext } from "../../../../utils/contexts/userContext";
+import { notifyError } from "../../../../utils/notify";
 
 function TwoFATurnOnButton() {
 	const [open, setOpen] = useState(false);
 	const [OTP, setOTP] = useState("");
-	const userHook = useContext(UserContext); 
+	const userHook = useContext(UserContext);
 
 	function openModal() {
 		setOpen(true);
@@ -31,7 +32,7 @@ function TwoFATurnOnButton() {
 				TOTP: otp
 			})
 		})
-			.then(function (response) {
+			.then(function (response: Response) {
 				if (!response.ok)
 					throw new Error(
 						"Request failed with status " + response.status
@@ -39,22 +40,21 @@ function TwoFATurnOnButton() {
 				return response.json();
 			})
 			.then(function (data) {
-				if (data.status === true) {	
+				if (data.status === true) {
 					userHook.setUser({
 						...userHook.user,
 						is2FAOn: true
 					});
 				}
 			})
-			.catch(function (error) {
-				console.log(error);
+			.catch(function (error: Error) {
+				notifyError(error.message);
 			});
 	}
 
 	if (OTP.length == 6) {
 		turnOn2FA(OTP);
 		closeModal();
-		// appel deux fois, pourquoi?
 	}
 
 	return (

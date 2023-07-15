@@ -1,4 +1,5 @@
 import apiAddress from "../../utils/apiAddress.ts";
+import { notifyError } from "../../utils/notify.ts";
 
 function paramsToJSON(iterator: IterableIterator<[string, string]>) {
 	const result: Record<string, string> = {};
@@ -37,7 +38,7 @@ export async function authLoader() {
 			throw new Error("Unexpected error has occured");
 		})
 		.catch(function (error) {
-			throw new Error(error.message);
+			notifyError(error.message);
 		});
 
 	return data;

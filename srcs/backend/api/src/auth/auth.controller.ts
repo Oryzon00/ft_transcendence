@@ -37,7 +37,10 @@ export class AuthController {
 	@Post("2FA/verify")
 	async verifyTOTP(@Body() body): Promise<TokenDto> {
 		const trueUser = await this.userService.getTrueUser(body.user);
-		const isOTPValid = this.authService.verifyTOTPValid(trueUser, body.OTP);
+		const isOTPValid = await this.authService.verifyTOTPValid(
+			trueUser,
+			body.OTP
+		);
 		if (!isOTPValid) throw new UnauthorizedException();
 		return await this.authService.signToken(body.user);
 	}
@@ -59,7 +62,11 @@ export class AuthController {
 		@GetUser() user: User,
 		@Body() body
 	): Promise<{ status: boolean }> {
-		const isTOTPValid = await this.authService.verifyTOTPValid(user, body.TOTP);
+		if (!user.secret2FA) throw new UnauthorizedException();
+		const isTOTPValid = await this.authService.verifyTOTPValid(
+			user,
+			body.TOTP
+		);
 		if (!isTOTPValid) throw new UnauthorizedException();
 		const status = await this.authService.turnOnOff2FA(user, true);
 

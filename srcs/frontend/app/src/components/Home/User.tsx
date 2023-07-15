@@ -1,6 +1,7 @@
 import { useState } from "react";
 import apiAddress from "../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../utils/getJWT";
+import { notifyError } from "../../utils/notify";
 
 function User() {
 	const [userInfo, setUserInfo] = useState("No user info");
@@ -24,6 +25,8 @@ function User() {
 				setUserInfo(data.name);
 			})
 			.catch(function (error) {
+				notifyError(error.message);
+				//supprimer ca?
 				if (error instanceof Error) {
 					const message: string = error.message;
 					setUserInfo(message);
