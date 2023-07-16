@@ -37,3 +37,7 @@
     flex-direction: row;
     justify-content: space-between;
 } 
+
+#message input, #room input {
+    width: 78%;
+}

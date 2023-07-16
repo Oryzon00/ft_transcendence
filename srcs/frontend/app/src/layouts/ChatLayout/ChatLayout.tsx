@@ -1,3 +1,4 @@
+
 import { useContext, useEffect, useState } from "react";
 import { socket, WebsocketContext, WebsocketProvider } from "../../contexts/WebsocketContext";
 import { MessagePayload, ChannelPayload } from "./chat.d"
@@ -28,7 +29,7 @@ function Discussion({channel, current} : CurrentChannel)
 	);
 }
 
-export function Chat() {
+function ChatLayout() {
 	const [current, setCurrent] = useState(0);
 	const [name, setName] = useState('');
 	const [value, setValue] = useState('');
@@ -116,3 +117,5 @@ export function Chat() {
 		</section>
 	);
 }
+
+export default ChatLayout;
