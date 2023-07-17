@@ -2,7 +2,8 @@ import {
 	ForbiddenException,
 	Injectable,
 	InternalServerErrorException,
-	NotFoundException
+	NotFoundException,
+	UnauthorizedException
 } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { Prisma, User } from "@prisma/client";
@@ -46,15 +47,20 @@ export class UserService {
 		user: User,
 		newName: string
 	): Promise<{ name: string }> {
-		await this.prisma.user.update({
-			where: {
-				id: user.id
-			},
-			data: {
-				name: newName
-			}
-		});
-		return { name: newName };
+		try {
+			await this.prisma.user.update({
+				where: {
+					id: user.id
+				},
+				data: {
+					name: newName
+				}
+			});
+			return { name: newName };
+		} catch (error) {
+			throw new UnauthorizedException();
+		}
+		
 	}
 
 	async findUser(username: string): Promise<UserSafeDTO> {
