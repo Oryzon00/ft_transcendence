@@ -2,7 +2,7 @@ import { useContext } from "react";
 import apiAddress from "../../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../../utils/getJWT";
 import { UserContext } from "../../../../utils/contexts/userContext";
-import { notifyError, notifyInfo, notifyWarning } from "../../../../utils/notify";
+import { notifyError, notifyInfo } from "../../../../utils/notify";
 
 function TwoFATurnOffButton() {
 	const userHook = useContext(UserContext);
