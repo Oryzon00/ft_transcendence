@@ -37,8 +37,8 @@ function UpdateUsernameButton() {
 				});
 				notifyInfo(`Your username has been changed to ${data.name}`);
 			})
-			.catch(function (error) {
-				notifyError(error.message);
+			.catch(function () {
+				notifyError(`Username ${mymessage} is already taken`);
 			});
 	}
 	const handleClick = (event: any) => {
