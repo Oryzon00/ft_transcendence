@@ -8,16 +8,14 @@ import { Modal2FAProps } from "./TModal2FA";
 import { throwErrorMessage } from "../../utils/throwErrorMessage.ts";
 
 function Modal2FA({ user }: Modal2FAProps) {
-	const [open, setOpen] = useState(true);
 	const [OTP, setOTP] = useState("");
 	if (OTP.length == 6) {
-		setTimeout(verifyOTPBack, 300);
-		setTimeout(clearModal, 300);
+		verifyOTPBack();
+		clearModal();
 	}
 
 	function clearModal() {
 		setOTP("");
-		console.log("in clear modal");
 	}
 
 	function verifyOTPBack() {
@@ -42,15 +40,15 @@ function Modal2FA({ user }: Modal2FAProps) {
 				document.cookie = `JWT=${data.access_token};Path=/`;
 				self.location.href = "home";
 			})
-			.catch(function (error) {
-				notifyError(error.message);
+			.catch(function () {
+				notifyError("Incorrect OTP");
 			});
 	}
 
 	return (
 		<>
 			<div>Auth loading</div>
-			<Popup modal nested open={open} onClose={clearModal}>
+			<Popup modal nested open={true} onClose={clearModal}>
 				<div className="modal">
 					<button className="close" onClick={clearModal}>
 						&times;

@@ -11,9 +11,10 @@ function LoginButton() {
 		self.location.href = api42Address;
 	}
 
-	useEffect (() => {
-		if (getJwtTokenFromCookie())
+	useEffect(() => {
+		if (getJwtTokenFromCookie()) {
 			setTimeout(navigate, 500, "/home");
+		}
 	});
 
 	return (
