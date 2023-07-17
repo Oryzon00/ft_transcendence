@@ -76,14 +76,6 @@ class ChannelDatabase {
 		return (res);
 	}
 
-    async getChannelMessages(channel: Channel) : Promise<Message[]> {
-        return (this.prisma.message.findMany({
-            where: {
-                channelId: channel.id,
-            },
-        }));
-    }
-
     async getPublicChannel() : Promise<Channel[]> {
         return (this.prisma.channel.findMany({
             where: {
@@ -91,6 +83,22 @@ class ChannelDatabase {
             }
         }))
     }
+
+	async getChannelInfo(id: number) : Promise<Channel> {
+		return (this.prisma.channel.findUnique({
+			where: {
+				id: id,
+			}
+		}))
+	}
+
+	async getChannelMessage(id: number) : Promise<Message[]> {
+		return (this.prisma.message.findMany({
+			where: {
+				channelId: id,
+			},
+		}))
+	}
 };
 
 export default ChannelDatabase;

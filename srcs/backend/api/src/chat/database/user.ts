@@ -4,9 +4,9 @@ import { PrismaService } from "src/prisma/prisma.service";
 class UserDatabase {
 	constructor(private prisma: PrismaService) {}
 
-    // Get all the channel 
-    async getUserData(userid: number) {
-        let res : { members: Member[] } = await this.prisma.user.findUnique({
+    // Get all the channelid and userid 
+    async getMembers(userid: number) : Promise<{members: Member[]}> {
+        let member : { members: Member[] } = await this.prisma.user.findUnique({
             where: {
                 id: userid,
             },
@@ -14,8 +14,7 @@ class UserDatabase {
                 members: true,
             }
         })
-        console.log(res);
-        return (res);
+        return (member);
     }
     /*
     joinChannel

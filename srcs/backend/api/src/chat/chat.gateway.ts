@@ -4,52 +4,53 @@ import { Socket, Server } from 'socket.io';
 import { MessagePayload, ChannelPayload } from './chat';
 import { Channel, Member, Message } from '@prisma/client';
 import ChannelDatabase from './database/channel';
+import UserDatabase from './database/user';
+import AdminDatabase from './database/admin';
+import { GetUser } from 'src/auth/decorator';
 
 @WebSocketGateway({
 	cors: {
 		origins: ['http://localhost:3000'],
 	}
 })
-export class ChatGateway implements OnModuleInit{ 
 
-	constructor(private db : ChannelDatabase) {};
+/*
+	Function for the chat socket
+	sendMessage
+	quitChannel
+*/
+export class ChatGateway implements OnModuleInit{ 
+	constructor(
+		private channeldb : ChannelDatabase,
+		private userdb : UserDatabase,
+		private admindb : AdminDatabase
+	) {};
 
 	@WebSocketServer()
 	server : Server;
 
 	onModuleInit() {
 		this.server.on('connection', (socket) => {
-			console.log('connected');
-			socket.to(socket.id).emit('onConnection', )
+			console.log('connected ', socket.id);
 		});
 	}
 
 	@SubscribeMessage('newMessage')
 	async onNewMessage(@ConnectedSocket() client: Socket, @MessageBody() body : MessagePayload) {
-		let res = await this.db.stockMessages(body);
-		console.log(res);
+		const res = await this.channeldb.stockMessages(body);
 		this.server.to(String(body.channelId)).emit('onMessage', res);
 	}
 
-	// If i put the functionnality to modify an already send message
-	@SubscribeMessage('changeMessage')
-	onChangeMessage(@ConnectedSocket() client: Socket, @MessageBody() body : MessagePayload) {}
-
 	@SubscribeMessage('newChannel')
 	async onNewChannel(@ConnectedSocket() client: Socket, @MessageBody() body : ChannelPayload) {
-		let channel : Channel = await this.db.createChannel(body);
+		let channel : Channel = await this.channeldb.createChannel(body);
 		client.join(String(channel.id));
-		console.log(channel.id);
 		this.server.to(String(channel.id)).emit('onChannel', channel);
 	}
-
-	// New config for a channel
-	@SubscribeMessage('changeChannel')
-	async onChangeChannel(@ConnectedSocket() client: Socket, @MessageBody() body : ChannelPayload) {}
 
 	@SubscribeMessage('quitChannel')
 	async onQuitChannel(@ConnectedSocket() client: Socket, @MessageBody() body : ChannelPayload) {
 		client.leave(String(body.id));
-		this.server.emit('quitChannel', );
+		this.server.to(String(body.id)).emit('quitChannel', {});
 	}
 }

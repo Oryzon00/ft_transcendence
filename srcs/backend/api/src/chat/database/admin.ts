@@ -4,6 +4,7 @@ class AdminDatabase {
 	constructor(private prisma: PrismaService) {}
 
     /*
+    listAdmin
     async addAdmin();
     async expulseUser();
     async banUser();
