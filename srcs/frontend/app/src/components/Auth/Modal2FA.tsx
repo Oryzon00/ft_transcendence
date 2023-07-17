@@ -17,7 +17,7 @@ function Modal2FA({ user }: Modal2FAProps) {
 		clearModal();
 	}
 
-	function clearModal() { //Sinon faire arrow function avec un bool dedans
+	function clearModal() {
 		setOTP("");
 	}
 
