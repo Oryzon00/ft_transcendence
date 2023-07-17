@@ -37,7 +37,7 @@ function TwoFARegisterButton() {
 	}
 	return (
 		<div>
-			<button onClick={register2FA}> Register to Google Authenticator </button>
+			<button onClick={register2FA}> Register via Google Authenticator </button>
 			<Popup modal nested open={open} onClose={closeModal}>
 				<div className="modal">
 					<button className="close" onClick={closeModal}>
