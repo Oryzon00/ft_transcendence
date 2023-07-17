@@ -38,6 +38,7 @@ function TwoFATurnOnButton() {
 				return response.json();
 			})
 			.then(function () {
+				closeModal();
 				userHook.setUser({
 					...userHook.user,
 					is2FAOn: true
@@ -51,7 +52,7 @@ function TwoFATurnOnButton() {
 
 	if (OTP.length == 6) {
 		turnOn2FA(OTP);
-		closeModal();
+		setOTP("");
 	}
 
 	return (
