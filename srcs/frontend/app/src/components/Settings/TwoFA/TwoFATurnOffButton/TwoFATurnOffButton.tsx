@@ -8,7 +8,6 @@ function TwoFATurnOffButton() {
 	const userHook = useContext(UserContext);
 
 	function turnOff2FA() {
-		// notifyError("test");
 		const url = apiAddress + "/auth/2FA/turn-off";
 		fetch(url, {
 			method: "PATCH",

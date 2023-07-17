@@ -6,6 +6,7 @@ import Popup from "reactjs-popup";
 import "./TwoFATurnOnButton.styles.css";
 import { UserContext } from "../../../../utils/contexts/userContext";
 import { notifyError, notifyInfo } from "../../../../utils/notify";
+import { throwErrorMessage } from "../../../../utils/throwErrorMessage";
 
 function TwoFATurnOnButton() {
 	const [open, setOpen] = useState(false);
@@ -34,9 +35,7 @@ function TwoFATurnOnButton() {
 		})
 			.then(function (response: Response) {
 				if (!response.ok)
-					throw new Error(
-						`Request failed: ${response.statusText} (${response.status})`
-					);
+					throwErrorMessage(response);
 				return response.json();
 			})
 			.then(function () {
