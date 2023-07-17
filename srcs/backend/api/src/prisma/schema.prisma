@@ -80,9 +80,9 @@ model Channel {
 
   name        String?
   avatar      String?
-  description String?
+  description String  @default("")
 
-  status Status?
+  status Status @default(PUBLIC)
 
   ownerId Int
   owner   User @relation("owners", fields: [ownerId], references: [id])
