@@ -9,6 +9,7 @@ import { GetUser } from "src/auth/decorator";
 import { User } from "@prisma/client";
 import { AuthGuard } from "@nestjs/passport";
 import { JwtGuard } from "src/auth/guard";
+import { ChannelCreation } from "./chat";
 
 @UseGuards(JwtGuard)
 @Controller('chat')
@@ -21,10 +22,14 @@ export class ChatController {
     }
 
     @Get('searchChannel')
-    searchChannel() {}
+    searchChannel() {
+        //return this.ChatService.searchChannel
+    }
 
     @Post('createChannel')
-    createChannel() {}
+    createChannel(channel: ChannelCreation) {
+        return this.ChatService.createChannel(channel);
+    }
 
     @Post('joinChannel')
     joinChannel() {}

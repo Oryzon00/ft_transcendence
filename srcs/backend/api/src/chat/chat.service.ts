@@ -1,9 +1,11 @@
 import { Injectable } from "@nestjs/common";
+import { Socket } from 'socket.io';
 import { Channel, Member, Message, User } from "@prisma/client";
 import UserDatabase from "./database/user";
 import ChannelDatabase from "./database/channel";
 import AdminDatabase from "./database/admin";
-import { ChannelPayload, MessagePayload } from "./chat";
+import { ChannelCreation, ChannelPayload, MessagePayload } from "./chat";
+import { ConnectedSocket } from "@nestjs/websockets";
 
 @Injectable()
 export class ChatService {
@@ -26,5 +28,9 @@ export class ChatService {
             res[members.members[i].channelId] = {id: channel.id, name: channel.name, ownerId: channel.ownerId, message: messages};
         }
         return (res);
+    }
+
+    async createChannel(@ConnectedSocket() socket : Socket, channel: ChannelCreation) : Promise<Channel>{
+        socket.join()
     }
 }
