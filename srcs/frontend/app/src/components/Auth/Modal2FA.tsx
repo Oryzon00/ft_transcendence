@@ -5,6 +5,7 @@ import Popup from "reactjs-popup";
 import OtpInput from "react-otp-input";
 import { notifyError } from "../../utils/notify.ts";
 import { Modal2FAProps } from "./TModal2FA";
+import { throwErrorMessage } from "../../utils/throwErrorMessage.ts";
 
 function Modal2FA({ user }: Modal2FAProps) {
 	const [open, setOpen] = useState(true);
@@ -34,10 +35,7 @@ function Modal2FA({ user }: Modal2FAProps) {
 			})
 		})
 			.then(function (response) {
-				if (!response.ok)
-					throw new Error(
-						"Request failed with status " + response.status
-					);
+				if (!response.ok) throwErrorMessage(response);
 				return response.json();
 			})
 			.then(function (data) {

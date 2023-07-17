@@ -1,5 +1,6 @@
 import getJwtTokenFromCookie from "../../utils/getJWT.ts";
 import { notifyError } from "../../utils/notify.ts";
+import { throwErrorMessage } from "../../utils/throwErrorMessage.ts";
 
 export function ProfileLayoutLoader() {
 	const url = "http://localhost:3000/user/me";
@@ -10,11 +11,7 @@ export function ProfileLayoutLoader() {
 		}
 	})
 		.then((response) => {
-			if (!response.ok) {
-				throw new Error(
-					"Request failed with status " + response.status
-				);
-			}
+			if (!response.ok) throwErrorMessage(response);
 			return response.json();
 		})
 		.then((data) => {

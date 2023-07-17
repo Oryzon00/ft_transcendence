@@ -4,7 +4,8 @@ import apiAddress from "../../../../utils/apiAddress";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
 import "./TwoFARegisterButton.styles.css";
-import { notifyError, notifyWarning } from "../../../../utils/notify";
+import { notifyError } from "../../../../utils/notify";
+import { throwErrorMessage } from "../../../../utils/throwErrorMessage";
 
 function TwoFARegisterButton() {
 	const [qrCode, setQrCode] = useState("");
@@ -20,10 +21,7 @@ function TwoFARegisterButton() {
 			body: JSON.stringify({})
 		})
 			.then(function (response) {
-				if (!response.ok)
-					throw new Error(
-						"Request failed with status " + response.status
-					);
+				if (!response.ok) throwErrorMessage(response);
 				return response.json();
 			})
 			.then(function (data) {

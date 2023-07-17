@@ -3,6 +3,7 @@ import { UserContext } from "../../../utils/contexts/userContext.tsx";
 import apiAddress from "../../../utils/apiAddress.ts";
 import getJwtTokenFromCookie from "../../../utils/getJWT.ts";
 import { notifyError, notifyInfo } from "../../../utils/notify.ts";
+import { throwErrorMessage } from "../../../utils/throwErrorMessage.ts";
 
 function UpdateUsernameButton() {
 	const userHook = useContext(UserContext);
@@ -26,10 +27,7 @@ function UpdateUsernameButton() {
 			})
 		})
 			.then(function (response) {
-				if (!response.ok)
-					throw new Error(
-						"Request failed with status " + response.status
-					);
+				if (!response.ok) throwErrorMessage(response);
 				return response.json();
 			})
 			.then(function (data) {

@@ -1,5 +1,6 @@
 import apiAddress from "../../utils/apiAddress.ts";
 import { notifyError } from "../../utils/notify.ts";
+import { throwErrorMessage } from "../../utils/throwErrorMessage.ts";
 
 function paramsToJSON(iterator: IterableIterator<[string, string]>) {
 	const result: Record<string, string> = {};
@@ -21,10 +22,7 @@ export async function authLoader() {
 		body: paramsToJSON(urlParams.entries())
 	})
 		.then(function (response) {
-			if (!response.ok)
-				throw new Error(
-					"Request failed with status " + response.status
-				);
+			if (!response.ok) throwErrorMessage(response);
 			return response.json();
 		})
 		.then(function (data) {

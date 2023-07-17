@@ -3,3 +3,4 @@ export function throwErrorMessage(response: Response) {
 		`Request failed: ${response.statusText} (${response.status})`
 	);
 }
+	

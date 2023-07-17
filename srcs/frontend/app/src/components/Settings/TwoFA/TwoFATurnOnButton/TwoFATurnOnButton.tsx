@@ -34,8 +34,7 @@ function TwoFATurnOnButton() {
 			})
 		})
 			.then(function (response: Response) {
-				if (!response.ok)
-					throwErrorMessage(response);
+				if (!response.ok) throwErrorMessage(response);
 				return response.json();
 			})
 			.then(function () {
