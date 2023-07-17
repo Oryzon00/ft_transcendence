@@ -45,8 +45,8 @@ function TwoFATurnOnButton() {
 				});
 				notifyInfo("2FA has been turned on");
 			})
-			.catch(function (error: Error) {
-				notifyError(error.message);
+			.catch(function () {
+				notifyError("Incorrect OTP");
 			});
 	}
 
