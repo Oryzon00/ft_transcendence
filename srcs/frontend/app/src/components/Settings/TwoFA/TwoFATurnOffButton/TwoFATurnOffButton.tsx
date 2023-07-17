@@ -2,7 +2,7 @@ import { useContext } from "react";
 import apiAddress from "../../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../../utils/getJWT";
 import { UserContext } from "../../../../utils/contexts/userContext";
-import { notifyError } from "../../../../utils/notify";
+import { notifyError, notifyInfo, notifyWarning } from "../../../../utils/notify";
 
 function TwoFATurnOffButton() {
 	const userHook = useContext(UserContext);
@@ -25,13 +25,12 @@ function TwoFATurnOffButton() {
 					);
 				return response.json();
 			})
-			.then(function (data) {
-				if (data.status === false) {
-					userHook.setUser({
-						...userHook.user,
-						is2FAOn: false
-					});
-				}
+			.then(function () {
+				userHook.setUser({
+					...userHook.user,
+					is2FAOn: false
+				});
+				notifyInfo("2FA has been turned off");
 			})
 			.catch(function (error) {
 				notifyError(error.message);

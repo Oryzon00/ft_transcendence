@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { UserContext } from "../../../utils/contexts/userContext.tsx";
 import apiAddress from "../../../utils/apiAddress.ts";
 import getJwtTokenFromCookie from "../../../utils/getJWT.ts";
-import { notifyError } from "../../../utils/notify.ts";
+import { notifyError, notifyInfo } from "../../../utils/notify.ts";
 
 function UpdateUsernameButton() {
 	const userHook = useContext(UserContext);
@@ -37,6 +37,7 @@ function UpdateUsernameButton() {
 					...userHook.user,
 					name: data.name
 				});
+				notifyInfo(`Your username has been changed to ${data.name}`);
 			})
 			.catch(function (error) {
 				notifyError(error.message);

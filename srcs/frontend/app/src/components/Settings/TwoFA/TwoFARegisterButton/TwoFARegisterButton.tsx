@@ -4,7 +4,7 @@ import apiAddress from "../../../../utils/apiAddress";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
 import "./TwoFARegisterButton.styles.css";
-import { notifyError } from "../../../../utils/notify";
+import { notifyError, notifyWarning } from "../../../../utils/notify";
 
 function TwoFARegisterButton() {
 	const [qrCode, setQrCode] = useState("");
@@ -39,7 +39,7 @@ function TwoFARegisterButton() {
 	}
 	return (
 		<div>
-			<button onClick={register2FA}> Register to 2FA </button>
+			<button onClick={register2FA}> Register to Google Authenticator </button>
 			<Popup modal nested open={open} onClose={closeModal}>
 				<div className="modal">
 					<button className="close" onClick={closeModal}>

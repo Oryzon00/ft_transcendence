@@ -5,7 +5,7 @@ import OtpInput from "react-otp-input";
 import Popup from "reactjs-popup";
 import "./TwoFATurnOnButton.styles.css";
 import { UserContext } from "../../../../utils/contexts/userContext";
-import { notifyError } from "../../../../utils/notify";
+import { notifyError, notifyInfo } from "../../../../utils/notify";
 
 function TwoFATurnOnButton() {
 	const [open, setOpen] = useState(false);
@@ -35,17 +35,16 @@ function TwoFATurnOnButton() {
 			.then(function (response: Response) {
 				if (!response.ok)
 					throw new Error(
-						"Request failed with status " + response.status
+						`Request failed: ${response.statusText} (${response.status})`
 					);
 				return response.json();
 			})
-			.then(function (data) {
-				if (data.status === true) {
-					userHook.setUser({
-						...userHook.user,
-						is2FAOn: true
-					});
-				}
+			.then(function () {
+				userHook.setUser({
+					...userHook.user,
+					is2FAOn: true
+				});
+				notifyInfo("2FA has been turned on");
 			})
 			.catch(function (error: Error) {
 				notifyError(error.message);
