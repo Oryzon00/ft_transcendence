@@ -4,7 +4,10 @@ import { ServerEvents } from "../types/ServerEvents";
 import { ServerResponseDTO } from "../types/ServerResponseDTO";
 import { Ball } from "./types/Ball";
 import { Paddle } from "./types/Paddle";
+import { Point } from "./types/Point";
 import { MovePaddleDTO } from "./MovePaddleDTO";
+import { Interval } from "@nestjs/schedule";
+import { Injectable } from "@nestjs/common";
 
 export class Pong {
 	//States
@@ -17,6 +20,7 @@ export class Pong {
 	public countdown: number = 0;
 
 	private startTimer: number;
+	private endTimer: number = 300000;
 
 	private lastUpdate: number = (new Date()).getTime();
 
@@ -24,7 +28,7 @@ export class Pong {
 	public readonly height: number = 800;
 	public readonly width: number = 800;
 
-	public readonly ball: Ball;
+	public readonly ball: Ball = new Ball(800, 800, 7);
 
 	public readonly paddles: Map<Socket["id"], Paddle> = new Map<Socket["id"], Paddle>();
 
@@ -38,7 +42,7 @@ export class Pong {
 
 		this.hasStarted = true;
 
-		for (const id in this.lobby.clients) {
+		for (const id in this.lobby.clients.keys()) {
 			if (this.paddles.size !== 0) this.paddles.set(id, new Paddle("away"));
 			else this.paddles.set(id, new Paddle("home"));
 		}
@@ -55,22 +59,41 @@ export class Pong {
 		
 		this.startTimer = (new Date().getTime());
 		//gameLoop
-		while(!this.hasFinished)
-		{
-			setTimeout(() => {this.nextFrame()}, 16);
-			if ((new Date()).getTime() - this.startTimer === this.endTimer)
+		//send event winner + update players MMR
+	}
+
+	
+	public loop(): void {
+		if (this.hasStarted !== true) return;
+		this.nextFrame();
+		this.lobby.sendLobbyState();
+		if ((new Date()).getTime() - this.startTimer === this.endTimer)
+			this.end();
+		for (const id in this.lobby.clients) {
+			if (this.scores[id] >= 5)
 				this.end();
 		}
+	}
 
-		//send event winner + update players MMR
+	private updateball() {		
+		if (this.ball.speed.angle > Math.PI / 2 || this.ball.speed.angle < -Math.PI / 2)
+			this.ball.checkBounce(this.paddles.entries().next().value);
+		else this.ball.checkBounce(Array.from(this.paddles.values()).pop());
+
+		let score: 0 | 1 | 2 | undefined = this.ball.respawn();
+		if (score) {
+			let arr = Array.from(this.lobby.clients.keys());
+			this.scores[arr[score]]++;
+		}
 	}
 
 	private nextFrame() {
 		
 		if (this.countdown === 0) {
-			//updateball
+			this.updateball();
 		} else {
 			this.countdown -= ((new Date()).getTime() - this.lastUpdate);
+			this.countdown = this.countdown < 0 ? 0 : this.countdown; 
 		}
 		
 		this.lastUpdate = (new Date().getTime());

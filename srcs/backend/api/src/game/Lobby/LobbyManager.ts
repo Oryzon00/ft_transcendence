@@ -3,7 +3,10 @@ import { LobbyMode } from "./lobby.types";
 import { Lobby } from "./Lobby";
 import { AuthenticatedSocket } from "../types/AuthenticatedSocket";
 import { WebSocketServer, WsException } from "@nestjs/websockets";
+import { Injectable } from "@nestjs/common";
+import { Interval } from "@nestjs/schedule";
 
+@Injectable()
 export class LobbyManager {
 	@WebSocketServer()
 	public server: Server;
@@ -47,5 +50,14 @@ export class LobbyManager {
 			if (lobby.maxClients === 2 && mode === 'PvP' && lobby.clients.size < 2 && !lobby.clients.has(clientId))
 				return(lobby);
 		return undefined;
+	}
+
+	@Interval(1000 / 60)
+	public refreshGame()
+	{
+		for(let lobby of this.lobbies.values()) {
+			if (lobby.game.hasStarted)
+				lobby.game.loop();
+		}
 	}
 }

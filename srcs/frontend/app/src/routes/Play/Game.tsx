@@ -5,7 +5,7 @@ import { ServerPayload } from './ServerPayload'
 
 export default function Game() {
 	const sm: SocketWrapper = useContext(SocketWrapperContext);
-	const [inLobby, setInLobby] = useState();
+	const [inLobby, setInLobby] = useState(Boolean(false));
   
 	function onPing() {
 		sm.emit({
@@ -32,35 +32,44 @@ export default function Game() {
 
 
 		const onGameMessage: Listener<ServerPayload[ServerEvents.GameMessage]> = ({ message}) => {
+			if (message === "Game is Starting")
+				setInLobby(true);
 			console.log(message);
 		};
 
-		// const onLobbyState: Listener<ServerPayload[ServerEvents.LobbyState]> = async (data) => {
-		// 	setInLobby(data)
-		// };
+		 const onLobbyState: Listener<ServerPayload[ServerEvents.LobbyState]> = (data) => {
+			console.log(data);
+		};
 
 		console.log("adding listeners");
 		sm.addListener(ServerEvents.Pong, onPong);
-		// sm.addListener(ServerEvents.LobbyState, onLobbyState);
+		sm.addListener(ServerEvents.LobbyState, onLobbyState);
 		sm.addListener(ServerEvents.GameMessage, onGameMessage);
 
 		return () => {
 			console.log('removing listeners');
 			sm.removeListener(ServerEvents.Pong, onPong);
 			sm.removeListener(ServerEvents.GameMessage, onGameMessage);
+			sm.removeListener(ServerEvents.LobbyState, onLobbyState);
+
 		};
 	}, []);
 
-	//if (inLobby === null)
-	//	return <JoinGameMenu/>;
-
-	return (
-	  <div>
+	
+	if (!inLobby) {
+		return (
+		  <div>
+			<SocketWrapperProvider value={sm}>
+				<button onClick={() => onNewGame('PvE')}>Play VS Bot</button>
+				<button onClick={() => onNewGame('PvP')}>Play 1v1</button>
+				<button onClick={onPing}>ping</button>
+			</SocketWrapperProvider>
+		  </div>
+		);
+	}
+	return (<div>
 		<SocketWrapperProvider value={sm}>
-			<button onClick={() => onNewGame('PvE')}>Play VS Bot</button>
-			<button onClick={() => onNewGame('PvP')}>Play 1v1</button>
-			<button onClick={onPing}>ping</button>
+			<span>in game</span>
 		</SocketWrapperProvider>
-	  </div>
-	)
+	</div>);
   }

@@ -1,20 +1,18 @@
 import { Point } from "./Point";
 
 export class Paddle {
-	public pos: Point;
+	public pos: Point = new Point(0, 0);
 	public readonly width: number;
 	public readonly height: number;
 
 	private lastUpdate: number = (new Date()).getTime();	
 
-	constructor(side: "home" | "away") {
-		
-		
+	constructor(side: "home" | "away") {	
 		this.height = 100;
 		this.width = 4;
 		
-		if (side === "home") this.pos = { x: 40, y: 350};
-		else if (side === "away") this.pos = { x : 760 - this.width, y: 350}
+		if (side === "home") this.pos = new Point(40, 350);
+		else if (side === "away") this.pos = new Point(760 - this.width, 350);
 	}
 
 	public isCheatedPosition(pos: Point): boolean {

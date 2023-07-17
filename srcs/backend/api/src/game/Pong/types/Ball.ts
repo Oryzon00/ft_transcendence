@@ -8,20 +8,20 @@ export class Ball {
 	rad: number;
 
 	constructor(private CanWidth: number, private CanHeight: number, rad: number) {
-		this.pos = { x: CanWidth / 2, y: CanWidth / 2 };
+		this.pos = new Point(CanWidth / 2, CanHeight / 2);
 		this.speed = { angle: -Math.PI + Math.random() * 2 * Math.PI, length: 4 };
 		this.rad = rad;
 	}
 
-	respawn(): "left" | "right" | undefined {
+	respawn(): 1 | 2 | undefined {
 		if (this.pos.x < 0) {
 			this.pos = { x: this.CanWidth / 2, y: this.CanHeight / 2 };
 			this.speed = { angle: Math.PI, length: 4 };
-			return "left";
+			return 2;
 		} else if (this.pos.x > this.CanWidth) {
 			this.pos = { x: this.CanWidth / 2, y: this.CanHeight / 2 };
 			this.speed = { angle: 0, length: 4 };
-			return "right";
+			return 1;
 		}
 		return undefined;
 	}
@@ -54,7 +54,7 @@ export class Ball {
 
 		this.speed.angle *= -1;
 
-		return { x: x, y: y };
+		return new Point(x,y);
 	}
 
 	private reboundPoint(dir: "+" | "-", PaddleX: number): Point {
@@ -65,7 +65,7 @@ export class Ball {
 		const x: number = PaddleX + (dir === "-" ? this.rad : -this.rad);
 		const y: number = slope * x + yIntercept;
 
-		return { x: x, y: y };
+		return new Point(x,y);
 	}
 
 	private bounce(reboundPoint: Point, pad: Paddle) {
@@ -84,7 +84,7 @@ export class Ball {
 		//let newX: number = reboundPoint.x + (Math.cos(this.speed.angle) * this.speed.length) * (1 - distBeforeHit);
 		//let newY: number = reboundPoint.y + (Math.sin(this.speed.angle) * this.speed.length) * (1 - distBeforeHit);
 
-		this.pos = /*{x: newX, y: newY}*/ this.pos = reboundPoint;
+		this.pos = reboundPoint;
 	}
 
 	private bounceInside(reboundPoint: Point, pad: Paddle) {
@@ -104,26 +104,28 @@ export class Ball {
 
 	checkBounce(pad: Paddle) {
 		if (this.speed.angle > Math.PI / 2 || this.speed.angle < -Math.PI / 2) {
-			let PaddleX: number = pad.pos.x + pad.width;
-			if (
-				this.pos.x - this.rad >= PaddleX &&
-				this.nextPos("x") - this.rad < PaddleX
-			) {
-				let reboundPoint: Point = this.reboundPoint("-", PaddleX);
+			if (pad && pad.pos) {		
+				let PaddleX: number = pad.pos.x + pad.width;
 				if (
-					reboundPoint.y >= pad.pos.y - this.rad &&
-					reboundPoint.y <= pad.pos.y + pad.height + this.rad
-				)
-					this.bounce(reboundPoint, pad);
-				else this.bounceCanvas();
-			} else if (
-				this.pos.x - this.rad >= pad.pos.x &&
-				this.pos.x + this.rad <= pad.pos.x + pad.width &&
-				this.pos.y >= pad.pos.y - this.rad &&
-				this.pos.y <= pad.pos.y + pad.height + this.rad
-			) {
-				this.bounceInside(this.pos, pad);
-			} else this.bounceCanvas();
+					this.pos.x - this.rad >= PaddleX &&
+					this.nextPos("x") - this.rad < PaddleX
+				) {
+					let reboundPoint: Point = this.reboundPoint("-", PaddleX);
+					if (
+						reboundPoint.y >= pad.pos.y - this.rad &&
+						reboundPoint.y <= pad.pos.y + pad.height + this.rad
+					)
+						this.bounce(reboundPoint, pad);
+					else this.bounceCanvas();
+				} else if (
+					this.pos.x - this.rad >= pad.pos.x &&
+					this.pos.x + this.rad <= pad.pos.x + pad.width &&
+					this.pos.y >= pad.pos.y - this.rad &&
+					this.pos.y <= pad.pos.y + pad.height + this.rad
+				) {
+					this.bounceInside(this.pos, pad);
+				} else this.bounceCanvas();
+			}
 		} else {
 			let PaddleX: number = pad.pos.x;
 			if (

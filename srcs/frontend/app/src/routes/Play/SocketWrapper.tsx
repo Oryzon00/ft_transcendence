@@ -13,7 +13,7 @@ export default class SocketWrapper
 	private connectionLost: boolean = false;
 
 	constructor() {
-		this.socket = io('localhost:3000');
+		this.socket = io(`http://${window.location.hostname}:3000`);
 
 		this.onConnect();
 		this.onDisconnect();
