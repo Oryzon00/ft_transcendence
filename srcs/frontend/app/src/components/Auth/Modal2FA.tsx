@@ -6,15 +6,18 @@ import OtpInput from "react-otp-input";
 import { notifyError } from "../../utils/notify.ts";
 import { Modal2FAProps } from "./TModal2FA";
 import { throwErrorMessage } from "../../utils/throwErrorMessage.ts";
+import { useNavigate } from "react-router";
 
 function Modal2FA({ user }: Modal2FAProps) {
 	const [OTP, setOTP] = useState("");
+	const navigate = useNavigate();
+	
 	if (OTP.length == 6) {
 		verifyOTPBack();
 		clearModal();
 	}
 
-	function clearModal() {
+	function clearModal() { //Sinon faire arrow function avec un bool dedans
 		setOTP("");
 	}
 
@@ -38,7 +41,7 @@ function Modal2FA({ user }: Modal2FAProps) {
 			})
 			.then(function (data) {
 				document.cookie = `JWT=${data.access_token};Path=/`;
-				self.location.href = "home";
+				navigate("/home", { replace: true });
 			})
 			.catch(function () {
 				notifyError("Incorrect OTP");
@@ -50,9 +53,6 @@ function Modal2FA({ user }: Modal2FAProps) {
 			<div>Auth loading</div>
 			<Popup modal nested open={true} onClose={clearModal}>
 				<div className="modal">
-					<button className="close" onClick={clearModal}>
-						&times;
-					</button>
 					<h2>Enter your OTP</h2>
 					<OtpInput
 						value={OTP}

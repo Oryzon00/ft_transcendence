@@ -7,7 +7,6 @@ import { throwErrorMessage } from "../../../../utils/throwErrorMessage";
 
 function TwoFATurnOffButton() {
 	const userHook = useContext(UserContext);
-
 	function turnOff2FA() {
 		const url = apiAddress + "/auth/2FA/turn-off";
 		fetch(url, {

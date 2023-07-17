@@ -31,7 +31,7 @@ export async function authLoader() {
 			}
 			if (data.access_token) {
 				document.cookie = `JWT=${data.access_token};Path=/`;
-				self.location.href = "home";
+				self.location.replace("home");
 			}
 			throw new Error("Unexpected error has occured");
 		})

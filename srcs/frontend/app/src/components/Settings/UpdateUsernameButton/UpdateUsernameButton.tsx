@@ -7,14 +7,14 @@ import { throwErrorMessage } from "../../../utils/throwErrorMessage.ts";
 
 function UpdateUsernameButton() {
 	const userHook = useContext(UserContext);
-	if (!userHook) return null;
+	if (!userHook.user) return null;
 
 	const [message, setMessage] = useState("");
 	const handleChange = (event: any) => {
 		setMessage(event.target.value);
 	};
 
-	function lol(mymessage: string) {
+	function sendToBack(mymessage: string) {
 		const url = apiAddress + "/user/update/name";
 		fetch(url, {
 			method: "PATCH",
@@ -43,7 +43,7 @@ function UpdateUsernameButton() {
 	}
 	const handleClick = (event: any) => {
 		if (event.key == "Enter") {
-			lol(message);
+			sendToBack(message);
 		}
 	};
 
