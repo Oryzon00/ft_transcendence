@@ -3,12 +3,14 @@ import { socket, WebsocketContext, WebsocketProvider } from "../../contexts/Webs
 import { MessagePayload, ChannelPayload } from "./chat.d"
 import { UserHook } from "../../utils/hooks/TuseUser";
 import useUser from "../../utils/hooks/useUser";
-import "./chat.css";
+//import "./chat.css";
 
 // Components
 import MessageEntry from "../../components/Chat/MessageEntry";
 import DiscussionBoard from "../../components/Chat/DiscussionBoard";
 import apiAddress from "../../utils/apiAddress";
+import getJwtTokenFromCookie from "../../utils/getJWT";
+import { notifyError } from "../../utils/notify";
 
 function ChatLayout() {
 	const [current, setCurrent] = useState(0);
@@ -17,18 +19,40 @@ function ChatLayout() {
 	const [channel, setChannel] = useState<{[key: number]: ChannelPayload}>({});
 	const sockets = useContext(WebsocketContext);
 	const user : UserHook = useUser();
-	
+
+	const getChatData = () => { // Get all the data for the variable channel
+		const url = apiAddress + '/chat/getData';
+		fetch(url, {
+			method: "GET",
+			headers: {
+				Authorization: "Bearer " + getJwtTokenFromCookie()
+			}
+		})
+		.then(
+			function (res) {
+				if (!res.ok) {
+					throw new Error(
+						"Request failed with status " + res.status
+					);
+				}
+				return (res.json);
+
+			})
+			.then (
+			)
+			.catch (
+				function(error) {
+					notifyError(error.message)
+				}
+			)
+	};
+
 	useEffect(() => {
 		sockets.on('connect', () => {
-			fetch( apiAddress + "/chat/getData",{
-				method: "GET",
-				headers: {
-				}
-			}
-
-			)
-			console.log("Connected!");
-		});
+				getChatData();
+				console.log(channel);
+				console.log("Connected!");
+			})
 
 		// Received new message
 		sockets.on('onMessage', (data: MessagePayload) => {
@@ -59,17 +83,14 @@ function ChatLayout() {
 			sockets.off('onMessage');
 			sockets.off('onChannel');
 		};
-	}, [channel]);
+		});
+	//}, [channel]);
 
-	const createChannel = () => {
-		socket.emit('newChannel', {ownerId: user.user.id , name: room})
-		setName(room);
-		setRoom('');
-	};
-
-	const inviteFriend = () => {};
+	/*
+	//const inviteFriend = () => {};
 	const modifyMessage = () => {};
 	const modifyChannel = () => {};
+	*/
 
 	return ( 
 		<section id="chat">

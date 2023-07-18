@@ -1,7 +1,7 @@
 import { OnModuleInit } from '@nestjs/common';
 import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, ConnectedSocket } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
-import { MessagePayload, ChannelPayload } from './chat';
+import { MessagePayload, ChannelPayload } from './dto/chat';
 import { Channel, Member, Message } from '@prisma/client';
 import ChannelDatabase from './database/channel';
 import UserDatabase from './database/user';

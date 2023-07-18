@@ -1,6 +1,6 @@
 import { Message, Channel, Member } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
-import { MessagePayload, ChannelPayload, ChannelCreation } from "../chat";
+import { MessagePayload, ChannelPayload, ChannelCreation } from "../dto/chat";
 import { Status } from "@prisma/client";
 
 class ChannelDatabase {

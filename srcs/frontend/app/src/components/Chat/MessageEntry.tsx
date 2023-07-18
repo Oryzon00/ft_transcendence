@@ -1,20 +1,17 @@
 import { useState } from "react";
-import { UserHook } from "../../utils/hooks/TuseUser";
-import useUser from "../../utils/hooks/useUser";
+import { Socket } from "socket.io-client";
 
-function MessageEntry (socket: any, current: number) {
+function MessageEntry (socket: Socket, current: number) {
 	const [value, setValue] = useState('');
-	const user : UserHook = useUser();
 
 	const sendMessage = () => {
-		let sendMessages = {authorId: user.user.id, channelId: current, content: value};
-		socket.emit('newMessage', sendMessages) ;
+		let sendMessages = {channelId: current, content: value};
+		socket.emit('newMessage', sendMessages);
 		setValue('');
 	};
 
     return (
 				<div id="message">
-					<p>Message</p>
 					<input type="text" value={value} placeholder="Taper un message" onChange={(e) => setValue(e.target.value)} maxLength={2000} />
 					<button onClick={sendMessage}>
 						Send
