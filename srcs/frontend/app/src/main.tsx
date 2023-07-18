@@ -14,6 +14,7 @@ import AuthPage from "./pages/AuthPage/AuthPage.tsx";
 import { authLoader } from "./layouts/AuthLayout/AuthLoader.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import GamePage from "./pages/GamePage/GamePage.tsx";
 
 const router = createBrowserRouter([
 	{
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
 	{
 		path: "/settings",
 		element: <SettingsPage />
+	},
+	{
+		path: "/play",
+		element: <GamePage />
 	},
 	{
 		path: "/test/settingsCSS",
