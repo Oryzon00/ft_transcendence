@@ -17,18 +17,18 @@ import { GetUser } from 'src/auth/decorator';
 /*
 	Function for the chat socket
 	sendMessage
-	quitChannel
 */
 export class ChatGateway implements OnModuleInit{ 
 	constructor(
 		private channeldb : ChannelDatabase,
 		private userdb : UserDatabase,
-		private admindb : AdminDatabase
+		private admindb : AdminDatabase,
 	) {};
 
 	@WebSocketServer()
 	server : Server;
 
+	socketList : string[]
 	onModuleInit() {
 		this.server.on('connection', (socket) => {
 			console.log('connected ', socket.id);
@@ -41,6 +41,7 @@ export class ChatGateway implements OnModuleInit{
 		this.server.to(String(body.channelId)).emit('onMessage', res);
 	}
 
+	/*
 	@SubscribeMessage('newChannel')
 	async onNewChannel(@ConnectedSocket() client: Socket, @MessageBody() body : ChannelPayload) {
 		let channel : Channel = await this.channeldb.createChannel(body);
@@ -53,4 +54,5 @@ export class ChatGateway implements OnModuleInit{
 		client.leave(String(body.id));
 		this.server.to(String(body.id)).emit('quitChannel', {});
 	}
+	*/
 }

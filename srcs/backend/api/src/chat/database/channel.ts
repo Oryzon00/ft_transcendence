@@ -1,6 +1,6 @@
 import { Message, Channel, Member } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
-import { MessagePayload, ChannelPayload, ChannelCreation, status } from "../chat";
+import { MessagePayload, ChannelPayload, ChannelCreation } from "../chat";
 import { Status } from "@prisma/client";
 
 class ChannelDatabase {
@@ -27,19 +27,36 @@ class ChannelDatabase {
 	};
 
 	// Demo of the creation of a channel
-	async createChannel(channel : ChannelCreation) : Promise<Channel> {
+	async createChannel(channel : ChannelCreation, user: number) : Promise<Channel> {
 		const res = await this.prisma.channel.create({
 					data: {
 						name: channel.name,
 						owner: {
-							connect: { id: channel.userId, }
+							connect: { id: user, }
 						},
 						password: channel.password,
-						//status: status.PUBLIC
+						status: channel.status,
 					},
 			});
+		this.joinChannel(res.id, res.ownerId);
 		return (res);
-		}
+	}
+
+
+	async joinChannel(channel: number, user: number) : Promise<Member> {
+		return (await this.prisma.member.create({
+			data: {
+				channel: {
+					connect: { id: channel }
+				},
+				user: { 
+					connect: { id: user }
+				}
+			}
+		}))
+	}
+
+	async 
 
     async getPublicChannel() : Promise<Channel[]> {
         return (this.prisma.channel.findMany({
@@ -64,6 +81,7 @@ class ChannelDatabase {
 			},
 		}))
 	}
+
 };
 
 export default ChannelDatabase;

@@ -7,22 +7,24 @@ export type MessagePayload = {
     content: string;
 };
 
-export enum status {
-    PUBLIC,
-    PRIVATE,
-    PROTECT
-}
-
 export type ChannelCreation = {
     name: string;
     status: status;
     password: string;
-    userId: number;
 }
 
 export type ChannelPayload = {
 	id: number;
 	name: string;
-	ownerId: number;
 	message: MessagePayload[];
+}
+
+export type ChannelInvitation = {
+    id: number;
+    invited: number[];
+}
+
+export type ChannelJoin = {
+    id: number;
+    password: string;
 }

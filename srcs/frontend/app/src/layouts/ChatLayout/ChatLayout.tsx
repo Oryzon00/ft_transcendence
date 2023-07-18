@@ -8,6 +8,7 @@ import "./chat.css";
 // Components
 import MessageEntry from "../../components/Chat/MessageEntry";
 import DiscussionBoard from "../../components/Chat/DiscussionBoard";
+import apiAddress from "../../utils/apiAddress";
 
 function ChatLayout() {
 	const [current, setCurrent] = useState(0);
@@ -19,6 +20,13 @@ function ChatLayout() {
 	
 	useEffect(() => {
 		sockets.on('connect', () => {
+			fetch( apiAddress + "/chat/getData",{
+				method: "GET",
+				headers: {
+				}
+			}
+
+			)
 			console.log("Connected!");
 		});
 

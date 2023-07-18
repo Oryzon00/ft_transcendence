@@ -9,7 +9,9 @@ import { GetUser } from "src/auth/decorator";
 import { User } from "@prisma/client";
 import { AuthGuard } from "@nestjs/passport";
 import { JwtGuard } from "src/auth/guard";
-import { ChannelCreation } from "./chat";
+import { ChannelCreation, ChannelJoin } from "./chat";
+import { ConnectedSocket } from "@nestjs/websockets";
+import { Socket } from "dgram";
 
 @UseGuards(JwtGuard)
 @Controller('chat')
@@ -27,12 +29,22 @@ export class ChatController {
     }
 
     @Post('createChannel')
-    createChannel(channel: ChannelCreation) {
-        return this.ChatService.createChannel(channel);
+    createChannel(
+        @GetUser() user : User,
+        @ConnectedSocket() socket,
+        channel: ChannelCreation
+    ) {
+        return this.ChatService.createChannel(user, socket, channel);
     }
 
     @Post('joinChannel')
-    joinChannel() {}
+    joinChannel(
+        @GetUser() user : User,
+        @ConnectedSocket() socket,
+        channel: ChannelJoin
+    ) {
+        return this.ChatService.joinChannel(user, socket, channel);
+    }
 
     @Post('quitChannel')
     quitChannel() {}
