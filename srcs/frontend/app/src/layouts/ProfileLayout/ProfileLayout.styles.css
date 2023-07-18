@@ -1,0 +1,34 @@
+.profile-div {
+	margin-top: 5.2vh;
+	margin-right: 0.2vh;
+	background-color:gray;
+	height: 50vh;
+	width: 15vw;
+	position: absolute;
+	display: flex;
+	align-self: flex-end;
+	align-items: center;
+	justify-content: space-around;
+	flex-direction: column;
+	border-radius: 8px;
+	box-shadow: -10px 10px 10px rgb(24, 24, 24);
+	animation-name: grow;
+	animation-duration: 0.2s;
+	animation-fill-mode: forwards;
+}
+
+  
+@keyframes grow {
+	from {
+	  transform: translate(50%, -50%) scale(0);
+	}
+	to {
+	  transform: translate(0, 0) scale(1);
+	}
+  }
+
+.profile-div img {
+	height: 15%;
+	width: fit-content;
+	border-radius: 50%;
+}

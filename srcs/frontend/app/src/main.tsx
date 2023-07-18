@@ -1,53 +1,58 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom/client';
-//import App from './App.tsx'
-import './index.css'
-
-import {
-    createBrowserRouter,
-    RouterProvider,
-} from "react-router-dom";
-
-import  Root from "./routes/root/root"
-import  Homepage from "./routes/Home/Home"
-import Game from './routes/Play/Game';
-import  Auth from "./routes/Auth/Auth"
-import  RootError from "./routes/root/rootError";
-import AuthError from "./routes/Auth/AuthError";
-import {authLoader} from "./routes/Auth/Auth";
+import * as React from "react";
+import * as ReactDOM from "react-dom/client";
+import "./index.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import AuthError from "./pages/AuthPage/AuthError.tsx";
+import NotFoundPage from "./pages/NotFoundPage/NotFoundPage.tsx";
+import SettingsPage from "./pages/SettingsPage/SettingsPage.tsx";
+import HomePage from "./pages/HomePage/HomePage.tsx";
+import { ProfileLayoutLoader } from "./layouts/ProfileLayout/ProfileLayoutLoader.tsx";
+import ProfileLayout from "./layouts/ProfileLayout/ProfileLayout.tsx";
+import OTPLoginPopup from "./pages/OTPPopup/OTPLoginPopup.tsx";
+import LoginPage from "./pages/LoginPage/LoginPage.tsx";
+import AuthPage from "./pages/AuthPage/AuthPage.tsx";
+import { authLoader } from "./layouts/AuthLayout/AuthLoader.tsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <Root />,
-        errorElement: <RootError />,
-        /*loader: rootLoader,
-        action: rootAction,
-        children: [
-            {
-                path: "contacts/:contactId",
-                element: <Contact />,
-            },
-        ],*/
-    },
-    {
-        path: "/home",
-        element: <Homepage />,
-    },
-    {
-        path: "/play",
-        element: <Game />,
-    },
-    {
-        path: "/auth",
-        element: <Auth />,
-        loader: authLoader,
-        errorElement: <AuthError />
-    },
+	{
+		path: "/",
+		element: <LoginPage />,
+		errorElement: <NotFoundPage />
+	},
+	{
+		path: "/home",
+		element: <HomePage />,
+		children: [
+			{
+				path: "/home/profile/",
+				element: <ProfileLayout />,
+				loader: ProfileLayoutLoader
+			}
+		]
+	},
+	{
+		path: "/auth",
+		element: <AuthPage />,
+		loader: authLoader,
+		errorElement: <AuthError />
+	},
+	{
+		path: "/settings",
+		element: <SettingsPage />
+	},
+	{
+		path: "/test/settingsCSS",
+		element: <OTPLoginPopup />
+	}
 ]);
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-      <RouterProvider router={router} />
-  </React.StrictMode>,
-)
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+	// <React.StrictMode>
+	<>
+		<ToastContainer />
+		<RouterProvider router={router} />
+	</>
+	// </React.StrictMode>
+);
