@@ -127,26 +127,28 @@ export class Ball {
 				} else this.bounceCanvas();
 			}
 		} else {
-			let PaddleX: number = pad.pos.x;
-			if (
-				this.pos.x + this.rad <= PaddleX &&
-				this.nextPos("x") + this.rad > PaddleX
-			) {
-				let reboundPoint: Point = this.reboundPoint("+", PaddleX);
+			if (pad && pad.pos) {
+				let PaddleX: number = pad.pos.x;
 				if (
-					reboundPoint.y >= pad.pos.y - this.rad &&
-					reboundPoint.y <= pad.pos.y + pad.height + this.rad
-				)
-					this.bounce(reboundPoint, pad);
-				else this.bounceCanvas();
-			} else if (
-				this.pos.x - this.rad >= pad.pos.x &&
-				this.pos.x + this.rad <= pad.pos.x + pad.width &&
-				this.pos.y >= pad.pos.y - this.rad &&
-				this.pos.y <= pad.pos.y + pad.height + this.rad
-			) {
-				this.bounceInside(this.pos, pad);
-			} else this.bounceCanvas();
+					this.pos.x + this.rad <= PaddleX &&
+					this.nextPos("x") + this.rad > PaddleX
+				) {
+					let reboundPoint: Point = this.reboundPoint("+", PaddleX);
+					if (
+						reboundPoint.y >= pad.pos.y - this.rad &&
+						reboundPoint.y <= pad.pos.y + pad.height + this.rad
+					)
+						this.bounce(reboundPoint, pad);
+					else this.bounceCanvas();
+				} else if (
+					this.pos.x - this.rad >= pad.pos.x &&
+					this.pos.x + this.rad <= pad.pos.x + pad.width &&
+					this.pos.y >= pad.pos.y - this.rad &&
+					this.pos.y <= pad.pos.y + pad.height + this.rad
+				) {
+					this.bounceInside(this.pos, pad);
+				} else this.bounceCanvas();
+			}
 		}
 	}
 }
