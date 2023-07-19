@@ -13,6 +13,10 @@ import AuthPage from "./pages/AuthPage/AuthPage.tsx";
 import { authLoader } from "./layouts/AuthLayout/AuthLoader.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { NavBarLayout } from "./layouts/NavBar/NavBarLayout.tsx";
+import { PlayPage } from "./pages/PlayPage/PlayPage.tsx";
+import { LeaderboardPage } from "./pages/LeaderboardPage/LeaderboardPage.tsx";
+import { ChatPage } from "./pages/ChatPage/ChatPage.tsx";
 
 const router = createBrowserRouter([
 	{
@@ -21,29 +25,46 @@ const router = createBrowserRouter([
 		errorElement: <NotFoundPage />
 	},
 	{
-		path: "/home",
-		element: <HomePage />,
+		element: <NavBarLayout />,
 		children: [
 			{
-				path: "/home/profile/",
-				element: <ProfileLayout />,
-				loader: ProfileLayoutLoader
+				path: "/home",
+				element: <HomePage />,
+				children: [
+					{
+						path: "/home/profile/",
+						element: <ProfileLayout />,
+						loader: ProfileLayoutLoader
+					}
+				]
+			},
+			{
+				path: "/auth",
+				element: <AuthPage />,
+				loader: authLoader,
+				errorElement: <AuthError />
+			},
+			{
+				path: "/settings",
+				element: <SettingsPage />
+			},
+			{
+				path: "/test/settingsCSS",
+				element: <OTPLoginPopup />
+			},
+			{
+				path: "/play",
+				element: <PlayPage />
+			},
+			{
+				path: "/leaderboard",
+				element: <LeaderboardPage />
+			},
+			{
+				path: "/chat",
+				element: <ChatPage />
 			}
 		]
-	},
-	{
-		path: "/auth",
-		element: <AuthPage />,
-		loader: authLoader,
-		errorElement: <AuthError />
-	},
-	{
-		path: "/settings",
-		element: <SettingsPage />
-	},
-	{
-		path: "/test/settingsCSS",
-		element: <OTPLoginPopup />
 	}
 ]);
 

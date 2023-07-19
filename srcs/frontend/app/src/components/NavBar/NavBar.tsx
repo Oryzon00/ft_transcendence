@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 export function NavBar() {
 	return (
 		<nav>
-			<a href="/">HOME</a>
+			<Link to="/home">HOME</Link>
 			<ul>
+				<Link to="/home">HOME</Link>
 				<li>
 					<Link to="/play">PLAY</Link>
 				</li>
@@ -14,9 +15,14 @@ export function NavBar() {
 				<li>
 					<Link to="/chat">CHAT</Link>
 				</li>
+				<li>
+					<Link to="/settings">SETTINGS</Link>
+				</li>
+				<button>SEARCHBAR</button>
+				<button>USER PROFILE</button>
 			</ul>
-			<div>SEARCHBAR</div>
-			<div>USER PROFILE</div>
+			<button>SEARCHBAR</button>
+			<button>USER PROFILE</button>
 		</nav>
 	);
 }
