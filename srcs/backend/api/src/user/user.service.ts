@@ -41,27 +41,34 @@ export class UserService {
 
 		let buf = Buffer.from(base64Data.split(',')[1], 'base64');
 		const oldPath = user.image.split('http://localhost:3000/images/')[1]
-		if (oldPath)
+		if (oldPath && oldPath.split('.')[1] != type.split('/')[1])
 			fs.unlink(join(process.cwd(), 'images', oldPath), (err) => {});
 
-		fs.writeFile(join(process.cwd(), 'images', user.id + '.' + type.split('/')[1]), buf, (err) => {
-			if (err) throw err;
-		});
-
-
-
-		const imagePath = "http://localhost:3000/images/" + user.id + "." + type.split('/')[1];
-
-		await this.prisma.user.update({
-			where: {
-				id: user.id
-			},
-			data: {
-				image: imagePath
-			}
-		});
-		return { image: imagePath };
+		let imagePath = new Promise(function (resolve, reject) {
+			console.log(type);
+			fs.writeFile(join(process.cwd(), 'images', user.id + '.' + type.split('/')[1]), buf, async (err) => {
+				if (err) reject(err);
+				else {
+					resolve("lol");
+				}
+			});
+		})
+			.then (() => {
+				return ("http://localhost:3000/images/" + user.id + "." + type.split('/')[1])
+		})
+		 return (imagePath.then( async (val) => {
+			 await this.prisma.user.update({
+				 where: {
+					 id: user.id
+				 },
+				 data: {
+					 image: val
+				 }
+			 });
+			 return { image: val };
+		 }));
 	}
+
 
 	async updateUserName(
 		user: User,

@@ -4,12 +4,13 @@ import './UpdateProfilePictureButton.styles.css'
 import getJwtTokenFromCookie from "../../../utils/getJWT.ts";
 import { notifyError } from "../../../utils/notify.ts";
 import apiAddress from "../../../utils/apiAddress.ts";
+import { throwErrorMessage } from "../../../utils/throwErrorMessage.ts";
 
 function updateProfilePictureButton() {
 	const userHook = useContext(UserContext);
 	if (!userHook.user) return null;
 
-	function sendToBack (type :string, data :string) {
+	function sendToBack (type :string, img :string) {
 		const url = apiAddress + "/user/update/image";
 
 		fetch(url, {
@@ -20,24 +21,22 @@ function updateProfilePictureButton() {
 			},
 			body: JSON.stringify({
 				imageType: type,
-				base64Data: data
+				base64Data: img
 			})
 		})
 			.then(function (response) {
 				if (!response.ok)
-					throw new Error(
-						"Request failed with status " + response.status
-					);
+					throwErrorMessage(response);
 				return response.json();
 			})
-			.then(function (data) {
+			.then(function () {
 				userHook.setUser({
 					...userHook.user,
-					image: data.image
+					image: img
 				});
 			})
-			.catch(function (error) {
-				notifyError(error.message);
+			.catch(function () {
+				notifyError("Image too large");
 			});
 	}
 	const handleChange = (event: any) => {
