@@ -12,13 +12,12 @@ export class ChatService {
     constructor(
         private userdb : UserDatabase,
         private channeldb : ChannelDatabase,
-        private admindb : AdminDatabase
+        private admindb : AdminDatabase,
     ) {}
 
-    // return struct with all the messages and channel the user is in
+    // Get all data of one user on connection
     async getData(user : User) : Promise<{[key: number]: ChannelPayload}> {
-        const members : any = await this.userdb.getMembers(user.id);
-        console.log(members);
+        const members : Member[] = await this.userdb.getMembers(user.id);
         let res : {[key: number]: ChannelPayload} = {};
 
         for (let i : number = 0; members != undefined && i < members.length; i++)
@@ -36,17 +35,25 @@ export class ChatService {
         })
     }
  
-    async createChannel(user : User, @ConnectedSocket() socket : Socket, channel: ChannelCreation) : Promise<Channel> {
+    // Creation of a channel
+    async createChannel(user : User, channel: ChannelCreation) : Promise<ChannelPayload> {
         const res : Channel = await this.channeldb.createChannel(channel, user.id);
-        socket.join(String(res.id));
-        return (res);
+        return ({id: res.id, name: res.name, message: []});
     }
 
     async searchChannel() : Promise<Channel[]> {
         return (this.channeldb.getPublicChannel())
     }
-/*
-    async joinChannel(user : User, @ConnectedSocket() socket : Socket, channel : ChannelJoin) : Promise<ChannelPayload | null > {
+
+
+    //async inviteChannel(user : User, channelId : number, inviteId : number) : Promise<>
+    /*
+    invite
+    ban
+    kick
+    mute
+    */
+    async joinChannel(user : User, channel : any) : Promise<ChannelPayload > {
         const searchchannel : Channel = await this.channeldb.getChannelInfo(channel.id);
         if (searchchannel.status == Status.PROTECT && searchchannel.password != channel.password)
             return (null);
@@ -54,7 +61,6 @@ export class ChatService {
         return (this.getChannel(channel.id));
     }
 
-    */
     /*
     async inviteChannel(user : User, @ConnectedSocket() socket : Socket, channel : ChannelInvitation) {
         let res : Channel

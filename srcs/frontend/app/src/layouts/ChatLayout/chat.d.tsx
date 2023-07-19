@@ -7,6 +7,11 @@ export type MessagePayload = {
 export type ChannelPayload = {
 	id: number;
 	name: string;
-	ownerId: number;
 	message: MessagePayload[];
+}
+
+export type ChannelCreation = {
+    name: string;
+    status: string;
+    password: string;
 }

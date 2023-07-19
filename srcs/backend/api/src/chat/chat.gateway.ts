@@ -1,13 +1,16 @@
-import { OnModuleInit } from '@nestjs/common';
-import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, ConnectedSocket } from '@nestjs/websockets';
+import { Injectable, OnModuleInit, UseGuards } from '@nestjs/common';
+import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, ConnectedSocket, OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { MessagePayload, ChannelPayload } from './dto/chat';
-import { Channel, Member, Message } from '@prisma/client';
+import { Channel, Member, Message, User } from '@prisma/client';
 import ChannelDatabase from './database/channel';
 import UserDatabase from './database/user';
 import AdminDatabase from './database/admin';
 import { GetUser } from 'src/auth/decorator';
+import { JwtGuard } from 'src/auth/guard';
 
+@UseGuards(JwtGuard)
+@Injectable()
 @WebSocketGateway({
 	cors: {
 		origins: ['http://localhost:3000'],
@@ -18,7 +21,7 @@ import { GetUser } from 'src/auth/decorator';
 	Function for the chat socket
 	sendMessage
 */
-export class ChatGateway implements OnModuleInit{ 
+export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect{ 
 	constructor(
 		private channeldb : ChannelDatabase,
 		private userdb : UserDatabase,
@@ -27,10 +30,14 @@ export class ChatGateway implements OnModuleInit{
 
 	@WebSocketServer()
 	server : Server;
+	socketList : {[key: string]: string};
 
-	socketList : string[]
-	onModuleInit() {
+	afterInit(server: any) {
+		
+	}
+	onModuleInit(@GetUser() user) {
 		this.server.on('connection', (socket) => {
+			let channelId = this.userdb.getAllChannels(user);
 			console.log('connected ', socket.id);
 		});
 	}
@@ -40,6 +47,12 @@ export class ChatGateway implements OnModuleInit{
 		const res = await this.channeldb.stockMessages(body);
 		this.server.to(String(body.channelId)).emit('onMessage', res);
 	}
+
+	@SubscribeMessage('joinChannel')
+	async onJoinChannel(@ConnectedSocket() client: Socket, @MessageBody() body) {}
+
+	@SubscribeMessage('leaveChannel')
+	async onLeaveChannel(@ConnectedSocket() client : Socket, @MessageBody() body) {}
 
 	/*
 	@SubscribeMessage('newChannel')

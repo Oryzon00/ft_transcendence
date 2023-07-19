@@ -2,7 +2,9 @@ import { Message, Channel, Member } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 import { MessagePayload, ChannelPayload, ChannelCreation } from "../dto/chat";
 import { Status } from "@prisma/client";
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 class ChannelDatabase {
 	constructor(private prisma: PrismaService) {}
 
@@ -26,16 +28,25 @@ class ChannelDatabase {
 		return (res);
 	};
 
+	convertStatus(status: string) : Status {
+		if (status == 'public')
+			return Status.PUBLIC;
+		else if (status == 'private')
+			return Status.PRIVATE;
+		return Status.PROTECT;
+	}
 	// Demo of the creation of a channel
 	async createChannel(channel : ChannelCreation, user: number) : Promise<Channel> {
 		const res = await this.prisma.channel.create({
 					data: {
 						name: channel.name,
 						owner: {
-							connect: { id: user, }
+							connect: {
+								id: user,
+							}
 						},
 						password: channel.password,
-						status: channel.status,
+						status: this.convertStatus(channel.status),
 					},
 			});
 		this.joinChannel(res.id, res.ownerId);

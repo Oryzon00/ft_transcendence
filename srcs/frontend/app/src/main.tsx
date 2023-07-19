@@ -15,6 +15,8 @@ import { authLoader } from "./layouts/AuthLayout/AuthLoader.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Chat from "./views/ChatPage/chat.tsx"
+import CreationChannel from "./views/ChatPage/CreationChannel.tsx";
+import SearchChannel from "./views/ChatPage/SearchChannel.tsx";
 
 const router = createBrowserRouter([
 	{
@@ -50,7 +52,21 @@ const router = createBrowserRouter([
 	{
 		path: "/chat",
 		element: <Chat />
+	},
+	{
+		path: "/chat/channel/create",
+		element: <CreationChannel/>
+	},
+	{
+		path: "/chat/channel/search",
+		element: <SearchChannel/>
+	},
+	/*
+	{
+		path: "/chat/channel/invite"
 	}
+	*/
+
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(

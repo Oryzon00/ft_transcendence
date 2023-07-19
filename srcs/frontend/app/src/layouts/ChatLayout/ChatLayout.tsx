@@ -11,6 +11,8 @@ import DiscussionBoard from "../../components/Chat/DiscussionBoard";
 import apiAddress from "../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../utils/getJWT";
 import { notifyError } from "../../utils/notify";
+import { ButtonChannelSearch } from "../../components/Chat/ChannelSearch";
+import { ButtonChannelCreation } from "../../components/Chat/ChannelCreation";
 
 function ChatLayout() {
 	const [current, setCurrent] = useState(0);
@@ -39,7 +41,10 @@ function ChatLayout() {
 
 			})
 			.then (
-			)
+				function (data) {
+					console.log(data.Channel)
+					setChannel(data)
+				})
 			.catch (
 				function(error) {
 					notifyError(error.message)
@@ -96,8 +101,8 @@ function ChatLayout() {
 		<section id="chat">
 			<div id="info">
 				<div id="channel">
-					<button>search channel</button>
-					<button>create channel</button>
+					<ButtonChannelSearch/>
+					<ButtonChannelCreation/>
 				</div>
 				<div id="conversation">
 					<input type="text" />

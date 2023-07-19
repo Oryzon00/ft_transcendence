@@ -9,11 +9,7 @@ import {
 import { ChatService } from "./chat.service";
 import { GetUser } from "src/auth/decorator";
 import { User } from "@prisma/client";
-import { AuthGuard } from "@nestjs/passport";
 import { JwtGuard } from "src/auth/guard";
-import { ChannelCreation, ChannelJoin } from "./dto/chat";
-import { ConnectedSocket } from "@nestjs/websockets";
-import { Socket } from "dgram";
 
 @UseGuards(JwtGuard)
 @Controller('chat')
@@ -22,41 +18,39 @@ export class ChatController {
 
     @Get('getData')
     getData(@GetUser() user : User) {
-        console.log("members");
         return this.ChatService.getData(user);
     }
 
-    @Get('searchChannel')
+    @Get('/channel/search')
     searchChannel() {
         return this.ChatService.searchChannel()
     }
 
-    @Post('createChannel')
+    @Post('/channel/create')
     createChannel(
         @GetUser() user : User,
-        @ConnectedSocket() socket,
-        channel: ChannelCreation
+        channel: any
     ) {
-        return this.ChatService.createChannel(user, socket, channel);
+        return (this.ChatService.createChannel(user, channel.body));
     }
-    /*
 
-    @Patch('joinChannel')
+    @Patch('/channel/join')
     joinChannel(
         @GetUser() user : User,
-        @ConnectedSocket() socket,
-        channel: ChannelJoin
+        channel: any
     ) {
-        return this.ChatService.joinChannel(user, socket, channel);
+        const res : any = this.ChatService.joinChannel(user, channel);
+        console.log(res);
+        return res
     }
 
-    @Patch('quitChannel')
+    @Patch('/channel/quit')
     quitChannel() {}
 
-    @Put('setChannel')
+    @Put('/channel/set')
     setChannel() {}
 
-    @Post('blockUser')
+    @Post('/user/block')
     blockUser() {}
-    */
+
 }
