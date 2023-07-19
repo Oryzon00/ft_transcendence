@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Socket } from "socket.io-client";
+import { socket, WebsocketProvider } from "../../contexts/WebsocketContext";
 
-function MessageEntry (socket: Socket, current: number) {
+function MessageEntry (current: number) {
 	const [value, setValue] = useState('');
 
 	const sendMessage = () => {
@@ -11,12 +11,14 @@ function MessageEntry (socket: Socket, current: number) {
 	};
 
     return (
-				<div id="message">
-					<input type="text" value={value} placeholder="Taper un message" onChange={(e) => setValue(e.target.value)} maxLength={2000} />
-					<button onClick={sendMessage}>
-						Send
-					</button>
-				</div>
+				<WebsocketProvider value={socket}>
+					<div id="message">
+						<input type="text" value={value} placeholder="Taper un message" onChange={(e) => setValue(e.target.value)} maxLength={2000} />
+						<button onClick={sendMessage}>
+							Send
+						</button>
+					</div>
+				</WebsocketProvider>
     );
 }
 

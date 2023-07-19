@@ -110,9 +110,7 @@ function ChatLayout() {
 					<p>{name}</p>
 				</div>
 				<DiscussionBoard channel={channel} current={current} me={user}/>
-				<WebsocketProvider value={socket}>
-					<MessageEntry socket={socket} current={current}/>
-				</WebsocketProvider>
+				<MessageEntry current={current}/>
 			</div>
 		</section>
 	);
