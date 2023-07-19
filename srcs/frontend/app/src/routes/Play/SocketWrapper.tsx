@@ -20,6 +20,15 @@ export default class SocketWrapper
 		this.onException();
 	}
 
+	getSocketId(): string | null
+	{
+	  if (!this.socket.connected) {
+		return null;
+	  }
+  
+	  return this.socket.id;
+	}
+
 	emit<T>(options: EmitOptions<T>): this
 	{
     this.socket.emit(options.event, options.data);

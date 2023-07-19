@@ -23,12 +23,10 @@ export class Lobby {
 	public removeClient(client: AuthenticatedSocket): void {}
 
 	public sendLobbyState(): void {
-		function convertMapToRecord(map: Map<string, Paddle>): Record<string, Point> {
-			let newRecord: Record<string, Point> = {}
-			for (let [key, value] of map) {
-			  newRecord[key] = value.pos;
-			}
-			return newRecord;
+		
+		let newMap: Map<string, Point> = new Map<string, Point>();
+		for (let [key, value] of this.game.paddles) {
+		  newMap.set(key, value.pos);
 		}
 		
 		const payload: ServerResponseDTO[ServerEvents.LobbyState] = {
@@ -41,7 +39,7 @@ export class Lobby {
 			gameWidth: this.game.width,
 			gameHeight: this.game.height,
 			ballPosition: this.game.ball.pos,
-			padPositions: convertMapToRecord(this.game.paddles),
+			padPositions: newMap,
 			scores: this.game.scores,
 		}
 

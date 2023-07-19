@@ -32,9 +32,12 @@ export class Pong {
 
 	public readonly paddles: Map<Socket["id"], Paddle> = new Map<Socket["id"], Paddle>();
 
-	public scores: Record<Socket["id"], number> = {};
+	public scores: Map<Socket["id"], number> = new Map<Socket["id"], number>();
 
-	constructor(private lobby: Lobby) {}
+	constructor(public readonly lobby: Lobby) {
+		for (const id in this.lobby.clients.keys())
+			this.scores.set(id, 0);
+	}
 
 	//Methods
 	public start(): void {
@@ -115,8 +118,7 @@ export class Pong {
 
 	public movePaddle(data: MovePaddleDTO): void {
 		let pad: Paddle = this.paddles[data.clientId];
-		
-		if (pad.isCheatedPosition(data.padPosition)) {
+		if (pad && pad.isCheatedPosition(data.padPosition)) {
 			pad.newPosition(data.padPosition);
 		}
 		

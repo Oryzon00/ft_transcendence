@@ -14,8 +14,8 @@ export type ServerResponseDTO = {
 		gameWidth: number,
 		gameHeight: number,
 		ballPosition: Point,
-		padPositions: Record<string, Point>,
-		scores: Record<string, number>,
+		padPositions: Map<string, Point>,
+		scores: Map<string, number>,
 	}
 
 	[ServerEvents.GameMessage]: {

@@ -98,7 +98,7 @@ export class GameGateway
 	@SubscribeMessage(ClientEvents.MovePaddle)
 	onMovePaddle(client: AuthenticatedSocket, data: MovePaddleDTO): void {
 		if (!client.data.lobby) throw new WsException("You are not in a lobby");
-		client.data.lobby?.game.movePaddle(data);
+		client.data.lobby.game.movePaddle(data);
 	}
 
 	@SubscribeMessage(ClientEvents.LobbyLeave)

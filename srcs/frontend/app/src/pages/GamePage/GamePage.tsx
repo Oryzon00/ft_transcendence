@@ -1,14 +1,32 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import GameLayout from "../../layouts/GameLayout/GameLayout";
 import SocketWrapper, { SocketWrapperContext, SocketWrapperProvider } from "../../routes/Play/SocketWrapper";
 import { UserProvider } from "../../utils/contexts/userContext";
 import PongLayout from "../../layouts/PongLayout/PongLayout";
+import { Listener, ServerEvents } from "../../routes/Play/types";
+import { ServerPayload } from "../../routes/Play/ServerPayload";
 
 function GamePage() {
 	const sm: SocketWrapper = useContext(SocketWrapperContext);
 	const [inLobby, setInLobby] = useState(Boolean(false));
 
-// transferer listeners et ajouter PongProps.
+	useEffect(() => {
+
+		const onGameMessage: Listener<ServerPayload[ServerEvents.GameMessage]> = ({ message}) => {
+			if (message === "Game is Starting")
+				setInLobby(true);
+			console.log(message);
+		};
+
+		console.log("adding listeners");
+		sm.addListener(ServerEvents.GameMessage, onGameMessage);
+
+		return () => {
+			console.log('removing listeners');
+			sm.removeListener(ServerEvents.GameMessage, onGameMessage);
+
+		};
+	}, []);
 
 	if (inLobby) {
 		return (
