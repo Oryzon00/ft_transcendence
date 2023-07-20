@@ -2,14 +2,14 @@ import { ChannelPayload, MessagePayload } from "../../layouts/ChatLayout/chat.d"
 import { UserHook } from "../../utils/hooks/TuseUser";
 
 type CurrentChannel = {
-	channel: {[key: number]: ChannelPayload},
-	current: number,
+	channel: {[key: string]: ChannelPayload},
+	current: string,
     me: UserHook,
 }
 
 function DiscussionBoard({channel, current, me} : CurrentChannel)
 {
-	if (current == 0)
+	if (current == '')
 		return (<div className="no-channel"><p>No channel</p></div>);
 	console.log(channel);
 	return ( 

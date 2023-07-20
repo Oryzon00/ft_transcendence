@@ -1,11 +1,11 @@
 export type MessagePayload = {
-	channelId: number;
+	channelId: string;
 	authorId: number;
 	content: string;
 };
 
 export type ChannelPayload = {
-	id: number;
+	id: string;
 	name: string;
 	message: MessagePayload[];
 }
@@ -15,3 +15,5 @@ export type ChannelCreation = {
     status: string;
     password: string;
 }
+
+export type ListChannel = {[key: string]: ChannelPayload}

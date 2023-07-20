@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { socket, WebsocketContext, WebsocketProvider } from "../../contexts/WebsocketContext";
-import { MessagePayload, ChannelPayload } from "./chat.d"
+import { MessagePayload, ChannelPayload, ListChannel } from "./chat.d"
 import { UserHook } from "../../utils/hooks/TuseUser";
 import useUser from "../../utils/hooks/useUser";
-//import "./chat.css";
+import "./chat.css";
 
 // Components
 import MessageEntry from "../../components/Chat/MessageEntry";
@@ -15,10 +15,10 @@ import { ButtonChannelSearch } from "../../components/Chat/ChannelSearch";
 import { ButtonChannelCreation } from "../../components/Chat/ChannelCreation";
 
 function ChatLayout() {
-	const [current, setCurrent] = useState(0);
+	const [current, setCurrent] = useState('');
 	const [name, setName] = useState('');
 	const [room, setRoom] = useState('');
-	const [channel, setChannel] = useState<{[key: number]: ChannelPayload}>({});
+	const [channel, setChannel] = useState<ListChannel>({});
 	const sockets = useContext(WebsocketContext);
 	const user : UserHook = useUser();
 
@@ -104,11 +104,7 @@ function ChatLayout() {
 					<ButtonChannelSearch/>
 					<ButtonChannelCreation/>
 				</div>
-				<div id="conversation">
-					<input type="text" />
-
-
-				</div>
+				<SelectChannel channel={channel}/>
 			</div>
 			<div id="send">
 				<div id="main-channel-name">
