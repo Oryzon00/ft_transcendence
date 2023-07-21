@@ -1,5 +1,5 @@
 import apiAddress from "../../utils/apiAddress.ts";
-import { notifyError } from "../../utils/notify.ts";
+import { notifyError, notifyWarning } from "../../utils/notify.ts";
 import { throwErrorMessage } from "../../utils/throwErrorMessage.ts";
 
 function paramsToJSON(iterator: IterableIterator<[string, string]>) {
@@ -11,7 +11,6 @@ function paramsToJSON(iterator: IterableIterator<[string, string]>) {
 }
 
 export async function authLoader() {
-	console.log("check")
 	const urlParams = new URLSearchParams(window.location.search);
 	const url = apiAddress + "/auth";
 
@@ -38,9 +37,9 @@ export async function authLoader() {
 		})
 		.catch(function (error) {
 			notifyError(error.message);
+			notifyWarning("42 token may be expired");
+			return null;
 		});
 
-	console.log("check");
-	console.log(data);
 	return data;
 }
