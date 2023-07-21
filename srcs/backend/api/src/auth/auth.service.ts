@@ -109,6 +109,7 @@ export class AuthService {
 					)
 			);
 			return responseData;
+			console.log("check");
 		} catch (error) {
 			throw new UnauthorizedException();
 		}

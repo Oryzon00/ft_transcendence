@@ -3,27 +3,53 @@ import { Link } from "react-router-dom";
 export function NavBar() {
 	return (
 		<nav>
-			<Link to="/home">HOME</Link>
-			<ul>
-				<li>
-					<Link to="/play">PLAY</Link>
-				</li>
-				<li>
-					<Link to="/leaderboard">LEADERBOARD</Link>
-				</li>
-				<li>
-					<Link to="/chat">CHAT</Link>
-				</li>
-				<li>
-					<Link to="/settings">SETTINGS</Link>
-				</li>
-				<input
-					type="search"
-					id="mySearch"
-					name="q"
-					placeholder="Search for a user..."
-				></input>
-			</ul>
+			<div className="max-w-6xl mx-auto px-2">
+				<div className="flex items-center justify-between h-16">
+					<div className="flex items-start">
+						<Link
+							to="/home"
+							className="text-white text-lg font-bold hover:bg-amber-800 px-3 py-2 rounded-md"
+						>
+							HOME
+						</Link>
+					</div>
+					<div className="flex">
+						<Link
+							to="/play"
+							className="text-white text-lg font-semibold hover:bg-amber-800 px-3 py-2 rounded-md"
+						>
+							PLAY
+						</Link>
+						<Link
+							to="/leaderboard"
+							className="text-white text-lg font-semibold hover:bg-amber-800 px-3 py-2 rounded-md"
+						>
+							LEADERBOARD
+						</Link>
+						<Link
+							to="/chat"
+							className="text-white text-lg font-semibold hover:bg-amber-800 px-3 py-2 rounded-md"
+						>
+							CHAT
+						</Link>
+						<input
+							className="px-3 py-2 rounded-md"
+							type="search"
+							id="mySearch"
+							name="q"
+							placeholder="Search for a user..."
+						></input>
+					</div>
+					<div className="flex items-end">
+						<Link
+							to="/home"
+							className="text-white text-lg font-bold"
+						>
+							USER PROFILE
+						</Link>
+					</div>
+				</div>
+			</div>
 		</nav>
 	);
 }

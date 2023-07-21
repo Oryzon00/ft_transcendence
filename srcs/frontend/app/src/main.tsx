@@ -1,6 +1,7 @@
 import * as ReactDOM from "react-dom/client";
-import "./index.css";
-import { createBrowserRouter, Router, RouterProvider } from "react-router-dom";
+import "./style/tailwind.css";
+import "./style/index.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AuthError from "./pages/AuthPage/AuthError.tsx";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage.tsx";
 import SettingsPage from "./pages/SettingsPage/SettingsPage.tsx";
@@ -19,6 +20,10 @@ import { LeaderboardPage } from "./pages/LeaderboardPage/LeaderboardPage.tsx";
 import { ChatPage } from "./pages/ChatPage/ChatPage.tsx";
 
 const router = createBrowserRouter([
+	{
+		path: "navbar",
+		element: <NavBarLayout />
+	},
 	{
 		path: "/",
 		element: <LoginPage />,
