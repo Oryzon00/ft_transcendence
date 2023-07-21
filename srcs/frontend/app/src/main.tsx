@@ -25,6 +25,12 @@ const router = createBrowserRouter([
 		errorElement: <NotFoundPage />
 	},
 	{
+		path: "/auth",
+		element: <AuthPage />,
+		loader: authLoader,
+		errorElement: <AuthError />
+	},
+	{
 		element: <NavBarLayout />,
 		children: [
 			{
@@ -37,12 +43,6 @@ const router = createBrowserRouter([
 						loader: ProfileLayoutLoader
 					}
 				]
-			},
-			{
-				path: "/auth",
-				element: <AuthPage />,
-				loader: authLoader,
-				errorElement: <AuthError />
 			},
 			{
 				path: "/settings",

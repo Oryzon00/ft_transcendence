@@ -11,6 +11,7 @@ function paramsToJSON(iterator: IterableIterator<[string, string]>) {
 }
 
 export async function authLoader() {
+	console.log("check")
 	const urlParams = new URLSearchParams(window.location.search);
 	const url = apiAddress + "/auth";
 
@@ -39,5 +40,7 @@ export async function authLoader() {
 			notifyError(error.message);
 		});
 
+	console.log("check");
+	console.log(data);
 	return data;
 }

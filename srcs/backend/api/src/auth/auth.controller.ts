@@ -18,14 +18,17 @@ export class AuthController {
 	@Post()
 	async auth(@Body() body): Promise<TokenDto | UserSafeDTO> {
 		if (body.error || !body.code) throw new UnauthorizedException();
-
+		console.log("1");
 		const token42 = await this.authService.getToken42(body.code);
 		if (!token42) throw new UnauthorizedException();
+		console.log("2");
 
 		const userData42 = await this.authService.getUserData42(token42);
 		if (!userData42) throw new UnauthorizedException();
+		console.log("3");
 
 		const user = await this.authService.login(userData42);
+		console.log("4");
 
 		if (user.is2FAOn) {
 			return this.userService.getUserSafe(user);
