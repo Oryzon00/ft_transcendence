@@ -1,8 +1,8 @@
 export type MessagePayload = {
-	id: number;
+	id: string;
     createdAt: Date;
     updateAt: Date;
-    channelId: number;
+    channelId: string;
     authorId: number;
     content: string;
 };
@@ -13,18 +13,38 @@ export type ChannelCreation = {
     password: string;
 }
 
+export type ChannelNewPassword = {
+    id: string;
+    password: string;
+}
+
 export type ChannelPayload = {
-	id: number;
+	id: string;
 	name: string;
 	message: MessagePayload[];
 }
 
 export type ChannelInvitation = {
-    id: number;
-    invited: number[];
+    id: string;
+    invited: number;
+}
+
+export type ChannelQuit = ChannelInvitation;
+export type ChannelKick = ChannelInvitation;
+export type ChannelBan = ChannelInvitation;
+export type ChannelMute = {
+    id: string;
+    muted: number;
+    until: Date;
 }
 
 export type ChannelJoin = {
-    id: number;
+    id: string;
     password: string;
+}
+
+export type ChannelInfo = {
+    id: string;
+    name: string;
+    status: string;
 }

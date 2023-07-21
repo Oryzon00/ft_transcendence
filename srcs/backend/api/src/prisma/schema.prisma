@@ -17,7 +17,7 @@ enum Status {
 }
 
 model User {
-  id    Int    @id @default(autoincrement())
+  id    Int    @id @unique @default(autoincrement())
   id42  Int    @unique
   image String
 
@@ -32,37 +32,28 @@ model User {
 
   // Connexion from another table
   members      Member[]
-  //channelAdmins Channel[] @relation("admins")
-  channelOwner Channel[] @relation("owners")
-  isBan        Channel[] @relation("bans")
-  //channelMute   UserMute[] @relation("mute")
+  friends     User[] @relation("friends")
+  friendsTo User[] @relation("friends")
 
-  //hasBlock Block[] @relation("block")
-  //isBlock  Block[] @relation("blocked")
+  channelOwner Channel[] @relation("owners")
+  isBan        Ban[] @relation("bans")
+
+  hasBlock Block[] @relation("block")
+  isBlock  Block[] @relation("blocked")
 
   message Message[]
-  //block   Block[] @relati
 
   @@map("users")
 }
 
-//model Block {
-//isBlock    User  @relation("block", fields: [isBlockId], references: [id])
-//isBlockId  Int
-//hasBlock   User  @relation("blocked", fields: [hasBlockId], references: [id])
-//hasBlockId Int
-//User       User? @relation(fields: [userId], references: [id])
-//userId     Int?
+model Block {
+  isBlock    User  @relation("block", fields: [isBlockId], references: [id])
+  isBlockId  Int
+  hasBlock   User  @relation("blocked", fields: [hasBlockId], references: [id])
+  hasBlockId Int
 
-//@@map("block")
-//}
-
-//model UserMute {
-//User      User?    @relation(fields: [userId], references: [id])
-//userId    Int?
-//Channel   Channel? @relation(fields: [channelId], references: [id])
-//channelId Int?
-//}
+  @@id([isBlockId, hasBlockId])
+}
 
 model GameProfile {
   userId Int  @unique
@@ -75,7 +66,7 @@ model GameProfile {
 }
 
 model Channel {
-  id Int @id @unique @default(autoincrement())
+  id String @id @unique @default(uuid())
 
   createdAt DateTime @default(now())
   updateAt  DateTime @default(now()) @updatedAt
@@ -91,7 +82,7 @@ model Channel {
 
   members Member[]
 
-  bans User[] @relation("bans")
+  bans Ban[] @relation("bans")
 
   messagesId Int[]
   Message    Message[]
@@ -102,9 +93,9 @@ model Channel {
 }
 
 model Member {
-  id Int @id @unique @default(autoincrement())
+  id String @id @unique @default(uuid())
 
-  channelId Int
+  channelId String
   userId    Int
   channel   Channel @relation(fields: [channelId], references: [id])
   user      User    @relation(fields: [userId], references: [id])
@@ -117,14 +108,27 @@ model Member {
   @@map("members")
 }
 
+model Ban {
+  id String @id @unique @default(uuid())
+
+  channelId String
+  userId    Int
+  channel   Channel @relation("bans", fields: [channelId], references: [id])
+  user      User    @relation("bans", fields: [userId], references: [id])
+
+  reason String?
+
+  @@map("bans")
+}
+
 model Message {
-  id Int @unique @default(autoincrement())
+  id String @unique @default(uuid())
 
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
 
   channel   Channel @relation(fields: [channelId], references: [id])
-  channelId Int
+  channelId String
 
   author   User @relation(fields: [authorId], references: [id])
   authorId Int

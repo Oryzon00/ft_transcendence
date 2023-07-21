@@ -1,13 +1,9 @@
 import { ListChannel } from '../../layouts/ChatLayout/chat.d'
 
-function SelectChannel(channel: ListChannel) {
-
+function SelectChannel() {
     return (
         <>
-            <div id="conversation">
-            </div>
+            <p>I</p>
         </>
-    );
+    )
 }
-
-export default SelectChannel;

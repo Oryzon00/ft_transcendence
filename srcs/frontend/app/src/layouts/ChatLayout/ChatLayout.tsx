@@ -42,7 +42,7 @@ function ChatLayout() {
 			})
 			.then (
 				function (data) {
-					console.log(data.Channel)
+					console.log(data.body)
 					setChannel(data)
 				})
 			.catch (
@@ -104,7 +104,6 @@ function ChatLayout() {
 					<ButtonChannelSearch/>
 					<ButtonChannelCreation/>
 				</div>
-				<SelectChannel channel={channel}/>
 			</div>
 			<div id="send">
 				<div id="main-channel-name">

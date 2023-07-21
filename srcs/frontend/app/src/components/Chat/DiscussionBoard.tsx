@@ -1,5 +1,6 @@
 import { ChannelPayload, MessagePayload } from "../../layouts/ChatLayout/chat.d";
 import { UserHook } from "../../utils/hooks/TuseUser";
+import "../../layouts/ChatLayout/chat.css"
 
 type CurrentChannel = {
 	channel: {[key: string]: ChannelPayload},

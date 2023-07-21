@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { socket, WebsocketProvider } from "../../contexts/WebsocketContext";
 
-function MessageEntry (current: number) {
+function MessageEntry (current: string) {
 	const [value, setValue] = useState('');
 
 	const sendMessage = () => {
