@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Member, User } from "@prisma/client";
+import { Ban, Member, User } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
@@ -62,12 +62,21 @@ class UserDatabase {
     }
 
     async findMember(userId: number, channelId: string) : Promise<Member> {
-        return (this.prisma.member.findFirst({
+        return (await this.prisma.member.findFirst({
             where: {
                 channelId: channelId,
                 userId: userId,
             }
         }));
+    }
+
+    async findBan(userId : number, channelId: string) : Promise<Ban> {
+        return (await this.prisma.ban.findFirst({
+            where: {
+                channelId: channelId,
+                userId: userId,
+            }
+        }))
     }
     /*
     joinChannel

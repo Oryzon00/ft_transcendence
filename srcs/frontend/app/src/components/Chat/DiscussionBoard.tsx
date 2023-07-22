@@ -1,6 +1,5 @@
 import { ChannelPayload, MessagePayload } from "../../layouts/ChatLayout/chat.d";
 import { UserHook } from "../../utils/hooks/TuseUser";
-import "../../layouts/ChatLayout/chat.css"
 
 type CurrentChannel = {
 	channel: {[key: string]: ChannelPayload},
@@ -14,7 +13,7 @@ function DiscussionBoard({channel, current, me} : CurrentChannel)
 		return (<div className="no-channel"><p>No channel</p></div>);
 	console.log(channel);
 	return ( 
-		<div id="discussion">
+		<div className="bg-white">
             <div id="message-box">
             {
                 channel[current].messagesId.map((msg : MessagePayload) => { 

@@ -1,9 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import { socket, WebsocketContext, WebsocketProvider } from "../../contexts/WebsocketContext";
-import { MessagePayload, ChannelPayload, ListChannel } from "./chat.d"
+import { WebsocketContext } from "../../contexts/WebsocketContext";
+import { ChannelPayload, ListChannel } from "./chat.d"
 import { UserHook } from "../../utils/hooks/TuseUser";
 import useUser from "../../utils/hooks/useUser";
-import "./chat.css";
 
 // Components
 import MessageEntry from "../../components/Chat/MessageEntry";
@@ -12,13 +11,18 @@ import apiAddress from "../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../utils/getJWT";
 import { notifyError } from "../../utils/notify";
 import { ButtonChannelSearch } from "../../components/Chat/ChannelSearch";
-import { ButtonChannelCreation } from "../../components/Chat/ChannelCreation";
+import ChannelBoard from "../../components/Chat/ChannelBoard";
+import CreationChannelLayout from "../CreationChannelLayout/CreationChannelLayout";
+import SearchChannelLayout from "../SearchChannelLayout/SearchChannelLayout";
 
 function ChatLayout() {
 	const [current, setCurrent] = useState('');
 	const [name, setName] = useState('');
-	const [room, setRoom] = useState('');
 	const [channel, setChannel] = useState<ListChannel>({});
+
+	const [creation, setCreation] = useState(false);
+	const [search, setSearch] = useState(false);
+
 	const sockets = useContext(WebsocketContext);
 	const user : UserHook = useUser();
 
@@ -41,8 +45,8 @@ function ChatLayout() {
 
 			})
 			.then (
-				function (data) {
-					console.log(data.body)
+				function (data) : void {
+					console.log(data);
 					setChannel(data)
 				})
 			.catch (
@@ -54,19 +58,10 @@ function ChatLayout() {
 
 	useEffect(() => {
 		sockets.on('connect', () => {
+				console.log("Connected!");
 				getChatData();
 				console.log(channel);
-				console.log("Connected!");
 			})
-
-		// Received new message
-		sockets.on('onMessage', (data: MessagePayload) => {
-				// Add the new received messages in the right channel
-				setChannel((prev) => { 
-					prev[data.channelId].messagesId.push(data);
-					return prev;
-				});
-		});
 
 		// Create new channel
 		sockets.on('onChannel', (data: any) => {
@@ -89,28 +84,30 @@ function ChatLayout() {
 			sockets.off('onChannel');
 		};
 		});
-	//}, [channel]);
-
-	/*
-	//const inviteFriend = () => {};
-	const modifyMessage = () => {};
-	const modifyChannel = () => {};
-	*/
 
 	return ( 
-		<section id="chat">
-			<div id="info">
-				<div id="channel">
-					<ButtonChannelSearch/>
-					<ButtonChannelCreation/>
+		<section className="h-screen w-screen bg-black flex">
+					<CreationChannelLayout open={creation} onClose={() => setCreation(false)} newChannel={(e: ChannelPayload) => setChannel({...channel, [e.id]: e})}/>
+					<SearchChannelLayout open={search} onClose={() => setSearch(false)} newChannel={(e: ChannelPayload) => setChannel({...channel, [e.id]: e})}/>
+			<div className="bg-white w[30vw] flex flex-col">
+				<div className="flex flex-col">
+					<button onClick={() => setSearch(true)}>Search Channel</button>
+					<button onClick={() => setCreation(true)}>Create Channel</button>
 				</div>
+				<ChannelBoard channels={channel} setCurrent={setCurrent}/>
 			</div>
-			<div id="send">
-				<div id="main-channel-name">
-					<p>{name}</p>
+			<div className="w-screen h-screen bg-blue-400 flex flex-col items-center justify-center" >
+				<div className="flex-grow w-full h-full ">
+					<div id="main-channel-name">
+						<p>{name}</p>
+					</div>
+					<div className="bg-white text-black w-[100%] h-[80%] border-black border-4">
+						<DiscussionBoard channel={channel} current={current} me={user}/>
+					</div>
 				</div>
-				<DiscussionBoard channel={channel} current={current} me={user}/>
-				<MessageEntry current={current}/>
+				<div className="flex-none w-full">
+					<MessageEntry current={current}/>
+				</div>
 			</div>
 		</section>
 	);

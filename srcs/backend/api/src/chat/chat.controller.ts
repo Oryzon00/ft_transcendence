@@ -4,14 +4,13 @@ import {
     Get,
     UseGuards,
     Patch,
-    Put,
     Body
 } from "@nestjs/common";
 import { ChatService } from "./chat.service";
 import { GetUser } from "src/auth/decorator";
 import { User } from "@prisma/client";
 import { JwtGuard } from "src/auth/guard";
-import { ChannelBan, ChannelCreation, ChannelInvitation, ChannelJoin, ChannelKick, ChannelMute, ChannelNewPassword } from "./dto/chat";
+import { ChannelBan, ChannelCreation, ChannelInfo, ChannelInvitation, ChannelJoin, ChannelKick, ChannelMute, ChannelNewPassword, ListChannel } from "./dto/chat";
 
 @UseGuards(JwtGuard)
 @Controller('chat')
@@ -19,17 +18,16 @@ export class ChatController {
     constructor(private ChatService: ChatService) {}
 
     @Get('getData')
-    getData(@GetUser() user : User) {
-        return this.ChatService.getData(user);
+    async getData(@GetUser() user : User) : Promise<ListChannel> {
+        return( await (this.ChatService.getData(user)) );
     }
 
     @Post('/channel/create')
     create(
         @GetUser() user : User,
         @Body() channel : ChannelCreation
-    ) {
-        console.log(channel)
-        return (this.ChatService.createChannel(user, channel));
+    ) : Promise<ChannelInfo> {
+        return  (this.ChatService.createChannel(user, channel));
     }
 
     @Patch('/channel/join')
@@ -57,10 +55,11 @@ export class ChatController {
     }
 
     @Get('/channel/search')
-    searchChannel(
+    search(
+        @GetUser() user : User,
         @Body() body : { name : string },
     ){
-        return (this.ChatService.searchChannel(body));
+        return (this.ChatService.searchChannel(user, body));
     }
 
     @Post('/user/block')
@@ -76,6 +75,7 @@ export class ChatController {
     )
     {
         this.ChatService.password(user, body);
+        return (null)
     }
 
     @Patch('/channel/kick')
@@ -84,6 +84,7 @@ export class ChatController {
         @Body() body : ChannelKick
     ){
         this.ChatService.kick(user, body)
+        return (null)
     }
 
     @Patch('/channel/ban')

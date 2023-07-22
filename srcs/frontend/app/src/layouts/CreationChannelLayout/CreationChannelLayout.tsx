@@ -1,11 +1,16 @@
 import { useState } from "react";
 import apiAddress from "../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../utils/getJWT";
+import NameInput from "../../components/Chat/CreateChannel/NameInput";
+import PasswordInput from "../../components/Chat/CreateChannel/PasswordInput";
+import SelectStatus from "../../components/Chat/CreateChannel/SelectStatus";
 
-function CreationChannelLayout() {
+function CreationChannelLayout({open, onClose, newChannel}) {
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [status, setStatus] = useState('public');
+
+    if (!open) return null;
 
     const options = [
         {
@@ -48,35 +53,17 @@ function CreationChannelLayout() {
 			})
         .then(
             function(data) {
-                console.log(data)
+                newChannel({id: data.id, name: data.name, status: data.status, message: []});
             }
         )
     }
 
     return (
             <div id="create-channel">
-                <div id="channel-name">
-                    <h2>
-                        Nom Channel
-                    </h2>
-                    <input type="text" value={name} placeholder="Entrer un nom" onChange={(e) => setName(e.target.value)}/>
-                </div>
-                <div id="channel-status">
-                    <h2>
-                        Status
-                    </h2>
-                    <select name="status" id="status-select" value={status} onChange={(e) => setStatus(e.target.value)}>
-                        {options.map((option) => (
-                            <option value={option.value}>{option.label}</option>
-                        ))}
-                    </select>
-                </div>
-                <div id="channel-password">
-                    <h2>
-                        Mot de passe
-                    </h2>
-                    <input type="text" value={password} placeholder="Entrer mot de passe" onChange={(e) => setPassword(e.target.value)}/>
-                </div>
+                <button onClick={onClose}>CLOSE</button>
+                <NameInput name={name} setName={setName}/>
+                <SelectStatus options={options} setStatus={setStatus}/>
+                <PasswordInput password={password} setPassword={setPassword}/>
                 <button onClick={createChannel} id="create-channel-button">
                     Create Channel
                 </button>

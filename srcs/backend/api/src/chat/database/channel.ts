@@ -1,6 +1,6 @@
 import { Message, Channel, Member, Ban } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
-import { MessagePayload, ChannelPayload, ChannelCreation } from "../dto/chat";
+import { MessagePayload, ChannelPayload, ChannelCreation } from "../dto/chat.d";
 import { Status } from "@prisma/client";
 import { Injectable } from "@nestjs/common";
 
@@ -10,7 +10,6 @@ class ChannelDatabase {
 
     /*
     changeStatus
-    destroyChannel
     */
 
 	async stockMessages(message : MessagePayload) : Promise<Message>{
@@ -66,13 +65,14 @@ class ChannelDatabase {
 
 
 	async joinChannel(channel: string, user: number, admin = false) : Promise<Member> {
-		if (this.prisma.member.findFirst({
+		if ((await this.prisma.member.findFirst({
 			where: {
 				channelId: channel,
 				userId: user
 			}
-		}) == undefined)
+		})) == undefined)
 		{
+			console.log('member')
 		return (await this.prisma.member.create({
 			data: {
 				channel: {

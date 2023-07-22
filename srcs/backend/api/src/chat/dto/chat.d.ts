@@ -21,6 +21,7 @@ export type ChannelNewPassword = {
 export type ChannelPayload = {
 	id: string;
 	name: string;
+    status: string;
 	message: MessagePayload[];
 }
 
@@ -48,3 +49,6 @@ export type ChannelInfo = {
     name: string;
     status: string;
 }
+
+
+export type ListChannel = {[key: string]: ChannelPayload}

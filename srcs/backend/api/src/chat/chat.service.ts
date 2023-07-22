@@ -3,8 +3,7 @@ import { Socket } from 'socket.io';
 import { Channel, Member, Message, Status, User } from "@prisma/client";
 import UserDatabase from "./database/user";
 import ChannelDatabase from "./database/channel";
-import AdminDatabase from "./database/admin";
-import { ChannelBan, ChannelCreation, ChannelInfo, ChannelInvitation, ChannelJoin, ChannelKick, ChannelMute, ChannelNewPassword, ChannelPayload, MessagePayload } from "./dto/chat";
+import { ChannelBan, ChannelCreation, ChannelInfo, ChannelInvitation, ChannelJoin, ChannelKick, ChannelMute, ChannelNewPassword, ChannelPayload, ListChannel, MessagePayload } from "./dto/chat";
 import { ConnectedSocket } from "@nestjs/websockets";
 import { PrismaService } from "src/prisma/prisma.service";
 
@@ -13,42 +12,45 @@ export class ChatService {
     constructor(
         private userdb : UserDatabase,
         private channeldb : ChannelDatabase,
-        private admindb : AdminDatabase,
         private prisma : PrismaService
     ) {}
 
     // Get all data of one user on connection
-    async getData(user : User) : Promise<{[key: number]: ChannelPayload}> {
+    async getData(user : User) : Promise<ListChannel> {
         const members : Member[] = await this.userdb.getMembers(user.id);
-        let res : {[key: number]: ChannelPayload} = {};
+        let res : ListChannel = {};
 
-        for (let i : number = 0; members != undefined && i < members.length; i++)
-            res[members[i].channelId] = await this.getChannel(members[i].channelId);
-        return (res);
+        if (members != undefined)
+        {
+            for (let i : number = 0; i < members.length; i++)
+                res[members[i].channelId] = await this.getChannel(members[i].channelId);
+        }
+        return (await res);
     }
 
     async getChannel(channelId : string) : Promise<ChannelPayload> {
         const channel = await this.channeldb.getChannelInfo(channelId);
         const messages : Message[] = await this.channeldb.getChannelMessage(channelId);
-        return ({
+        return (await {
             id: channel.id,
             name: channel.name,
+            status: this.channeldb.convertString(channel.status),
             message: messages,
         })
     }
  
     // Creation of a channel
-    async createChannel(user : User, channel: ChannelCreation) : Promise<{id : string, name: string, status: string}> {
+    async createChannel(user : User, channel: ChannelCreation) : Promise<ChannelInfo> {
         const res : Channel = await this.channeldb.createChannel(channel, user.id);
         return ({id: res.id, name: res.name, status: this.channeldb.convertString(res.status)});
     }
 
-    fusionSameName(name : string, channel : Channel[], old : ChannelInfo[])
+    fusionSameName(userId: number, name : string, channel : Channel[], old : ChannelInfo[])
     {
         let res = old;
         for (let i : number = 0; i < channel.length; i++) {
-           if (name == '' || channel[i].name.startsWith(name))
-            {
+            let member = this.userdb.findMember(userId, channel[i].id);
+            if ((name == '' || channel[i].name.startsWith(name))){// && member == undefined){
                 res.push({
                     id: channel[i].id,
                     name: channel[i].name,
@@ -59,12 +61,12 @@ export class ChatService {
         return (res);
     }
 
-    async searchChannel(body : {name : string}) : Promise<ChannelInfo[]> {
+    async searchChannel(user : User, body : {name : string}) : Promise<ChannelInfo[]> {
         const publicChannel : Channel[] = await this.channeldb.getPublicChannel();
         const protectChannel : Channel[] =  await this.channeldb.getProtectChannel();
-        let res : ChannelInfo[];
-        res = this.fusionSameName(body.name, publicChannel, res);
-        res = this.fusionSameName(body.name, protectChannel, res);
+        let res : ChannelInfo[] = [];
+        res = this.fusionSameName(user.id, body.name, publicChannel, res);
+        res = this.fusionSameName(user.id, body.name, protectChannel, res);
         return (res);
     }
 

@@ -5,8 +5,6 @@ import { MessagePayload, ChannelPayload, ChannelInvitation, ChannelKick } from '
 import { Channel, Member, Message, User } from '@prisma/client';
 import ChannelDatabase from './database/channel';
 import UserDatabase from './database/user';
-import AdminDatabase from './database/admin';
-import { GetUser } from 'src/auth/decorator';
 import { JwtGuard } from 'src/auth/guard';
 import { AuthSocket } from './AuthSocket.types';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -53,13 +51,13 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 	@SubscribeMessage('newMessage')
 	async onNewMessage(@ConnectedSocket() client: AuthSocket, @MessageBody() body : MessagePayload) {
 		// Confirmed the user 
-		const member = await this.prisma.member.findMany({
+		const member : Member = await this.prisma.member.findFirst({
 			where: { 
 				channelId: body.channelId,
 				userId: client.userId
 			 }
 		});
-		if (member == undefined) {
+		if (member == undefined || member.mute) {
 			throw new WsException(
 				"You cannot send message in this channel, refresh the page",
 			  );
