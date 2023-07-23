@@ -9,7 +9,7 @@ function NotFoundLayout() {
 		<>
 			<div>Error</div>
 			<p>
-				<i>{error.statusText || error.message}</i>
+				<i>{error.status} ({error.data})</i>
 			</p>
 			<ButtonToLogin />
 		</>

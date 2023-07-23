@@ -1,7 +1,6 @@
 import * as ReactDOM from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import AuthError from "./pages/AuthPage/AuthError.tsx";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage.tsx";
 import SettingsPage from "./pages/SettingsPage/SettingsPage.tsx";
 import HomePage from "./pages/HomePage/HomePage.tsx";
@@ -23,19 +22,12 @@ const router = createBrowserRouter([
 	{
 		path: "/home",
 		element: <HomePage />,
-		children: [
-			{
-				path: "/home/profile/:username?",
-				element: <ProfileLayout />,
-				loader: ProfileLayoutLoader
-			}
-		]
 	},
 	{
 		path: "/auth",
 		element: <AuthPage />,
 		loader: authLoader,
-		errorElement: <AuthError />
+		errorElement: <NotFoundPage />
 	},
 	{
 		path: "/settings",
@@ -44,6 +36,12 @@ const router = createBrowserRouter([
 	{
 		path: "/test/settingsCSS",
 		element: <OTPLoginPopup />
+	},
+	{
+		path: "/profile/:username?",
+		element: <ProfileLayout />,
+		loader: ProfileLayoutLoader,
+		errorElement: <NotFoundPage />
 	}
 ]);
 

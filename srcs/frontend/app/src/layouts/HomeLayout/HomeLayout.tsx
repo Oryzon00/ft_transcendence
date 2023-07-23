@@ -10,14 +10,14 @@ function HomeLayout() {
 
 	return (
 		<div className="home-root">
-			<div className="profile-button">
-				<ProfileButton />
+			<div>
 			</div>
 			<Outlet />
 			<div className="main-site">
 				<div>Welcome home !</div>
 				<User></User>
 				<ButtonSettings />
+				<ProfileButton />
 			</div>
 			<div />
 		</div>

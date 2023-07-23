@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { UserContext } from "../../../utils/contexts/userContext.tsx";
 import './UpdateProfilePictureButton.styles.css'
 import getJwtTokenFromCookie from "../../../utils/getJWT.ts";
@@ -9,7 +9,6 @@ import { throwErrorMessage } from "../../../utils/throwErrorMessage.ts";
 function updateProfilePictureButton() {
 	const userHook = useContext(UserContext);
 	if (!userHook.user) return null;
-
 	function sendToBack (type :string, img :string) {
 		const url = apiAddress + "/user/update/image";
 
