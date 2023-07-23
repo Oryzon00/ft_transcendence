@@ -45,7 +45,6 @@ export class UserService {
 			fs.unlink(join(process.cwd(), 'images', oldPath), (err) => {});
 
 		let imagePath = new Promise(function (resolve, reject) {
-			console.log(type);
 			fs.writeFile(join(process.cwd(), 'images', user.id + '.' + type.split('/')[1]), buf, async (err) => {
 				if (err) reject(err);
 				else {
@@ -54,7 +53,7 @@ export class UserService {
 			});
 		})
 			.then (() => {
-				return ("http://localhost:3000/images/" + user.id + "." + type.split('/')[1])
+				return ("http://localhost:3000/images/" + user.id + "." + type.split('/')[1]) // Possibilité de mettre le path dans le resolve au lieu de .then
 		})
 		 return (imagePath.then( async (val) => {
 			 await this.prisma.user.update({

@@ -2,8 +2,13 @@ import getJwtTokenFromCookie from "../../utils/getJWT.ts";
 import { notifyError } from "../../utils/notify.ts";
 import { throwErrorMessage } from "../../utils/throwErrorMessage.ts";
 
-export function ProfileLayoutLoader() {
-	const url = "http://localhost:3000/user/me";
+export function ProfileLayoutLoader({ params }:any) {
+	let url;
+	if (params.username === undefined)
+		url = "http://localhost:3000/user/me";
+	else
+		url = "http://localhost:3000/user/find?username=" + params.username;
+
 	const data = fetch(url, {
 		method: "GET",
 		headers: {
@@ -19,6 +24,7 @@ export function ProfileLayoutLoader() {
 		})
 		.catch((error) => {
 			notifyError(error.message);
+			return null;
 		});
 	return data;
 }

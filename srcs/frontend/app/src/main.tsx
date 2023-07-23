@@ -1,4 +1,3 @@
-import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -26,7 +25,7 @@ const router = createBrowserRouter([
 		element: <HomePage />,
 		children: [
 			{
-				path: "/home/profile/",
+				path: "/home/profile/:username?",
 				element: <ProfileLayout />,
 				loader: ProfileLayoutLoader
 			}
