@@ -2,9 +2,6 @@
 .vscode*
 .idea*
 
-# Credentials, API keys, env variable
-# *.env
-
 # Dependencies
 node_modules/
 
@@ -16,3 +13,6 @@ migrations/
 # Secret 42 API
 42.api.env
 api.secret.env
+
+# Images
+images/
