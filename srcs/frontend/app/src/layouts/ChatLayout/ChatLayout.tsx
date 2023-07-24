@@ -11,19 +11,20 @@ import apiAddress from "../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../utils/getJWT";
 import { notifyError } from "../../utils/notify";
 import ChannelBoard from "../../components/Chat/ChannelBoard";
-import CreationChannelLayout from "../CreationChannelLayout/CreationChannelLayout";
-import SearchChannelLayout from "../SearchChannelLayout/SearchChannelLayout";
+import CreationChannelLayout from "../JoinChannelLayout/JoinChannelLayout";
+import JoinChannelLayout from "../JoinChannelLayout/JoinChannelLayout";
+import BlockUser from "./BlockUser";
+
 
 function ChatLayout() {
 	const [current, setCurrent] = useState('');
 	const [channel, setChannel] = useState<ListChannel>({});
 
 	const [creation, setCreation] = useState(false);
-	const [search, setSearch] = useState(false);
+	const [block, setBlock] = useState(false);
 
 	const sockets = useContext(WebsocketContext);
 	const user : UserHook = useUser();
-	console.log(user.user)
 
 	const getChatData = () => { // Get all the data for the variable channel
 		const url = apiAddress + '/chat/getData';
@@ -45,7 +46,6 @@ function ChatLayout() {
 			})
 			.then (
 				function (data) : void {
-					console.log(data);
 					setChannel(data)
 				})
 			.catch (
@@ -54,6 +54,42 @@ function ChatLayout() {
 				}
 			)
 	};
+
+	const isBlocked = (author : number) => {
+		const url = apiAddress + '/chat/isBlocked';
+		let blocked = false;
+		fetch(url, {
+			method: "POST",
+			headers: {
+				Authorization: "Bearer " + getJwtTokenFromCookie(),
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				author: author
+			})
+		})
+		.then(
+			function (res: Response) {
+				if (!res.ok) {
+					throw new Error(
+						"Request failed with status " + res.status
+					);
+				}
+				return (res.json());
+			}
+		)
+		.then(
+			function (data) : void {
+				blocked = data.res;
+			}
+		)
+			.catch (
+				function(error) {
+					notifyError(error.message)
+				}
+			)
+		return (blocked);
+	}
 
 	useEffect(() => {
 		sockets.on('connect', () => {
@@ -74,7 +110,8 @@ function ChatLayout() {
 		});
 
 		sockets.on('onMessage', (data: MessagePayload) => {
-			channel[data.channelId].message.push(data);
+			if (!isBlocked(data.authorId))
+				channel[data.channelId].message.push(data);
 		})
 
 		return () => {
@@ -87,12 +124,12 @@ function ChatLayout() {
 
 	return ( 
 		<section className="h-screen w-screen bg-black flex">
-					<CreationChannelLayout socket={sockets} open={creation} onClose={() => setCreation(false)} newChannel={(e: ChannelPayload) => setChannel({...channel, [e.id]: e})}/>
-					<SearchChannelLayout open={search} onClose={() => setSearch(false)} newChannel={(e: ChannelPayload) => setChannel({...channel, [e.id]: e})}/>
+					<JoinChannelLayout socket={sockets} open={creation} onClose={() => setCreation(false)} newChannel={(e: ChannelPayload) => setChannel({...channel, [e.id]: e})}/>
+					<BlockUser show={block} hide={() => setBlock(false)}/>
 			<div className="bg-white w[30vw] flex flex-col">
 				<div className="flex flex-col">
-					<button onClick={() => setSearch(true)}>Search Channel</button>
-					<button onClick={() => setCreation(true)}>Create Channel</button>
+					<button onClick={() => setCreation(true)}>Join Channel</button>
+					<button onClick={() => setBlock(true)}>Block User</button>
 				</div>
 				<ChannelBoard channels={channel} setCurrent={setCurrent}/>
 			</div>

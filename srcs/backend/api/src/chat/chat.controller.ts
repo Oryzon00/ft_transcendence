@@ -11,7 +11,7 @@ import { ChatService } from "./chat.service";
 import { GetUser } from "src/auth/decorator";
 import { User } from "@prisma/client";
 import { JwtGuard } from "src/auth/guard";
-import { ChannelBan, ChannelCreation, ChannelInfo, ChannelInvitation, ChannelJoin, ChannelKick, ChannelMute, ChannelNewPassword, ListChannel, MessageWrite } from "./dto/chat";
+import { ChannelBan, ChannelCreation, ChannelInfo, ChannelInvitation, ChannelJoin, ChannelKick, ChannelMute, ChannelNewPassword, ListChannel, ListName, MessageWrite } from "./dto/chat";
 
 @UseGuards(JwtGuard)
 @Controller('chat')
@@ -22,14 +22,6 @@ export class ChatController {
     @Get('getData')
     async getData(@GetUser() user : User) : Promise<ListChannel> {
         return (await this.ChatService.getData(user));
-    }
-
-    @Post('/channel/create')
-    create(
-        @GetUser() user : User,
-        @Body() channel : ChannelCreation
-    ) : Promise<ChannelInfo> {
-        return  (this.ChatService.createChannel(user, channel));
     }
 
     @Post('message')
@@ -50,14 +42,6 @@ export class ChatController {
         return (this.ChatService.joinChannel(user, channel));
     }
 
-    @Patch('/channel/invite')
-    invite(
-        @GetUser() user : User,
-        @Body() invite : ChannelInvitation
-    ) {
-        return (this.ChatService.invite(user, invite));
-    }
-
     @Patch('/channel/quit')
     quit(
         @GetUser() user : User,
@@ -75,19 +59,38 @@ export class ChatController {
         return (this.ChatService.listUser(user, body.channelId))
     }
 
-    @Post('/channel/search')
-    search(
+    @Get('/user/listBlock')
+    async getBlocked(
         @GetUser() user : User,
-        @Body() body : { name : string },
-    ){
-        return (this.ChatService.searchChannel(user, body));
+    ) : Promise<string[]>
+    {
+        return (await this.ChatService.getBlocked(user));
     }
 
     @Post('/user/block')
     block(
         @GetUser() user : User,
-        @Body() channel
-    ) {}
+        @Body() body : ListName
+    )  
+    {
+        return (this.ChatService.block(user, body))
+    }
+
+    @Post('/user/unblock')
+    unblock(
+        @GetUser() user : User,
+        @Body() body : ListName
+    )
+    {
+        return (this.ChatService.unblock(user, body))
+    }
+
+    @Patch('/channel/sendPassword')
+    sendPassword(
+        @GetUser() user : User,
+        @Body() body : ChannelNewPassword
+    )
+    {}
 
     @Patch('/channel/password')
     password(

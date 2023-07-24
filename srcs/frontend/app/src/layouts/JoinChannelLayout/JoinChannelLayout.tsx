@@ -3,12 +3,11 @@ import apiAddress from "../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../utils/getJWT";
 import NameInput from "../../components/Chat/CreateChannel/NameInput";
 import PasswordInput from "../../components/Chat/CreateChannel/PasswordInput";
-import SelectStatus from "../../components/Chat/CreateChannel/SelectStatus";
 
-function CreationChannelLayout({socket, open, onClose, newChannel}) {
+function JoinChannelLayout({socket, open, onClose, newChannel}) {
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
-    const [status, setStatus] = useState('public');
+    //const [status, setStatus] = useState('public');
 
 
     const options = [
@@ -26,8 +25,8 @@ function CreationChannelLayout({socket, open, onClose, newChannel}) {
         }
     ]
 
-    function createChannel() {
-        const url = apiAddress + '/chat/channel/create';
+    function joinChannel() {
+        const url = apiAddress + '/chat/channel/join';
         fetch(url, {
             method: "POST",
 			headers: {
@@ -36,8 +35,7 @@ function CreationChannelLayout({socket, open, onClose, newChannel}) {
 			},
             body: JSON.stringify({
                 name: name,
-                status: status,
-                password: password,
+                password: password
             })
         }
         ).then(
@@ -53,7 +51,6 @@ function CreationChannelLayout({socket, open, onClose, newChannel}) {
         .then(
             function(data) {
                 newChannel({id: data.id, name: data.name, status: data.status, message: []});
-                socket.emit('joinChannel', {channelId: data.id})
             }
         )
     }
@@ -65,14 +62,13 @@ function CreationChannelLayout({socket, open, onClose, newChannel}) {
                     CLOSE
                 </button>
                 <NameInput name={name} setName={setName}/>
-                <SelectStatus options={options} status={status} setStatus={setStatus}/>
                 <PasswordInput password={password} setPassword={setPassword}/>
-                <button onClick={createChannel} id="create-channel-button">
-                    Create Channel
+                <button onClick={joinChannel} id="create-channel-button">
+                    Join Channel
                 </button>
             </div>
     );
 
 }
 
-export default CreationChannelLayout;
+export default JoinChannelLayout;

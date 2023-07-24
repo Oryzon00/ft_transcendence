@@ -46,8 +46,12 @@ export type ChannelMute = {
 }
 
 export type ChannelJoin = {
-    id: string;
+    name: string;
     password: string;
+}
+
+export type ListName = {
+    name: string;
 }
 
 export type ChannelInfo = {

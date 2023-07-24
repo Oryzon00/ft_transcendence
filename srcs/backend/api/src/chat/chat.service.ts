@@ -1,10 +1,8 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { Socket } from 'socket.io';
-import { Channel, Member, Message, Status, User } from "@prisma/client";
+import { Block, Channel, Member, Message, Status, User } from "@prisma/client";
 import UserDatabase from "./database/user";
 import ChannelDatabase from "./database/channel";
-import { ChannelBan, ChannelCreation, ChannelInfo, ChannelInvitation, ChannelJoin, ChannelKick, ChannelMute, ChannelNewPassword, ChannelPayload, ListChannel, MessagePayload, MessageWrite } from "./dto/chat";
-import { ConnectedSocket } from "@nestjs/websockets";
+import { ChannelBan, ChannelCreation, ChannelInfo, ChannelInvitation, ChannelJoin, ChannelKick, ChannelMute, ChannelNewPassword, ChannelPayload, ListChannel, ListName, MessagePayload, MessageWrite } from "./dto/chat";
 import { PrismaService } from "src/prisma/prisma.service";
 import { ChatGateway } from "./chat.gateway";
 
@@ -18,22 +16,32 @@ export class ChatService {
         private prisma : PrismaService,
     ) {}
 
+    listBlocked(blocked : Block[]) : number[] {
+        if (blocked == undefined)
+            return [];
+        let res : number[] = [];
+        for (let i = 0; i < blocked.length; i++)
+            res.push(blocked[i].isBlockId);
+        return (res);
+    }
+
     // Get all data of one user on connection
     async getData(user : User) : Promise<ListChannel> {
         const members : Member[] = await this.userdb.getMembers(user.id);
+        const blocked : number[] = this.listBlocked(await this.userdb.listBlockedUser(user.id));
         let res : ListChannel = {};
 
         if (members != undefined)
         {
             for (let i : number = 0; i < members.length; i++)
-                res[members[i].channelId] = await this.getChannel(members[i].channelId);
+                res[members[i].channelId] = await this.getChannel(members[i].channelId, blocked);
         }
-        return (await res);
+        return (res);
     }
 
-    async getChannel(channelId : string) : Promise<ChannelPayload> {
+    async getChannel(channelId : string, blocked: number[]) : Promise<ChannelPayload> {
         const channel = await this.channeldb.getChannelInfo(channelId);
-        const messages : Message[] = await this.channeldb.getChannelMessage(channelId);
+        const messages : Message[] = await this.channeldb.getChannelMessage(channelId, blocked);
         return (await {
             id: channel.id,
             name: channel.name,
@@ -43,8 +51,8 @@ export class ChatService {
     }
  
     // Creation of a channel
-    async createChannel(user : User, channel: ChannelCreation) : Promise<ChannelInfo> {
-        const res : Channel = await this.channeldb.createChannel(channel, user.id);
+    async createChannel(user : User, name: string) : Promise<ChannelInfo> {
+        const res : Channel = await this.channeldb.createChannel(name, user.id);
         return ({id: res.id, name: res.name, status: this.channeldb.convertString(res.status)});
     }
 
@@ -87,15 +95,35 @@ export class ChatService {
         return (await res);
     }
 
+    async getBlocked(user : User) : Promise<string[]> {
+        const listblocked : number[] = this.listBlocked(await this.userdb.listBlockedUser(user.id));
+        if (listblocked ==  undefined || listblocked.length == 0)
+            return []
+        return (await this.userdb.getUserFromId(listblocked))
+    }
+
+    async block(user : User, body : ListName) {
+        this.userdb.addBlock(user.id, body.name)
+    }
+
+    async unblock(user : User, body : ListName) {
+        this.userdb.unBlock(user.id, body.name);
+    }
+
     async joinChannel(user : User, channel : ChannelJoin) : Promise<ChannelPayload > {
-        const searchchannel : Channel = await this.channeldb.getChannelInfo(channel.id);
+        const searchchannel : Channel = await this.channeldb.getChannelInfo(channel.name);
+        if (this.searchChannel == undefined)
+        {
+            const res = (await this.createChannel(user, channel.name))
+            return ({id: res.id, name: res.name, status: res.status, message: []})
+        }
         if (searchchannel.status == Status.PROTECT && searchchannel.password != channel.password)
-            return (null);
-        if (this.channeldb.findBanChannel(channel.id, user.id) == undefined)
+            throw new UnauthorizedException()
+        if (this.channeldb.findBanChannel(channel.name, user.id) == undefined)
             throw new UnauthorizedException();
-        await this.channeldb.joinChannel(channel.id, user.id);
-        this.chatGateway.onJoinChannel(user.name, channel.id);
-        return (this.getChannel(channel.id));
+        await this.channeldb.joinChannel(channel.name, user.id);
+        this.chatGateway.onJoinChannel(user.name, channel.name);
+        return (this.getChannel(channel.name, this.listBlocked(await this.userdb.listBlockedUser(user.id))));
     }
 
     async invite(user : User, channel : ChannelInvitation) {

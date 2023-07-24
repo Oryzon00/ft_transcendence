@@ -1,4 +1,4 @@
-import { Message, Channel, Member, Ban, User } from "@prisma/client";
+import { Message, Channel, Member, Ban, User, Block } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 import { MessagePayload, ChannelPayload, ChannelCreation, MessageWrite } from "../dto/chat.d";
 import { Status } from "@prisma/client";
@@ -47,17 +47,16 @@ class ChannelDatabase {
 
 	}
 	// Demo of the creation of a channel
-	async createChannel(channel : ChannelCreation, user: number) : Promise<Channel> {
-		const res = await this.prisma.channel.create({
+	async createChannel(name : string, user: number) : Promise<Channel> {
+		const res : Channel = await this.prisma.channel.create({
 					data: {
-						name: channel.name,
+						name: name,
 						owner: {
 							connect: {
 								id: user,
 							}
 						},
-						password: channel.password,
-						status: this.convertStatus(channel.status),
+						status: Status.PUBLIC,
 					},
 			});
 		this.joinChannel(res.id, res.ownerId, true);
@@ -137,20 +136,28 @@ class ChannelDatabase {
         }))
 	}
 
-	async getChannelInfo(id: string) : Promise<Channel> {
+	async getChannelInfo(name: string) : Promise<Channel> {
 		return (await this.prisma.channel.findUnique({
 			where: {
-				id: id,
+				name: name,
 			}
 		}))
 	}
 
-	async getChannelMessage(id: string) : Promise<Message[]> {
-		return (await this.prisma.message.findMany({
+	// Do not take all the user blocked
+	async getChannelMessage(id: string, blocked: number[]) : Promise<Message[]> {
+		let res : Message[] = [];
+		const messages : Message[] = await this.prisma.message.findMany({
 			where: {
 				channelId: id,
 			},
-		}))
+		})
+		for (let i = 0; i < messages.length; i++)
+		{
+			if (!(messages[i].authorId in blocked))
+				res.push(messages[i]);
+		}
+		return (res);
 	}
 
 	async getChannelUser(id: string) : Promise<{user : {id: number, name: string}}[]> {

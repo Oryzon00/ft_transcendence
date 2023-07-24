@@ -31,12 +31,12 @@ model User {
   updatedAt   DateTime     @updatedAt
 
   // Connexion from another table
-  members      Member[]
-  friends     User[] @relation("friends")
-  friendsTo User[] @relation("friends")
+  members   Member[]
+  friends   User[]   @relation("friends")
+  friendsTo User[]   @relation("friends")
 
   channelOwner Channel[] @relation("owners")
-  isBan        Ban[] @relation("bans")
+  isBan        Ban[]     @relation("bans")
 
   hasBlock Block[] @relation("block")
   isBlock  Block[] @relation("blocked")
@@ -47,12 +47,16 @@ model User {
 }
 
 model Block {
-  isBlock    User  @relation("block", fields: [isBlockId], references: [id])
+  id String @id @unique @default(uuid())
+
+  isBlock    User @relation("block", fields: [isBlockId], references: [id])
   isBlockId  Int
-  hasBlock   User  @relation("blocked", fields: [hasBlockId], references: [id])
+  hasBlock   User @relation("blocked", fields: [hasBlockId], references: [id])
   hasBlockId Int
 
-  @@id([isBlockId, hasBlockId])
+  reason String?
+
+  @@map("blocks")
 }
 
 model GameProfile {
@@ -71,7 +75,7 @@ model Channel {
   createdAt DateTime @default(now())
   updateAt  DateTime @default(now()) @updatedAt
 
-  name        String?
+  name        String  @unique
   avatar      String?
   description String  @default("")
 

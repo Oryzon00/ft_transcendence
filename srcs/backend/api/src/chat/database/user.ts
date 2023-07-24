@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Ban, Member, User } from "@prisma/client";
+import { Ban, Block, Member, User } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
@@ -49,6 +49,7 @@ class UserDatabase {
 
     async isModo(userId: number, channelId: string) : Promise<boolean>
     {
+        try {
         const res = await this.prisma.member.findFirst({
             where: {
                 userId: userId,
@@ -59,6 +60,10 @@ class UserDatabase {
             }
         });
         return (res.isAdmin)
+        }
+        catch (error) {
+            return (error);
+        }
     }
 
     async isMember(userId : number, channelId: string) : Promise<boolean> {
@@ -66,12 +71,18 @@ class UserDatabase {
     }
 
     async findMember(userId: number, channelId: string) : Promise<Member> {
-        return (await this.prisma.member.findFirst({
-            where: {
-                channelId: channelId,
-                userId: userId,
-            }
-        }));
+        try {
+            return (await this.prisma.member.findFirst({
+                where: {
+                    channelId: channelId,
+                    userId: userId,
+                }
+            }));
+        }
+        catch (error)
+        {
+            return (error);
+        }
     }
 
     async findBan(userId : number, channelId: string) : Promise<Ban> {
@@ -82,11 +93,87 @@ class UserDatabase {
             }
         }))
     }
+
+    async addBlock(userId: number, blockName: string) : Promise<Block> {
+        try {
+        return (await this.prisma.block.create({
+            data: {
+                isBlock: {
+                    connect: {
+                        name: blockName
+                    },
+                },
+                hasBlock: {
+                    connect: {
+                        id: userId
+                    }
+                }
+            }
+        }))
+        }
+        catch (error) {
+            return (error)
+        }
+    }
+
+    async unBlock(userId: number, blockName: string) {
+        const blocked = await this.prisma.block.findFirst({
+            where: {
+                isBlock: {
+                    name: blockName
+                },
+                hasBlockId: userId,
+            }
+        })
+        if (blocked != undefined)
+        {
+            try {
+                return (await this.prisma.block.delete({
+                    where: {
+                        id: blocked.id
+                    }
+                }))
+            }
+            catch (error)
+            {
+                return (error)
+            }
+        }
+    }
+
+    async listBlockedUser(userId: number) : Promise<Block[]>{
+        try {
+            return (await this.prisma.block.findMany({
+                where: {
+                    hasBlockId: userId
+                }
+            }))
+        }
+        catch (error) {
+            console.log(error)
+            return (error);
+        }
+    }
+
+    async getUserFromId(userId: number[]) {
+        try {
+            return (await this.prisma.user.findMany({
+                where: { 
+                    id: {
+                        in: userId
+                    }
+                },
+            }))
+        }
+        catch (error)
+        {
+            return (error);
+        }
+    }
     /*
     joinChannel
     quitChannel
     blockUser
-    inviteChannel
     */
 }
 
