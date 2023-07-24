@@ -3,14 +3,14 @@ import { UserMenu } from "./UserMenu";
 
 export function NavBar() {
 	let activeClassName =
-		"text-amber-800 text-lg font-semibold px-3 py-2 rounded-md";
+		"text-amber-800 text-lg font-semibold px-5 py-2 rounded-md";
 	let normalClassName =
-		"text-white text-lg font-semibold hover:bg-amber-800 px-3 py-2 rounded-md";
+		"text-white text-lg font-semibold hover:bg-amber-800 px-5 py-2 rounded-md";
 
 	return (
-		<nav>
-			<div className="max-w-6xl mx-auto px-2 ">
-				<div className="flex items-center justify-between h-20">
+		<nav className="">
+			<div className="max-w-full  mx-auto px-4">
+				<div className="flex items-center justify-between h-20 ">
 					<div className="flex">
 						<NavLink
 							to="/home"
