@@ -1,4 +1,11 @@
-import { Body, Controller, Post, Patch, UseGuards, Get } from "@nestjs/common";
+import {
+	Body,
+	Controller,
+	Post,
+	Patch,
+	UseGuards,
+	BadGatewayException
+} from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { TokenDto } from "./dto/token.dto";
 import { UnauthorizedException } from "@nestjs/common";
@@ -19,10 +26,10 @@ export class AuthController {
 	async auth(@Body() body): Promise<TokenDto | UserSafeDTO> {
 		if (body.error || !body.code) throw new UnauthorizedException();
 		const token42 = await this.authService.getToken42(body.code);
-		if (!token42) throw new UnauthorizedException();
+		if (!token42) throw new BadGatewayException();
 
 		const userData42 = await this.authService.getUserData42(token42);
-		if (!userData42) throw new UnauthorizedException();
+		if (!userData42) throw new BadGatewayException();
 
 		const user = await this.authService.login(userData42);
 

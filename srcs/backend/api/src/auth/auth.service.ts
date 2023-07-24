@@ -1,4 +1,5 @@
 import {
+	BadGatewayException,
 	ForbiddenException,
 	Injectable,
 	InternalServerErrorException,
@@ -109,9 +110,8 @@ export class AuthService {
 					)
 			);
 			return responseData;
-			console.log("check");
 		} catch (error) {
-			throw new UnauthorizedException();
+			throw new BadGatewayException();
 		}
 	}
 
