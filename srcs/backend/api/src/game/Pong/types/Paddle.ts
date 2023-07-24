@@ -1,7 +1,7 @@
 import { Point } from "./Point";
 
 export class Paddle {
-	public pos: Point = new Point(0, 0);
+	public pos: Point;
 	public readonly width: number;
 	public readonly height: number;
 
@@ -18,14 +18,16 @@ export class Paddle {
 	public isCheatedPosition(pos: Point): boolean {
 		const now = (new Date()).getTime();
 		
-		if (pos.y !== this.pos.y || now - this.lastUpdate < 10 || Math.abs(pos.x - this.pos.x) > 40)
+
+		if (pos.x !== this.pos.x || now - this.lastUpdate < 10 || Math.abs(pos.y - this.pos.y) > 40)
 			return (true);
 		return (false);
 	}
 
 	public newPosition(pos: Point): void {
 		this.lastUpdate = (new Date()).getTime();
-
+		if (pos.y < -50) pos.y = -50;
+		else if (pos.y > 750) pos.y = 750;
 		this.pos = pos;
 	}
 }

@@ -5,6 +5,12 @@ export type Point = {
 	y: number;
 }
 
+interface Paddle {
+	pos: Point;
+	readonly width: number;
+	readonly height: number;
+}
+
 export type ServerPayload = {
 	[ServerEvents.LobbyState]: {
 		lobbyId: string,
@@ -16,8 +22,8 @@ export type ServerPayload = {
 		gameWidth: number,
 		gameHeight: number,
 		ballPosition: Point,
-		padPositions: Map<string, Point>,
-		scores: Map<string, number>,
+		padPositions: Record<string, Paddle>,
+		scores: Record<string, number>,
 	}
 
 	[ServerEvents.GameMessage]: {

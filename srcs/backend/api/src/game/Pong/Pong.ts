@@ -35,7 +35,7 @@ export class Pong {
 	public scores: Map<Socket["id"], number> = new Map<Socket["id"], number>();
 
 	constructor(public readonly lobby: Lobby) {
-		for (const id in this.lobby.clients.keys())
+		for (const id of this.lobby.clients.keys())
 			this.scores.set(id, 0);
 	}
 
@@ -45,7 +45,8 @@ export class Pong {
 
 		this.hasStarted = true;
 
-		for (const id in this.lobby.clients.keys()) {
+		for (const id of this.lobby.clients.keys()) {
+			this.scores.set(id, 0);
 			if (this.paddles.size !== 0) this.paddles.set(id, new Paddle("away"));
 			else this.paddles.set(id, new Paddle("home"));
 		}
@@ -67,26 +68,33 @@ export class Pong {
 
 	
 	public loop(): void {
-		if (this.hasStarted !== true) return;
+		if (this.hasStarted !== true || this.hasFinished) return;
 		this.nextFrame();
 		this.lobby.sendLobbyState();
 		if ((new Date()).getTime() - this.startTimer === this.endTimer)
 			this.end();
-		for (const id in this.lobby.clients) {
-			if (this.scores[id] >= 5)
+		for (const id of this.lobby.clients.keys()) {
+			if (this.scores.get(id) >= 5)
 				this.end();
 		}
 	}
 
 	private updateball() {		
 		if (this.ball.speed.angle > Math.PI / 2 || this.ball.speed.angle < -Math.PI / 2)
-			this.ball.checkBounce(this.paddles.entries().next().value);
-		else this.ball.checkBounce(Array.from(this.paddles.values()).pop());
+			this.ball.checkBounce(this.paddles.values().next().value);
+		else {
+			const it: IterableIterator<Paddle> = this.paddles.values();
+			it.next();
+			this.ball.checkBounce(it.next().value);
+		}
 
 		let score: 0 | 1 | 2 | undefined = this.ball.respawn();
 		if (score) {
 			let arr = Array.from(this.lobby.clients.keys());
-			this.scores[arr[score]]++;
+			console.log(this.scores.get(arr[score]))
+			this.scores.set(arr[score - 1], this.scores.get(arr[score - 1]) + 1);
+			for (const [id, value] of this.scores.entries())
+				console.log("id: " + id + " score: " + value);
 		}
 	}
 
@@ -117,8 +125,8 @@ export class Pong {
 	}
 
 	public movePaddle(data: MovePaddleDTO): void {
-		let pad: Paddle = this.paddles[data.clientId];
-		if (pad && pad.isCheatedPosition(data.padPosition)) {
+		let pad: Paddle = this.paddles.get(data.clientId);
+		if (pad && !pad.isCheatedPosition(data.padPosition)) {
 			pad.newPosition(data.padPosition);
 		}
 		

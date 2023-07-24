@@ -13,9 +13,9 @@ class GameInfo {
 	playersCount: number = 0;
 	gameWidth: number = 800;
 	gameHeight: number = 800;
-	ballPosition: Point = {x: 0, y: 0};
-	myPad: Point | undefined = {x: 0, y: 0};
-	OpponentPad: Point | undefined = {x: 0, y: 0};
+	ballPosition: Point = {x: 400, y: 400};
+	myPad: Point | undefined = {x: 40, y: 350};
+	OpponentPad: Point | undefined = {x: 756, y: 350};
 	myScore: number | undefined = 0;
 	OpponentScore: number | undefined = 0;
 }
@@ -23,35 +23,37 @@ class GameInfo {
 function Pong() {
 	const sm: SocketWrapper = useContext(SocketWrapperContext);
 	const canvasRef = useRef<HTMLCanvasElement>(null);
-	const [GameState, setGameState] = useState(new GameInfo());
+	const [GameState] = useState<GameInfo>(new GameInfo());
 	const clientId : string | null = sm.getSocketId();
 
 
 	function readServerPayload(data: ServerPayload[ServerEvents.LobbyState]) {
 		if (GameState)
 		{
-			console.log("reading data");
-			let NewGameState: GameInfo = new GameInfo();
-			NewGameState.lobbyId = data.lobbyId;
-			NewGameState.ballPosition = data.ballPosition;
-			NewGameState.gameHeight = data.gameHeight;
-			NewGameState.gameWidth = data.gameWidth;
-			NewGameState.hasFinished = data.hasFinished;
-			NewGameState.isPaused = data.isPaused;
-			NewGameState.hasStarted = data.hasStarted;
-			NewGameState.playersCount = data.playersCount;
-			NewGameState.lobbyMode = data.lobbyMode;
-			console.log(data.scores);
-			for (let Id of data.scores.keys()) {
+			GameState.lobbyId = data.lobbyId;
+			GameState.ballPosition = data.ballPosition;
+			GameState.gameHeight = data.gameHeight;
+			GameState.gameWidth = data.gameWidth;
+			GameState.hasFinished = data.hasFinished;
+			GameState.isPaused = data.isPaused;
+			GameState.hasStarted = data.hasStarted;
+			GameState.playersCount = data.playersCount;
+			GameState.lobbyMode = data.lobbyMode;
+			// console.log(data.scores);
+			for (let [Id, value] of Object.entries(data.scores)) {
 				if (Id === clientId) {
-					NewGameState.myScore = data.scores.get(Id);
-					NewGameState.myPad = data.padPositions.get(Id);
+					GameState.myScore = value;
 				} else {
-					NewGameState.OpponentScore = data.scores.get(Id);
-					NewGameState.OpponentPad = data.padPositions.get(Id);  
+					GameState.OpponentScore = value;
 				}
 			}
-			setGameState(NewGameState);
+			for (let [Id, value] of Object.entries(data.padPositions)) {
+				if (Id === clientId) {
+					GameState.myPad = value.pos;
+				} else {
+					GameState.OpponentPad = value.pos;
+				}
+			}
 		}	
 	}
 
@@ -103,50 +105,55 @@ function Pong() {
 	}
 
 	useEffect(() => {
+
+		function onMove(pos: Point) {
+			if (GameState && GameState.myPad)
+				sm.emit({
+					  event: ClientEvents.MovePaddle,
+					  data: {
+						clientId: sm.getSocketId(),
+						padPosition: pos,
+					},
+				});
+		};
+
 		function keyPressHandler(e: KeyboardEvent) {
 			if (e.key === "Up" || e.key === "ArrowUp") {
-				sm.emit({
-					event: ClientEvents.MovePaddle,
-					data: {
-						clientId: sm.getSocketId(),
-						// padPosition: { x: GameState.myPad.x, y: GameState.myPad.y + 40},
-				  },
-			  });
+				if (GameState && GameState.myPad)
+					onMove({x: GameState.myPad.x, y: GameState.myPad.y - 20})
 				e.preventDefault();
 			}
 			if (e.key === "Down" || e.key === "ArrowDown") {
-				sm.emit({
-					event: ClientEvents.MovePaddle,
-					data: {
-						clientId: sm.getSocketId(),
-						// padPosition: { x: GameState.myPad.x, y: GameState.myPad.y - 40},
-				  },
-			  });
+				if (GameState && GameState.myPad)
+					onMove({x: GameState.myPad.x, y: GameState.myPad.y + 20})
 				e.preventDefault();
 			}
 		}
 
-		function keyReleaseHandler(e: KeyboardEvent) {
-			if (e.key === "Up" || e.key === "ArrowUp") return;
-			if (e.key === "Down" || e.key === "ArrowDown") return;
+		// function keyReleaseHandler(e: KeyboardEvent) {
+		// 	if (e.key === "Up" || e.key === "ArrowUp") return;
+		// 	if (e.key === "Down" || e.key === "ArrowDown") return;
 			
-		}
+		// }
 
 		const onLobbyState: Listener<ServerPayload[ServerEvents.LobbyState]> = (data : ServerPayload[ServerEvents.LobbyState]) => {
-			console.log(data.padPositions.entries().next().value);
-			console.log(Array.from(data.padPositions.values()).pop());
+			// const iter = data.padPositions.entries();
+			
+			// console.log(iter.next().value);
+			// console.log(iter.next().value);
+			console.log(data.padPositions[sm.getSocketId()]);
 			readServerPayload(data);
 			draw();
 		};
 
 		sm.addListener(ServerEvents.LobbyState, onLobbyState);
 		window.addEventListener("keydown", keyPressHandler, false);
-		window.addEventListener("keyup", keyReleaseHandler, false);
+		// window.addEventListener("keyup", keyReleaseHandler, false);
 
 		return () => {
 			sm.removeListener(ServerEvents.LobbyState, onLobbyState);
 			window.removeEventListener("keydown", keyPressHandler);
-			window.removeEventListener("keyup", keyReleaseHandler);
+			// window.removeEventListener("keyup", keyReleaseHandler);
 		};
 	}, []);
 

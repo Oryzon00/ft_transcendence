@@ -1,4 +1,5 @@
 import { LobbyMode } from "../Lobby/lobby.types";
+import { Paddle } from "../Pong/types/Paddle";
 import { Point } from "../Pong/types/Point";
 import { ServerEvents } from "./ServerEvents";
 
@@ -14,8 +15,8 @@ export type ServerResponseDTO = {
 		gameWidth: number,
 		gameHeight: number,
 		ballPosition: Point,
-		padPositions: Map<string, Point>,
-		scores: Map<string, number>,
+		padPositions: Record<string, Paddle>,
+		scores: Record<string, number>,
 	}
 
 	[ServerEvents.GameMessage]: {

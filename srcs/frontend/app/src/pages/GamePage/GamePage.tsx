@@ -5,6 +5,7 @@ import { UserProvider } from "../../utils/contexts/userContext";
 import PongLayout from "../../layouts/PongLayout/PongLayout";
 import { Listener, ServerEvents } from "../../routes/Play/types";
 import { ServerPayload } from "../../routes/Play/ServerPayload";
+import { notifyInfo } from "../../utils/notify";
 
 function GamePage() {
 	const sm: SocketWrapper = useContext(SocketWrapperContext);
@@ -13,8 +14,14 @@ function GamePage() {
 	useEffect(() => {
 
 		const onGameMessage: Listener<ServerPayload[ServerEvents.GameMessage]> = ({ message}) => {
-			if (message === "Game is Starting")
+			if (message === "Game is Starting") {
+				notifyInfo("Game found !");
 				setInLobby(true);
+			}
+			if (message === "Game is Finished") {
+				notifyInfo("Game ended, rank updating...");
+				setInLobby(false);
+			}
 			console.log(message);
 		};
 

@@ -20,10 +20,10 @@ export default class SocketWrapper
 		this.onException();
 	}
 
-	getSocketId(): string | null
+	getSocketId(): string
 	{
 	  if (!this.socket.connected) {
-		return null;
+		return "";
 	  }
   
 	  return this.socket.id;

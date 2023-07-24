@@ -79,11 +79,10 @@ export class Ball {
 				-Math.PI + (Math.abs(heightHit - 0.5) / 0.5) * ((2 * Math.PI) / 5);
 		else this.speed.angle = Math.PI - ((heightHit - 0.5) / 0.5) * ((2 * Math.PI) / 5);
 
-		if (this.speed.length < 100) this.speed.length *= 1.1;
-		console.log(this.speed.length);
+		if (this.speed.length < 100) 
+			this.speed.length *= 1.1;
 		//let newX: number = reboundPoint.x + (Math.cos(this.speed.angle) * this.speed.length) * (1 - distBeforeHit);
 		//let newY: number = reboundPoint.y + (Math.sin(this.speed.angle) * this.speed.length) * (1 - distBeforeHit);
-
 		this.pos = reboundPoint;
 	}
 

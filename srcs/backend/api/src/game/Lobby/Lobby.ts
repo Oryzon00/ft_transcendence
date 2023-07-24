@@ -24,9 +24,13 @@ export class Lobby {
 
 	public sendLobbyState(): void {
 		
-		let newMap: Map<string, Point> = new Map<string, Point>();
-		for (let [key, value] of this.game.paddles) {
-		  newMap.set(key, value.pos);
+		
+		function MapToRecord<V>(map: Map<string, V>): Record<string, V> {
+		let newRecord: Record<string, V> = {};
+			for (let [key, value] of map) {
+			  newRecord[key] = value;
+			}
+			return newRecord
 		}
 		
 		const payload: ServerResponseDTO[ServerEvents.LobbyState] = {
@@ -39,10 +43,10 @@ export class Lobby {
 			gameWidth: this.game.width,
 			gameHeight: this.game.height,
 			ballPosition: this.game.ball.pos,
-			padPositions: newMap,
-			scores: this.game.scores,
+			padPositions: MapToRecord(this.game.paddles),
+			scores: MapToRecord(this.game.scores),
 		}
-
+		
 		this.sendEvent<ServerResponseDTO[ServerEvents.LobbyState]>(ServerEvents.LobbyState, payload);
 	}
 
