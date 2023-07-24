@@ -40,7 +40,8 @@ export class ChatService {
     }
 
     async getChannel(channelId : string, blocked: number[]) : Promise<ChannelPayload> {
-        const channel = await this.channeldb.getChannelInfo(channelId);
+        const channel = await this.channeldb.getChannelInfoId(channelId);
+        console.log(channelId);
         const messages : Message[] = await this.channeldb.getChannelMessage(channelId, blocked);
         return (await {
             id: channel.id,
@@ -83,6 +84,7 @@ export class ChatService {
 			throw new UnauthorizedException( "You cannot send message in this channel, refresh the page" );
 		}
         const msg = await this.channeldb.stockMessages(message);
+        console.log(msg)
         this.chatGateway.emitToRoom(msg.channelId, msg, 'onMessage')
     }
 
@@ -111,13 +113,15 @@ export class ChatService {
     }
 
     async joinChannel(user : User, channel : ChannelJoin) : Promise<ChannelPayload > {
-        const searchchannel : Channel = await this.channeldb.getChannelInfo(channel.name);
-        if (this.searchChannel == undefined)
+        const searchChannel : Channel = await this.channeldb.getChannelInfoName(channel.name);
+        console.log(searchChannel)
+        if (searchChannel == null)
         {
+            console.log()
             const res = (await this.createChannel(user, channel.name))
             return ({id: res.id, name: res.name, status: res.status, message: []})
         }
-        if (searchchannel.status == Status.PROTECT && searchchannel.password != channel.password)
+        if (searchChannel.status == Status.PROTECT && searchChannel.password != channel.password)
             throw new UnauthorizedException()
         if (this.channeldb.findBanChannel(channel.name, user.id) == undefined)
             throw new UnauthorizedException();

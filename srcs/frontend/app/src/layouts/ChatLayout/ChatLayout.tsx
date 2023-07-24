@@ -59,7 +59,7 @@ function ChatLayout() {
 		const url = apiAddress + '/chat/isBlocked';
 		let blocked = false;
 		fetch(url, {
-			method: "POST",
+			method: "GET",
 			headers: {
 				Authorization: "Bearer " + getJwtTokenFromCookie(),
 				"Content-Type": "application/json",
@@ -91,6 +91,11 @@ function ChatLayout() {
 		return (blocked);
 	}
 
+	const addMessage = (data: MessagePayload) => {
+		channel[data.channelId].message.push(data);
+		setChannel(channel);
+	}
+
 	useEffect(() => {
 		sockets.on('connect', () => {
 			sockets.emit('authenticate', user.user);
@@ -111,7 +116,12 @@ function ChatLayout() {
 
 		sockets.on('onMessage', (data: MessagePayload) => {
 			if (!isBlocked(data.authorId))
-				channel[data.channelId].message.push(data);
+			{
+				addMessage(data);
+				//channel[data.channelId].message.push(data);
+			}
+
+			
 		})
 
 		return () => {

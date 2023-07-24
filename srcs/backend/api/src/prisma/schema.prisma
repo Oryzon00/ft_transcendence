@@ -47,16 +47,12 @@ model User {
 }
 
 model Block {
-  id String @id @unique @default(uuid())
-
   isBlock    User @relation("block", fields: [isBlockId], references: [id])
   isBlockId  Int
   hasBlock   User @relation("blocked", fields: [hasBlockId], references: [id])
   hasBlockId Int
 
-  reason String?
-
-  @@map("blocks")
+  @@id([isBlockId, hasBlockId])
 }
 
 model GameProfile {

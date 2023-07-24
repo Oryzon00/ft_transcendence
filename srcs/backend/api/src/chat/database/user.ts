@@ -120,7 +120,7 @@ class UserDatabase {
         const blocked = await this.prisma.block.findFirst({
             where: {
                 isBlock: {
-                    name: blockName
+                    
                 },
                 hasBlockId: userId,
             }
@@ -130,7 +130,10 @@ class UserDatabase {
             try {
                 return (await this.prisma.block.delete({
                     where: {
-                        id: blocked.id
+                        isBlockId_hasBlockId: {
+                            isBlockId: blocked.isBlockId,
+                            hasBlockId: blocked.hasBlockId
+                        }
                     }
                 }))
             }

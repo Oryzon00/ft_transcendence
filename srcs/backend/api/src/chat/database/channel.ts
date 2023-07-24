@@ -13,7 +13,7 @@ class ChannelDatabase {
     */
 
 	async stockMessages(message : MessageWrite) : Promise<Message>{
-		console.log('Message:', message);
+		try {
 		const res: Message = await this.prisma.message.create({
 			data: {
 				content: message.content,
@@ -26,6 +26,12 @@ class ChannelDatabase {
 			}
 		})
 		return (res);
+		}
+		catch (error)
+		{
+			return (error)
+		}
+
 	};
 
 	convertStatus(status: string) : Status {
@@ -48,6 +54,7 @@ class ChannelDatabase {
 	}
 	// Demo of the creation of a channel
 	async createChannel(name : string, user: number) : Promise<Channel> {
+		try {
 		const res : Channel = await this.prisma.channel.create({
 					data: {
 						name: name,
@@ -61,6 +68,10 @@ class ChannelDatabase {
 			});
 		this.joinChannel(res.id, res.ownerId, true);
 		return (res);
+		}
+		catch (error) {
+			return (error);
+		}
 	}
 
 
@@ -88,16 +99,22 @@ class ChannelDatabase {
 	}
 
 	async findBanChannel(channel : string, user: number) {
+		try {
 		return (await this.prisma.ban.findFirst({
 			where: {
 				channelId: channel,
 				userId: user
 			}
 		}))
+	}
+	catch (error) {
+		return (error)
+	}
 
 	}
 
 	async banChannel(channel: string, user: number, reason = '') : Promise<Ban> {
+		try {
 		return (await this.prisma.ban.create({
 			data: {
 				channel: {
@@ -110,14 +127,23 @@ class ChannelDatabase {
 			}
 		}))
 	}
+	catch (error) {
+		return (error)
+	}
+	}
 
 	async unbanChannel(channel: string, user: number, reason = '') : Promise<Ban> {
+		try {
 		const find : Ban = await this.findBanChannel(channel, user);
 		return (await this.prisma.ban.delete({
 			where: {
 				id: find.id
 			}
 		}))
+	}
+	catch (error) {
+		return (error)
+	}
 	}
 
     async getPublicChannel() : Promise<Channel[]> {
@@ -136,7 +162,15 @@ class ChannelDatabase {
         }))
 	}
 
-	async getChannelInfo(name: string) : Promise<Channel> {
+	async getChannelInfoId(id: string) : Promise<Channel> {
+		return (await this.prisma.channel.findUnique({
+			where: {
+				id: id,
+			}
+		}))
+	}
+
+	async getChannelInfoName(name: string) : Promise<Channel> {
 		return (await this.prisma.channel.findUnique({
 			where: {
 				name: name,

@@ -4,7 +4,7 @@ import getJwtTokenFromCookie from "../../utils/getJWT";
 import NameInput from "../../components/Chat/CreateChannel/NameInput";
 import PasswordInput from "../../components/Chat/CreateChannel/PasswordInput";
 
-function JoinChannelLayout({socket, open, onClose, newChannel}) {
+function JoinChannelLayout({open, onClose, newChannel}) {
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     //const [status, setStatus] = useState('public');

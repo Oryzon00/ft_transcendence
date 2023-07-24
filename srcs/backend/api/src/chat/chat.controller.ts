@@ -34,7 +34,7 @@ export class ChatController {
         this.ChatService.message(user, message);
     }
 
-    @Patch('/channel/join')
+    @Post('/channel/join')
     join(
         @GetUser() user : User,
         @Body() channel : ChannelJoin
@@ -59,7 +59,7 @@ export class ChatController {
         return (this.ChatService.listUser(user, body.channelId))
     }
 
-    @Get('/user/listBlock')
+    @Get('/isBlocked')
     async getBlocked(
         @GetUser() user : User,
     ) : Promise<string[]>

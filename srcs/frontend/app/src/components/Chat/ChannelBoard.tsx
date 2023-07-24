@@ -31,7 +31,7 @@ export default function ChannelBoard({channels, setCurrent} : TypeChannelBoard) 
     return (
         <div className="rounded w-full scroll-smooth hover:scroll-auto bg-blue-900 h-[80%]">
             <input type="text" value={query} onChange={(e) => setQuery(e.target.value)}/>
-            <ul className="h-[100%] overflow-y-scroll scrollbar-thick scrollbar-thumb-blue-500 scrollbar-track-blue-100">
+            <ul className="h-full overflow-y-scroll scrollbar-thick scrollbar-thumb-blue-500 scrollbar-track-blue-100">
                 {
                     filtredItems.map((value) => (
                         <li>
