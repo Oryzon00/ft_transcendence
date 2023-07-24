@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { UserMenu } from "./UserMenu";
 
 export function NavBar() {
 	let activeClassName =
@@ -8,9 +9,9 @@ export function NavBar() {
 
 	return (
 		<nav>
-			<div className="max-w-6xl mx-auto px-2">
-				<div className="flex items-center justify-between h-16">
-					<div className="flex items-start">
+			<div className="max-w-6xl mx-auto px-2 ">
+				<div className="flex items-center justify-between h-20">
+					<div className="flex">
 						<NavLink
 							to="/home"
 							className={({ isActive }) =>
@@ -45,23 +46,16 @@ export function NavBar() {
 						>
 							CHAT
 						</NavLink>
-						<input
-							className="px-3 py-2 rounded-md"
-							type="search"
-							id="mySearch"
-							name="q"
-							placeholder="Search for a user..."
-						></input>
 					</div>
-					<div className="flex items-end">
-						<NavLink
-							to="/profile"
-							className={({ isActive }) =>
-								isActive ? activeClassName : normalClassName
-							}
-						>
-							USER PROFILE
-						</NavLink>
+					<input
+						className="px-3 py-2 rounded-md"
+						type="search"
+						id="mySearch"
+						name="q"
+						placeholder="Search for a user..."
+					></input>
+					<div className="flex">
+						<UserMenu />
 					</div>
 				</div>
 			</div>
