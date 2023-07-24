@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { WebsocketContext } from "../../contexts/WebsocketContext";
-import { ChannelPayload, ListChannel } from "./chat.d"
+import { ChannelPayload, ListChannel, MessagePayload } from "./chat.d"
 import { UserHook } from "../../utils/hooks/TuseUser";
 import useUser from "../../utils/hooks/useUser";
 
@@ -10,14 +10,12 @@ import DiscussionBoard from "../../components/Chat/DiscussionBoard";
 import apiAddress from "../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../utils/getJWT";
 import { notifyError } from "../../utils/notify";
-import { ButtonChannelSearch } from "../../components/Chat/ChannelSearch";
 import ChannelBoard from "../../components/Chat/ChannelBoard";
 import CreationChannelLayout from "../CreationChannelLayout/CreationChannelLayout";
 import SearchChannelLayout from "../SearchChannelLayout/SearchChannelLayout";
 
 function ChatLayout() {
 	const [current, setCurrent] = useState('');
-	const [name, setName] = useState('');
 	const [channel, setChannel] = useState<ListChannel>({});
 
 	const [creation, setCreation] = useState(false);
@@ -25,6 +23,7 @@ function ChatLayout() {
 
 	const sockets = useContext(WebsocketContext);
 	const user : UserHook = useUser();
+	console.log(user.user)
 
 	const getChatData = () => { // Get all the data for the variable channel
 		const url = apiAddress + '/chat/getData';
@@ -35,13 +34,13 @@ function ChatLayout() {
 			}
 		})
 		.then(
-			function (res) {
+			function (res: Response) {
 				if (!res.ok) {
 					throw new Error(
 						"Request failed with status " + res.status
 					);
 				}
-				return (res.json);
+				return (res.json());
 
 			})
 			.then (
@@ -58,16 +57,13 @@ function ChatLayout() {
 
 	useEffect(() => {
 		sockets.on('connect', () => {
-				console.log("Connected!");
-				getChatData();
-				console.log(channel);
-			})
+			sockets.emit('authenticate', user.user);
+			getChatData();
+		})
 
 		// Create new channel
 		sockets.on('onChannel', (data: any) => {
 			setCurrent(() => { return data.id });
-			console.log(data.id);
-			console.log(channel[data.id])
 			if (channel[data.id] == undefined)
 			{
 				setChannel((prev) => {
@@ -76,6 +72,10 @@ function ChatLayout() {
 				});
 			}
 		});
+
+		sockets.on('onMessage', (data: MessagePayload) => {
+			channel[data.channelId].message.push(data);
+		})
 
 		return () => {
 			console.log('Unregistered events...');
@@ -87,7 +87,7 @@ function ChatLayout() {
 
 	return ( 
 		<section className="h-screen w-screen bg-black flex">
-					<CreationChannelLayout open={creation} onClose={() => setCreation(false)} newChannel={(e: ChannelPayload) => setChannel({...channel, [e.id]: e})}/>
+					<CreationChannelLayout socket={sockets} open={creation} onClose={() => setCreation(false)} newChannel={(e: ChannelPayload) => setChannel({...channel, [e.id]: e})}/>
 					<SearchChannelLayout open={search} onClose={() => setSearch(false)} newChannel={(e: ChannelPayload) => setChannel({...channel, [e.id]: e})}/>
 			<div className="bg-white w[30vw] flex flex-col">
 				<div className="flex flex-col">
@@ -98,15 +98,12 @@ function ChatLayout() {
 			</div>
 			<div className="w-screen h-screen bg-blue-400 flex flex-col items-center justify-center" >
 				<div className="flex-grow w-full h-full ">
-					<div id="main-channel-name">
-						<p>{name}</p>
-					</div>
 					<div className="bg-white text-black w-[100%] h-[80%] border-black border-4">
 						<DiscussionBoard channel={channel} current={current} me={user}/>
 					</div>
 				</div>
 				<div className="flex-none w-full">
-					<MessageEntry current={current}/>
+					<MessageEntry current={current} sockets={sockets}/>
 				</div>
 			</div>
 		</section>

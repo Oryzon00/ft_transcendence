@@ -1,14 +1,16 @@
-function SelectStatus({options}) {
+import Select from 'react-select'
+
+function SelectStatus({options, status, setStatus}) {
     return (
-                <div id="channel-status">
+                <div >
                     <h2>
                         Status
                     </h2>
-                    <select name="status" id="status-select" value={status} onChange={(e) => setStatus(e.target.value)}>
-                        {options.map((option) => (
-                            <option value={option.value}>{option.label}</option>
-                        ))}
-                    </select>
+                    <Select
+                        options={options}
+                        defaultValue={status}
+                        onChange={setStatus}
+                    />
                 </div>
     );
 }

@@ -1,8 +1,12 @@
 export type MessagePayload = {
-	channelId: string;
-	authorId: number;
-	content: string;
+	id: string;
+    createdAt: Date;
+    updateAt: Date;
+    channelId: string;
+    authorId: number;
+    content: string;
 };
+
 
 export type ChannelPayload = {
 	id: string;

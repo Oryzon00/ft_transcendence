@@ -3,18 +3,20 @@ import apiAddress from "../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../utils/getJWT";
 import { ChannelInfo } from "../ChatLayout/chat.d";
 
-function SearchChannelLayout() {
+function SearchChannelLayout({open, onClose, newChannel}) {
     const [value, setValue] = useState('')
     const [channel, setChannel] = useState<ChannelInfo[]>([])
     const url = apiAddress + '/chat/channel/search'
 
-    useEffect(() =>
+    useEffect(() => {
         getSearch()
+        console.log('channel: ', channel);
+    }
     ,[channel])
 
     function getSearch() {
         fetch(url, {
-            method: "GET",
+            method: "POST",
 			headers: {
 				Authorization: "Bearer " + getJwtTokenFromCookie(),
 				"Content-Type": "application/json",
@@ -38,8 +40,10 @@ function SearchChannelLayout() {
                 }
             )
     }
+    if (!open) return null;
     return (
         <div>
+            <button onClick={onClose}>CLOSE</button>
             <h2>search channel</h2>
             <input type="text" value={value}onChange={(e) => setValue(e.target.value)}/>
             {

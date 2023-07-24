@@ -5,12 +5,11 @@ import NameInput from "../../components/Chat/CreateChannel/NameInput";
 import PasswordInput from "../../components/Chat/CreateChannel/PasswordInput";
 import SelectStatus from "../../components/Chat/CreateChannel/SelectStatus";
 
-function CreationChannelLayout({open, onClose, newChannel}) {
+function CreationChannelLayout({socket, open, onClose, newChannel}) {
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [status, setStatus] = useState('public');
 
-    if (!open) return null;
 
     const options = [
         {
@@ -54,15 +53,19 @@ function CreationChannelLayout({open, onClose, newChannel}) {
         .then(
             function(data) {
                 newChannel({id: data.id, name: data.name, status: data.status, message: []});
+                socket.emit('joinChannel', {channelId: data.id})
             }
         )
     }
 
+    if (!open) return null;
     return (
             <div id="create-channel">
-                <button onClick={onClose}>CLOSE</button>
+                <button onClick={onClose}>
+                    CLOSE
+                </button>
                 <NameInput name={name} setName={setName}/>
-                <SelectStatus options={options} setStatus={setStatus}/>
+                <SelectStatus options={options} status={status} setStatus={setStatus}/>
                 <PasswordInput password={password} setPassword={setPassword}/>
                 <button onClick={createChannel} id="create-channel-button">
                     Create Channel

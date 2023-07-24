@@ -61,6 +61,10 @@ class UserDatabase {
         return (res.isAdmin)
     }
 
+    async isMember(userId : number, channelId: string) : Promise<boolean> {
+        return ((await this.findMember(userId, channelId)) != undefined)
+    }
+
     async findMember(userId: number, channelId: string) : Promise<Member> {
         return (await this.prisma.member.findFirst({
             where: {

@@ -3,16 +3,19 @@ import { Socket } from 'socket.io';
 import { Channel, Member, Message, Status, User } from "@prisma/client";
 import UserDatabase from "./database/user";
 import ChannelDatabase from "./database/channel";
-import { ChannelBan, ChannelCreation, ChannelInfo, ChannelInvitation, ChannelJoin, ChannelKick, ChannelMute, ChannelNewPassword, ChannelPayload, ListChannel, MessagePayload } from "./dto/chat";
+import { ChannelBan, ChannelCreation, ChannelInfo, ChannelInvitation, ChannelJoin, ChannelKick, ChannelMute, ChannelNewPassword, ChannelPayload, ListChannel, MessagePayload, MessageWrite } from "./dto/chat";
 import { ConnectedSocket } from "@nestjs/websockets";
 import { PrismaService } from "src/prisma/prisma.service";
+import { ChatGateway } from "./chat.gateway";
 
 @Injectable()
 export class ChatService {
+
     constructor(
         private userdb : UserDatabase,
         private channeldb : ChannelDatabase,
-        private prisma : PrismaService
+        private chatGateway : ChatGateway,
+        private prisma : PrismaService,
     ) {}
 
     // Get all data of one user on connection
@@ -61,13 +64,27 @@ export class ChatService {
         return (res);
     }
 
+    async message(user : User, message: MessageWrite) {
+		const member : Member = await this.prisma.member.findFirst({
+			where: { 
+				channelId: message.channelId,
+				userId: user.id
+			 }
+		});
+		if (member == undefined || member.mute) {
+			throw new UnauthorizedException( "You cannot send message in this channel, refresh the page" );
+		}
+        const msg = await this.channeldb.stockMessages(message);
+        this.chatGateway.emitToRoom(msg.channelId, msg, 'onMessage')
+    }
+
     async searchChannel(user : User, body : {name : string}) : Promise<ChannelInfo[]> {
         const publicChannel : Channel[] = await this.channeldb.getPublicChannel();
         const protectChannel : Channel[] =  await this.channeldb.getProtectChannel();
         let res : ChannelInfo[] = [];
         res = this.fusionSameName(user.id, body.name, publicChannel, res);
         res = this.fusionSameName(user.id, body.name, protectChannel, res);
-        return (res);
+        return (await res);
     }
 
     async joinChannel(user : User, channel : ChannelJoin) : Promise<ChannelPayload > {
@@ -77,6 +94,7 @@ export class ChatService {
         if (this.channeldb.findBanChannel(channel.id, user.id) == undefined)
             throw new UnauthorizedException();
         await this.channeldb.joinChannel(channel.id, user.id);
+        this.chatGateway.onJoinChannel(user.name, channel.id);
         return (this.getChannel(channel.id));
     }
 
@@ -163,4 +181,9 @@ export class ChatService {
             }
         })
     }
-}
+
+    async listUser(user: User, channelId: string) {
+        if (this.userdb.isMember(user.id, channelId))
+            return (await this.channeldb.getChannelUser(channelId));
+        throw new UnauthorizedException();
+    }}

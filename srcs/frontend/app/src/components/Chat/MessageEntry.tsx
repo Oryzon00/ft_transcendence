@@ -1,14 +1,50 @@
 import { useState } from "react";
 import { socket, WebsocketProvider } from "../../contexts/WebsocketContext";
+import { Socket } from "socket.io-client";
+import apiAddress from "../../utils/apiAddress";
+import getJwtTokenFromCookie from "../../utils/getJWT";
+import { notifyError } from "../../utils/notify";
 
-function MessageEntry (current: string) {
+type MessageEntryType = {
+	current: string;
+	sockets: Socket
+}
+function MessageEntry ({current} : MessageEntryType) {
 	const [value, setValue] = useState('');
 
 	const sendMessage = () => {
 		if (current != '')
 		{
-			let sendMessages = {channelId: current, content: value};
-			socket.emit('newMessage', sendMessages);
+			fetch(apiAddress + '/chat/message', {
+				method: "POST",
+				headers: {
+					Authorization: "Bearer " + getJwtTokenFromCookie(),
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					authorId: 0,
+					channelId: current,
+					content: value,
+				})
+			})
+			.then(
+				function (res: Response) {
+					if (!res.ok) {
+						throw new Error(
+							"Request failed with status" + res.status
+						);
+					}
+					return (res.json())
+				}
+			)
+			.then(
+				function() : void {}
+			)
+			.catch(
+				function(error) {
+					notifyError(error.message)
+				}
+			)
 			setValue('');
 		}
 	};

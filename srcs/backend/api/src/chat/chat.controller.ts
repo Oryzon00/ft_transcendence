@@ -4,22 +4,24 @@ import {
     Get,
     UseGuards,
     Patch,
-    Body
+    Body,
+    Put
 } from "@nestjs/common";
 import { ChatService } from "./chat.service";
 import { GetUser } from "src/auth/decorator";
 import { User } from "@prisma/client";
 import { JwtGuard } from "src/auth/guard";
-import { ChannelBan, ChannelCreation, ChannelInfo, ChannelInvitation, ChannelJoin, ChannelKick, ChannelMute, ChannelNewPassword, ListChannel } from "./dto/chat";
+import { ChannelBan, ChannelCreation, ChannelInfo, ChannelInvitation, ChannelJoin, ChannelKick, ChannelMute, ChannelNewPassword, ListChannel, MessageWrite } from "./dto/chat";
 
 @UseGuards(JwtGuard)
 @Controller('chat')
 export class ChatController {
-    constructor(private ChatService: ChatService) {}
+    constructor(
+        private ChatService: ChatService) {}
 
     @Get('getData')
     async getData(@GetUser() user : User) : Promise<ListChannel> {
-        return( await (this.ChatService.getData(user)) );
+        return (await this.ChatService.getData(user));
     }
 
     @Post('/channel/create')
@@ -28,6 +30,16 @@ export class ChatController {
         @Body() channel : ChannelCreation
     ) : Promise<ChannelInfo> {
         return  (this.ChatService.createChannel(user, channel));
+    }
+
+    @Post('message')
+    message(
+        @GetUser() user : User,
+        @Body() message : MessageWrite
+    ) {
+
+        message.authorId = user.id;
+        this.ChatService.message(user, message);
     }
 
     @Patch('/channel/join')
@@ -54,7 +66,16 @@ export class ChatController {
         return (this.ChatService.quitChannel(user, channel));
     }
 
-    @Get('/channel/search')
+    @Get('/channel/list')
+    list(
+        @GetUser() user : User,
+        @Body() body : { channelId: string}
+    )
+    {
+        return (this.ChatService.listUser(user, body.channelId))
+    }
+
+    @Post('/channel/search')
     search(
         @GetUser() user : User,
         @Body() body : { name : string },

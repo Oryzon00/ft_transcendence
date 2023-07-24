@@ -1,6 +1,6 @@
-import { Message, Channel, Member, Ban } from "@prisma/client";
+import { Message, Channel, Member, Ban, User } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
-import { MessagePayload, ChannelPayload, ChannelCreation } from "../dto/chat.d";
+import { MessagePayload, ChannelPayload, ChannelCreation, MessageWrite } from "../dto/chat.d";
 import { Status } from "@prisma/client";
 import { Injectable } from "@nestjs/common";
 
@@ -12,7 +12,8 @@ class ChannelDatabase {
     changeStatus
     */
 
-	async stockMessages(message : MessagePayload) : Promise<Message>{
+	async stockMessages(message : MessageWrite) : Promise<Message>{
+		console.log('Message:', message);
 		const res: Message = await this.prisma.message.create({
 			data: {
 				content: message.content,
@@ -20,7 +21,7 @@ class ChannelDatabase {
 					connect: { id: message.channelId }
 				},
 				author: {
-					connect: { id: message.authorId}
+					connect: { id: message.authorId }
 				}
 			}
 		})
@@ -72,7 +73,6 @@ class ChannelDatabase {
 			}
 		})) == undefined)
 		{
-			console.log('member')
 		return (await this.prisma.member.create({
 			data: {
 				channel: {
@@ -122,7 +122,7 @@ class ChannelDatabase {
 	}
 
     async getPublicChannel() : Promise<Channel[]> {
-        return (this.prisma.channel.findMany({
+        return (await this.prisma.channel.findMany({
             where: {
                 status: Status.PUBLIC,
             }
@@ -130,7 +130,7 @@ class ChannelDatabase {
     }
 
 	async getProtectChannel() : Promise<Channel[]> {
-        return (this.prisma.channel.findMany({
+        return (await this.prisma.channel.findMany({
             where: {
                 status: Status.PROTECT,
             }
@@ -138,7 +138,7 @@ class ChannelDatabase {
 	}
 
 	async getChannelInfo(id: string) : Promise<Channel> {
-		return (this.prisma.channel.findUnique({
+		return (await this.prisma.channel.findUnique({
 			where: {
 				id: id,
 			}
@@ -146,11 +146,29 @@ class ChannelDatabase {
 	}
 
 	async getChannelMessage(id: string) : Promise<Message[]> {
-		return (this.prisma.message.findMany({
+		return (await this.prisma.message.findMany({
 			where: {
 				channelId: id,
 			},
 		}))
+	}
+
+	async getChannelUser(id: string) : Promise<{user : {id: number, name: string}}[]> {
+		return (await this.prisma.member.findMany({
+			where: {
+				channelId: id
+			},
+			select: 
+			{
+				user: {
+						select: {
+							id: true,
+							name: true
+						}
+					}
+				}
+			}
+		));
 	}
 
 };

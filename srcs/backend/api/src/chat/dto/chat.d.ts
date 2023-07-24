@@ -7,6 +7,12 @@ export type MessagePayload = {
     content: string;
 };
 
+export type MessageWrite = {
+	channelId: string;
+	authorId: number;
+	content: string;
+};
+
 export type ChannelCreation = {
     name: string;
     status: status;

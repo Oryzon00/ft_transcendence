@@ -1,135 +1,74 @@
-import { Injectable, OnModuleInit, UseGuards } from '@nestjs/common';
+import { Body, ExecutionContext, Get, Injectable, OnModuleInit, UseFilters, UseGuards } from '@nestjs/common';
 import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, ConnectedSocket, OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect, WsException } from '@nestjs/websockets';
-import { Socket, Server } from 'socket.io';
+import { Namespace, Socket, Server } from 'socket.io';
+import socketioJwt from 'socketio-jwt'
 import { MessagePayload, ChannelPayload, ChannelInvitation, ChannelKick } from './dto/chat';
 import { Channel, Member, Message, User } from '@prisma/client';
 import ChannelDatabase from './database/channel';
 import UserDatabase from './database/user';
 import { JwtGuard } from 'src/auth/guard';
-import { AuthSocket } from './AuthSocket.types';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { GetUser } from 'src/auth/decorator';
+import { AuthSocket } from './AuthSocket.types';
 
 
-@UseGuards(JwtGuard)
 @Injectable()
 @WebSocketGateway({
-	namespace: 'chat',
 	cors: {
 		origins: ['http://localhost:3000'],
 	}
 })
-export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect{ 
+export class ChatGateway 
+	implements OnModuleInit{ 
 	constructor(
+		private userdb : UserDatabase,
 		private channeldb : ChannelDatabase,
 		private prisma : PrismaService,
 	) {};
 
 	@WebSocketServer()
-	server : Server;
-	socketList : {[key: string]: string};
+	public server : Server;
 
-	afterInit(server: any) {
-		this.server.on('connection', (socket) => {
-			console.log('init');
-		})
-		
-	}
-	async handleConnection(client : AuthSocket) {
-		const channel : Member[] = await this.prisma.member.findMany({
-			where: {
-				userId: client.userId,
-			},
-		})
-		channel.map((member) => {
-			client.join(member.channelId);
-		})
-		client.join(String(client.userId))
+
+	onModuleInit() {
+		this.server.on('connection', (socket: AuthSocket) => {})
 	}
 
-	async handleDisconnect() {/* Do nothing */}
-
-	@SubscribeMessage('newMessage')
-	async onNewMessage(@ConnectedSocket() client: AuthSocket, @MessageBody() body : MessagePayload) {
-		// Confirmed the user 
-		const member : Member = await this.prisma.member.findFirst({
-			where: { 
-				channelId: body.channelId,
-				userId: client.userId
-			 }
-		});
-		if (member == undefined || member.mute) {
-			throw new WsException(
-				"You cannot send message in this channel, refresh the page",
-			  );
+	@SubscribeMessage('authenticate')
+	async authenticate(@ConnectedSocket() client : AuthSocket, @MessageBody() body) {
+		if (body != null)
+		{
+			client.userId = body.id;
+			client.name = body.name;
+			const members : Member[] = await this.userdb.getMembers(body.id);
+			if (!members) return;
+			members.map((rooms) =>
+				client.join(rooms.channelId)
+			)
+			client.join(body.name);
 		}
-		body.authorId = client.userId;
-		const res = await this.channeldb.stockMessages(body);
-		this.server.to(String(body.channelId)).emit('onMessage', res);
 	}
 
-	@SubscribeMessage('joinChannel')
-	async onJoinChannel(@ConnectedSocket() client: AuthSocket, @MessageBody() body : MessagePayload) {
-		const member = await this.prisma.member.findMany({
-			where: { 
-				channelId: body.channelId,
-				userId: client.userId
-			 }
-		});
-		if (member == undefined) {
-			throw new WsException(
-				"You cannot join this channel, refresh the page",
-			  );
-		}
-		client.join(body.channelId);
+	async onJoinChannel(username: string, channelId: string) {
+		const socket = this.getSocketFromUserID(username)
+		if (!socket) return null;
+		socket.join(channelId);
 	}
 
-	getSocketFromUserID(userId : number) : Socket
+	getSocketFromUserID(userId : string) : Socket
 	{
-		const sockets : Socket[] = Object.values(this.server.sockets.sockets);
-		for (let i = 0; i < sockets.length; i++)
-		{
-			if (sockets[i].rooms.has(String(userId)))
-				return (sockets[i]);
-		}
-		return (undefined)
-
+		const socketId = this.server.of('/').adapter.rooms.get(userId).values().next().value;
+		return (this.server.sockets.sockets[socketId])
 	}
 
-	@SubscribeMessage('inviteChannel')
-	async onInviteChannel(@ConnectedSocket() client: AuthSocket, @MessageBody() body : ChannelInvitation) {
-		const member = await this.prisma.member.findMany({
-			where: { 
-				channelId: body.id,
-				userId: body.invited,
-			 }
-		});
-		if (member == undefined) {
-			throw new WsException(
-				"The user invite is not in the channel, refresh the page",
-			  );
-		}
-		const socket : Socket = this.getSocketFromUserID(body.invited);
-		if (socket != undefined)
-			socket.join(body.id);
-	}
-	@SubscribeMessage('leaveChannel')
-	async onLeaveChannel(@ConnectedSocket() client : AuthSocket, @MessageBody() body : MessagePayload) {
-		client.leave(body.channelId)
+	async onLeaveChannel(username: string, channelId: string) {
+		const socket = this.getSocketFromUserID(username)
+		if (!socket) return null;
+		socket.leave(channelId);
 	}
 
-	@SubscribeMessage('ejectChannel')
-	async onEjectChannel(@ConnectedSocket() client : AuthSocket, @MessageBody() body : ChannelKick) {
-		if (this.prisma.member.findFirst({
-			where: {
-				userId: body.invited,
-				channelId: body.id,
-			}
-		}) == undefined)
-		{
-		const socket = this.getSocketFromUserID(body.invited);
-		if (socket != undefined)
-			socket.leave(body.id)
-			this.server.to(body.id).emit('onModeration', {id: body.id})
-		}
+	emitToRoom(room : string, message : MessagePayload, status: string) {
+		console.log(message);
+		this.server.to(room).emit(status, message);
 	}
 }

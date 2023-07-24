@@ -1,0 +1,1467 @@
+npm notice 
+npm notice New major version of npm available! 8.19.4 -> 9.8.1
+npm notice Changelog: <https://github.com/npm/cli/releases/tag/v9.8.1>
+npm notice Run `npm install -g npm@9.8.1` to update!
+npm notice 
+[31m[Nest] 626  - [39m07/22/2023, 9:33:25 PM [31m  ERROR[39m [38;5;3m[WsExceptionsHandler] [39m[31mCannot read properties of undefined (reading 'authorization')[39m
+TypeError: Cannot read properties of undefined (reading 'authorization')
+    at JwtStrategy._jwtFromRequest (/api/node_modules/passport-jwt/lib/extract_jwt.js:58:28)
+    at JwtStrategy.authenticate (/api/node_modules/passport-jwt/lib/strategy.js:93:22)
+    at attempt (/api/node_modules/passport/lib/middleware/authenticate.js:369:16)
+    at authenticate (/api/node_modules/passport/lib/middleware/authenticate.js:370:7)
+    at /api/node_modules/@nestjs/passport/dist/auth.guard.js:97:3
+    at new Promise (<anonymous>)
+    at /api/node_modules/@nestjs/passport/dist/auth.guard.js:89:83
+    at JwtGuard.<anonymous> (/api/node_modules/@nestjs/passport/dist/auth.guard.js:50:36)
+    at Generator.next (<anonymous>)
+    at fulfilled (/api/node_modules/@nestjs/passport/dist/auth.guard.js:17:58)
+[31m[Nest] 658  - [39m07/22/2023, 9:33:51 PM [31m  ERROR[39m [38;5;3m[WsExceptionsHandler] [39m[31m
+Invalid `this.prisma.message.create()` invocation in
+/api/src/chat/database/channel.ts:16:50
+
+  13    */
+  14 
+  15 async stockMessages(message : MessagePayload) : Promise<Message>{
+→ 16 	const res: Message = await this.prisma.message.create({
+       data: {
+         content: 'salut',
+         channel: {
+           connect: {
+             id: '35cc8c7c-2e65-4a21-9ea8-968c28fe634d'
+           }
+         },
+         author: {
+           connect: {
+     ?       id?: Int,
+     ?       id42?: Int,
+     ?       name?: String
+           },
+     ?     create?: UserCreateWithoutMessageInput | UserUncheckedCreateWithoutMessageInput,
+     ?     connectOrCreate?: {
+     ?       where: UserWhereUniqueInput,
+     ?       create: UserCreateWithoutMessageInput | UserUncheckedCreateWithoutMessageInput
+     ?     }
+         }
+       }
+     })
+
+Argument data.author.connect of type UserWhereUniqueInput needs at least one argument. Available args are listed in green.
+
+Note: Lines with ? are optional.
+[39m
+Error: 
+Invalid `this.prisma.message.create()` invocation in
+/api/src/chat/database/channel.ts:16:50
+
+  13    */
+  14 
+  15 async stockMessages(message : MessagePayload) : Promise<Message>{
+→ 16 	const res: Message = await this.prisma.message.create({
+       data: {
+         content: 'salut',
+         channel: {
+           connect: {
+             id: '35cc8c7c-2e65-4a21-9ea8-968c28fe634d'
+           }
+         },
+         author: {
+           connect: {
+     ?       id?: Int,
+     ?       id42?: Int,
+     ?       name?: String
+           },
+     ?     create?: UserCreateWithoutMessageInput | UserUncheckedCreateWithoutMessageInput,
+     ?     connectOrCreate?: {
+     ?       where: UserWhereUniqueInput,
+     ?       create: UserCreateWithoutMessageInput | UserUncheckedCreateWithoutMessageInput
+     ?     }
+         }
+       }
+     })
+
+Argument data.author.connect of type UserWhereUniqueInput needs at least one argument. Available args are listed in green.
+
+Note: Lines with ? are optional.
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
+[31m[Nest] 754  - [39m07/22/2023, 9:38:02 PM [31m  ERROR[39m [38;5;3m[WsExceptionsHandler] [39m[31m
+Invalid `this.prisma.message.create()` invocation in
+/api/src/chat/database/channel.ts:16:50
+
+  13    */
+  14 
+  15 async stockMessages(message : MessageWrite) : Promise<Message>{
+→ 16 	const res: Message = await this.prisma.message.create({
+       data: {
+         content: 'aaa',
+         channel: {
+           connect: {
+             id: '35cc8c7c-2e65-4a21-9ea8-968c28fe634d'
+           }
+         },
+         author: {
+           connect: {
+     ?       id?: Int,
+     ?       id42?: Int,
+     ?       name?: String
+           },
+     ?     create?: UserCreateWithoutMessageInput | UserUncheckedCreateWithoutMessageInput,
+     ?     connectOrCreate?: {
+     ?       where: UserWhereUniqueInput,
+     ?       create: UserCreateWithoutMessageInput | UserUncheckedCreateWithoutMessageInput
+     ?     }
+         }
+       }
+     })
+
+Argument data.author.connect of type UserWhereUniqueInput needs at least one argument. Available args are listed in green.
+
+Note: Lines with ? are optional.
+[39m
+Error: 
+Invalid `this.prisma.message.create()` invocation in
+/api/src/chat/database/channel.ts:16:50
+
+  13    */
+  14 
+  15 async stockMessages(message : MessageWrite) : Promise<Message>{
+→ 16 	const res: Message = await this.prisma.message.create({
+       data: {
+         content: 'aaa',
+         channel: {
+           connect: {
+             id: '35cc8c7c-2e65-4a21-9ea8-968c28fe634d'
+           }
+         },
+         author: {
+           connect: {
+     ?       id?: Int,
+     ?       id42?: Int,
+     ?       name?: String
+           },
+     ?     create?: UserCreateWithoutMessageInput | UserUncheckedCreateWithoutMessageInput,
+     ?     connectOrCreate?: {
+     ?       where: UserWhereUniqueInput,
+     ?       create: UserCreateWithoutMessageInput | UserUncheckedCreateWithoutMessageInput
+     ?     }
+         }
+       }
+     })
+
+Argument data.author.connect of type UserWhereUniqueInput needs at least one argument. Available args are listed in green.
+
+Note: Lines with ? are optional.
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
+[31m[Nest] 786  - [39m07/22/2023, 9:39:14 PM [31m  ERROR[39m [38;5;3m[WsExceptionsHandler] [39m[31m
+Invalid `this.prisma.message.create()` invocation in
+/api/src/chat/database/channel.ts:16:50
+
+  13    */
+  14 
+  15 async stockMessages(message : MessageWrite) : Promise<Message>{
+→ 16 	const res: Message = await this.prisma.message.create({
+       data: {
+         content: 'aaa',
+         channel: {
+           connect: {
+             id: '35cc8c7c-2e65-4a21-9ea8-968c28fe634d'
+           }
+         },
+         author: {
+           connect: {
+     ?       id?: Int,
+     ?       id42?: Int,
+     ?       name?: String
+           },
+     ?     create?: UserCreateWithoutMessageInput | UserUncheckedCreateWithoutMessageInput,
+     ?     connectOrCreate?: {
+     ?       where: UserWhereUniqueInput,
+     ?       create: UserCreateWithoutMessageInput | UserUncheckedCreateWithoutMessageInput
+     ?     }
+         }
+       }
+     })
+
+Argument data.author.connect of type UserWhereUniqueInput needs at least one argument. Available args are listed in green.
+
+Note: Lines with ? are optional.
+[39m
+Error: 
+Invalid `this.prisma.message.create()` invocation in
+/api/src/chat/database/channel.ts:16:50
+
+  13    */
+  14 
+  15 async stockMessages(message : MessageWrite) : Promise<Message>{
+→ 16 	const res: Message = await this.prisma.message.create({
+       data: {
+         content: 'aaa',
+         channel: {
+           connect: {
+             id: '35cc8c7c-2e65-4a21-9ea8-968c28fe634d'
+           }
+         },
+         author: {
+           connect: {
+     ?       id?: Int,
+     ?       id42?: Int,
+     ?       name?: String
+           },
+     ?     create?: UserCreateWithoutMessageInput | UserUncheckedCreateWithoutMessageInput,
+     ?     connectOrCreate?: {
+     ?       where: UserWhereUniqueInput,
+     ?       create: UserCreateWithoutMessageInput | UserUncheckedCreateWithoutMessageInput
+     ?     }
+         }
+       }
+     })
+
+Argument data.author.connect of type UserWhereUniqueInput needs at least one argument. Available args are listed in green.
+
+Note: Lines with ? are optional.
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
+[31m[Nest] 878  - [39m07/22/2023, 9:47:39 PM [31m  ERROR[39m [38;5;3m[WsExceptionsHandler] [39m[31m
+Invalid `this.prisma.message.create()` invocation in
+/api/src/chat/database/channel.ts:17:50
+
+  14 
+  15 async stockMessages(message : MessageWrite) : Promise<Message>{
+  16 	console.log(message);
+→ 17 	const res: Message = await this.prisma.message.create({
+       data: {
+         content: 'stay young',
+         channel: {
+           connect: {
+             id: '35cc8c7c-2e65-4a21-9ea8-968c28fe634d'
+           }
+         },
+         author: {
+           connect: {
+     ?       id?: Int,
+     ?       id42?: Int,
+     ?       name?: String
+           },
+     ?     create?: UserCreateWithoutMessageInput | UserUncheckedCreateWithoutMessageInput,
+     ?     connectOrCreate?: {
+     ?       where: UserWhereUniqueInput,
+     ?       create: UserCreateWithoutMessageInput | UserUncheckedCreateWithoutMessageInput
+     ?     }
+         }
+       }
+     })
+
+Argument data.author.connect of type UserWhereUniqueInput needs at least one argument. Available args are listed in green.
+
+Note: Lines with ? are optional.
+[39m
+Error: 
+Invalid `this.prisma.message.create()` invocation in
+/api/src/chat/database/channel.ts:17:50
+
+  14 
+  15 async stockMessages(message : MessageWrite) : Promise<Message>{
+  16 	console.log(message);
+→ 17 	const res: Message = await this.prisma.message.create({
+       data: {
+         content: 'stay young',
+         channel: {
+           connect: {
+             id: '35cc8c7c-2e65-4a21-9ea8-968c28fe634d'
+           }
+         },
+         author: {
+           connect: {
+     ?       id?: Int,
+     ?       id42?: Int,
+     ?       name?: String
+           },
+     ?     create?: UserCreateWithoutMessageInput | UserUncheckedCreateWithoutMessageInput,
+     ?     connectOrCreate?: {
+     ?       where: UserWhereUniqueInput,
+     ?       create: UserCreateWithoutMessageInput | UserUncheckedCreateWithoutMessageInput
+     ?     }
+         }
+       }
+     })
+
+Argument data.author.connect of type UserWhereUniqueInput needs at least one argument. Available args are listed in green.
+
+Note: Lines with ? are optional.
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
+[31m[Nest] 910  - [39m07/22/2023, 9:48:30 PM [31m  ERROR[39m [38;5;3m[WsExceptionsHandler] [39m[31m
+Invalid `this.prisma.message.create()` invocation in
+/api/src/chat/database/channel.ts:17:50
+
+  14 
+  15 async stockMessages(message : MessageWrite) : Promise<Message>{
+  16 	console.log(message);
+→ 17 	const res: Message = await this.prisma.message.create({
+       data: {
+         content: 'aaa',
+         channel: {
+           connect: {
+             id: '35cc8c7c-2e65-4a21-9ea8-968c28fe634d'
+           }
+         },
+         author: {
+           connect: {
+     ?       id?: Int,
+     ?       id42?: Int,
+     ?       name?: String
+           },
+     ?     create?: UserCreateWithoutMessageInput | UserUncheckedCreateWithoutMessageInput,
+     ?     connectOrCreate?: {
+     ?       where: UserWhereUniqueInput,
+     ?       create: UserCreateWithoutMessageInput | UserUncheckedCreateWithoutMessageInput
+     ?     }
+         }
+       }
+     })
+
+Argument data.author.connect of type UserWhereUniqueInput needs at least one argument. Available args are listed in green.
+
+Note: Lines with ? are optional.
+[39m
+Error: 
+Invalid `this.prisma.message.create()` invocation in
+/api/src/chat/database/channel.ts:17:50
+
+  14 
+  15 async stockMessages(message : MessageWrite) : Promise<Message>{
+  16 	console.log(message);
+→ 17 	const res: Message = await this.prisma.message.create({
+       data: {
+         content: 'aaa',
+         channel: {
+           connect: {
+             id: '35cc8c7c-2e65-4a21-9ea8-968c28fe634d'
+           }
+         },
+         author: {
+           connect: {
+     ?       id?: Int,
+     ?       id42?: Int,
+     ?       name?: String
+           },
+     ?     create?: UserCreateWithoutMessageInput | UserUncheckedCreateWithoutMessageInput,
+     ?     connectOrCreate?: {
+     ?       where: UserWhereUniqueInput,
+     ?       create: UserCreateWithoutMessageInput | UserUncheckedCreateWithoutMessageInput
+     ?     }
+         }
+       }
+     })
+
+Argument data.author.connect of type UserWhereUniqueInput needs at least one argument. Available args are listed in green.
+
+Note: Lines with ? are optional.
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
+
+/api/src/chat/chat.gateway.ts:42
+				userId: client.userId,
+                   ^
+TypeError: Cannot read properties of undefined (reading 'userId')
+    at ChatGateway.<anonymous> (/api/src/chat/chat.gateway.ts:42:20)
+    at Generator.next (<anonymous>)
+    at /api/dist/chat/chat.gateway.js:20:71
+    at new Promise (<anonymous>)
+    at __awaiter (/api/dist/chat/chat.gateway.js:16:12)
+    at ChatGateway.handleConnection (/api/dist/chat/chat.gateway.js:45:16)
+    at Object.next (/api/node_modules/@nestjs/websockets/web-sockets-controller.js:77:47)
+    at ConsumerObserver.next (/api/node_modules/rxjs/src/internal/Subscriber.ts:161:25)
+    at SafeSubscriber.Subscriber._next (/api/node_modules/rxjs/src/internal/Subscriber.ts:119:22)
+    at SafeSubscriber.Subscriber.next (/api/node_modules/rxjs/src/internal/Subscriber.ts:75:12)
+
+/api/node_modules/@prisma/client/runtime/library.js:144
+`});return process.env.NO_COLOR||i==="colorless"?(0,Si.default)(U):U},b=new W(g(o));throw process.env.NODE_ENV!=="production"&&Object.defineProperty(b,"render",{get:()=>g,enumerable:!1}),b}normalizePath(t,r){let n=t.slice(),i=[],o,s=r;for(;(o=n.shift())!==void 0;)!Array.isArray(s)&&o===0||(o==="select"?s[o]?s=s[o]:s=s.include:s&&s[o]&&(s=s[o]),i.push(o));return i}},W=class extends Error{get[Symbol.toStringTag](){return"PrismaClientValidationError"}};ce(W,"PrismaClientValidationError");var z=class extends Error{constructor(t){super(t+`
+                                                                        ^
+Error: 
+Invalid `this.prisma.member.findMany()` invocation in
+/api/src/chat/chat.gateway.ts:40:55
+
+  37 }
+  38 async handleConnection(@GetUser() user: User, client : Socket) {
+  39 	console.log('connection')
+→ 40 	const channel : Member[] = await this.prisma.member.findMany({
+       where: {
+         userId: '1IfDjvpH8OX5G4z1AAAB'
+                 ~~~~~~~~~~~~~~~~~~~~~~
+       }
+     })
+
+Argument userId: Got invalid value '1IfDjvpH8OX5G4z1AAAB' on prisma.findManyMember. Provided String, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
+
+/api/node_modules/@prisma/client/runtime/library.js:144
+`});return process.env.NO_COLOR||i==="colorless"?(0,Si.default)(U):U},b=new W(g(o));throw process.env.NODE_ENV!=="production"&&Object.defineProperty(b,"render",{get:()=>g,enumerable:!1}),b}normalizePath(t,r){let n=t.slice(),i=[],o,s=r;for(;(o=n.shift())!==void 0;)!Array.isArray(s)&&o===0||(o==="select"?s[o]?s=s[o]:s=s.include:s&&s[o]&&(s=s[o]),i.push(o));return i}},W=class extends Error{get[Symbol.toStringTag](){return"PrismaClientValidationError"}};ce(W,"PrismaClientValidationError");var z=class extends Error{constructor(t){super(t+`
+                                                                        ^
+Error: 
+Invalid `this.prisma.member.findMany()` invocation in
+/api/src/chat/chat.gateway.ts:40:55
+
+  37 }
+  38 async handleConnection(@GetUser() user: User, client : Socket) {
+  39 	console.log('connection')
+→ 40 	const channel : Member[] = await this.prisma.member.findMany({
+       where: {
+         userId: 'wKmJAZv3qPlnukIcAAAB'
+                 ~~~~~~~~~~~~~~~~~~~~~~
+       }
+     })
+
+Argument userId: Got invalid value 'wKmJAZv3qPlnukIcAAAB' on prisma.findManyMember. Provided String, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
+
+/api/node_modules/@prisma/client/runtime/library.js:144
+`});return process.env.NO_COLOR||i==="colorless"?(0,Si.default)(U):U},b=new W(g(o));throw process.env.NODE_ENV!=="production"&&Object.defineProperty(b,"render",{get:()=>g,enumerable:!1}),b}normalizePath(t,r){let n=t.slice(),i=[],o,s=r;for(;(o=n.shift())!==void 0;)!Array.isArray(s)&&o===0||(o==="select"?s[o]?s=s[o]:s=s.include:s&&s[o]&&(s=s[o]),i.push(o));return i}},W=class extends Error{get[Symbol.toStringTag](){return"PrismaClientValidationError"}};ce(W,"PrismaClientValidationError");var z=class extends Error{constructor(t){super(t+`
+                                                                        ^
+Error: 
+Invalid `this.prisma.member.findMany()` invocation in
+/api/src/chat/chat.gateway.ts:40:55
+
+  37 }
+  38 async handleConnection(@GetUser() user: User, client : Socket) {
+  39 	console.log(user)
+→ 40 	const channel : Member[] = await this.prisma.member.findMany({
+       where: {
+         userId: 'tanfSa9hRStD92U6AAAB'
+                 ~~~~~~~~~~~~~~~~~~~~~~
+       }
+     })
+
+Argument userId: Got invalid value 'tanfSa9hRStD92U6AAAB' on prisma.findManyMember. Provided String, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
+
+/api/node_modules/@prisma/client/runtime/library.js:144
+`});return process.env.NO_COLOR||i==="colorless"?(0,Si.default)(U):U},b=new W(g(o));throw process.env.NODE_ENV!=="production"&&Object.defineProperty(b,"render",{get:()=>g,enumerable:!1}),b}normalizePath(t,r){let n=t.slice(),i=[],o,s=r;for(;(o=n.shift())!==void 0;)!Array.isArray(s)&&o===0||(o==="select"?s[o]?s=s[o]:s=s.include:s&&s[o]&&(s=s[o]),i.push(o));return i}},W=class extends Error{get[Symbol.toStringTag](){return"PrismaClientValidationError"}};ce(W,"PrismaClientValidationError");var z=class extends Error{constructor(t){super(t+`
+                                                                        ^
+Error: 
+Invalid `this.prisma.member.findMany()` invocation in
+/api/src/chat/chat.gateway.ts:40:55
+
+  37 }
+  38 async handleConnection(@GetUser() user: User, client : Socket) {
+  39 	console.log(user.id)
+→ 40 	const channel : Member[] = await this.prisma.member.findMany({
+       where: {
+         userId: 'QSqxelGXSZ_CByL3AAAB'
+                 ~~~~~~~~~~~~~~~~~~~~~~
+       }
+     })
+
+Argument userId: Got invalid value 'QSqxelGXSZ_CByL3AAAB' on prisma.findManyMember. Provided String, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
+
+/api/node_modules/@prisma/client/runtime/library.js:144
+`});return process.env.NO_COLOR||i==="colorless"?(0,Si.default)(U):U},b=new W(g(o));throw process.env.NODE_ENV!=="production"&&Object.defineProperty(b,"render",{get:()=>g,enumerable:!1}),b}normalizePath(t,r){let n=t.slice(),i=[],o,s=r;for(;(o=n.shift())!==void 0;)!Array.isArray(s)&&o===0||(o==="select"?s[o]?s=s[o]:s=s.include:s&&s[o]&&(s=s[o]),i.push(o));return i}},W=class extends Error{get[Symbol.toStringTag](){return"PrismaClientValidationError"}};ce(W,"PrismaClientValidationError");var z=class extends Error{constructor(t){super(t+`
+                                                                        ^
+Error: 
+Invalid `this.prisma.member.findMany()` invocation in
+/api/src/chat/chat.gateway.ts:40:55
+
+  37 }
+  38 async handleConnection(@GetUser() user: User, client : Socket) {
+  39 	console.log(user.id)
+→ 40 	const channel : Member[] = await this.prisma.member.findMany({
+       where: {
+         userId: '2GAjzrj_CW0e2e4qAAAB'
+                 ~~~~~~~~~~~~~~~~~~~~~~
+       }
+     })
+
+Argument userId: Got invalid value '2GAjzrj_CW0e2e4qAAAB' on prisma.findManyMember. Provided String, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
+
+/api/node_modules/@prisma/client/runtime/library.js:144
+`});return process.env.NO_COLOR||i==="colorless"?(0,Si.default)(U):U},b=new W(g(o));throw process.env.NODE_ENV!=="production"&&Object.defineProperty(b,"render",{get:()=>g,enumerable:!1}),b}normalizePath(t,r){let n=t.slice(),i=[],o,s=r;for(;(o=n.shift())!==void 0;)!Array.isArray(s)&&o===0||(o==="select"?s[o]?s=s[o]:s=s.include:s&&s[o]&&(s=s[o]),i.push(o));return i}},W=class extends Error{get[Symbol.toStringTag](){return"PrismaClientValidationError"}};ce(W,"PrismaClientValidationError");var z=class extends Error{constructor(t){super(t+`
+                                                                        ^
+Error: 
+Invalid `this.prisma.member.findMany()` invocation in
+/api/src/chat/chat.gateway.ts:40:55
+
+  37 }
+  38 async handleConnection(@GetUser() user: User, client : Socket) {
+  39 	console.log(user)
+→ 40 	const channel : Member[] = await this.prisma.member.findMany({
+       where: {
+         userId: 'O5NxaCn_gAdxEgjuAAAB'
+                 ~~~~~~~~~~~~~~~~~~~~~~
+       }
+     })
+
+Argument userId: Got invalid value 'O5NxaCn_gAdxEgjuAAAB' on prisma.findManyMember. Provided String, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
+
+/api/node_modules/@prisma/client/runtime/library.js:144
+`});return process.env.NO_COLOR||i==="colorless"?(0,Si.default)(U):U},b=new W(g(o));throw process.env.NODE_ENV!=="production"&&Object.defineProperty(b,"render",{get:()=>g,enumerable:!1}),b}normalizePath(t,r){let n=t.slice(),i=[],o,s=r;for(;(o=n.shift())!==void 0;)!Array.isArray(s)&&o===0||(o==="select"?s[o]?s=s[o]:s=s.include:s&&s[o]&&(s=s[o]),i.push(o));return i}},W=class extends Error{get[Symbol.toStringTag](){return"PrismaClientValidationError"}};ce(W,"PrismaClientValidationError");var z=class extends Error{constructor(t){super(t+`
+                                                                        ^
+Error: 
+Invalid `this.prisma.member.findMany()` invocation in
+/api/src/chat/chat.gateway.ts:40:55
+
+  37 }
+  38 async handleConnection(@GetUser() user: User, client : Socket) {
+  39 	console.log(user)
+→ 40 	const channel : Member[] = await this.prisma.member.findMany({
+       where: {
+         userId: 'QzpgUO7ZwndG_NpsAAAB'
+                 ~~~~~~~~~~~~~~~~~~~~~~
+       }
+     })
+
+Argument userId: Got invalid value 'QzpgUO7ZwndG_NpsAAAB' on prisma.findManyMember. Provided String, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
+
+/api/node_modules/@prisma/client/runtime/library.js:144
+`});return process.env.NO_COLOR||i==="colorless"?(0,Si.default)(U):U},b=new W(g(o));throw process.env.NODE_ENV!=="production"&&Object.defineProperty(b,"render",{get:()=>g,enumerable:!1}),b}normalizePath(t,r){let n=t.slice(),i=[],o,s=r;for(;(o=n.shift())!==void 0;)!Array.isArray(s)&&o===0||(o==="select"?s[o]?s=s[o]:s=s.include:s&&s[o]&&(s=s[o]),i.push(o));return i}},W=class extends Error{get[Symbol.toStringTag](){return"PrismaClientValidationError"}};ce(W,"PrismaClientValidationError");var z=class extends Error{constructor(t){super(t+`
+                                                                        ^
+Error: 
+Invalid `this.prisma.member.findMany()` invocation in
+/api/src/chat/chat.gateway.ts:39:55
+
+  36 }
+  37 async handleConnection(@GetUser() user: User, client : Socket) {
+  38 	console.log('connection ', user)
+→ 39 	const channel : Member[] = await this.prisma.member.findMany({
+       where: {
+         userId: 'E_PQFrb2lm-xN77MAAAB'
+                 ~~~~~~~~~~~~~~~~~~~~~~
+       }
+     })
+
+Argument userId: Got invalid value 'E_PQFrb2lm-xN77MAAAB' on prisma.findManyMember. Provided String, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
+
+/api/src/chat/chat.gateway.ts:38
+		console.log('connection ', client.data.user)
+                                    ^
+TypeError: Cannot read properties of undefined (reading 'data')
+    at ChatGateway.<anonymous> (/api/src/chat/chat.gateway.ts:38:37)
+    at Generator.next (<anonymous>)
+    at /api/dist/chat/chat.gateway.js:20:71
+    at new Promise (<anonymous>)
+    at __awaiter (/api/dist/chat/chat.gateway.js:16:12)
+    at ChatGateway.handleConnection (/api/dist/chat/chat.gateway.js:44:16)
+    at Object.next (/api/node_modules/@nestjs/websockets/web-sockets-controller.js:77:47)
+    at ConsumerObserver.next (/api/node_modules/rxjs/src/internal/Subscriber.ts:161:25)
+    at SafeSubscriber.Subscriber._next (/api/node_modules/rxjs/src/internal/Subscriber.ts:119:22)
+    at SafeSubscriber.Subscriber.next (/api/node_modules/rxjs/src/internal/Subscriber.ts:75:12)
+
+/api/src/chat/chat.gateway.ts:38
+		console.log('connection ', client.data.user)
+                                    ^
+TypeError: Cannot read properties of undefined (reading 'data')
+    at ChatGateway.<anonymous> (/api/src/chat/chat.gateway.ts:38:37)
+    at Generator.next (<anonymous>)
+    at /api/dist/chat/chat.gateway.js:20:71
+    at new Promise (<anonymous>)
+    at __awaiter (/api/dist/chat/chat.gateway.js:16:12)
+    at ChatGateway.handleConnection (/api/dist/chat/chat.gateway.js:44:16)
+    at Object.next (/api/node_modules/@nestjs/websockets/web-sockets-controller.js:77:47)
+    at ConsumerObserver.next (/api/node_modules/rxjs/src/internal/Subscriber.ts:161:25)
+    at SafeSubscriber.Subscriber._next (/api/node_modules/rxjs/src/internal/Subscriber.ts:119:22)
+    at SafeSubscriber.Subscriber.next (/api/node_modules/rxjs/src/internal/Subscriber.ts:75:12)
+
+/api/src/chat/chat.gateway.ts:38
+		console.log('connection ', client.data.user)
+                                    ^
+TypeError: Cannot read properties of undefined (reading 'data')
+    at ChatGateway.<anonymous> (/api/src/chat/chat.gateway.ts:38:37)
+    at Generator.next (<anonymous>)
+    at /api/dist/chat/chat.gateway.js:20:71
+    at new Promise (<anonymous>)
+    at __awaiter (/api/dist/chat/chat.gateway.js:16:12)
+    at ChatGateway.handleConnection (/api/dist/chat/chat.gateway.js:44:16)
+    at Object.next (/api/node_modules/@nestjs/websockets/web-sockets-controller.js:77:47)
+    at ConsumerObserver.next (/api/node_modules/rxjs/src/internal/Subscriber.ts:161:25)
+    at SafeSubscriber.Subscriber._next (/api/node_modules/rxjs/src/internal/Subscriber.ts:119:22)
+    at SafeSubscriber.Subscriber.next (/api/node_modules/rxjs/src/internal/Subscriber.ts:75:12)
+
+/api/src/chat/chat.gateway.ts:38
+		console.log('connection ', client.data.user)
+                                    ^
+TypeError: Cannot read properties of undefined (reading 'data')
+    at ChatGateway.<anonymous> (/api/src/chat/chat.gateway.ts:38:37)
+    at Generator.next (<anonymous>)
+    at /api/dist/chat/chat.gateway.js:20:71
+    at new Promise (<anonymous>)
+    at __awaiter (/api/dist/chat/chat.gateway.js:16:12)
+    at ChatGateway.handleConnection (/api/dist/chat/chat.gateway.js:44:16)
+    at Object.next (/api/node_modules/@nestjs/websockets/web-sockets-controller.js:77:47)
+    at ConsumerObserver.next (/api/node_modules/rxjs/src/internal/Subscriber.ts:161:25)
+    at SafeSubscriber.Subscriber._next (/api/node_modules/rxjs/src/internal/Subscriber.ts:119:22)
+    at SafeSubscriber.Subscriber.next (/api/node_modules/rxjs/src/internal/Subscriber.ts:75:12)
+[31m[Nest] 639  - [39m07/23/2023, 7:00:39 AM [31m  ERROR[39m [38;5;3m[ExceptionHandler] [39m[31mNest can't resolve dependencies of the ChatGateway (ChannelDatabase, PrismaService, ?). Please make sure that the argument ChatController at index [2] is available in the ChatModule context.
+
+Potential solutions:
+- Is ChatModule a valid NestJS module?
+- If ChatController is a provider, is it part of the current ChatModule?
+- If ChatController is exported from a separate @Module, is that module imported within ChatModule?
+  @Module({
+    imports: [ /* the Module containing ChatController */ ]
+  })
+[39m
+Error: Nest can't resolve dependencies of the ChatGateway (ChannelDatabase, PrismaService, ?). Please make sure that the argument ChatController at index [2] is available in the ChatModule context.
+
+Potential solutions:
+- Is ChatModule a valid NestJS module?
+- If ChatController is a provider, is it part of the current ChatModule?
+- If ChatController is exported from a separate @Module, is that module imported within ChatModule?
+  @Module({
+    imports: [ /* the Module containing ChatController */ ]
+  })
+
+    at Injector.lookupComponentInParentModules (/api/node_modules/@nestjs/core/injector/injector.js:247:19)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+    at Injector.resolveComponentInstance (/api/node_modules/@nestjs/core/injector/injector.js:200:33)
+    at resolveParam (/api/node_modules/@nestjs/core/injector/injector.js:120:38)
+    at async Promise.all (index 2)
+    at Injector.resolveConstructorParams (/api/node_modules/@nestjs/core/injector/injector.js:135:27)
+    at Injector.loadInstance (/api/node_modules/@nestjs/core/injector/injector.js:61:13)
+    at Injector.loadProvider (/api/node_modules/@nestjs/core/injector/injector.js:88:9)
+    at /api/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+    at async Promise.all (index 4)
+[31m[Nest] 651  - [39m07/23/2023, 7:28:51 AM [31m  ERROR[39m [38;5;3m[ExceptionHandler] [39m[31mNest can't resolve dependencies of the ChatGateway (ChannelDatabase, PrismaService, ?). Please make sure that the argument ChatController at index [2] is available in the ChatModule context.
+
+Potential solutions:
+- Is ChatModule a valid NestJS module?
+- If ChatController is a provider, is it part of the current ChatModule?
+- If ChatController is exported from a separate @Module, is that module imported within ChatModule?
+  @Module({
+    imports: [ /* the Module containing ChatController */ ]
+  })
+[39m
+Error: Nest can't resolve dependencies of the ChatGateway (ChannelDatabase, PrismaService, ?). Please make sure that the argument ChatController at index [2] is available in the ChatModule context.
+
+Potential solutions:
+- Is ChatModule a valid NestJS module?
+- If ChatController is a provider, is it part of the current ChatModule?
+- If ChatController is exported from a separate @Module, is that module imported within ChatModule?
+  @Module({
+    imports: [ /* the Module containing ChatController */ ]
+  })
+
+    at Injector.lookupComponentInParentModules (/api/node_modules/@nestjs/core/injector/injector.js:247:19)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+    at Injector.resolveComponentInstance (/api/node_modules/@nestjs/core/injector/injector.js:200:33)
+    at resolveParam (/api/node_modules/@nestjs/core/injector/injector.js:120:38)
+    at async Promise.all (index 2)
+    at Injector.resolveConstructorParams (/api/node_modules/@nestjs/core/injector/injector.js:135:27)
+    at Injector.loadInstance (/api/node_modules/@nestjs/core/injector/injector.js:61:13)
+    at Injector.loadProvider (/api/node_modules/@nestjs/core/injector/injector.js:88:9)
+    at /api/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+    at async Promise.all (index 4)
+[31m[Nest] 663  - [39m07/23/2023, 7:29:09 AM [31m  ERROR[39m [38;5;3m[ExceptionHandler] [39m[31mNest can't resolve dependencies of the ChatGateway (ChannelDatabase, PrismaService, ?). Please make sure that the argument ChatController at index [2] is available in the ChatModule context.
+
+Potential solutions:
+- Is ChatModule a valid NestJS module?
+- If ChatController is a provider, is it part of the current ChatModule?
+- If ChatController is exported from a separate @Module, is that module imported within ChatModule?
+  @Module({
+    imports: [ /* the Module containing ChatController */ ]
+  })
+[39m
+Error: Nest can't resolve dependencies of the ChatGateway (ChannelDatabase, PrismaService, ?). Please make sure that the argument ChatController at index [2] is available in the ChatModule context.
+
+Potential solutions:
+- Is ChatModule a valid NestJS module?
+- If ChatController is a provider, is it part of the current ChatModule?
+- If ChatController is exported from a separate @Module, is that module imported within ChatModule?
+  @Module({
+    imports: [ /* the Module containing ChatController */ ]
+  })
+
+    at Injector.lookupComponentInParentModules (/api/node_modules/@nestjs/core/injector/injector.js:247:19)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+    at Injector.resolveComponentInstance (/api/node_modules/@nestjs/core/injector/injector.js:200:33)
+    at resolveParam (/api/node_modules/@nestjs/core/injector/injector.js:120:38)
+    at async Promise.all (index 2)
+    at Injector.resolveConstructorParams (/api/node_modules/@nestjs/core/injector/injector.js:135:27)
+    at Injector.loadInstance (/api/node_modules/@nestjs/core/injector/injector.js:61:13)
+    at Injector.loadProvider (/api/node_modules/@nestjs/core/injector/injector.js:88:9)
+    at /api/node_modules/@nestjs/core/injector/instance-loader.js:56:13
+    at async Promise.all (index 4)
+
+/api/node_modules/@prisma/client/runtime/library.js:144
+`});return process.env.NO_COLOR||i==="colorless"?(0,Si.default)(U):U},b=new W(g(o));throw process.env.NODE_ENV!=="production"&&Object.defineProperty(b,"render",{get:()=>g,enumerable:!1}),b}normalizePath(t,r){let n=t.slice(),i=[],o,s=r;for(;(o=n.shift())!==void 0;)!Array.isArray(s)&&o===0||(o==="select"?s[o]?s=s[o]:s=s.include:s&&s[o]&&(s=s[o]),i.push(o));return i}},W=class extends Error{get[Symbol.toStringTag](){return"PrismaClientValidationError"}};ce(W,"PrismaClientValidationError");var z=class extends Error{constructor(t){super(t+`
+                                                                        ^
+Error: 
+Invalid `this.prisma.member.findMany()` invocation in
+/api/src/chat/chat.gateway.ts:40:55
+
+  37 
+  38 async handleConnection(@GetUser() user: User, client : Socket) {
+  39 	console.log('connection ', user)
+→ 40 	const channel : Member[] = await this.prisma.member.findMany({
+       where: {
+         userId: 'XlJu6ZpBhX4ktx6mAAAB'
+                 ~~~~~~~~~~~~~~~~~~~~~~
+       }
+     })
+
+Argument userId: Got invalid value 'XlJu6ZpBhX4ktx6mAAAB' on prisma.findManyMember. Provided String, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
+
+/api/node_modules/@prisma/client/runtime/library.js:144
+`});return process.env.NO_COLOR||i==="colorless"?(0,Si.default)(U):U},b=new W(g(o));throw process.env.NODE_ENV!=="production"&&Object.defineProperty(b,"render",{get:()=>g,enumerable:!1}),b}normalizePath(t,r){let n=t.slice(),i=[],o,s=r;for(;(o=n.shift())!==void 0;)!Array.isArray(s)&&o===0||(o==="select"?s[o]?s=s[o]:s=s.include:s&&s[o]&&(s=s[o]),i.push(o));return i}},W=class extends Error{get[Symbol.toStringTag](){return"PrismaClientValidationError"}};ce(W,"PrismaClientValidationError");var z=class extends Error{constructor(t){super(t+`
+                                                                        ^
+Error: 
+Invalid `this.prisma.member.findMany()` invocation in
+/api/src/chat/chat.gateway.ts:39:55
+
+  36 
+  37 async handleConnection(@GetUser() user: User, client : Socket) {
+  38 	console.log('connection ', user)
+→ 39 	const channel : Member[] = await this.prisma.member.findMany({
+       where: {
+         userId: 'xtFyD2mJD4_ImhA9AAAB'
+                 ~~~~~~~~~~~~~~~~~~~~~~
+       }
+     })
+
+Argument userId: Got invalid value 'xtFyD2mJD4_ImhA9AAAB' on prisma.findManyMember. Provided String, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
+
+/api/node_modules/@prisma/client/runtime/library.js:144
+`});return process.env.NO_COLOR||i==="colorless"?(0,Si.default)(U):U},b=new W(g(o));throw process.env.NODE_ENV!=="production"&&Object.defineProperty(b,"render",{get:()=>g,enumerable:!1}),b}normalizePath(t,r){let n=t.slice(),i=[],o,s=r;for(;(o=n.shift())!==void 0;)!Array.isArray(s)&&o===0||(o==="select"?s[o]?s=s[o]:s=s.include:s&&s[o]&&(s=s[o]),i.push(o));return i}},W=class extends Error{get[Symbol.toStringTag](){return"PrismaClientValidationError"}};ce(W,"PrismaClientValidationError");var z=class extends Error{constructor(t){super(t+`
+                                                                        ^
+Error: 
+Invalid `this.prisma.member.findMany()` invocation in
+/api/src/chat/chat.gateway.ts:40:55
+
+  37 
+  38 async handleConnection(@GetUser() user: User, client : Socket) {
+  39 	console.log('connection ', user)
+→ 40 	const channel : Member[] = await this.prisma.member.findMany({
+       where: {
+         userId: 'f2F9QdWpvHeurtWTAAAB'
+                 ~~~~~~~~~~~~~~~~~~~~~~
+       }
+     })
+
+Argument userId: Got invalid value 'f2F9QdWpvHeurtWTAAAB' on prisma.findManyMember. Provided String, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
+
+/api/node_modules/@prisma/client/runtime/library.js:144
+`});return process.env.NO_COLOR||i==="colorless"?(0,Si.default)(U):U},b=new W(g(o));throw process.env.NODE_ENV!=="production"&&Object.defineProperty(b,"render",{get:()=>g,enumerable:!1}),b}normalizePath(t,r){let n=t.slice(),i=[],o,s=r;for(;(o=n.shift())!==void 0;)!Array.isArray(s)&&o===0||(o==="select"?s[o]?s=s[o]:s=s.include:s&&s[o]&&(s=s[o]),i.push(o));return i}},W=class extends Error{get[Symbol.toStringTag](){return"PrismaClientValidationError"}};ce(W,"PrismaClientValidationError");var z=class extends Error{constructor(t){super(t+`
+                                                                        ^
+Error: 
+Invalid `this.prisma.member.findMany()` invocation in
+/api/src/chat/chat.gateway.ts:40:55
+
+  37 
+  38 async handleConnection(@GetUser() user: User, client : Socket) {
+  39 	console.log('connection ', user)
+→ 40 	const channel : Member[] = await this.prisma.member.findMany({
+       where: {
+         userId: 'Z7_8dhDzljyAlk72AAAB'
+                 ~~~~~~~~~~~~~~~~~~~~~~
+       }
+     })
+
+Argument userId: Got invalid value 'Z7_8dhDzljyAlk72AAAB' on prisma.findManyMember. Provided String, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
+
+/api/node_modules/@prisma/client/runtime/library.js:144
+`});return process.env.NO_COLOR||i==="colorless"?(0,Si.default)(U):U},b=new W(g(o));throw process.env.NODE_ENV!=="production"&&Object.defineProperty(b,"render",{get:()=>g,enumerable:!1}),b}normalizePath(t,r){let n=t.slice(),i=[],o,s=r;for(;(o=n.shift())!==void 0;)!Array.isArray(s)&&o===0||(o==="select"?s[o]?s=s[o]:s=s.include:s&&s[o]&&(s=s[o]),i.push(o));return i}},W=class extends Error{get[Symbol.toStringTag](){return"PrismaClientValidationError"}};ce(W,"PrismaClientValidationError");var z=class extends Error{constructor(t){super(t+`
+                                                                        ^
+Error: 
+Invalid `this.prisma.member.findMany()` invocation in
+/api/src/chat/chat.gateway.ts:40:55
+
+  37 
+  38 async handleConnection(@GetUser() user: User, client : Socket) {
+  39 	console.log('connection ', user)
+→ 40 	const channel : Member[] = await this.prisma.member.findMany({
+       where: {
+         userId: 'WT2MEV-QUg-DgSZUAAAB'
+                 ~~~~~~~~~~~~~~~~~~~~~~
+       }
+     })
+
+Argument userId: Got invalid value 'WT2MEV-QUg-DgSZUAAAB' on prisma.findManyMember. Provided String, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
+
+/api/node_modules/@prisma/client/runtime/library.js:144
+`});return process.env.NO_COLOR||i==="colorless"?(0,Si.default)(U):U},b=new W(g(o));throw process.env.NODE_ENV!=="production"&&Object.defineProperty(b,"render",{get:()=>g,enumerable:!1}),b}normalizePath(t,r){let n=t.slice(),i=[],o,s=r;for(;(o=n.shift())!==void 0;)!Array.isArray(s)&&o===0||(o==="select"?s[o]?s=s[o]:s=s.include:s&&s[o]&&(s=s[o]),i.push(o));return i}},W=class extends Error{get[Symbol.toStringTag](){return"PrismaClientValidationError"}};ce(W,"PrismaClientValidationError");var z=class extends Error{constructor(t){super(t+`
+                                                                        ^
+Error: 
+Invalid `this.prisma.member.findMany()` invocation in
+/api/src/chat/chat.gateway.ts:40:55
+
+  37 
+  38 async handleConnection(@GetUser() user: User, client : Socket) {
+  39 	console.log('connection ', user)
+→ 40 	const channel : Member[] = await this.prisma.member.findMany({
+       where: {
+         userId: 'h3fqWR5skDS1hKFkAAAB'
+                 ~~~~~~~~~~~~~~~~~~~~~~
+       }
+     })
+
+Argument userId: Got invalid value 'h3fqWR5skDS1hKFkAAAB' on prisma.findManyMember. Provided String, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
+
+/api/node_modules/@prisma/client/runtime/library.js:144
+`});return process.env.NO_COLOR||i==="colorless"?(0,Si.default)(U):U},b=new W(g(o));throw process.env.NODE_ENV!=="production"&&Object.defineProperty(b,"render",{get:()=>g,enumerable:!1}),b}normalizePath(t,r){let n=t.slice(),i=[],o,s=r;for(;(o=n.shift())!==void 0;)!Array.isArray(s)&&o===0||(o==="select"?s[o]?s=s[o]:s=s.include:s&&s[o]&&(s=s[o]),i.push(o));return i}},W=class extends Error{get[Symbol.toStringTag](){return"PrismaClientValidationError"}};ce(W,"PrismaClientValidationError");var z=class extends Error{constructor(t){super(t+`
+                                                                        ^
+Error: 
+Invalid `this.prisma.member.findMany()` invocation in
+/api/src/chat/chat.gateway.ts:40:55
+
+  37 
+  38 async handleConnection(@GetUser() user: User, client : Socket) {
+  39 	console.log('connection ', user)
+→ 40 	const channel : Member[] = await this.prisma.member.findMany({
+       where: {
+         userId: 'QUFtTAMILTLWz2K9AAAB'
+                 ~~~~~~~~~~~~~~~~~~~~~~
+       }
+     })
+
+Argument userId: Got invalid value 'QUFtTAMILTLWz2K9AAAB' on prisma.findManyMember. Provided String, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
+
+/api/node_modules/@prisma/client/runtime/library.js:144
+`});return process.env.NO_COLOR||i==="colorless"?(0,Si.default)(U):U},b=new W(g(o));throw process.env.NODE_ENV!=="production"&&Object.defineProperty(b,"render",{get:()=>g,enumerable:!1}),b}normalizePath(t,r){let n=t.slice(),i=[],o,s=r;for(;(o=n.shift())!==void 0;)!Array.isArray(s)&&o===0||(o==="select"?s[o]?s=s[o]:s=s.include:s&&s[o]&&(s=s[o]),i.push(o));return i}},W=class extends Error{get[Symbol.toStringTag](){return"PrismaClientValidationError"}};ce(W,"PrismaClientValidationError");var z=class extends Error{constructor(t){super(t+`
+                                                                        ^
+Error: 
+Invalid `this.prisma.member.findMany()` invocation in
+/api/src/chat/chat.gateway.ts:40:55
+
+  37 
+  38 async handleConnection(@GetUser() user: User, client : Socket) {
+  39 	console.log('connection ', user)
+→ 40 	const channel : Member[] = await this.prisma.member.findMany({
+       where: {
+         userId: 'o64AMjCUOU0Sx7ciAAAB'
+                 ~~~~~~~~~~~~~~~~~~~~~~
+       }
+     })
+
+Argument userId: Got invalid value 'o64AMjCUOU0Sx7ciAAAB' on prisma.findManyMember. Provided String, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
+
+/api/node_modules/@prisma/client/runtime/library.js:144
+`});return process.env.NO_COLOR||i==="colorless"?(0,Si.default)(U):U},b=new W(g(o));throw process.env.NODE_ENV!=="production"&&Object.defineProperty(b,"render",{get:()=>g,enumerable:!1}),b}normalizePath(t,r){let n=t.slice(),i=[],o,s=r;for(;(o=n.shift())!==void 0;)!Array.isArray(s)&&o===0||(o==="select"?s[o]?s=s[o]:s=s.include:s&&s[o]&&(s=s[o]),i.push(o));return i}},W=class extends Error{get[Symbol.toStringTag](){return"PrismaClientValidationError"}};ce(W,"PrismaClientValidationError");var z=class extends Error{constructor(t){super(t+`
+                                                                        ^
+Error: 
+Invalid `this.prisma.member.findMany()` invocation in
+/api/src/chat/chat.gateway.ts:49:55
+
+  46 
+  47 async handleConnection(@GetUser() user: User, client : Socket) {
+  48 	console.log('connection ', user)
+→ 49 	const channel : Member[] = await this.prisma.member.findMany({
+       where: {
+         userId: 'zNqQjtCbmdsF0MdJAAAB'
+                 ~~~~~~~~~~~~~~~~~~~~~~
+       }
+     })
+
+Argument userId: Got invalid value 'zNqQjtCbmdsF0MdJAAAB' on prisma.findManyMember. Provided String, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
+
+/api/node_modules/@prisma/client/runtime/library.js:144
+`});return process.env.NO_COLOR||i==="colorless"?(0,Si.default)(U):U},b=new W(g(o));throw process.env.NODE_ENV!=="production"&&Object.defineProperty(b,"render",{get:()=>g,enumerable:!1}),b}normalizePath(t,r){let n=t.slice(),i=[],o,s=r;for(;(o=n.shift())!==void 0;)!Array.isArray(s)&&o===0||(o==="select"?s[o]?s=s[o]:s=s.include:s&&s[o]&&(s=s[o]),i.push(o));return i}},W=class extends Error{get[Symbol.toStringTag](){return"PrismaClientValidationError"}};ce(W,"PrismaClientValidationError");var z=class extends Error{constructor(t){super(t+`
+                                                                        ^
+Error: 
+Invalid `this.prisma.member.findMany()` invocation in
+/api/src/chat/chat.gateway.ts:49:55
+
+  46 
+  47 async handleConnection(@GetUser() user: User, client : Socket) {
+  48 	console.log('connection ', client);
+→ 49 	const channel : Member[] = await this.prisma.member.findMany({
+       where: {
+         userId: 'gBkIEshh8ckMKMrOAAAC'
+                 ~~~~~~~~~~~~~~~~~~~~~~
+       }
+     })
+
+Argument userId: Got invalid value 'gBkIEshh8ckMKMrOAAAC' on prisma.findManyMember. Provided String, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
+
+/api/node_modules/@prisma/client/runtime/library.js:144
+`});return process.env.NO_COLOR||i==="colorless"?(0,Si.default)(U):U},b=new W(g(o));throw process.env.NODE_ENV!=="production"&&Object.defineProperty(b,"render",{get:()=>g,enumerable:!1}),b}normalizePath(t,r){let n=t.slice(),i=[],o,s=r;for(;(o=n.shift())!==void 0;)!Array.isArray(s)&&o===0||(o==="select"?s[o]?s=s[o]:s=s.include:s&&s[o]&&(s=s[o]),i.push(o));return i}},W=class extends Error{get[Symbol.toStringTag](){return"PrismaClientValidationError"}};ce(W,"PrismaClientValidationError");var z=class extends Error{constructor(t){super(t+`
+                                                                        ^
+Error: 
+Invalid `this.prisma.member.findMany()` invocation in
+/api/src/chat/chat.gateway.ts:49:55
+
+  46 
+  47 async handleConnection(@GetUser() user: User, client : Socket) {
+  48 	console.log('connection ', client);
+→ 49 	const channel : Member[] = await this.prisma.member.findMany({
+       where: {
+         userId: 'O-zz_W0LgmX0N3H7AAAB'
+                 ~~~~~~~~~~~~~~~~~~~~~~
+       }
+     })
+
+Argument userId: Got invalid value 'O-zz_W0LgmX0N3H7AAAB' on prisma.findManyMember. Provided String, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
+
+/api/node_modules/@prisma/client/runtime/library.js:144
+`});return process.env.NO_COLOR||i==="colorless"?(0,Si.default)(U):U},b=new W(g(o));throw process.env.NODE_ENV!=="production"&&Object.defineProperty(b,"render",{get:()=>g,enumerable:!1}),b}normalizePath(t,r){let n=t.slice(),i=[],o,s=r;for(;(o=n.shift())!==void 0;)!Array.isArray(s)&&o===0||(o==="select"?s[o]?s=s[o]:s=s.include:s&&s[o]&&(s=s[o]),i.push(o));return i}},W=class extends Error{get[Symbol.toStringTag](){return"PrismaClientValidationError"}};ce(W,"PrismaClientValidationError");var z=class extends Error{constructor(t){super(t+`
+                                                                        ^
+Error: 
+Invalid `this.prisma.member.findMany()` invocation in
+/api/src/chat/chat.gateway.ts:49:55
+
+  46 
+  47 async handleConnection(@GetUser() user: User, @ConnectedSocket() client : Socket) {
+  48 	console.log('connection ', client);
+→ 49 	const channel : Member[] = await this.prisma.member.findMany({
+       where: {
+         userId: 'C9e12VD6A4DCtsyMAAAB'
+                 ~~~~~~~~~~~~~~~~~~~~~~
+       }
+     })
+
+Argument userId: Got invalid value 'C9e12VD6A4DCtsyMAAAB' on prisma.findManyMember. Provided String, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int> | Int
+  notIn?: List<Int> | Int
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+    at Ai.validate (/api/node_modules/@prisma/client/runtime/library.js:144:73)
+    at un.createMessage (/api/node_modules/@prisma/client/runtime/library.js:161:1298)
+    at /api/node_modules/@prisma/client/runtime/library.js:174:10818
+    at Object.runInChildSpan (/api/node_modules/@prisma/client/runtime/library.js:171:1343)
+    at PrismaService._executeRequest (/api/node_modules/@prisma/client/runtime/library.js:174:10795)
