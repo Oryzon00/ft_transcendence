@@ -1,37 +1,50 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export function NavBar() {
+	let activeClassName =
+		"text-amber-800 text-lg font-semibold px-3 py-2 rounded-md";
+	let normalClassName =
+		"text-white text-lg font-semibold hover:bg-amber-800 px-3 py-2 rounded-md";
+
 	return (
 		<nav>
 			<div className="max-w-6xl mx-auto px-2">
 				<div className="flex items-center justify-between h-16">
 					<div className="flex items-start">
-						<Link
+						<NavLink
 							to="/home"
-							className="text-white text-lg font-bold hover:bg-amber-800 px-3 py-2 rounded-md"
+							className={({ isActive }) =>
+								isActive ? activeClassName : normalClassName
+							}
 						>
 							HOME
-						</Link>
+						</NavLink>
 					</div>
 					<div className="flex">
-						<Link
+						<NavLink
 							to="/play"
-							className="text-white text-lg font-semibold hover:bg-amber-800 px-3 py-2 rounded-md"
+							className={({ isActive }) =>
+								isActive ? activeClassName : normalClassName
+							}
 						>
 							PLAY
-						</Link>
-						<Link
+						</NavLink>
+						<NavLink
 							to="/leaderboard"
-							className="text-white text-lg font-semibold hover:bg-amber-800 px-3 py-2 rounded-md"
+							className={({ isActive }) =>
+								isActive ? activeClassName : normalClassName
+							}
 						>
 							LEADERBOARD
-						</Link>
-						<Link
+						</NavLink>
+						<NavLink
 							to="/chat"
-							className="text-white text-lg font-semibold hover:bg-amber-800 px-3 py-2 rounded-md"
+							className={({ isActive }) =>
+								isActive ? activeClassName : normalClassName
+							}
 						>
 							CHAT
-						</Link>
+						</NavLink>
 						<input
 							className="px-3 py-2 rounded-md"
 							type="search"
@@ -41,12 +54,14 @@ export function NavBar() {
 						></input>
 					</div>
 					<div className="flex items-end">
-						<Link
+						<NavLink
 							to="/profile"
-							className="text-white text-lg font-bold"
+							className={({ isActive }) =>
+								isActive ? activeClassName : normalClassName
+							}
 						>
 							USER PROFILE
-						</Link>
+						</NavLink>
 					</div>
 				</div>
 			</div>

@@ -21,10 +21,6 @@ import { NavBarPage } from "./pages/NavBarPage/NavBarPage.tsx";
 
 const router = createBrowserRouter([
 	{
-		path: "navbar",
-		element: <NavBarPage />
-	},
-	{
 		path: "/",
 		element: <LoginPage />,
 		errorElement: <NotFoundPage />
