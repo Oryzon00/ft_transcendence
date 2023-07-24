@@ -42,7 +42,7 @@ export function NavBar() {
 					</div>
 					<div className="flex items-end">
 						<Link
-							to="/home"
+							to="/profile"
 							className="text-white text-lg font-bold"
 						>
 							USER PROFILE

@@ -14,15 +14,15 @@ import AuthPage from "./pages/AuthPage/AuthPage.tsx";
 import { authLoader } from "./layouts/AuthLayout/AuthLoader.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { NavBarLayout } from "./layouts/NavBar/NavBarLayout.tsx";
 import { PlayPage } from "./pages/PlayPage/PlayPage.tsx";
 import { LeaderboardPage } from "./pages/LeaderboardPage/LeaderboardPage.tsx";
 import { ChatPage } from "./pages/ChatPage/ChatPage.tsx";
+import { NavBarPage } from "./pages/NavBarPage/NavBarPage.tsx";
 
 const router = createBrowserRouter([
 	{
 		path: "navbar",
-		element: <NavBarLayout />
+		element: <NavBarPage />
 	},
 	{
 		path: "/",
@@ -36,7 +36,7 @@ const router = createBrowserRouter([
 		errorElement: <AuthError />
 	},
 	{
-		element: <NavBarLayout />,
+		element: <NavBarPage />,
 		children: [
 			{
 				path: "/home",
