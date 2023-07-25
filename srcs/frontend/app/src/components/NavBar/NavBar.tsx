@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { UserMenu } from "./UserMenu";
+import { SearchUserInput } from "./SearchUserInput";
 
 export function NavBar() {
 	let activeClassName =
@@ -47,16 +48,9 @@ export function NavBar() {
 							CHAT
 						</NavLink>
 					</div>
-					<input
-						className="px-3 py-2 rounded-md"
-						type="search"
-						id="mySearch"
-						name="q"
-						placeholder="Search for a user..."
-					></input>
-					<div className="flex">
-						<UserMenu />
-					</div>
+
+					<SearchUserInput />
+					<UserMenu />
 				</div>
 			</div>
 		</nav>
