@@ -3,7 +3,7 @@ import PlayVSBotButton from "../../components/Play/PlayVSBotButton";
 import { cookieProtection } from "../../utils/cookieProtection";
 
 function GameLayout() {
-	cookieProtection();
+	// cookieProtection();
 
 	return (
 		<>

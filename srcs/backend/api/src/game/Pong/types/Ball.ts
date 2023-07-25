@@ -9,18 +9,18 @@ export class Ball {
 
 	constructor(private CanWidth: number, private CanHeight: number, rad: number) {
 		this.pos = new Point(CanWidth / 2, CanHeight / 2);
-		this.speed = { angle: -Math.PI + Math.random() * 2 * Math.PI, length: 4 };
+		this.speed = { angle: -Math.PI + Math.random() * 2 * Math.PI, length: 6 };
 		this.rad = rad;
 	}
 
 	respawn(): 1 | 2 | undefined {
 		if (this.pos.x < 0) {
 			this.pos = { x: this.CanWidth / 2, y: this.CanHeight / 2 };
-			this.speed = { angle: Math.PI, length: 4 };
+			this.speed = { angle: Math.PI, length: 6 };
 			return 2;
 		} else if (this.pos.x > this.CanWidth) {
 			this.pos = { x: this.CanWidth / 2, y: this.CanHeight / 2 };
-			this.speed = { angle: 0, length: 4 };
+			this.speed = { angle: 0, length: 6 };
 			return 1;
 		}
 		return undefined;

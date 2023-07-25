@@ -1,10 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import GameLayout from "../../layouts/GameLayout/GameLayout";
-import SocketWrapper, { SocketWrapperContext, SocketWrapperProvider } from "../../routes/Play/SocketWrapper";
+import SocketWrapper, {
+	SocketWrapperContext,
+	SocketWrapperProvider
+} from "../../utils/websockets/SocketWrapper";
 import { UserProvider } from "../../utils/contexts/userContext";
 import PongLayout from "../../layouts/PongLayout/PongLayout";
-import { Listener, ServerEvents } from "../../routes/Play/types";
-import { ServerPayload } from "../../routes/Play/ServerPayload";
+import { Listener, ServerEvents } from "../../utils/websockets/types";
+import { ServerPayload } from "../../utils/websockets/ServerPayload";
 import { notifyInfo } from "../../utils/notify";
 
 function GamePage() {
@@ -12,8 +15,9 @@ function GamePage() {
 	const [inLobby, setInLobby] = useState(Boolean(false));
 
 	useEffect(() => {
-
-		const onGameMessage: Listener<ServerPayload[ServerEvents.GameMessage]> = ({ message}) => {
+		const onGameMessage: Listener<
+			ServerPayload[ServerEvents.GameMessage]
+		> = ({ message }) => {
 			if (message === "Game is Starting") {
 				notifyInfo("Game found !");
 				setInLobby(true);
@@ -29,9 +33,8 @@ function GamePage() {
 		sm.addListener(ServerEvents.GameMessage, onGameMessage);
 
 		return () => {
-			console.log('removing listeners');
+			console.log("removing listeners");
 			sm.removeListener(ServerEvents.GameMessage, onGameMessage);
-
 		};
 	}, []);
 
@@ -42,9 +45,8 @@ function GamePage() {
 					<PongLayout />
 				</SocketWrapperProvider>
 			</UserProvider>
-		)
-	}
-	else {
+		);
+	} else {
 		return (
 			<UserProvider>
 				<SocketWrapperProvider value={sm}>

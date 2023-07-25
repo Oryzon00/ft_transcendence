@@ -1,11 +1,11 @@
-import './PongLayout.styles.css'
+import "./PongLayout.styles.css";
 import Pong from "../../components/Play/Pong";
 import { cookieProtection } from "../../utils/cookieProtection";
-import { ServerPayload } from '../../routes/Play/ServerPayload';
-import { ServerEvents } from '../../routes/Play/types';
+import { ServerPayload } from "../../utils/websockets/ServerPayload";
+import { ServerEvents } from "../../utils/websockets/types";
 
 function PongLayout() {
-	cookieProtection();
+	// cookieProtection();
 
 	return (
 		<>

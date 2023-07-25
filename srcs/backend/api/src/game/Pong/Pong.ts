@@ -91,10 +91,9 @@ export class Pong {
 		let score: 0 | 1 | 2 | undefined = this.ball.respawn();
 		if (score) {
 			let arr = Array.from(this.lobby.clients.keys());
-			console.log(this.scores.get(arr[score]))
 			this.scores.set(arr[score - 1], this.scores.get(arr[score - 1]) + 1);
-			for (const [id, value] of this.scores.entries())
-				console.log("id: " + id + " score: " + value);
+			for (let pad of this.paddles.values())
+				pad.pos.y = 350;
 		}
 	}
 
