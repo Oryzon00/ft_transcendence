@@ -3,7 +3,7 @@ import { notifyError } from "../../utils/notify.ts";
 import { throwErrorMessage } from "../../utils/throwErrorMessage.ts";
 
 export function ProfileLayoutLoader() {
-	const url = "http://localhost:3000/user/me";
+	const url = `http://${window.location.hostname}:3000/user/me`;
 	const data = fetch(url, {
 		method: "GET",
 		headers: {
