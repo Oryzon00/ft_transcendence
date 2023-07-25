@@ -25,14 +25,14 @@ export class AuthController {
 	@Post()
 	async auth(@Body() body): Promise<TokenDto | UserSafeDTO> {
 		if (body.error || !body.code) throw new UnauthorizedException();
+
 		const token42 = await this.authService.getToken42(body.code);
 		if (!token42) throw new BadGatewayException();
-		console.log(token42);
+
 		const userData42 = await this.authService.getUserData42(token42);
 		if (!userData42) throw new BadGatewayException();
 
 		const user = await this.authService.login(userData42);
-
 		if (user.is2FAOn) {
 			return this.userService.getUserSafe(user);
 		} else {

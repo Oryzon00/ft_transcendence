@@ -47,6 +47,8 @@ services:
             - type: volume
               source: frontend
               target: /app
+        env_file:
+            - env_files/42.api.env
         networks:
             - transcendance
         ports:
