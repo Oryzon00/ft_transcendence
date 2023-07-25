@@ -7,11 +7,13 @@ export function UserMenu() {
 	return (
 		<>
 			<div className="flex items-center space-x-4">
-				<img
-					className="h-12 w-12 rounded-full"
-					src={userHook.user.image}
-					alt="Rounded avatar"
-				/>
+				<Link to="/profile">
+					<img
+						className="h-12 w-12 rounded-full"
+						src={userHook.user.image}
+						alt="Rounded avatar"
+					/>
+				</Link>
 				<div className="flex flex-col">
 					<Link
 						to="/profile"
