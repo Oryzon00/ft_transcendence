@@ -1,9 +1,9 @@
-import { ListChannel } from '../../layouts/ChatLayout/chat.d'
+import { ListChannel } from "../../layouts/ChatLayout/chat.d";
 
 function SelectChannel() {
-    return (
-        <>
-            <p>I</p>
-        </>
-    )
+	return (
+		<>
+			<p>I</p>
+		</>
+	);
 }

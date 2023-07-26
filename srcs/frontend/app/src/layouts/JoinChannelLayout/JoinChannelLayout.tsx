@@ -10,20 +10,6 @@ function JoinChannelLayout({open, onClose, newChannel}) {
     //const [status, setStatus] = useState('public');
 
 
-    const options = [
-        {
-            label: "public",
-            value: "public"
-        },
-        {
-            label: "private",
-            value: "private",
-        },
-        {
-            label: "protect",
-            value: "protect"
-        }
-    ]
 
     function joinChannel() {
         const url = apiAddress + '/chat/channel/join';

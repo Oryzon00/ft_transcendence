@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { WebsocketContext } from "../../contexts/WebsocketContext";
+import { WebsocketContext } from "../../utils/contexts/WebsocketContext";
 import { ChannelPayload, ListChannel, MessagePayload } from "./chat.d"
 import { UserHook } from "../../utils/hooks/TuseUser";
 import useUser from "../../utils/hooks/useUser";
