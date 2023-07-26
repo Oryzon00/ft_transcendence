@@ -33,16 +33,10 @@ function MessageEntry ({current} : MessageEntryType) {
 							"Request failed with status" + res.status
 						);
 					}
-					return (res.json())
 				}
-			)
-			.then(
-				function() : void {}
 			)
 			.catch(
-				function(error) {
-					notifyError(error.message)
-				}
+				function(error) { notifyError(error.message) }
 			)
 			setValue('');
 		}

@@ -1,6 +1,6 @@
 import { Message, Channel, Member, Ban, User, Block } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
-import { MessagePayload, ChannelPayload, ChannelCreation, MessageWrite } from "../dto/chat.d";
+import { MessagePayload, ChannelPayload, ChannelCreation, MessageWrite, ChannelChangement } from "../dto/chat.d";
 import { Status } from "@prisma/client";
 import { Injectable } from "@nestjs/common";
 
@@ -73,9 +73,41 @@ class ChannelDatabase {
 			return (error);
 		}
 	}
-
-
+	
+	async setChannel(userId: number, channelId: string, body: ChannelChangement) : Promise<Channel> {
+		try {
+			let res : Channel;
+			if (body.status == 'protect')
+			{
+				res = await this.prisma.channel.update({
+					where: {
+						id: channelId
+					},
+					data: {
+						status: this.convertStatus(body.status),
+						password: body.password
+					}
+				})
+			}
+			else
+			{
+				res = await this.prisma.channel.update({
+					where: {
+						id: channelId
+					},
+					data: {
+						status: this.convertStatus(body.status),
+					}
+				})
+			}
+			return (res);
+		}
+		catch (error) {
+			return (error);
+		}
+	}
 	async joinChannel(channel: string, user: number, admin = false) : Promise<Member> {
+		console.log(channel, user);
 		if ((await this.prisma.member.findFirst({
 			where: {
 				channelId: channel,

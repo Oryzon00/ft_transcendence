@@ -11,9 +11,9 @@ import apiAddress from "../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../utils/getJWT";
 import { notifyError } from "../../utils/notify";
 import ChannelBoard from "../../components/Chat/ChannelBoard";
-import CreationChannelLayout from "../CreationChannelLayout/CreationChannelLayout";
-import SearchChannelLayout from "../SearchChannelLayout/SearchChannelLayout";
 import JoinChannelLayout from "../JoinChannelLayout/JoinChannelLayout";
+
+export function getChatData() {}
 
 function ChatLayout() {
 	const [current, setCurrent] = useState('');
@@ -24,36 +24,33 @@ function ChatLayout() {
 
 	const sockets = useContext(WebsocketContext);
 	const user : UserHook = useUser();
-	console.log(user.user)
 
 	const getChatData = () => { // Get all the data for the variable channel
-		const url = apiAddress + '/chat/getData';
-		fetch(url, {
-			method: "GET",
-			headers: {
-				Authorization: "Bearer " + getJwtTokenFromCookie()
+	fetch(apiAddress + '/chat/getData', {
+		method: "GET",
+		headers: {
+			Authorization: "Bearer " + getJwtTokenFromCookie()
+		}
+	})
+	.then(
+		function (res: Response) {
+			if (!res.ok) {
+				throw new Error(
+					"Request failed with status " + res.status
+				);
 			}
-		})
-		.then(
-			function (res: Response) {
-				if (!res.ok) {
-					throw new Error(
-						"Request failed with status " + res.status
-					);
-				}
-				return (res.json());
+			return (res.json());
 
+		})
+		.then (
+			function (data) : void {
+				setChannel(data);
 			})
-			.then (
-				function (data) : void {
-					console.log(data);
-					setChannel(data)
-				})
-			.catch (
-				function(error) {
-					notifyError(error.message)
-				}
-			)
+		.catch (
+			function(error) {
+				notifyError(error.message);
+			}
+		)
 	};
 
 	useEffect(() => {
@@ -75,7 +72,10 @@ function ChatLayout() {
 		});
 
 		sockets.on('onMessage', (data: MessagePayload) => {
-			channel[data.channelId].message.push(data);
+			console.log(data)
+				//channel[data.channelId].message.push(data);
+				//setChannel(channel);
+				getChatData()
 		})
 
 		return () => {
@@ -99,7 +99,7 @@ function ChatLayout() {
 			<div className="w-screen h-screen bg-blue-400 flex flex-col items-center justify-center" >
 				<div className="flex-grow w-full h-full ">
 					<div className="bg-white text-black w-[100%] h-[80%] border-black border-4">
-						<DiscussionBoard channel={channel} current={current} me={user}/>
+						<DiscussionBoard channel={channel} setChannel={setChannel} current={current} setCurrent={setCurrent} me={user}/>
 					</div>
 				</div>
 				<div className="flex-none w-full">

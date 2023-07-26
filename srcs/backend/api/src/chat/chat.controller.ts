@@ -9,9 +9,9 @@ import {
 } from "@nestjs/common";
 import { ChatService } from "./chat.service";
 import { GetUser } from "src/auth/decorator";
-import { User } from "@prisma/client";
+import { Channel, User } from "@prisma/client";
 import { JwtGuard } from "src/auth/guard";
-import { ChannelBan, ChannelCreation, ChannelInfo, ChannelInvitation, ChannelJoin, ChannelKick, ChannelMute, ChannelNewPassword, ListChannel, ListName, MessageWrite } from "./dto/chat";
+import { ChannelAllInfo, ChannelBan, ChannelChangement, ChannelCreation, ChannelInfo, ChannelInvitation, ChannelJoin, ChannelKick, ChannelMute, ChannelNewPassword, ChannelPayload, ListChannel, ListName, MessageWrite } from "./dto/chat";
 
 @UseGuards(JwtGuard)
 @Controller('chat')
@@ -59,6 +59,28 @@ export class ChatController {
         return (this.ChatService.listUser(user, body.channelId))
     }
 
+    @Get('/channel/get')
+    async getChannel(
+        @GetUser() user : User,
+        @Body() channel: {id: string}
+    ) : Promise<ChannelAllInfo>
+    {
+        const res : Channel = await this.ChatService.getChannelInfo(user, channel.id)
+        if (res != null)
+            return ({
+                id: res.id,
+                createdAt: res.createdAt,
+                updateAt: res.updateAt, 
+                name: res.name,
+                avatar: res.avatar,
+                description: res.description,
+                status: res.status,
+                ownerId: res.ownerId,
+                messagesId: res.messagesId,
+            });
+        return (res);
+    }
+
     @Get('/isBlocked')
     async getBlocked(
         @GetUser() user : User,
@@ -85,20 +107,13 @@ export class ChatController {
         return (this.ChatService.unblock(user, body))
     }
 
-    @Patch('/channel/sendPassword')
-    sendPassword(
-        @GetUser() user : User,
-        @Body() body : ChannelNewPassword
-    )
-    {}
-
-    @Patch('/channel/password')
+    @Patch('/channel/settings')
     password(
         @GetUser() user : User,
-        @Body() body : ChannelNewPassword
+        @Body() body : ChannelChangement
     )
     {
-        this.ChatService.password(user, body);
+        this.ChatService.channelChangement(user, body);
         return (null)
     }
 
@@ -143,5 +158,14 @@ export class ChatController {
     )
     {
         this.ChatService.unmute(user, body);
+    }
+
+    @Post('/channel/direct')
+    direct_message(
+        @GetUser() user : User,
+        @Body() body : {name : string}
+    )
+    {
+        this.ChatService.createDirect(user, body);
     }
 }

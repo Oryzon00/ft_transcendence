@@ -7,6 +7,18 @@ export type MessagePayload = {
     content: string;
 };
 
+export type ChannelAllInfo = {
+    id: string;
+    createdAt: Date;
+    updateAt: Date;
+    name: string;
+    avatar: string | null;
+    description: string;
+    status: Status;
+    ownerId: number;
+    messagesId: number[];
+}
+
 export type MessageWrite = {
 	channelId: string;
 	authorId: number;
@@ -18,6 +30,12 @@ export type ChannelCreation = {
     status: status;
     password: string;
 }
+
+export type ChannelChangement = {
+    id: string;
+    status: string;
+    password: string;
+};
 
 export type ChannelNewPassword = {
     id: string;
@@ -59,6 +77,5 @@ export type ChannelInfo = {
     name: string;
     status: string;
 }
-
 
 export type ListChannel = {[key: string]: ChannelPayload}

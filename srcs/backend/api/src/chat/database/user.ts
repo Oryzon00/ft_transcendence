@@ -66,6 +66,20 @@ class UserDatabase {
         }
     }
 
+    async isOwner(userId: number, channelId: string) : Promise<boolean> {
+        try {
+            const res = await this.prisma.channel.findFirst({
+                where: {
+                    id: channelId
+                }
+            })
+            return (res.ownerId == userId)
+        }
+        catch (error) {
+            return (error)
+        }
+    }
+
     async isMember(userId : number, channelId: string) : Promise<boolean> {
         return ((await this.findMember(userId, channelId)) != undefined)
     }

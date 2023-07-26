@@ -31,12 +31,12 @@ export class ChatGateway
 
 
 	onModuleInit() {
-		this.server.on('connection', (socket: AuthSocket) => {})
+		this.server.on('connection', (socket: Socket) => {})
 	}
 
 	@SubscribeMessage('authenticate')
 	async authenticate(@ConnectedSocket() client : AuthSocket, @MessageBody() body) {
-		if (body != null)
+		if (body != null && Object.keys(body).length > 0)
 		{
 			client.userId = body.id;
 			client.name = body.name;
@@ -45,30 +45,29 @@ export class ChatGateway
 			members.map((rooms) =>
 				client.join(rooms.channelId)
 			)
-			client.join(body.name);
+			client.join(String(body.id));
 		}
 	}
 
-	async onJoinChannel(username: string, channelId: string) {
-		const socket = this.getSocketFromUserID(username)
+	async onJoinChannel(userId: number, channelId: string) {
+		const socket = await this.getSocketFromUserID(String(userId))
 		if (!socket) return null;
 		socket.join(channelId);
 	}
 
-	getSocketFromUserID(userId : string) : Socket
+	async getSocketFromUserID(userId : string) : Promise<Socket>
 	{
-		const socketId = this.server.of('/').adapter.rooms.get(userId).values().next().value;
-		return (this.server.sockets.sockets[socketId])
+		return (await this.server.in(userId).fetchSockets()[0])
 	}
 
-	async onLeaveChannel(username: string, channelId: string) {
-		const socket = this.getSocketFromUserID(username)
+	async emitToRoom(room : string, message : MessagePayload, status: string) {
+		console.log('message:', message, await this.server.in(room).fetchSockets());
+		this.server.to(room).emit(status, message);
+	}
+
+	async onLeaveChannel(userId: number, channelId: string) {
+		const socket = await this.getSocketFromUserID(String(userId))
 		if (!socket) return null;
 		socket.leave(channelId);
-	}
-
-	emitToRoom(room : string, message : MessagePayload, status: string) {
-		console.log(message);
-		this.server.to(room).emit(status, message);
 	}
 }
