@@ -10,6 +10,7 @@ import { Point } from "../Pong/types/Point";
 
 export class Lobby {
 	public readonly Id: string = v4();
+	public startedAt: number;
 
 	public readonly clients: Map<Socket["id"], AuthenticatedSocket> = new Map<
 		Socket["id"],
@@ -57,6 +58,7 @@ export class Lobby {
 
 	private startGame(mode: number) {
 		this.game.start();
+		this.startedAt = (new Date()).getTime();
 	}
 
 	public addClient(client: AuthenticatedSocket): void {

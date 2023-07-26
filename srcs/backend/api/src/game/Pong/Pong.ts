@@ -92,14 +92,28 @@ export class Pong {
 		if (score) {
 			let arr = Array.from(this.lobby.clients.keys());
 			this.scores.set(arr[score - 1], this.scores.get(arr[score - 1]) + 1);
-			for (let pad of this.paddles.values())
+			for (let pad of this.paddles.values()){
 				pad.pos.y = 350;
+				pad.downKey = false;
+				pad.upKey = false;
+			}
+		}
+	}
+
+	private updatePaddles() {
+		for (const pad of this.paddles.values()) {
+			if (pad.upKey) pad.pos.y -= 10;
+			if (pad.downKey) pad.pos.y += 10;
+			
+			if (pad.pos.y < -50) pad.pos.y = -50;
+			if (pad.pos.y > 750) pad.pos.y = 750;
 		}
 	}
 
 	private nextFrame() {
 		
 		if (this.countdown === 0) {
+			this.updatePaddles();
 			this.updateball();
 		} else {
 			this.countdown -= ((new Date()).getTime() - this.lastUpdate);
@@ -125,10 +139,10 @@ export class Pong {
 
 	public movePaddle(data: MovePaddleDTO): void {
 		let pad: Paddle = this.paddles.get(data.clientId);
-		if (pad && !pad.isCheatedPosition(data.padPosition)) {
-			pad.newPosition(data.padPosition);
+		if (pad && !pad.isCheatedPosition(data.keyPressed)) {
+			pad.newPosition(data.keyPressed);
 		}
 		
-		this.lobby.sendLobbyState();
+		// this.lobby.sendLobbyState();
 	}
 }

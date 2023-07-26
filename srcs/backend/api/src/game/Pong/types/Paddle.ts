@@ -2,6 +2,8 @@ import { Point } from "./Point";
 
 export class Paddle {
 	public pos: Point;
+	public upKey: Boolean = false;
+	public downKey: Boolean = false;
 	public readonly width: number;
 	public readonly height: number;
 
@@ -15,19 +17,30 @@ export class Paddle {
 		else if (side === "away") this.pos = new Point(760 - this.width, 350);
 	}
 
-	public isCheatedPosition(pos: Point): boolean {
+	public isCheatedPosition(key: string): boolean {
 		const now = (new Date()).getTime();
-		
 
-		if (pos.x !== this.pos.x || now - this.lastUpdate < 10 || Math.abs(pos.y - this.pos.y) > 40)
+		if (now - this.lastUpdate < 10 || (key !== "UpPress" && key !== "DownPress" && key !== "UpRelease" && key !== "DownRelease"))
 			return (true);
 		return (false);
 	}
 
-	public newPosition(pos: Point): void {
+	public newPosition(key: string): void {
 		this.lastUpdate = (new Date()).getTime();
-		if (pos.y < -50) pos.y = -50;
-		else if (pos.y > 750) pos.y = 750;
-		this.pos = pos;
+		switch(key)
+		{
+			case "UpPress": 
+				this.upKey = true;
+				break;
+			case "UpRelease":
+				this.upKey = false;
+				break;
+			case "DownPress":
+				this.downKey = true;
+				break;
+			case "DownRelease":
+				this.downKey = false;
+				break;
+		}
 	}
 }

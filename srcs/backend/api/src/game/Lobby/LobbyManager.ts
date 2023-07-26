@@ -4,7 +4,9 @@ import { Lobby } from "./Lobby";
 import { AuthenticatedSocket } from "../types/AuthenticatedSocket";
 import { WebSocketServer, WsException } from "@nestjs/websockets";
 import { Injectable } from "@nestjs/common";
-import { Interval } from "@nestjs/schedule";
+import { Cron, Interval } from "@nestjs/schedule";
+import { ServerResponseDTO } from "../types/ServerResponseDTO";
+import { ServerEvents } from "../types/ServerEvents";
 
 @Injectable()
 export class LobbyManager {
@@ -58,6 +60,23 @@ export class LobbyManager {
 		for(let lobby of this.lobbies.values()) {
 			if (lobby.game.hasStarted)
 				lobby.game.loop();
+		}
+	}
+
+	@Cron('*/10 * * * *')
+	private cleanLobbies(): void {
+		for(let [id, lobby] of this.lobbies) {
+			const now = (new Date()).getTime();
+			const lobbyLifetime = now - lobby.startedAt;
+			
+			if (lobby.game.hasFinished || !lobby.clients.size || lobbyLifetime > 1000 * 60 * 12)
+			{
+				lobby.sendEvent<ServerResponseDTO[ServerEvents.GameMessage]>(ServerEvents.GameMessage, {
+					message: 'Game timed out',
+					mode: lobby.maxClients === 1 ? 'PvE' : 'PvP',
+				});
+				this.lobbies.delete(id);
+			}
 		}
 	}
 }

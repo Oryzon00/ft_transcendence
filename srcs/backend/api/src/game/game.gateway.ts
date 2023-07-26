@@ -16,6 +16,7 @@ import { AuthenticatedSocket } from "./types/AuthenticatedSocket";
 import { LobbyCreateDto, LobbyJoinDto } from "./Lobby/lobby.types";
 import { ServerResponseDTO } from "./types/ServerResponseDTO";
 import { MovePaddleDTO } from "./Pong/MovePaddleDTO";
+import { Cron } from "@nestjs/schedule";
 
 @WebSocketGateway({
 	cors: {
@@ -50,10 +51,7 @@ export class GameGateway
 	}
 
 	@SubscribeMessage(ClientEvents.LobbyCreate)
-	onLobbyCreate(
-		client: AuthenticatedSocket,
-		data: LobbyCreateDto
-	): WsResponse<ServerResponseDTO[ServerEvents.GameMessage]> {
+	onLobbyCreate( client: AuthenticatedSocket, data: LobbyCreateDto ): WsResponse<ServerResponseDTO[ServerEvents.GameMessage]> {
 		let lobby = this.lobbyManager.findLobby(client.id, data.mode);
 		if (lobby) {
 			this.lobbyManager.joinLobby(client, lobby.Id);

@@ -31,6 +31,7 @@ function Pong() {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const [GameState] = useState<GameInfo>(new GameInfo());
 	const clientId: string | null = sm.getSocketId();
+	let keyPressed: Array<Boolean> = new Array<Boolean>(false, false);
 
 	function readServerPayload(data: ServerPayload[ServerEvents.LobbyState]) {
 		if (GameState) {
@@ -130,35 +131,54 @@ function Pong() {
 	}
 
 	useEffect(() => {
-		function onMove(pos: Point) {
+		function onMove(keyEvent: string) {
 			if (GameState && GameState.myPad)
 				sm.emit({
 					event: ClientEvents.MovePaddle,
 					data: {
 						clientId: sm.getSocketId(),
-						padPosition: pos
+						keyPressed: keyEvent
 					}
 				});
 		}
 
 		function keyPressHandler(e: KeyboardEvent) {
 			if (e.key === "Up" || e.key === "ArrowUp") {
-				if (GameState && GameState.myPad)
-					onMove({ x: GameState.myPad.x, y: GameState.myPad.y - 20 });
+				if (GameState && GameState.myPad && !keyPressed[0])
+				{
+					keyPressed[0] = true;
+					onMove("UpPress");
+				}
 				e.preventDefault();
 			}
 			if (e.key === "Down" || e.key === "ArrowDown") {
-				if (GameState && GameState.myPad)
-					onMove({ x: GameState.myPad.x, y: GameState.myPad.y + 20 });
+				if (GameState && GameState.myPad && !keyPressed[1])
+				{
+					keyPressed[1] = true;
+					onMove("DownPress");
+				}
 				e.preventDefault();
 			}
 		}
 
-		// function keyReleaseHandler(e: KeyboardEvent) {
-		// 	if (e.key === "Up" || e.key === "ArrowUp") return;
-		// 	if (e.key === "Down" || e.key === "ArrowDown") return;
-
-		// }
+		function keyReleaseHandler(e: KeyboardEvent) {
+			if (e.key === "Up" || e.key === "ArrowUp") {
+				if (GameState && GameState.myPad && keyPressed[0])
+				{
+					keyPressed[0] = false;
+					onMove("UpRelease");
+				}
+				e.preventDefault();
+			}
+			if (e.key === "Down" || e.key === "ArrowDown") {
+				if (GameState && GameState.myPad && keyPressed[1])
+				{
+					keyPressed[1] = false;
+					onMove("DownRelease");
+				}
+				e.preventDefault();
+			}
+		}
 
 		const onLobbyState: Listener<ServerPayload[ServerEvents.LobbyState]> = (
 			data: ServerPayload[ServerEvents.LobbyState]
@@ -174,12 +194,12 @@ function Pong() {
 
 		sm.addListener(ServerEvents.LobbyState, onLobbyState);
 		window.addEventListener("keydown", keyPressHandler, false);
-		// window.addEventListener("keyup", keyReleaseHandler, false);
+		window.addEventListener("keyup", keyReleaseHandler, false);
 
 		return () => {
 			sm.removeListener(ServerEvents.LobbyState, onLobbyState);
 			window.removeEventListener("keydown", keyPressHandler);
-			// window.removeEventListener("keyup", keyReleaseHandler);
+			window.removeEventListener("keyup", keyReleaseHandler);
 		};
 	}, []);
 
