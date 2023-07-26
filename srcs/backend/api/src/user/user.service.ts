@@ -9,8 +9,8 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { Prisma, User } from "@prisma/client";
 import { UserSafeDTO } from "./dto";
 import * as fs from "fs";
-import {Buffer} from 'buffer';
-import {join} from 'path';
+import { Buffer } from "buffer";
+import { join } from "path";
 import * as process from "process";
 
 @Injectable()
@@ -40,7 +40,7 @@ export class UserService {
 	): Promise<{ image: string }> {
 
 		let buf = Buffer.from(base64Data.split(',')[1], 'base64');
-		const oldPath = user.image.split('http://localhost:3000/images/')[1]
+		const oldPath = user.image.split(`http://${process.env.SERVER_HOSTNAME}:3000/images/`)[1]
 		if (oldPath && oldPath.split('.')[1] != type.split('/')[1])
 			fs.unlink(join(process.cwd(), 'images', oldPath), (err) => {});
 
@@ -53,7 +53,7 @@ export class UserService {
 			});
 		})
 			.then (() => {
-				return ("http://localhost:3000/images/" + user.id + "." + type.split('/')[1]) // Possibilité de mettre le path dans le resolve au lieu de .then
+				return (`http://${process.env.SERVER_HOSTNAME}:3000/images/` + user.id + "." + type.split('/')[1]) // Possibilité de mettre le path dans le resolve au lieu de .then
 		})
 		 return (imagePath.then( async (val) => {
 			 await this.prisma.user.update({
@@ -86,7 +86,6 @@ export class UserService {
 		} catch (error) {
 			throw new UnauthorizedException();
 		}
-		
 	}
 
 	async findUser(username: string): Promise<UserSafeDTO> {
