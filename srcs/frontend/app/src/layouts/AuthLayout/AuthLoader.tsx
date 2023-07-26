@@ -1,6 +1,5 @@
 import apiAddress from "../../utils/apiAddress.ts";
-import { notifyError } from "../../utils/notify.ts";
-
+import { notifyError, notifyWarning } from "../../utils/notify.ts";
 
 function paramsToJSON(iterator: IterableIterator<[string, string]>) {
 	const result: Record<string, string> = {};
@@ -39,6 +38,8 @@ export async function authLoader() {
 		})
 		.catch(function (error) {
 			notifyError(error.message);
+			notifyWarning("42 token may be expired");
+			return null;
 		});
 
 	return data;

@@ -1,20 +1,58 @@
+import { NavLink } from "react-router-dom";
+import { UserMenu } from "./UserMenu";
+import { SearchUserInput } from "./SearchUserInput";
+
 export function NavBar() {
+	let activeClassName =
+		"text-amber-800 text-lg font-semibold px-5 py-2 rounded-md";
+	let normalClassName =
+		"text-white text-lg font-semibold hover:bg-amber-800 px-5 py-2 rounded-md";
+
 	return (
-		<nav>
-			<a href="/">HOME</a>
-			<ul>
-				<li>
-					<a href="/play">PLAY</a>
-				</li>
-				<li>
-					<a href="/leaderboard">LEADERBOARD</a>
-				</li>
-				<li>
-					<a href="/chat">CHAT</a>
-				</li>
-			</ul>
-			<div>SEARCHBAR</div>
-			<div>USER PROFILE NAV BAR</div>
+		<nav className="">
+			<div className="max-w-full  mx-auto px-4">
+				<div className="flex items-center justify-between h-20 ">
+					<div className="flex">
+						<NavLink
+							to="/home"
+							className={({ isActive }) =>
+								isActive ? activeClassName : normalClassName
+							}
+						>
+							HOME
+						</NavLink>
+					</div>
+					<div className="flex">
+						<NavLink
+							to="/play"
+							className={({ isActive }) =>
+								isActive ? activeClassName : normalClassName
+							}
+						>
+							PLAY
+						</NavLink>
+						<NavLink
+							to="/leaderboard"
+							className={({ isActive }) =>
+								isActive ? activeClassName : normalClassName
+							}
+						>
+							LEADERBOARD
+						</NavLink>
+						<NavLink
+							to="/chat"
+							className={({ isActive }) =>
+								isActive ? activeClassName : normalClassName
+							}
+						>
+							CHAT
+						</NavLink>
+					</div>
+
+					<SearchUserInput />
+					<UserMenu />
+				</div>
+			</div>
 		</nav>
 	);
 }
