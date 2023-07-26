@@ -3,23 +3,18 @@ import ButtonSettings from "../../components/Home/Button2FA.tsx";
 import User from "../../components/Home/User.tsx";
 import ProfileButton from "../../components/Home/ProfileButton.tsx";
 import "./HomeLayout.styles.css";
-import { cookieProtection } from "../../utils/cookieProtection.ts";
 
 function HomeLayout() {
-	cookieProtection();
 
 	return (
 		<div className="home-root">
-			<div className="profile-button">
-				<ProfileButton />
-			</div>
 			<Outlet />
 			<div className="main-site">
 				<div>Welcome home !</div>
 				<User></User>
 				<ButtonSettings />
-			</div>
-			<div />
+				<ProfileButton />
+				</div>
 		</div>
 	);
 }

@@ -1,8 +1,7 @@
-import * as React from "react";
 import * as ReactDOM from "react-dom/client";
-import "./index.css";
+import "./style/tailwind.css";
+import "./style/index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import AuthError from "./pages/AuthPage/AuthError.tsx";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage.tsx";
 import SettingsPage from "./pages/SettingsPage/SettingsPage.tsx";
 import HomePage from "./pages/HomePage/HomePage.tsx";
@@ -15,6 +14,10 @@ import { authLoader } from "./layouts/AuthLayout/AuthLoader.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import GamePage from "./pages/GamePage/GamePage.tsx";
+import { PlayPage } from "./pages/PlayPage/PlayPage.tsx";
+import { LeaderboardPage } from "./pages/LeaderboardPage/LeaderboardPage.tsx";
+import { ChatPage } from "./pages/ChatPage/ChatPage.tsx";
+import { NavBarPage } from "./pages/NavBarPage/NavBarPage.tsx";
 
 const router = createBrowserRouter([
 	{
@@ -23,41 +26,51 @@ const router = createBrowserRouter([
 		errorElement: <NotFoundPage />
 	},
 	{
-		path: "/home",
-		element: <HomePage />,
-		children: [
-			{
-				path: "/home/profile/",
-				element: <ProfileLayout />,
-				loader: ProfileLayoutLoader
-			}
-		]
-	},
-	{
 		path: "/auth",
 		element: <AuthPage />,
 		loader: authLoader,
-		errorElement: <AuthError />
+		errorElement: <NotFoundPage />
 	},
 	{
-		path: "/settings",
-		element: <SettingsPage />
-	},
-	{
-		path: "/play",
-		element: <GamePage />
-	},
-	{
-		path: "/test/settingsCSS",
-		element: <OTPLoginPopup />
+		element: <NavBarPage />,
+		children: [
+			{
+				path: "/home",
+				element: <HomePage />,
+			},
+			{
+				path: "/settings",
+				element: <SettingsPage />
+			},
+			{
+				path: "/test/settingsCSS",
+				element: <OTPLoginPopup />
+			},
+			{
+				path: "/play",
+				element: <GamePage />
+			},
+			{
+				path: "/leaderboard",
+				element: <LeaderboardPage />
+			},
+			{
+				path: "/chat",
+				element: <ChatPage />
+			},
+			{
+				path: "/profile/:username?",
+				element: <ProfileLayout />,
+				loader: ProfileLayoutLoader,
+				errorElement: <NotFoundPage />
+			},
+		]
 	}
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-	// <React.StrictMode>
 	<>
 		<ToastContainer />
-		<RouterProvider router={router} />
+		<RouterProvider router={router}></RouterProvider>
 	</>
-	// </React.StrictMode>
 );

@@ -1,4 +1,5 @@
 import {
+	BadGatewayException,
 	ForbiddenException,
 	Injectable,
 	InternalServerErrorException,
@@ -91,7 +92,7 @@ export class AuthService {
 				client_id: process.env.API42_UID,
 				client_secret: process.env.API42_SECRET,
 				code: code,
-				redirect_uri: "http://localhost:8000/auth"
+				redirect_uri: process.env.REDIRECT_URI
 			}
 		};
 		try {
@@ -110,7 +111,8 @@ export class AuthService {
 			);
 			return responseData;
 		} catch (error) {
-			throw new UnauthorizedException();
+			console.log(error.message);
+			throw new BadGatewayException();
 		}
 	}
 
