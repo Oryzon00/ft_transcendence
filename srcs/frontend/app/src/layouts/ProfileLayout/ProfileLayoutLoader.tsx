@@ -1,22 +1,24 @@
 import getJwtTokenFromCookie from "../../utils/getJWT.ts";
 import { notifyError } from "../../utils/notify.ts";
 
-export function ProfileLayoutLoader() {
-	const url = "http://localhost:3000/user/me";
-	const data = fetch(url, {
+export async function ProfileLayoutLoader({ params }:any) {
+	let url;
+	if (params.username === undefined)
+		url = `http://${window.location.hostname}:3000/user/me`;
+	else
+		url = `http://${window.location.hostname}:3000/user/find?username=` + params.username;
+
+	const response = await fetch(url, {
 		method: "GET",
 		headers: {
 			Authorization: "Bearer " + getJwtTokenFromCookie()
 		}
-	})
-		.then((response) => {
-			if (!response.ok) {
-				throw new Error(
-					"Request failed with status " + response.status
-				);
-			}
-			return response.json();
-		})
+	});
+	if (!response.ok) {
+		notifyError("User " + response.statusText);
+		throw new Response("User " + response.statusText, { status: response.status });
+	}
+	const data = await response.json()
 		.then((data) => {
 			return data;
 		})

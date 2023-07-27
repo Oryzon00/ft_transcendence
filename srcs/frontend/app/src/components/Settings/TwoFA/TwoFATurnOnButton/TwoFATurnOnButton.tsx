@@ -5,7 +5,8 @@ import OtpInput from "react-otp-input";
 import Popup from "reactjs-popup";
 import "./TwoFATurnOnButton.styles.css";
 import { UserContext } from "../../../../utils/contexts/userContext";
-import { notifyError } from "../../../../utils/notify";
+import { notifyError, notifyInfo } from "../../../../utils/notify";
+import { throwErrorMessage } from "../../../../utils/throwErrorMessage";
 
 function TwoFATurnOnButton() {
 	const [open, setOpen] = useState(false);
@@ -33,29 +34,25 @@ function TwoFATurnOnButton() {
 			})
 		})
 			.then(function (response: Response) {
-				if (!response.ok)
-					throw new Error(
-						"Request failed with status " + response.status
-					);
+				if (!response.ok) throwErrorMessage(response);
 				return response.json();
 			})
-			.then(function (data) {
-				if (data.status === true) {
-					userHook.setUser({
-						...userHook.user,
-						is2FAOn: true
-					});
-				}
+			.then(function () {
+				closeModal();
+				userHook.setUser({
+					...userHook.user,
+					is2FAOn: true
+				});
+				notifyInfo("2FA has been turned on");
 			})
-			.catch(function (error: Error) {
-				notifyError(error.message);
+			.catch(function () {
+				notifyError("Incorrect OTP");
 			});
 	}
 
 	if (OTP.length == 6) {
 		turnOn2FA(OTP);
-		closeModal();
-		// appel deux fois, pourquoi?
+		setOTP("");
 	}
 
 	return (

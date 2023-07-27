@@ -1,20 +1,24 @@
-import * as React from "react";
 import * as ReactDOM from "react-dom/client";
-import "./index.css";
+import "./style/tailwind.css";
+import "./style/index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import AuthError from "./views/AuthPage/AuthError.tsx";
-import NotFoundPage from "./views/NotFoundPage/NotFoundPage.tsx";
-import SettingsPage from "./views/SettingsPage/SettingsPage.tsx";
-import HomePage from "./views/HomePage/HomePage.tsx";
+import NotFoundPage from "./pages/NotFoundPage/NotFoundPage.tsx";
+import SettingsPage from "./pages/SettingsPage/SettingsPage.tsx";
+import HomePage from "./pages/HomePage/HomePage.tsx";
 import { ProfileLayoutLoader } from "./layouts/ProfileLayout/ProfileLayoutLoader.tsx";
 import ProfileLayout from "./layouts/ProfileLayout/ProfileLayout.tsx";
-import OTPLoginPopup from "./views/OTPPopup/OTPLoginPopup.tsx";
-import LoginPage from "./views/LoginPage/LoginPage.tsx";
-import AuthPage from "./views/AuthPage/AuthPage.tsx";
+import OTPLoginPopup from "./pages/OTPPopup/OTPLoginPopup.tsx";
+import LoginPage from "./pages/LoginPage/LoginPage.tsx";
+import AuthPage from "./pages/AuthPage/AuthPage.tsx";
 import { authLoader } from "./layouts/AuthLayout/AuthLoader.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Chat from "./views/ChatPage/chat.tsx"
+import GamePage from "./pages/GamePage/GamePage.tsx";
+import { PlayPage } from "./pages/PlayPage/PlayPage.tsx";
+import { LeaderboardPage } from "./pages/LeaderboardPage/LeaderboardPage.tsx";
+import { ChatPage } from "./pages/ChatPage/ChatPage.tsx";
+import { NavBarPage } from "./pages/NavBarPage/NavBarPage.tsx";
 
 const router = createBrowserRouter([
 	{
@@ -23,51 +27,52 @@ const router = createBrowserRouter([
 		errorElement: <NotFoundPage />
 	},
 	{
-		path: "/home",
-		element: <HomePage />, // HomePage != Homepage
-		children: [
-			{
-				path: "/home/profile/",
-				element: <ProfileLayout />,
-				loader: ProfileLayoutLoader
-			}
-		]
-	},
-	{
 		path: "/auth",
 		element: <AuthPage />,
 		loader: authLoader,
-		errorElement: <AuthError />
+		errorElement: <NotFoundPage />
 	},
 	{
-		path: "/settings",
-		element: <SettingsPage />
-	},
-	{
-		path: "/test/settingsCSS",
-		element: <OTPLoginPopup />
-	},
-	{
-		path: "/chat",
-		element: <Chat />,
-	},
-	/*
-	{
-		path: "/chat/channel/settings",
-		element: <SettingsChannel/>
+		element: <NavBarPage />,
+		children: [
+			{
+				path: "/home",
+				element: <HomePage />,
+			},
+			{
+				path: "/settings",
+				element: <SettingsPage />
+			},
+			{
+				path: "/test/settingsCSS",
+				element: <OTPLoginPopup />
+			},
+			{
+				path: "/play",
+				element: <GamePage />
+			},
+			{
+				path: "/leaderboard",
+				element: <LeaderboardPage />
+			},
+			{
+				path: "/chat",
+				element: <ChatPage />
+			},
+			{
+				path: "/profile/:username?",
+				element: <ProfileLayout />,
+				loader: ProfileLayoutLoader,
+				errorElement: <NotFoundPage />
+			},
+		]
 	}
-	{
-		path: "/chat/channel/invite"
-	}
-	*/
 
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-	// <React.StrictMode>
 	<>
 		<ToastContainer />
-		<RouterProvider router={router} />
+		<RouterProvider router={router}></RouterProvider>
 	</>
-	// </React.StrictMode>
 );

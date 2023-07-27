@@ -1,4 +1,6 @@
 import {
+	BadGatewayException,
+	ForbiddenException,
 	Injectable,
 	InternalServerErrorException,
 	UnauthorizedException
@@ -28,23 +30,26 @@ export class AuthService {
 	/* 2FA */
 
 	async generate2FASecretQRCode(user: User): Promise<string> {
-		const secret2FA = authenticator.generateSecret();
-		try {
-			await this.prisma.user.update({
-				where: {
-					id: user.id
-				},
-				data: {
-					secret2FA: secret2FA
-				}
-			});
-		} catch {
-			throw new InternalServerErrorException();
+		if (!user.secret2FA) {
+			const secret2FA = authenticator.generateSecret();
+			try {
+				await this.prisma.user.update({
+					where: {
+						id: user.id
+					},
+					data: {
+						secret2FA: secret2FA
+					}
+				});
+			} catch {
+				throw new ForbiddenException();
+			}
 		}
+
 		const otpAuthUrl = authenticator.keyuri(
 			user.name,
 			"Transcendance",
-			secret2FA
+			user.secret2FA
 		);
 		return otpAuthUrl;
 	}
@@ -71,7 +76,7 @@ export class AuthService {
 				}
 			});
 		} catch {
-			throw new InternalServerErrorException();
+			throw new ForbiddenException();
 		}
 		return status;
 	}
@@ -87,7 +92,7 @@ export class AuthService {
 				client_id: process.env.API42_UID,
 				client_secret: process.env.API42_SECRET,
 				code: code,
-				redirect_uri: "http://localhost:8000/auth"
+				redirect_uri: process.env.REDIRECT_URI
 			}
 		};
 		try {
@@ -106,7 +111,8 @@ export class AuthService {
 			);
 			return responseData;
 		} catch (error) {
-			throw new UnauthorizedException();
+			console.log(error.message);
+			throw new BadGatewayException();
 		}
 	}
 

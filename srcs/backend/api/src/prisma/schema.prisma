@@ -111,7 +111,7 @@ model Member {
 model Ban {
   id String @id @unique @default(uuid())
 
-  channelId String
+ channelId String
   userId    Int
   channel   Channel @relation("bans", fields: [channelId], references: [id])
   user      User    @relation("bans", fields: [userId], references: [id])

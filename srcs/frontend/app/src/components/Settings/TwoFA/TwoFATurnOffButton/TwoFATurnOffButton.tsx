@@ -2,13 +2,12 @@ import { useContext } from "react";
 import apiAddress from "../../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../../utils/getJWT";
 import { UserContext } from "../../../../utils/contexts/userContext";
-import { notifyError } from "../../../../utils/notify";
+import { notifyError, notifyInfo } from "../../../../utils/notify";
+import { throwErrorMessage } from "../../../../utils/throwErrorMessage";
 
 function TwoFATurnOffButton() {
 	const userHook = useContext(UserContext);
-
 	function turnOff2FA() {
-		// notifyError("test");
 		const url = apiAddress + "/auth/2FA/turn-off";
 		fetch(url, {
 			method: "PATCH",
@@ -19,19 +18,15 @@ function TwoFATurnOffButton() {
 			body: JSON.stringify({})
 		})
 			.then(function (response) {
-				if (!response.ok)
-					throw new Error(
-						"Request failed with status " + response.status
-					);
+				if (!response.ok) throwErrorMessage(response);
 				return response.json();
 			})
-			.then(function (data) {
-				if (data.status === false) {
-					userHook.setUser({
-						...userHook.user,
-						is2FAOn: false
-					});
-				}
+			.then(function () {
+				userHook.setUser({
+					...userHook.user,
+					is2FAOn: false
+				});
+				notifyInfo("2FA has been turned off");
 			})
 			.catch(function (error) {
 				notifyError(error.message);

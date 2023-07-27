@@ -3,6 +3,7 @@ import "./LoginButton.styles.css";
 import getJwtTokenFromCookie from "../../utils/getJWT.ts";
 import { useNavigate } from "react-router";
 import { useEffect } from "react";
+import { checkUser } from "../../utils/cookieProtection.ts";
 
 function LoginButton() {
 	const navigate = useNavigate();
@@ -11,9 +12,12 @@ function LoginButton() {
 		self.location.href = api42Address;
 	}
 
-	useEffect (() => {
-		if (getJwtTokenFromCookie())
-			setTimeout(navigate, 500, "/home");
+	useEffect(() => { 
+		async () => {
+			if (getJwtTokenFromCookie() || await checkUser()) {
+				setTimeout(navigate, 500, "/home");
+			}
+		}
 	});
 
 	return (

@@ -2,6 +2,7 @@ import { useState } from "react";
 import apiAddress from "../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../utils/getJWT";
 import { notifyError } from "../../utils/notify";
+import { throwErrorMessage } from "../../utils/throwErrorMessage";
 
 function User() {
 	const [userInfo, setUserInfo] = useState("No user info");
@@ -14,11 +15,7 @@ function User() {
 			}
 		})
 			.then(function (response) {
-				if (!response.ok) {
-					throw new Error(
-						"Request failed with status " + response.status
-					);
-				}
+				if (!response.ok) throwErrorMessage(response);
 				return response.json();
 			})
 			.then(function (data) {

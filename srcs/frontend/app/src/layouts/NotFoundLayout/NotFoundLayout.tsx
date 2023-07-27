@@ -1,14 +1,15 @@
 import { useRouteError } from "react-router-dom";
 import ButtonToLogin from "../../components/NotFound/ButtonToLogin.tsx";
 
-function NotFoundLayout () {
-	const error:any = useRouteError(); // A changer juste webstorm qui clc, hint : (useUnknownInCatchVariables: true)
+function NotFoundLayout() {
+	// A changer juste webstorm qui clc, hint : (useUnknownInCatchVariables: true)
+	const error: any = useRouteError();
 
 	return (
 		<>
 			<div>Error</div>
 			<p>
-				<i>{error.statusText || error.message}</i>
+				<i>{error.status} ({error.data})</i>
 			</p>
 			<ButtonToLogin />
 		</>
