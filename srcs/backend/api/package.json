@@ -28,11 +28,8 @@
     "@nestjs/passport": "^9.0.3",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/platform-socket.io": "^9.4.3",
-<<<<<<< HEAD
-=======
     "@nestjs/schedule": "^3.0.1",
     "@nestjs/serve-static": "^4.0.0",
->>>>>>> origin/main
     "@nestjs/websockets": "^9.4.3",
     "@prisma/client": "^4.14.0",
     "argon2": "^0.30.3",
