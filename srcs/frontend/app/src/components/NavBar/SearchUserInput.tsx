@@ -17,9 +17,8 @@ export function SearchUserInput() {
 		<input
 			className="px-3 py-2 rounded-md"
 			type="search"
-			id="mySearch"
-			name="q"
 			placeholder="Search for a user..."
+			value={search}
 			onKeyDown={handleEnterKey}
 			onChange={handleSearch}
 		></input>
