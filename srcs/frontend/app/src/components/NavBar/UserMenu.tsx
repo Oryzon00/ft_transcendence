@@ -17,15 +17,15 @@ export function UserMenu() {
 				<div className="flex flex-col">
 					<Link
 						to="/profile"
-						className="text-white text-md font-medium px-3 rounded-md"
+						className="text-white text-md font-semibold px-3 rounded-md"
 					>
 						{userHook.user.name}
 					</Link>
 					<Link
 						to="/leaderboard"
-						className="text-gray-400 text-md font-medium px-3 rounded-md"
+						className="text-gray-400 text-md font-semibold px-3 rounded-md"
 					>
-						rank:{userHook.user.rank}
+						rank: {userHook.user.rank}
 					</Link>
 				</div>
 				<Link
