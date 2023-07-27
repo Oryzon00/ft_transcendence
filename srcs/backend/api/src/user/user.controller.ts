@@ -19,7 +19,7 @@ export class UserController {
 		@GetUser() user: User,
 		@Body() body
 	): Promise<{ image: string }> {
-		return await this.userService.updateUserImage(user, body.image);
+		return await this.userService.updateUserImage(user, body.imageType, body.base64Data);
 	}
 
 	@Patch("update/name")

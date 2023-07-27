@@ -1,6 +1,6 @@
 import ChatLayout from "../../layouts/ChatLayout/ChatLayout"
 
-function Chat() {
+function ChatPage() {
 	return <ChatLayout />;
 }
-export default Chat;
+export default ChatPage;

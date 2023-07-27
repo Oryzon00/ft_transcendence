@@ -2,18 +2,19 @@ import { useContext, useState } from "react";
 import { UserContext } from "../../../utils/contexts/userContext.tsx";
 import apiAddress from "../../../utils/apiAddress.ts";
 import getJwtTokenFromCookie from "../../../utils/getJWT.ts";
-import { notifyError } from "../../../utils/notify.ts";
+import { notifyError, notifyInfo } from "../../../utils/notify.ts";
+import { throwErrorMessage } from "../../../utils/throwErrorMessage.ts";
 
 function UpdateUsernameButton() {
 	const userHook = useContext(UserContext);
-	if (!userHook) return null;
+	if (!userHook.user) return null;
 
 	const [message, setMessage] = useState("");
 	const handleChange = (event: any) => {
 		setMessage(event.target.value);
 	};
 
-	function lol(mymessage: string) {
+	function sendToBack(mymessage: string) {
 		const url = apiAddress + "/user/update/name";
 		fetch(url, {
 			method: "PATCH",
@@ -26,10 +27,7 @@ function UpdateUsernameButton() {
 			})
 		})
 			.then(function (response) {
-				if (!response.ok)
-					throw new Error(
-						"Request failed with status " + response.status
-					);
+				if (!response.ok) throwErrorMessage(response);
 				return response.json();
 			})
 			.then(function (data) {
@@ -37,14 +35,15 @@ function UpdateUsernameButton() {
 					...userHook.user,
 					name: data.name
 				});
+				notifyInfo(`Your username has been changed to ${data.name}`);
 			})
-			.catch(function (error) {
-				notifyError(error.message);
+			.catch(function () {
+				notifyError(`Username ${mymessage} is already taken`);
 			});
 	}
 	const handleClick = (event: any) => {
 		if (event.key == "Enter") {
-			lol(message);
+			sendToBack(message);
 		}
 	};
 

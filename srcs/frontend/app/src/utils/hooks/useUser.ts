@@ -4,6 +4,7 @@ import { UserHook } from "./TuseUser";
 import apiAddress from "../apiAddress";
 import getJwtTokenFromCookie from "../getJWT";
 import { notifyError } from "../notify";
+import { throwErrorMessage } from "../throwErrorMessage";
 
 async function getUserAPI(): Promise<User> {
 	const url = apiAddress + "/user/me";
@@ -14,11 +15,7 @@ async function getUserAPI(): Promise<User> {
 		}
 	})
 		.then(function (response) {
-			if (!response.ok) {
-				throw new Error(
-					"Request failed with status " + response.status
-				);
-			}
+			if (!response.ok) throwErrorMessage(response);
 			return response.json();
 		})
 		.then(function (data) {

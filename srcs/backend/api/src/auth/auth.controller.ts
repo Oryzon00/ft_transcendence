@@ -1,4 +1,11 @@
-import { Body, Controller, Post, Patch, UseGuards, Get } from "@nestjs/common";
+import {
+	Body,
+	Controller,
+	Post,
+	Patch,
+	UseGuards,
+	BadGatewayException
+} from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { TokenDto } from "./dto/token.dto";
 import { UnauthorizedException } from "@nestjs/common";
@@ -20,13 +27,12 @@ export class AuthController {
 		if (body.error || !body.code) throw new UnauthorizedException();
 
 		const token42 = await this.authService.getToken42(body.code);
-		if (!token42) throw new UnauthorizedException();
+		if (!token42) throw new BadGatewayException();
 
 		const userData42 = await this.authService.getUserData42(token42);
-		if (!userData42) throw new UnauthorizedException();
+		if (!userData42) throw new BadGatewayException();
 
 		const user = await this.authService.login(userData42);
-
 		if (user.is2FAOn) {
 			return this.userService.getUserSafe(user);
 		} else {
@@ -37,7 +43,10 @@ export class AuthController {
 	@Post("2FA/verify")
 	async verifyTOTP(@Body() body): Promise<TokenDto> {
 		const trueUser = await this.userService.getTrueUser(body.user);
-		const isOTPValid = this.authService.verifyTOTPValid(trueUser, body.OTP);
+		const isOTPValid = await this.authService.verifyTOTPValid(
+			trueUser,
+			body.OTP
+		);
 		if (!isOTPValid) throw new UnauthorizedException();
 		return await this.authService.signToken(body.user);
 	}
@@ -59,7 +68,11 @@ export class AuthController {
 		@GetUser() user: User,
 		@Body() body
 	): Promise<{ status: boolean }> {
-		const isTOTPValid = await this.authService.verifyTOTPValid(user, body.TOTP);
+		if (!user.secret2FA) throw new UnauthorizedException();
+		const isTOTPValid = await this.authService.verifyTOTPValid(
+			user,
+			body.TOTP
+		);
 		if (!isTOTPValid) throw new UnauthorizedException();
 		const status = await this.authService.turnOnOff2FA(user, true);
 

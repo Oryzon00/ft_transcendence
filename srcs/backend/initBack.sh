@@ -1,3 +1,4 @@
+npm install --save @nestjs/platform-socket.io @nestjs/websockets
 rm -rf dist/ nodes_modules/
 npm install
 

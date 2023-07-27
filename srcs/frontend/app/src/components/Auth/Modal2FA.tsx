@@ -4,20 +4,20 @@ import getJwtTokenFromCookie from "../../utils/getJWT.ts";
 import Popup from "reactjs-popup";
 import OtpInput from "react-otp-input";
 import { notifyError } from "../../utils/notify.ts";
+import { Modal2FAProps } from "./TModal2FA";
+import { throwErrorMessage } from "../../utils/throwErrorMessage.ts";
+import { useNavigate } from "react-router";
 
-function Modal2FA({ user }: any) {
-
-	const [open, setOpen] = useState(true);
+function Modal2FA({ user }: Modal2FAProps) {
 	const [OTP, setOTP] = useState("");
+	const navigate = useNavigate();
+	
 	if (OTP.length == 6) {
 		verifyOTPBack();
-		console.log()
-		setTimeout(closeModal, 5000);
-		// appel deux fois, pourquoi?
+		clearModal();
 	}
 
-	function closeModal() {
-		setOpen(false);
+	function clearModal() {
 		setOTP("");
 	}
 
@@ -36,30 +36,23 @@ function Modal2FA({ user }: any) {
 			})
 		})
 			.then(function (response) {
-				if (!response.ok)
-					throw new Error(
-						"Request failed with status " + response.status
-					);
+				if (!response.ok) throwErrorMessage(response);
 				return response.json();
 			})
 			.then(function (data) {
-				// use naviguate ?
 				document.cookie = `JWT=${data.access_token};Path=/`;
-				self.location.href = "home";
+				navigate("/home", { replace: true });
 			})
-			.catch(function (error) {
-				notifyError(error.message);
+			.catch(function () {
+				notifyError("Incorrect OTP");
 			});
 	}
 
 	return (
 		<>
 			<div>Auth loading</div>
-			<Popup modal nested open={open} onClose={closeModal}>
+			<Popup modal nested open={true} onClose={clearModal}>
 				<div className="modal">
-					<button className="close" onClick={closeModal}>
-						&times;
-					</button>
 					<h2>Enter your OTP</h2>
 					<OtpInput
 						value={OTP}
