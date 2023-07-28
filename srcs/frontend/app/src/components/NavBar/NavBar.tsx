@@ -1,8 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { UserMenu } from "./UserMenu";
 import { SearchUserInput } from "./SearchUserInput";
-import homeLogo from "./../../assets/homeLogo.png";
-import homeLogoActive from "./../../assets/homeLogo-active.png";
+import { HomeNavLink } from "./HomeNavLink";
 
 export function NavBar() {
 	let activeClassName =
@@ -14,30 +13,8 @@ export function NavBar() {
 		<nav className="">
 			<div className="max-w-full  mx-auto px-4">
 				<div className="flex items-center justify-between h-20 ">
-					<div className="flex">
-						<NavLink
-							to="/home"
-							className={({ isActive }) =>
-								isActive ? activeClassName : normalClassName
-							}
-						>
-							{({ isActive }) =>
-								isActive ? (
-									<img
-										className="h-9 w-9"
-										src={homeLogoActive}
-										alt="Home"
-									/>
-								) : (
-									<img
-										className="h-9 w-9"
-										src={homeLogo}
-										alt="HomeActive"
-									/>
-								)
-							}
-						</NavLink>
-					</div>
+						<HomeNavLink />
+
 					<div className="flex">
 						<NavLink
 							to="/play"
