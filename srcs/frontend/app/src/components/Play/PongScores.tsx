@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import './PongScores.styles.css'
 
 interface PongScoresProps {
@@ -7,7 +8,14 @@ interface PongScoresProps {
 }
 
 export function PongScores({side, myScore, OpponentScore}: PongScoresProps) {
-	
+	const [myScoreState, setMyScoreState] = useState<number>();
+	const [myOpponentState, setMyOpponentState] = useState<number>();
+
+	if (myScore !== myScoreState || OpponentScore !== myOpponentState)
+	{
+		setMyOpponentState(OpponentScore);
+		setMyScoreState(myScore);
+	}
 
 	return(
 		<div className="PongScores">

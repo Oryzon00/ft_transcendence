@@ -17,9 +17,9 @@ function PlayVSBotButton() {
 	}
 
 	return (
-		<div>
-			<button onClick={createPvEGame}> Train against bot </button>
-		</div>
+			 <button className="bg-[#242424] hover:bg-[#323232] text-white font-bold py-2 px-4 border-2 border-amber-800" onClick={createPvEGame}>
+    			Practice againt Bot
+  			</button>
 	);
 }
 
