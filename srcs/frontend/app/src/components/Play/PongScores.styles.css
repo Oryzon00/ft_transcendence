@@ -1,0 +1,7 @@
+.PongScores {
+	background-color: rgb(14, 14, 14);
+	display: flex;
+	align-items: center;
+	flex-flow: row wrap;
+	justify-content: space-around;
+}

@@ -9,6 +9,7 @@ import SocketWrapper, {
 	SocketWrapperContext
 } from "../../utils/websockets/SocketWrapper";
 import { Point } from "../../utils/websockets/ServerPayload";
+import { PongScores } from "./PongScores";
 
 class GameInfo {
 	lobbyId: string = "";
@@ -32,6 +33,7 @@ function Pong() {
 	const [GameState] = useState<GameInfo>(new GameInfo());
 	const clientId: string | null = sm.getSocketId();
 	let keyPressed: Array<Boolean> = new Array<Boolean>(false, false);
+	let side: Boolean = false;
 
 	function readServerPayload(data: ServerPayload[ServerEvents.LobbyState]) {
 		if (GameState) {
@@ -59,6 +61,10 @@ function Pong() {
 					GameState.OpponentPad = value.pos;
 				}
 			}
+			if (GameState.myPad && GameState.myPad.x < data.gameWidth / 2)
+				side = false;
+			else
+				side = true;
 		}
 	}
 
@@ -108,24 +114,12 @@ function Pong() {
 				ctx.closePath();
 			}
 
-			function drawScore(ctx: CanvasRenderingContext2D) {
-				ctx.fillStyle = "white";
-				ctx.font = "40px Sans";
-				ctx.textAlign = "center";
-				ctx.fillText(
-					GameState.myScore + "     " + GameState.OpponentScore,
-					800 / 2,
-					50
-				);
-			}
-
 			if (renderCtx) {
 				renderCtx.fillStyle = "#000000";
 				renderCtx.fillRect(0, 0, 800, 800);
 				drawPaddles(renderCtx);
 				drawNet(renderCtx);
 				drawBall(renderCtx);
-				drawScore(renderCtx);
 			}
 		}
 	}
@@ -204,9 +198,12 @@ function Pong() {
 	}, []);
 
 	return (
-		<div>
-			<canvas ref={canvasRef} width={800} height={800} />
-		</div>
+		<>
+			<div>
+				<PongScores side={side} myScore={GameState.myScore ? GameState.myScore : 0} OpponentScore={GameState.OpponentScore ? GameState.OpponentScore : 0}/>
+				<canvas ref={canvasRef} width={800} height={800} />
+			</div>
+		</>
 	);
 }
 
