@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { UserContext } from "../../utils/contexts/userContext";
 import { SettingsNavLink } from "./SettingsNavLink";
 
@@ -7,27 +7,27 @@ export function UserMenu() {
 	const userHook = useContext(UserContext);
 
 	return (
-		<div className="flex items-center space-x-4 px-3 py-2">
-			<Link to="/profile">
+		<div className="flex items-center space-x-4 px-3 py-2 shrink-0">
+			<NavLink to="/profile" className="shrink-0 px-3 ">
 				<img
-					className="h-12 w-12 rounded-full"
+					className="h-12 w-12 rounded-full "
 					src={userHook.user.image}
-					alt="Rounded avatar"
+					alt="Profile Avatar"
 				/>
-			</Link>
+			</NavLink>
 			<div className="flex flex-col">
-				<Link
+				<NavLink
 					to="/profile"
-					className="text-white text-lg font-semibold px-3 rounded-md"
+					className="text-white text-lg font-semibold px-0 rounded-md hover:underline"
 				>
 					{userHook.user.name}
-				</Link>
-				<Link
+				</NavLink>
+				<NavLink
 					to="/leaderboard"
-					className="text-gray-400 text-base font-semibold px-3 rounded-md"
+					className="text-gray-400 text-base font-semibold px-0 rounded-md hover:underline"
 				>
 					rank: {userHook.user.rank}
-				</Link>
+				</NavLink>
 			</div>
 			<SettingsNavLink />
 		</div>
