@@ -5,9 +5,9 @@ import { HomeNavLink } from "./HomeNavLink";
 
 export function NavBar() {
 	let activeClassName =
-		"text-amber-800 text-xl font-bold px-3 py-2 rounded-md";
+		"text-amber-800 text-xl font-bold px-5 py-2 rounded-md";
 	let normalClassName =
-		"text-white text-xl font-bold hover:bg-amber-800 px-3 py-2 rounded-md";
+		"text-white text-xl font-bold hover:bg-amber-800 px-5 py-2 rounded-md";
 
 	return (
 		<nav className="h-20">
@@ -39,9 +39,9 @@ export function NavBar() {
 						>
 							CHAT
 						</NavLink>
+						<SearchUserInput />
 					</div>
 
-					<SearchUserInput />
 					<UserMenu />
 				</div>
 			</div>
