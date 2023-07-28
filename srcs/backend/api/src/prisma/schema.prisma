@@ -6,31 +6,130 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
-model	User {
-	id			Int			@id @default(autoincrement())
-	id42		Int			@unique
- 
-	name		String		@unique
-	gameProfile	GameProfile?
-	image		String
-	rank		Int			@default(1)
-	
-	is2FAOn		Boolean		@default(false)
-	secret2FA	String?
-
-	createdAt	DateTime	@default(now())
-	updatedAt	DateTime	@updatedAt
-	
-	@@map("users")
+enum Status {
+  PUBLIC
+  PRIVATE
+  PROTECT
 }
 
-model	GameProfile {
-	userId		Int		@unique
-	user		User	@relation(fields: [userId], references: [id])
 
-	wins		Int
-	loss		Int	
+model User {
+  id    Int    @id @unique @default(autoincrement())
+  id42  Int    @unique
+  image String
+	rank		Int			@default(1)
 
-	@@map("gameProfile")
+  name        String       @unique
+  gameProfile GameProfile?
+  is2FAOn     Boolean      @default(false)
+  secret2FA   String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  // Connexion from another table
+  members   Member[]
+  friends   User[]   @relation("friends")
+  friendsTo User[]   @relation("friends")
+
+  channelOwner Channel[] @relation("owners")
+  isBan        Ban[]     @relation("bans")
+
+  hasBlock Block[] @relation("block")
+  isBlock  Block[] @relation("blocked")
+
+  message Message[]
+
+  @@map("users")
+}
+
+model Block {
+  isBlock    User @relation("block", fields: [isBlockId], references: [id])
+  isBlockId  Int
+  hasBlock   User @relation("blocked", fields: [hasBlockId], references: [id])
+  hasBlockId Int
+
+  @@id([isBlockId, hasBlockId])
+}
+
+model GameProfile {
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id])
+
+  wins Int
+  loss Int
+
+  @@map("gameProfile")
+}
+
+model Channel {
+  id String @id @unique @default(uuid())
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @default(now()) @updatedAt
+
+  name        String  @unique
+  avatar      String?
+  description String  @default("")
+
+  status Status @default(PUBLIC)
+
+  ownerId Int
+  owner   User @relation("owners", fields: [ownerId], references: [id])
+
+  members Member[]
+
+  bans Ban[] @relation("bans")
+
+  messagesId Int[]
+  Message    Message[]
+
+  password String? @db.VarChar(2000)
+
+  @@map("channels")
+}
+
+model Member {
+  id String @id @unique @default(uuid())
+
+  channelId String
+  userId    Int
+  channel   Channel @relation(fields: [channelId], references: [id])
+  user      User    @relation(fields: [userId], references: [id])
+
+  mute    Boolean   @default(false)
+  muteEnd DateTime?
+
+  isAdmin Boolean @default(false)
+
+  @@map("members")
+}
+
+model Ban {
+  id String @id @unique @default(uuid())
+
+  channelId String
+  userId    Int
+  channel   Channel @relation("bans", fields: [channelId], references: [id])
+  user      User    @relation("bans", fields: [userId], references: [id])
+
+  reason String?
+
+  @@map("bans")
+}
+
+model Message {
+  id String @unique @default(uuid())
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  channel   Channel @relation(fields: [channelId], references: [id])
+  channelId String
+
+  author   User @relation(fields: [authorId], references: [id])
+  authorId Int
+
+  content String @db.VarChar(2000)
+
+  @@map("messages")
 }

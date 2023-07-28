@@ -14,10 +14,9 @@ import { authLoader } from "./layouts/AuthLayout/AuthLoader.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import GamePage from "./pages/GamePage/GamePage.tsx";
-import { PlayPage } from "./pages/PlayPage/PlayPage.tsx";
 import { LeaderboardPage } from "./pages/LeaderboardPage/LeaderboardPage.tsx";
-import { ChatPage } from "./pages/ChatPage/ChatPage.tsx";
 import { NavBarPage } from "./pages/NavBarPage/NavBarPage.tsx";
+import ChatPage from "./pages/ChatPage/ChatPage.tsx";
 
 const router = createBrowserRouter([
 	{

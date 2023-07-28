@@ -1,7 +1,6 @@
-export function ChatPage() {
-	return (
-		<>
-			<h1>Chat Page</h1>
-		</>
-	);
+import ChatLayout from "../../layouts/ChatLayout/ChatLayout"
+
+function ChatPage() {
+	return <ChatLayout />;
 }
+export default ChatPage;
