@@ -15,7 +15,7 @@ export function SearchUserInput() {
 	}
 	return (
 		<input
-			className="px-5 py-2 rounded-md"
+			className="px-2 lg:px-3 py-2 rounded-md lg:w-52 w-28"
 			type="search"
 			placeholder="Search for a user..."
 			value={search}
