@@ -1,23 +1,22 @@
 import { NavLink } from "react-router-dom";
-import homeLogo from "./../../assets/homeLogo.png";
-import homeLogoActive from "./../../assets/homeLogo-active.png";
+import { FiSettings } from "react-icons/fi";
 
-export function HomeNavLink() {
+export function SettingsNavLink() {
 	let activeClassName = "px-3 py-2 rounded-md";
 	let normalClassName = "hover:bg-amber-800 px-3 py-2 rounded-md";
 
 	return (
 		<NavLink
-			to="/home"
+			to="/settings"
 			className={({ isActive }) =>
 				isActive ? activeClassName : normalClassName
 			}
 		>
 			{({ isActive }) =>
 				isActive ? (
-					<img className="h-9 w-9" src={homeLogoActive} alt="Home" />
+					<FiSettings color="#9a3412" className="h-7 w-7" />
 				) : (
-					<img className="h-9 w-9" src={homeLogo} alt="HomeActive" />
+					<FiSettings color="white" className="h-7 w-7" />
 				)
 			}
 		</NavLink>
