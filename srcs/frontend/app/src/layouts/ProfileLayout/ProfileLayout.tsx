@@ -1,6 +1,6 @@
 import './ProfileLayout.styles.css'
 import { useLoaderData } from 'react-router';
-import ProfileButton from "../../components/Home/ProfileButton.tsx";
+
 function ProfileLayout () {
 	const userData :any = useLoaderData();
 		return (
@@ -8,11 +8,20 @@ function ProfileLayout () {
 				<div className='profile-main'>
 					<div className="profile-div">
 						<img src={userData.image}></img>
-						<span>Login : {userData.name} </span>
-						<span>Rank : </span>
-						<a href="/profile/me/history">History</a>
+						<span className='profile-login'>Login : {userData.name} </span>
+						<span className='profile-desc'>short desc</span>
 					</div>
-					<ProfileButton />
+					<div className='profile-rank'>
+						<span>Rank : 1</span>
+						<span>0 / 0</span>
+						<span>WL</span>
+					</div>
+					<div className='profile-leaderboard'>
+						leaderboard
+					</div>
+					<div className='profile-history'>
+						history
+					</div>
 				</div>
 			</>
 		);
