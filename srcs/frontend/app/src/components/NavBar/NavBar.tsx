@@ -1,27 +1,19 @@
 import { NavLink } from "react-router-dom";
 import { UserMenu } from "./UserMenu";
 import { SearchUserInput } from "./SearchUserInput";
+import { HomeNavLink } from "./HomeNavLink";
 
 export function NavBar() {
 	let activeClassName =
-		"text-amber-800 text-lg font-semibold px-5 py-2 rounded-md";
+		"text-amber-800 text-xl font-bold px-5 py-2 rounded-md";
 	let normalClassName =
-		"text-white text-lg font-semibold hover:bg-amber-800 px-5 py-2 rounded-md";
+		"text-white text-xl font-bold hover:bg-amber-800 px-5 py-2 rounded-md";
 
 	return (
-		<nav className="">
+		<nav className="h-20">
 			<div className="max-w-full  mx-auto px-4">
-				<div className="flex items-center justify-between h-20 ">
-					<div className="flex">
-						<NavLink
-							to="/home"
-							className={({ isActive }) =>
-								isActive ? activeClassName : normalClassName
-							}
-						>
-							HOME
-						</NavLink>
-					</div>
+				<div className="flex items-center justify-between h-20">
+					<HomeNavLink />
 					<div className="flex">
 						<NavLink
 							to="/play"
@@ -47,9 +39,9 @@ export function NavBar() {
 						>
 							CHAT
 						</NavLink>
+						<SearchUserInput />
 					</div>
 
-					<SearchUserInput />
 					<UserMenu />
 				</div>
 			</div>

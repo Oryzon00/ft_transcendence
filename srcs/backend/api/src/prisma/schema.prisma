@@ -9,22 +9,21 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
 enum Status {
   PUBLIC
   PRIVATE
   PROTECT
 }
 
+
 model User {
   id    Int    @id @unique @default(autoincrement())
   id42  Int    @unique
   image String
+	rank		Int			@default(1)
 
   name        String       @unique
   gameProfile GameProfile?
-  twoFA       Boolean      @default(false)
-  twoFASecret String?
   is2FAOn     Boolean      @default(false)
   secret2FA   String?
   createdAt   DateTime     @default(now())

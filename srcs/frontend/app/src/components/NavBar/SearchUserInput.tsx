@@ -15,11 +15,10 @@ export function SearchUserInput() {
 	}
 	return (
 		<input
-			className="px-3 py-2 rounded-md"
+			className="px-5 py-2 rounded-md"
 			type="search"
-			id="mySearch"
-			name="q"
 			placeholder="Search for a user..."
+			value={search}
 			onKeyDown={handleEnterKey}
 			onChange={handleSearch}
 		></input>
