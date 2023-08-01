@@ -11,7 +11,7 @@ import apiAddress from "../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../utils/getJWT";
 import { notifyError } from "../../utils/notify";
 import ChannelBoard from "../../components/Chat/ChannelBoard";
-import JoinChannelLayout from "../JoinChannelLayout/JoinChannelLayout";
+import JoinChannelLayout from "./JoinChannelLayout";
 
 export function getChatData() {}
 
