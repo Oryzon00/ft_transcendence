@@ -1,4 +1,4 @@
-rm -rf dist/ nodes_modules/
+rm -rf dist/ nodes_modules/ api/src/prisma/migrations/
 npm install
 
 # npx prisma db push --accept-data-loss
