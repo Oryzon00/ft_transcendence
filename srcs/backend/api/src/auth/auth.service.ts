@@ -160,7 +160,6 @@ export class AuthService {
 				}
 			} else throw error;
 		}
-
 		return user;
 	}
 
