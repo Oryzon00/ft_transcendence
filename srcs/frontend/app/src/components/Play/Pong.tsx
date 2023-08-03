@@ -14,6 +14,7 @@ import { PongScores } from "./PongScores";
 class GameInfo {
 	lobbyId: string = "";
 	lobbyMode: "PvP" | "PvE" | undefined = undefined;
+	countdown: number = 0;
 	hasStarted: boolean = false;
 	hasFinished: boolean = false;
 	isPaused: boolean = false;
@@ -42,6 +43,7 @@ function Pong() {
 			GameState.gameHeight = data.gameHeight;
 			GameState.gameWidth = data.gameWidth;
 			GameState.hasFinished = data.hasFinished;
+			GameState.countdown = data.countdown;
 			GameState.isPaused = data.isPaused;
 			GameState.hasStarted = data.hasStarted;
 			GameState.playersCount = data.playersCount;
@@ -114,12 +116,39 @@ function Pong() {
 				ctx.closePath();
 			}
 
+			function drawCountdown(ctx: CanvasRenderingContext2D) {
+				if (GameState.countdown > 0) {
+					ctx.beginPath();
+					ctx.font = 'bold 60px serif'
+					ctx.textAlign = 'center'
+					ctx.textBaseline = 'middle'
+					if (GameState.countdown > 3000) {
+						ctx.fillStyle = 'white'
+						ctx.fillText('GOAL !', 400, 400);
+					}
+					else if (GameState.countdown > 2000) {
+						ctx.fillStyle = 'red'
+						ctx.fillText('3', 400, 400);
+					}
+					else if (GameState.countdown > 1000) {
+						ctx.fillStyle = 'orange'
+						ctx.fillText('2', 400, 400);
+					}
+					else {
+						ctx.fillStyle = 'yellow'
+						ctx.fillText('1', 400, 400);
+					}
+					ctx.stroke();
+				}
+			}
+
 			if (renderCtx) {
 				renderCtx.fillStyle = "#000000";
 				renderCtx.fillRect(0, 0, 800, 800);
 				drawPaddles(renderCtx);
 				drawNet(renderCtx);
 				drawBall(renderCtx);
+				drawCountdown(renderCtx);
 			}
 		}
 	}
@@ -181,7 +210,7 @@ function Pong() {
 
 			// console.log(iter.next().value);
 			// console.log(iter.next().value);
-			console.log(data.padPositions[sm.getSocketId()]);
+			//console.log(data.padPositions[sm.getSocketId()]);
 			readServerPayload(data);
 			draw();
 		};

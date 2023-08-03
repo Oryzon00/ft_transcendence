@@ -39,6 +39,7 @@ export class Lobby {
 			lobbyMode: this.maxClients === 1 ? 'PvE' : 'PvP',
 			hasStarted: this.game.hasStarted,
 			hasFinished: this.game.hasFinished,
+			countdown: this.game.countdown,
 			isPaused: this.game.isPaused,
 			playersCount: this.clients.size,
 			gameWidth: this.game.width,

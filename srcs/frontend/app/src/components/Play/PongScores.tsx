@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './PongScores.styles.css'
 
 interface PongScoresProps {
@@ -8,19 +8,19 @@ interface PongScoresProps {
 }
 
 export function PongScores({side, myScore, OpponentScore}: PongScoresProps) {
-	const [myScoreState, setMyScoreState] = useState<number>();
-	const [myOpponentState, setMyOpponentState] = useState<number>();
+	const [spanLeftText, setSpanLeftText] = useState<string>('');
+	const [spanRightText, setSpanRightText] = useState<string>('');
 
-	if (myScore !== myScoreState || OpponentScore !== myOpponentState)
-	{
-		setMyOpponentState(OpponentScore);
-		setMyScoreState(myScore);
-	}
+	useEffect(() => {
+		console.log("pong scores:" + myScore + " " + OpponentScore);
+		setSpanLeftText(side === false ? "Your Score : " + myScore : "Opponent Score : " + OpponentScore);
+		setSpanRightText(side === true ? "Your Score : " + myScore : "Opponent Score : " + OpponentScore);
+	},[myScore, OpponentScore]);
 
 	return(
 		<div className="PongScores">
-			<span>{side === false ? "Your Score : " : "Opponent Score : "}{side === false ? myScore : OpponentScore}</span>
-			<span>{side === true ? "Your Score : " : "Opponent Score : "}{side === true ? myScore : OpponentScore}</span>
+			<span>{spanLeftText}</span>
+			<span>{spanRightText}</span>
 		</div>
 	)
 }

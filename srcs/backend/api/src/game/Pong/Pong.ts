@@ -97,6 +97,7 @@ export class Pong {
 				pad.downKey = false;
 				pad.upKey = false;
 			}
+			this.countdown = 5000;
 		}
 	}
 
