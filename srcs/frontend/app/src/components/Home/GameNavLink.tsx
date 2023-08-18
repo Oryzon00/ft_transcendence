@@ -5,11 +5,14 @@ export function GameNavLink() {
 	return (
 		<NavLink
 			to="/play"
-			className="text-white text-xl font-bold bg-amber-800 lg:px-5 px-2 py-2 rounded-md"
+			className="text-white text-xl font-bold border-4 bg-zinc-700 hover:bg-amber-800 lg:px-5 px-2 py-2 rounded-md"
 		>
 			<div className="flex flex-row justify-center items-center">
-				<RiPingPongFill className="h-20 w-20" title="GameNavLink" />
-				<p> Play !</p>
+				<RiPingPongFill
+					className="h-20 w-20 mr-4"
+					title="GameNavLink"
+				/>
+				<h2 className="text-4xl"> PLAY </h2>
 			</div>
 		</NavLink>
 	);
