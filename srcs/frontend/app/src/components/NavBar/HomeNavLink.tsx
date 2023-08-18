@@ -2,9 +2,8 @@ import { NavLink } from "react-router-dom";
 import { AiFillHome } from "react-icons/ai";
 
 export function HomeNavLink() {
-	let activeClassName = "px-2 lg:px-3 py-2 rounded-md shrink-0";
-	let normalClassName =
-		"hover:bg-amber-800 px-2 lg:px-3 py-2 rounded-md shrink-0";
+	let activeClassName = "w-56 px-2 py-2 rounded-md shrink-0";
+	let normalClassName = "w-56 px-2 py-2 rounded-md shrink-0";
 
 	return (
 		<NavLink
@@ -15,13 +14,20 @@ export function HomeNavLink() {
 		>
 			{({ isActive }) =>
 				isActive ? (
-					<AiFillHome
-						className="h-11 w-11"
-						color="#92400e"
-						title="HomeActive"
-					/>
+					<div className="p-0.5 w-fit h-fit rounded-md">
+						<AiFillHome
+							className="box-border mx-2 my-2 h-11 w-11"
+							color="#92400e"
+							title="HomeActive"
+						/>
+					</div>
 				) : (
-					<AiFillHome className="h-11 w-11" title="HomeInactive" />
+					<div className="hover:bg-amber-800 p-0.5 w-fit h-fit rounded-md">
+						<AiFillHome
+							className="box-border mx-2 my-2 h-11 w-11"
+							title="HomeInactive"
+						/>
+					</div>
 				)
 			}
 		</NavLink>
