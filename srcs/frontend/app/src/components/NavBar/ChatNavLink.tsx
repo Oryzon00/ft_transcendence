@@ -1,27 +1,27 @@
 import { NavLink } from "react-router-dom";
-import { AiFillHome } from "react-icons/ai";
+import { AiFillWechat } from "react-icons/ai";
 
-export function HomeNavLink() {
+export function ChatNavLink() {
 	let activeClassName = "px-2 lg:px-3 py-2 rounded-md shrink-0";
 	let normalClassName =
 		"hover:bg-amber-800 px-2 lg:px-3 py-2 rounded-md shrink-0";
 
 	return (
 		<NavLink
-			to="/home"
+			to="/chat"
 			className={({ isActive }) =>
 				isActive ? activeClassName : normalClassName
 			}
 		>
 			{({ isActive }) =>
 				isActive ? (
-					<AiFillHome
+					<AiFillWechat
 						className="h-11 w-11"
 						color="#92400e"
-						title="HomeActive"
+						title="ChatActive"
 					/>
 				) : (
-					<AiFillHome className="h-11 w-11" title="HomeInactive" />
+					<AiFillWechat className="h-11 w-11" title="ChatInactive" />
 				)
 			}
 		</NavLink>

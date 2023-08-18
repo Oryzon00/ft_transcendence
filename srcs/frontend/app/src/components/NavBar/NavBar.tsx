@@ -2,6 +2,8 @@ import { NavLink } from "react-router-dom";
 import { UserMenu } from "./UserMenu";
 import { SearchUserInput } from "./SearchUserInput";
 import { HomeNavLink } from "./HomeNavLink";
+import { ChatNavLink } from "./ChatNavLink";
+import { LeaderboardNavLink } from "./LeaderboardNavLink";
 
 export function NavBar() {
 	let activeClassName =
@@ -23,22 +25,8 @@ export function NavBar() {
 						>
 							PLAY
 						</NavLink>
-						<NavLink
-							to="/leaderboard"
-							className={({ isActive }) =>
-								isActive ? activeClassName : normalClassName
-							}
-						>
-							LEADERBOARD
-						</NavLink>
-						<NavLink
-							to="/chat"
-							className={({ isActive }) =>
-								isActive ? activeClassName : normalClassName
-							}
-						>
-							CHAT
-						</NavLink>
+						<LeaderboardNavLink />
+						<ChatNavLink />
 						<SearchUserInput />
 					</div>
 
