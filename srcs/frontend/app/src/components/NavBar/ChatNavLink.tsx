@@ -2,9 +2,9 @@ import { NavLink } from "react-router-dom";
 import { AiFillWechat } from "react-icons/ai";
 
 export function ChatNavLink() {
-	let activeClassName = "px-2 lg:px-3 py-2 rounded-md shrink-0";
+	let activeClassName = "mx-4 px-2 py-2 rounded-md shrink-0";
 	let normalClassName =
-		"hover:bg-amber-800 px-2 lg:px-3 py-2 rounded-md shrink-0";
+		"hover:bg-amber-800 mx-4 px-2 py-2 rounded-md shrink-0";
 
 	return (
 		<NavLink

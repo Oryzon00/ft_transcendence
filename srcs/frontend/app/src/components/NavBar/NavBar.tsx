@@ -1,4 +1,3 @@
-import { NavLink } from "react-router-dom";
 import { UserMenu } from "./UserMenu";
 import { SearchUserInput } from "./SearchUserInput";
 import { HomeNavLink } from "./HomeNavLink";
@@ -6,25 +5,13 @@ import { ChatNavLink } from "./ChatNavLink";
 import { LeaderboardNavLink } from "./LeaderboardNavLink";
 
 export function NavBar() {
-	let activeClassName =
-		"text-amber-800 text-xl font-bold lg:px-5 px-2 py-2 rounded-md";
-	let normalClassName =
-		"text-white text-xl font-bold hover:bg-amber-800 lg:px-5 px-2 py-2 rounded-md";
-
 	return (
 		<nav className="h-20">
-			<div className="max-w-full  mx-auto px-2 lg:px-3">
+			<div className="max-w-full mx-auto px-2">
 				<div className="flex items-center justify-between h-20">
 					<HomeNavLink />
+
 					<div className="flex">
-						<NavLink
-							to="/play"
-							className={({ isActive }) =>
-								isActive ? activeClassName : normalClassName
-							}
-						>
-							PLAY
-						</NavLink>
 						<LeaderboardNavLink />
 						<ChatNavLink />
 						<SearchUserInput />
