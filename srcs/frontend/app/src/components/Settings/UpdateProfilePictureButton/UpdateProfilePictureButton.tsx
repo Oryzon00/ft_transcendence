@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { UserContext } from "../../../utils/contexts/userContext.tsx";
-import './UpdateProfilePictureButton.styles.css'
+// import './UpdateProfilePictureButton.styles.css'
 import getJwtTokenFromCookie from "../../../utils/getJWT.ts";
 import { notifyError } from "../../../utils/notify.ts";
 import apiAddress from "../../../utils/apiAddress.ts";
@@ -46,8 +46,8 @@ function updateProfilePictureButton() {
 		}
 	};
 	return (
-		<div className="UpdatePfpButton">
-			<img src={userHook.user.image} />
+		<div className="">
+			<img src={userHook.user.image} className="w-12 h-12 shrink-0 rounded-full"/>
 			<input
 				type="file"
 				accept="image/*"
