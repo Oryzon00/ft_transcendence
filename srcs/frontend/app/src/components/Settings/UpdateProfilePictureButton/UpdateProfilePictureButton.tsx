@@ -46,8 +46,8 @@ function updateProfilePictureButton() {
 		}
 	};
 	return (
-		<div className="">
-			<img src={userHook.user.image} className="w-12 h-12 shrink-0 rounded-full"/>
+		<div className="flex justify-center">
+			<img src={userHook.user.image} className="shrink-0 rounded-full h-28 border-2"/>
 			<input
 				type="file"
 				accept="image/*"

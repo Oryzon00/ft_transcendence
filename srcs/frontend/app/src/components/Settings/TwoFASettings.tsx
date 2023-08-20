@@ -5,7 +5,7 @@ import TwoFATurnOnButton from "./TwoFA/TwoFATurnOnButton/TwoFATurnOnButton";
 
 export function TwoFASettings() {
 	return (
-		<div className="w-96">
+		<div className="w-96 border-4">
 			<h3> 2FA settings </h3>
 			<TwoFAStatus />
 			<TwoFATurnOnButton />

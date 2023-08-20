@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../../utils/contexts/userContext.tsx";
 import apiAddress from "../../../utils/apiAddress.ts";
 import getJwtTokenFromCookie from "../../../utils/getJWT.ts";
@@ -7,11 +7,20 @@ import { throwErrorMessage } from "../../../utils/throwErrorMessage.ts";
 
 function UpdateUsernameButton() {
 	const userHook = useContext(UserContext);
-	if (!userHook.user) return null;
+	const [username, setUsername] = useState("");
+	useEffect(
+		function () {
+			if (userHook.user.name) {
+				setUsername(userHook.user.name);
+			}
+		},
+		[userHook.user.name]
+	);
 
-	const [message, setMessage] = useState("");
+	if (!userHook.user.name) return <div> Loading... </div>;
+
 	const handleChange = (event: any) => {
-		setMessage(event.target.value);
+		setUsername(event.target.value);
 	};
 
 	function sendToBack(mymessage: string) {
@@ -42,21 +51,19 @@ function UpdateUsernameButton() {
 			});
 	}
 	const handleClick = (event: any) => {
-		if (event.key == "Enter") {
-			sendToBack(message);
+		if (event.key == "Enter" && username !== "") {
+			sendToBack(username);
 		}
 	};
 
 	return (
-		<div>
-			Username : {userHook.user.name}
-			<div>
-				<input
-					onChange={handleChange}
-					value={message}
-					onKeyDown={handleClick}
-				/>
-			</div>
+		<div className="py-10">
+			<h4 className="text-white font-semibold text-base py-1">Your username</h4>
+			<input
+				value={username}
+				onChange={handleChange}
+				onKeyDown={handleClick}
+			/>
 		</div>
 	);
 }
