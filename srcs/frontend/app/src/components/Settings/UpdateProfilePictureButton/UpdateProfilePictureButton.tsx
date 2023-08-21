@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { UserContext } from "../../../utils/contexts/userContext.tsx";
 // import './UpdateProfilePictureButton.styles.css'
 import getJwtTokenFromCookie from "../../../utils/getJWT.ts";
@@ -9,7 +9,13 @@ import { throwErrorMessage } from "../../../utils/throwErrorMessage.ts";
 function updateProfilePictureButton() {
 	const userHook = useContext(UserContext);
 	if (!userHook.user) return null;
-	function sendToBack (type :string, img :string) {
+	const fileInputRef = useRef<HTMLInputElement>(null);
+
+	const handleButtonClick = () => {
+		fileInputRef.current?.click();
+	};
+
+	function sendToBack(type: string, img: string) {
 		const url = apiAddress + "/user/update/image";
 
 		fetch(url, {
@@ -24,8 +30,7 @@ function updateProfilePictureButton() {
 			})
 		})
 			.then(function (response) {
-				if (!response.ok)
-					throwErrorMessage(response);
+				if (!response.ok) throwErrorMessage(response);
 				return response.json();
 			})
 			.then(function () {
@@ -38,23 +43,45 @@ function updateProfilePictureButton() {
 				notifyError("Image too large");
 			});
 	}
-	const handleChange = (event: any) => {
+
+	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		let FR = new FileReader();
-		FR.readAsDataURL(event.target.files[0]);
+		if (!event.target.files) return;
+		FR.readAsDataURL(event.target.files?.[0]);
 		FR.onload = () => {
+			if (!event.target.files) return;
 			sendToBack(event.target.files[0].type, String(FR.result));
-		}
+		};
 	};
+
 	return (
-		<div className="flex justify-center">
-			<img src={userHook.user.image} className="shrink-0 rounded-full h-28 border-2"/>
-			<input
-				type="file"
-				accept="image/*"
-				onChange={handleChange}
-			/>
+		<div className="py-10">
+			<h4 className="text-white text-center font-semibold text-base py-2">
+				Profile Picture
+			</h4>
+			<div className="px-2 py-2 flex justify-center items-center">
+				<img
+					src={userHook.user.image}
+					className="shrink-0 rounded-full border-2 h-24"
+				/>
+				<button
+					className="mx-2 px-2 py-2 rounded-md hover:bg-amber-800 text-white font-semibold border-4 bg-zinc-500"
+					type={"button"}
+					onClick={handleButtonClick}
+				>
+					Upload file...
+				</button>
+				<input
+					id="profilePictureInput"
+					ref={fileInputRef}
+					type="file"
+					accept="image/*"
+					onChange={handleChange}
+					style={{ display: "none" }}
+				/>
+			</div>
 		</div>
-	)
+	);
 }
 
 export default updateProfilePictureButton;

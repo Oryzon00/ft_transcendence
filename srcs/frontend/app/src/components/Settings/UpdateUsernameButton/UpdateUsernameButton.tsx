@@ -58,8 +58,10 @@ function UpdateUsernameButton() {
 
 	return (
 		<div className="py-10">
-			<h4 className="text-white font-semibold text-base py-1">Your username</h4>
-			<input
+			<h4 className="text-white text-center font-semibold text-base py-2">
+				Username
+			</h4>
+			<input className="px-2 py-1 bg-zinc-800"
 				value={username}
 				onChange={handleChange}
 				onKeyDown={handleClick}
