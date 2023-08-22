@@ -2,8 +2,8 @@ import { NavLink } from "react-router-dom";
 import { FiSettings } from "react-icons/fi";
 
 export function SettingsNavLink() {
-	let activeClassName = "px-3 py-2 rounded-md shrink-0";
-	let normalClassName = "hover:bg-amber-800 px-3 py-2 rounded-md shrink-0";
+	let activeClassName = "px-2 lg:px-3 py-2 rounded-md shrink-0";
+	let normalClassName = "hover:bg-amber-800 px-2 lg:px-3 py-2 rounded-md shrink-0";
 
 	return (
 		<NavLink

@@ -3,8 +3,9 @@ import homeLogo from "./../../assets/homeLogo.png";
 import homeLogoActive from "./../../assets/homeLogo-active.png";
 
 export function HomeNavLink() {
-	let activeClassName = "px-3 py-2 rounded-md shrink-0";
-	let normalClassName = "hover:bg-amber-800 px-3 py-2 rounded-md shrink-0";
+	let activeClassName = "px-2 lg:px-3 py-2 rounded-md shrink-0";
+	let normalClassName =
+		"hover:bg-amber-800 px-2 lg:px-3 py-2 rounded-md shrink-0";
 
 	return (
 		<NavLink
