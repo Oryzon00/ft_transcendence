@@ -5,8 +5,14 @@ function TwoFAStatus() {
 	const userHook = useContext(UserContext);
 	if (!userHook.user) return null;
 	return (
-		<div>
-			<div> 2fa status : {userHook.user.is2FAOn ? "true" : "false"} </div>
+		<div className="flex pt-5">
+			<h4 className="text-white text-base font-semibold py-2">
+				Status :
+			</h4>
+			<h4 className="text-amber-800 text-base font-semibold py-2">
+				&nbsp;
+				{userHook.user.is2FAOn ? "on" : "off"}
+			</h4>
 		</div>
 	);
 }

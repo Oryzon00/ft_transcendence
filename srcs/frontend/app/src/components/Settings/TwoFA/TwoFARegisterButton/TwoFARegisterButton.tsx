@@ -36,15 +36,25 @@ function TwoFARegisterButton() {
 		setOpen(false);
 	}
 	return (
-		<div>
-			<button onClick={register2FA}> Register via Google Authenticator </button>
+		<div className="py-5 ">
+			<button
+				className="mx-2 px-2 py-1 rounded-md hover:bg-amber-800 text-white font-semibold border-4 bg-zinc-500"
+				onClick={register2FA}
+			>
+				Register via Google Authenticator
+			</button>
 			<Popup modal nested open={open} onClose={closeModal}>
-				<div className="modal">
-					<button className="close" onClick={closeModal}>
+				<div className="flex flex-col bg-zinc-800 rounded-md text-white items-center">
+					<h2 className="px-2 py-2 text-white text-lg font-bold">
+						Scan the QR Code using Google Authenticator
+					</h2>
+					<img className="h-48 w-48 my-5" src={qrCode}></img>
+					<button
+						className="px-2 pt-0 pb-1 absolute -top-3 -right-3 rounded-full bg-zinc-500 hover:bg-amber-800 text-xl font-bold"
+						onClick={closeModal}
+					>
 						&times;
 					</button>
-					<h2>Scan the QRCode using Google Authenticator</h2>
-					<img src={qrCode}></img>
 				</div>
 			</Popup>
 		</div>
