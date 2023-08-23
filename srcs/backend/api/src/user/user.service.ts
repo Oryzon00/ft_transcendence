@@ -100,4 +100,27 @@ export class UserService {
 			throw new NotFoundException();
 		}
 	}
+
+	async addFriend(user: User, friendName: string): Promise<{name: string}> {
+		try {
+			const myfriend = await this.prisma.user.findUnique({
+				where: {
+					name: friendName
+				}
+			});
+			await this.prisma.update({
+				where: {
+					id: user.id
+				},
+				data: {
+					connect: {
+						friend: myfriend.id
+					}
+				}
+			});
+			return ({name: friendName});
+		} catch {
+			throw new NotFoundException();
+		}
+	}
 }
