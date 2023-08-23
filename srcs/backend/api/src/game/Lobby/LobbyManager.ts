@@ -7,16 +7,20 @@ import { Injectable } from "@nestjs/common";
 import { Cron, Interval } from "@nestjs/schedule";
 import { ServerResponseDTO } from "../types/ServerResponseDTO";
 import { ServerEvents } from "../types/ServerEvents";
+import { GameService } from "../game.service";
 
 @Injectable()
 export class LobbyManager {
 	@WebSocketServer()
 	public server: Server;
 
+	private gameService: GameService;
+
 	public readonly lobbies: Map<Lobby["Id"], Lobby> = new Map<Lobby["Id"], Lobby>();
 
 	public initSocket(client: AuthenticatedSocket): void {
 		client.data.lobby = null;
+		this.gameService.updateSocket()
 	}
 
 	public endSocket(client: AuthenticatedSocket): void {

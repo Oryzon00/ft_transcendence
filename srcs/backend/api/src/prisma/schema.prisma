@@ -6,10 +6,17 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 enum Status {
   PUBLIC
   PRIVATE
   PROTECT
+}
+
+enum GameStatus {
+	IN_GAME
+	IN_QUEUE
+	IDLE
 }
 
 
@@ -17,7 +24,7 @@ model User {
   id    Int    @id @unique @default(autoincrement())
   id42  Int    @unique
   image String
-	rank		Int			@default(1)
+  rank		Int			@default(1)
 
   name        String       @unique
   gameProfile GameProfile?
@@ -52,13 +59,42 @@ model Block {
 }
 
 model GameProfile {
-  userId Int  @unique
-  user   User @relation(fields: [userId], references: [id])
+  userId 	Int  @unique
+  user   	User @relation(fields: [userId], references: [id])
+  playSocketId	String
+  
+  status 	GameStatus @default(IDLE)
+  lobby		String?
 
-  wins Int
-  loss Int
+  history	Game[]
 
-  @@map("gameProfile")
+  matchMakingRanking	Int @default(1000)
+
+  wins Int	@default(0)
+  loss Int	@default(0)
+
+  @@map("gameProfiles")
+}
+
+model Game {
+  id String @id @unique @default(uuid())
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @default(now()) @updatedAt
+
+  isStarted	Boolean @default(false)
+
+  gamemode	String
+
+  players User[]
+  
+  winnerId	Int?
+  winner	User? @relation(fields: [winnerId], references: [id])
+
+  scores	Int[]
+  timerMS	Int
+
+  @@map("games")
 }
 
 model Channel {
