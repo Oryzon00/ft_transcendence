@@ -55,7 +55,7 @@ function updateProfilePictureButton() {
 	};
 
 	return (
-		<div className="py-10">
+		<div className="py-5">
 			<h4 className="text-white text-center font-semibold text-base py-2">
 				Profile Picture
 			</h4>
@@ -65,11 +65,11 @@ function updateProfilePictureButton() {
 					className="shrink-0 rounded-full border-2 h-24"
 				/>
 				<button
-					className="mx-2 px-2 py-2 rounded-md hover:bg-amber-800 text-white font-semibold border-4 bg-zinc-500"
+					className="mx-2 px-2 py-1 rounded-md hover:bg-amber-800 text-white font-semibold border-4 bg-zinc-500"
 					type={"button"}
 					onClick={handleButtonClick}
 				>
-					Upload file...
+					Upload your file
 				</button>
 				<input
 					id="profilePictureInput"
