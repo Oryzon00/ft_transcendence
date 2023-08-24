@@ -108,14 +108,12 @@ export class UserService {
 					name: friendName
 				}
 			});
-			await this.prisma.update({
+			await this.prisma.user.update({
 				where: {
 					id: user.id
 				},
 				data: {
-					connect: {
-						friend: myfriend.id
-					}
+					friends: { connect: { id: myfriend.id}},
 				}
 			});
 			return ({name: friendName});
