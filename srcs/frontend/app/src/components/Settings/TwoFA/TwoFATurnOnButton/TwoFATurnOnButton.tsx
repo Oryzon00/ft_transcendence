@@ -21,6 +21,11 @@ function TwoFATurnOnButton() {
 		setOTP("");
 	}
 
+	if (OTP.length === 6) {
+		turnOn2FA(OTP);
+		setOTP("");
+	}
+
 	function turnOn2FA(otp: string) {
 		const url = apiAddress + "/auth/2FA/turn-on";
 		fetch(url, {
@@ -50,11 +55,6 @@ function TwoFATurnOnButton() {
 			});
 	}
 
-	if (OTP.length == 6) {
-		turnOn2FA(OTP);
-		setOTP("");
-	}
-
 	return (
 		<div className="py-10">
 			<button
@@ -68,7 +68,7 @@ function TwoFATurnOnButton() {
 					<h2 className="px-5 py-5 text-white text-lg font-bold">
 						Enter your One Time Password
 					</h2>
-					<div className="py-10 px-5 ">
+					<div className="py-5 px-5 ">
 						<OtpInput
 							value={OTP}
 							onChange={setOTP}

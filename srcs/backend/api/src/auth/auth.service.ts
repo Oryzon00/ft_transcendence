@@ -47,7 +47,7 @@ export class AuthService {
 		const otpAuthUrl = authenticator.keyuri(
 			user.name,
 			"Transcendance",
-			user.secret2FA
+			secret2FA
 		);
 		return otpAuthUrl;
 	}
