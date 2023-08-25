@@ -13,11 +13,6 @@ function Modal2FA({ user }: Modal2FAProps) {
 	const [OTP, setOTP] = useState("");
 	const navigate = useNavigate();
 
-	if (OTP.length == 6) {
-		verifyOTPBack();
-		setOTP("");
-	}
-
 	function closeModal() {
 		setOTP("");
 	}
