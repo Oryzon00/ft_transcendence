@@ -5,7 +5,7 @@ function TwoFAStatus() {
 	const userHook = useContext(UserContext);
 	if (!userHook.user) return null;
 	return (
-		<div className="flex pt-5">
+		<div className="flex pt-10">
 			<h4 className="text-white text-base font-semibold py-2">
 				Status :
 			</h4>
