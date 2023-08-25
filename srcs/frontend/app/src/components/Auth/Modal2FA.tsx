@@ -7,23 +7,23 @@ import { notifyError } from "../../utils/notify.ts";
 import { Modal2FAProps } from "./TModal2FA";
 import { throwErrorMessage } from "../../utils/throwErrorMessage.ts";
 import { useNavigate } from "react-router";
+import { TwoFAOTPInput } from "../Settings/TwoFA/TwoFAOTPInput/TwoFAOTPInput.tsx";
 
 function Modal2FA({ user }: Modal2FAProps) {
 	const [OTP, setOTP] = useState("");
 	const navigate = useNavigate();
-	
+
 	if (OTP.length == 6) {
 		verifyOTPBack();
-		clearModal();
+		setOTP("");
 	}
 
-	function clearModal() {
+	function closeModal() {
 		setOTP("");
 	}
 
 	function verifyOTPBack() {
 		const url = apiAddress + "/auth/2FA/verify";
-
 		fetch(url, {
 			method: "POST",
 			headers: {
@@ -49,21 +49,9 @@ function Modal2FA({ user }: Modal2FAProps) {
 	}
 
 	return (
-		<>
-			<div>Auth loading</div>
-			<Popup modal nested open={true} onClose={clearModal}>
-				<div className="modal">
-					<h2>Enter your OTP</h2>
-					<OtpInput
-						value={OTP}
-						onChange={setOTP}
-						numInputs={6}
-						renderSeparator={<span></span>}
-						renderInput={(props) => <input {...props} />}
-					/>
-				</div>
-			</Popup>
-		</>
+		<Popup modal nested open={true} onClose={closeModal}>
+			<TwoFAOTPInput OTP={OTP} setOTP={setOTP} callBack={verifyOTPBack} />
+		</Popup>
 	);
 }
 
