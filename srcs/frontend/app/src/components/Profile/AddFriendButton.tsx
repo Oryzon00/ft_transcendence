@@ -1,10 +1,36 @@
-function AddFriendButton({user, friendname}) {
-	function handleClick() {
-		console.log(user.name);
-		console.log(friendname);
+import apiAddress from "../../utils/apiAddress";
+import getJwtTokenFromCookie from "../../utils/getJWT";
+import { throwErrorMessage } from "../../utils/throwErrorMessage";
+import { notifyError } from "../../utils/notify";
+
+function AddFriendButton({friendname}) {
+	function addFriend() {
+		
+		let url = apiAddress + "/user/friend/add";
+		fetch (url, {
+			method: "POST",
+			headers: {
+				Authorization: "Bearer " + getJwtTokenFromCookie(),
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				username: friendname
+			})
+		})
+			.then(function (response) {
+				if (!response.ok)
+					throwErrorMessage(response);
+				return response.json();
+			})
+			.then(function (result) {
+				console.log(result.name);
+			})
+			.catch(function () {
+				notifyError("Error while adding friend");
+			});
 	}
 	return (
-		<button onClick={handleClick}>Add Friend</button>
+		<button onClick={addFriend}>Add Friend</button>
 	);
 }
 

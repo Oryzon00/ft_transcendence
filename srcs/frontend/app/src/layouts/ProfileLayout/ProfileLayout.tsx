@@ -14,10 +14,9 @@ function ProfileLayout () {
 						<img src={userData.image}></img>
 						<span className='profile-login'>Login : {userData.name} </span>
 						<span className='profile-desc'>short desc</span>
-						{ userHook.user.name !== userData.name &&
+						{ userHook.user.name !== userData.name &&  
                             <AddFriendButton
-	                            user={userHook.user}
-	                            friendname={userData.name} />
+							friendname={userData.name} />
 						}
 					</div>
 					<div className='profile-rank'>

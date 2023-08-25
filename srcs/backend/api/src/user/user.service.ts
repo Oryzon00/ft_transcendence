@@ -114,6 +114,7 @@ export class UserService {
 				},
 				data: {
 					friends: { connect: { id: myfriend.id}},
+					friendsTo: { connect: { id: myfriend.id}},
 				}
 			});
 			return ({name: friendName});
