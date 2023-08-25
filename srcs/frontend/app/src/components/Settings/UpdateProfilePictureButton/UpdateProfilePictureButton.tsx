@@ -65,11 +65,11 @@ function updateProfilePictureButton() {
 					className="shrink-0 rounded-full border-2 h-24"
 				/>
 				<button
-					className="mx-2 px-2 py-1 rounded-md hover:bg-amber-800 text-white font-semibold border-4 bg-zinc-500"
+					className="mx-5 px-3 py-1 rounded-md hover:bg-amber-800 text-white font-semibold border-4 bg-zinc-500"
 					type={"button"}
 					onClick={handleButtonClick}
 				>
-					Upload your file
+					Upload your avatar
 				</button>
 				<input
 					id="profilePictureInput"
