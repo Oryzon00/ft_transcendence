@@ -9,9 +9,9 @@ function TwoFAStatus() {
 			<h4 className="text-white text-base font-semibold py-2">
 				Status :
 			</h4>
-			<h4 className="text-amber-800 text-base font-semibold py-2">
+			<h4 className="text-amber-800 text-base font-bold py-2">
 				&nbsp;
-				{userHook.user.is2FAOn ? "on" : "off"}
+				{userHook.user.is2FAOn ? "ON" : "OFF"}
 			</h4>
 		</div>
 	);
