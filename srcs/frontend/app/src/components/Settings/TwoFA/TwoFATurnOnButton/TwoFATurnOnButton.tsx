@@ -1,13 +1,12 @@
 import { useContext, useState } from "react";
 import apiAddress from "../../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../../utils/getJWT";
-import OtpInput from "react-otp-input";
 import Popup from "reactjs-popup";
 import "./TwoFATurnOnButton.styles.css";
 import { UserContext } from "../../../../utils/contexts/userContext";
 import { notifyError, notifyInfo } from "../../../../utils/notify";
 import { throwErrorMessage } from "../../../../utils/throwErrorMessage";
-import { TwoFAOTPInput } from "../TwoFAOTPInput";
+import { TwoFAOTPInput } from "../TwoFAOTPInput/TwoFAOTPInput";
 
 function TwoFATurnOnButton() {
 	const [open, setOpen] = useState(false);
@@ -19,11 +18,6 @@ function TwoFATurnOnButton() {
 	}
 	function closeModal() {
 		setOpen(false);
-		setOTP("");
-	}
-
-	if (OTP.length === 6) {
-		turnOn2FA(OTP);
 		setOTP("");
 	}
 
@@ -84,28 +78,3 @@ function TwoFATurnOnButton() {
 }
 
 export default TwoFATurnOnButton;
-
-{
-	/* <h2 className="px-5 py-5 text-white text-lg font-bold">
-						Enter your One Time Password
-					</h2>
-					<div className="py-5 px-5 ">
-						<OtpInput
-							value={OTP}
-							onChange={setOTP}
-							numInputs={6}
-							renderSeparator={
-								<span className="px-2 py-2 text-white text-xl font-bold">
-									-
-								</span>
-							}
-							renderInput={(props) => (
-								<input
-									{...props}
-									className="h-12 bg-gray-500 rounded-md text-2xl text-center"
-								/>
-							)}
-							inputStyle={{ width: "3rem" }}
-						/>
-					</div> */
-}

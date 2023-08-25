@@ -1,11 +1,5 @@
 import OtpInput from "react-otp-input";
-import React from "react";
-
-type TwoFAOTPInputProps = {
-	OTP: string;
-	setOTP: (value: React.SetStateAction<string>) => void;
-	callBack: (otp: string) => void;
-};
+import { TwoFAOTPInputProps } from "./TTwoFAOTPInput";
 
 export function TwoFAOTPInput({ OTP, setOTP, callBack }: TwoFAOTPInputProps) {
 	if (OTP.length === 6) {
