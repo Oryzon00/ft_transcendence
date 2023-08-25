@@ -1,7 +1,6 @@
 import OtpInput from "react-otp-input";
 import React from "react";
 
-
 type TwoFAOTPInputProps = {
 	OTP: string;
 	setOTP: (value: React.SetStateAction<string>) => void;
@@ -14,7 +13,7 @@ export function TwoFAOTPInput({ OTP, setOTP, callBack }: TwoFAOTPInputProps) {
 		setOTP("");
 	}
 	return (
-		<div>
+		<div className="flex flex-col bg-zinc-800 rounded-md text-white items-center">
 			<h2 className="px-5 py-5 text-white text-lg font-bold">
 				Enter your One Time Password
 			</h2>
