@@ -23,6 +23,14 @@ function UpdateUsernameButton() {
 		setUsername(event.target.value);
 	};
 
+	const handleClick = (event: any) => {
+		if (event.key == "Enter" && username !== "") {
+			if (username.length > 15)
+				notifyError("Username must be under 15 chars");
+			else sendToBack(username);
+		}
+	};
+
 	function sendToBack(mymessage: string) {
 		const url = apiAddress + "/user/update/name";
 		fetch(url, {
@@ -50,18 +58,14 @@ function UpdateUsernameButton() {
 				notifyError(`Username ${mymessage} is already taken`);
 			});
 	}
-	const handleClick = (event: any) => {
-		if (event.key == "Enter" && username !== "") {
-			sendToBack(username);
-		}
-	};
 
 	return (
 		<div className="py-5">
 			<h4 className="text-white text-center font-semibold text-base py-2">
 				Username
 			</h4>
-			<input className="px-2 py-1 bg-zinc-800 rounded-md w-36"
+			<input
+				className="px-2 py-1 bg-zinc-800 rounded-md w-36"
 				value={username}
 				onChange={handleChange}
 				onKeyDown={handleClick}
