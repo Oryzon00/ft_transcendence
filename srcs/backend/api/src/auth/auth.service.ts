@@ -30,20 +30,18 @@ export class AuthService {
 	/* 2FA */
 
 	async generate2FASecretQRCode(user: User): Promise<string> {
-		if (!user.secret2FA) {
-			const secret2FA = authenticator.generateSecret();
-			try {
-				await this.prisma.user.update({
-					where: {
-						id: user.id
-					},
-					data: {
-						secret2FA: secret2FA
-					}
-				});
-			} catch {
-				throw new ForbiddenException();
-			}
+		const secret2FA = authenticator.generateSecret();
+		try {
+			await this.prisma.user.update({
+				where: {
+					id: user.id
+				},
+				data: {
+					secret2FA: secret2FA
+				}
+			});
+		} catch {
+			throw new ForbiddenException();
 		}
 
 		const otpAuthUrl = authenticator.keyuri(
