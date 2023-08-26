@@ -10,8 +10,11 @@ import DiscussionBoard from "../../components/Chat/DiscussionBoard";
 import apiAddress from "../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../utils/getJWT";
 import { notifyError } from "../../utils/notify";
-import ChannelBoard from "../../components/Chat/ChannelBoard";
+import ChannelBoard from "../../components/Chat/ChannelBoard/ChannelBoard";
 import JoinChannelLayout from "./JoinChannelLayout";
+
+import ChannelBoardButton from "../../components/Chat/ChannelBoard/ChannelBoardButton";
+// Images
 
 export function getChatData() {}
 
@@ -54,9 +57,10 @@ function ChatLayout() {
 	};
 
 	useEffect(() => {
+		getChatData();
+
 		sockets.on('connect', () => {
 			sockets.emit('authenticate', user.user);
-			getChatData();
 		})
 
 		// Create new channel
@@ -73,9 +77,8 @@ function ChatLayout() {
 
 		sockets.on('onMessage', (data: MessagePayload) => {
 			console.log(data)
-				//channel[data.channelId].message.push(data);
-				//setChannel(channel);
-				getChatData()
+			// Temp solution
+			getChatData()
 		})
 
 		return () => {
@@ -84,27 +87,17 @@ function ChatLayout() {
 			sockets.off('onMessage');
 			sockets.off('onChannel');
 		};
-		});
+		}, []);
 
 	return ( 
-		<section className="h-screen w-screen bg-black flex">
-					<JoinChannelLayout open={creation} onClose={() => setCreation(false)} newChannel={(e: ChannelPayload) => setChannel({...channel, [e.id]: e})}/>
-			<div className="bg-white w[30vw] flex flex-col">
-				<div className="flex flex-col">
-					<button onClick={() => setDirect(true)}>Direct Message</button>
-					<button onClick={() => setCreation(true)}>Join Channel</button>
-				</div>
+		<section className="h-[90%] w-auto flex flex-grow">
+			<JoinChannelLayout open={creation} onClose={() => setCreation(false)} newChannel={(e: ChannelPayload) => setChannel({...channel, [e.id]: e})}/>
+			<div className="flex-grow flex flex-col w-[20%] min-w-[18em]">
+				<ChannelBoardButton direct={setDirect} creation={setCreation}/>
 				<ChannelBoard channels={channel} setCurrent={setCurrent}/>
 			</div>
-			<div className="w-screen h-screen bg-blue-400 flex flex-col items-center justify-center" >
-				<div className="flex-grow w-full h-full ">
-					<div className="bg-white text-black w-[100%] h-[80%] border-black border-4">
-						<DiscussionBoard channel={channel} setChannel={setChannel} current={current} setCurrent={setCurrent} me={user}/>
-					</div>
-				</div>
-				<div className="flex-none w-full">
-					<MessageEntry current={current} sockets={sockets}/>
-				</div>
+			<div className="flex-grow w-full h-auto col bg-[#282b30] border-black border-4" >
+				<DiscussionBoard channel={channel} setChannel={(e: ListChannel) => setChannel(e)} current={current} setCurrent={setCurrent} me={user} sockets={sockets}/>
 			</div>
 		</section>
 	);

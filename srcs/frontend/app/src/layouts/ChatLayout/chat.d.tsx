@@ -11,6 +11,7 @@ export type MessagePayload = {
 export type ChannelPayload = {
 	id: string;
 	name: string;
+    description: string;
 	status: string;
 	message: MessagePayload[];
 }

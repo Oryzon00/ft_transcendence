@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import {
 	ChannelPayload,
-	MessagePayload
 } from "../../layouts/ChatLayout/chat.d";
 import { UserHook } from "../../utils/hooks/TuseUser";
-import MessageBox from "./Discussion/MessageBox";
 import ChooseBox from "./Discussion/ChooseBox";
 import getJwtTokenFromCookie from "../../utils/getJWT";
 import apiAddress from "../../utils/apiAddress";
 import { getChatData } from "../../layouts/ChatLayout/ChatLayout";
+import { Socket } from "socket.io-client";
+import MessageEntry from "./MessageEntry";
+import Dots from "../../assets/chat/not-clicked/dots.png"
 
 type CurrentChannel = {
 	channel: { [key: string]: ChannelPayload };
@@ -16,6 +17,7 @@ type CurrentChannel = {
 	current: string;
 	setCurrent: any;
 	me: UserHook;
+	sockets: Socket;
 };
 
 function DiscussionBoard({
@@ -23,7 +25,8 @@ function DiscussionBoard({
 	setChannel,
 	current,
 	setCurrent,
-	me
+	me,
+	sockets
 }: CurrentChannel) {
 	const [value, setValue] = useState(0);
 
@@ -45,23 +48,28 @@ function DiscussionBoard({
 			})
 			.then(function () {
 				setChannel(getChatData());
-				setCurrent("");
+				console.log(channel);
+				setCurrent('');
 			});
 	};
 	if (current == "")
 		return (
-			<div className="flex justify-center items-center">
 				<p>No channel</p>
-			</div>
 		);
 	return (
 		<>
-			<div className="flex space-x-0 flex-row bg-black text-4xl text-white">
-				<p>{channel[current].name}</p>
+			<div id="header-discussion-bar" className="flex flex-row justify-between bg-black text-4xl text-white">
+				<div className="flex flex-col">
+					<h2 className="text-[1.6em]">{channel[current].name}</h2>
+					<p className="text-[0.6em]">{channel[current].description != undefined ? channel[current].description : 'Send a message'}</p>
+				</div>
 				<div>
-					<button onClick={() => setValue(1)}>moderation</button>
-					<button onClick={() => setValue(2)}>settings</button>
-					<button onClick={leaveChannel}>quit</button>
+					<button>
+						<img src="" alt="" />
+					</button>
+					<button>
+						<img src={Dots} alt="" />
+					</button>
 				</div>
 			</div>
 			<ChooseBox
@@ -71,10 +79,11 @@ function DiscussionBoard({
 				current={current}
 				me={me}
 			/>
+				<div className="flex-none w-full">
+					<MessageEntry current={current} sockets={sockets}/>
+				</div>
 		</>
 	);
-	if (value == 0)
-		return <MessageBox channel={channel} current={current} me={me} />;
 }
 
 export default DiscussionBoard;

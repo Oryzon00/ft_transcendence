@@ -3,7 +3,8 @@ import {
 	ChannelId,
 	ChannelPayload,
 	ListChannel
-} from "../../layouts/ChatLayout/chat.d";
+} from "../../../layouts/ChatLayout/chat.d";
+import Search from "../../../assets/chat/search.png";
 
 function searchElements(channels: ListChannel, query: string): ChannelId[] {
 	let res: ChannelId[] = [];
@@ -34,12 +35,16 @@ export default function ChannelBoard({
 	}
 
 	return (
-		<div className="rounded w-full scroll-smooth hover:scroll-auto bg-blue-900 h-[80%]">
-			<input
-				type="text"
-				value={query}
-				onChange={(e) => setQuery(e.target.value)}
-			/>
+		<div className="rounded w-full scroll-smooth hover:scroll-auto bg-blue-900">
+			<div className="flex">
+				<img src={Search} alt="" />
+				<input
+					type="text"
+					value={query}
+					onChange={(e) => setQuery(e.target.value)}
+					className="w-full"
+				/>
+			</div>
 			<ul className="h-full overflow-y-scroll scrollbar-thick scrollbar-thumb-blue-500 scrollbar-track-blue-100">
 				{filtredItems.map((value) => (
 					<li>
