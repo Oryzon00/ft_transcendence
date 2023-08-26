@@ -44,8 +44,8 @@ function MessageEntry({ current }: MessageEntryType) {
 			<input
 				type="text"
 				value={value}
-				className="rounded-[30px] w-[80%]"
-				placeholder="Taper un message"
+				className="rounded-[5px] w-[80%] bg-[#424549]"
+				placeholder=" Send a message"
 				onChange={(e) => setValue(e.target.value)}
 				maxLength={2000}
 			/>
