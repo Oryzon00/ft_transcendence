@@ -14,13 +14,15 @@ export function SearchUserInput() {
 		}
 	}
 	return (
-		<input
-			className="px-5 py-2 rounded-md"
-			type="search"
-			placeholder="Search for a user..."
-			value={search}
-			onKeyDown={handleEnterKey}
-			onChange={handleSearch}
-		></input>
+		<div className="flex items-center">
+			<input
+				className="px-2 py-1 mx-4 rounded-md w-52 h-12"
+				type="search"
+				placeholder="Search for a user..."
+				value={search}
+				onKeyDown={handleEnterKey}
+				onChange={handleSearch}
+			></input>
+		</div>
 	);
 }

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../../utils/contexts/userContext.tsx";
 import apiAddress from "../../../utils/apiAddress.ts";
 import getJwtTokenFromCookie from "../../../utils/getJWT.ts";
@@ -7,11 +7,28 @@ import { throwErrorMessage } from "../../../utils/throwErrorMessage.ts";
 
 function UpdateUsernameButton() {
 	const userHook = useContext(UserContext);
-	if (!userHook.user) return null;
+	const [username, setUsername] = useState("");
+	useEffect(
+		function () {
+			if (userHook.user.name) {
+				setUsername(userHook.user.name);
+			}
+		},
+		[userHook.user.name]
+	);
 
-	const [message, setMessage] = useState("");
+	if (!userHook.user.name) return <div> Loading... </div>;
+
 	const handleChange = (event: any) => {
-		setMessage(event.target.value);
+		setUsername(event.target.value);
+	};
+
+	const handleClick = (event: any) => {
+		if (event.key == "Enter" && username !== "") {
+			if (username.length > 15)
+				notifyError("Username must be under 15 chars");
+			else sendToBack(username);
+		}
 	};
 
 	function sendToBack(mymessage: string) {
@@ -41,22 +58,18 @@ function UpdateUsernameButton() {
 				notifyError(`Username ${mymessage} is already taken`);
 			});
 	}
-	const handleClick = (event: any) => {
-		if (event.key == "Enter") {
-			sendToBack(message);
-		}
-	};
 
 	return (
-		<div>
-			Username : {userHook.user.name}
-			<div>
-				<input
-					onChange={handleChange}
-					value={message}
-					onKeyDown={handleClick}
-				/>
-			</div>
+		<div className="py-5">
+			<h4 className="text-white text-center font-semibold text-base py-2">
+				Username
+			</h4>
+			<input
+				className="px-2 py-1 bg-zinc-800 rounded-md w-36"
+				value={username}
+				onChange={handleChange}
+				onKeyDown={handleClick}
+			/>
 		</div>
 	);
 }

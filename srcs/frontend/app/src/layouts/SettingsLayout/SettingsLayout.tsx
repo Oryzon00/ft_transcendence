@@ -1,25 +1,18 @@
-import TwoFARegisterButton from "../../components/Settings/TwoFA/TwoFARegisterButton/TwoFARegisterButton";
-import TwoFAStatus from "../../components/Settings/TwoFA/TwoFAStatusButton/TwoFAStatus.tsx";
-import TwoFATurnOffButton from "../../components/Settings/TwoFA/TwoFATurnOffButton/TwoFATurnOffButton";
-import TwoFATurnOnButton from "../../components/Settings/TwoFA/TwoFATurnOnButton/TwoFATurnOnButton";
-import UpdateUsernameButton from "../../components/Settings/UpdateUsernameButton/UpdateUsernameButton.tsx";
 import { LogOutButton } from "../../components/Settings/ButtonDeleteCookie.tsx";
-import UpdateProfilePictureButton
-	from "../../components/Settings/UpdateProfilePictureButton/UpdateProfilePictureButton.tsx";
+import { ProfileSettings } from "../../components/Settings/ProfileSettings.tsx";
+import { TwoFASettings } from "../../components/Settings/TwoFASettings.tsx";
 
 function SettingsLayout() {
-
 	return (
-		<>
-			<h1> User Settings</h1>
-			<LogOutButton />
-			<TwoFATurnOnButton />
-			<TwoFATurnOffButton />
-			<TwoFARegisterButton />
-			<UpdateProfilePictureButton />
-			<UpdateUsernameButton />
-			<TwoFAStatus />
-		</>
+		<div className="flex flex-col justify-around h-[calc(100vh-100x)] py-5">
+			<div className="flex justify-around flex-wrap">
+				<ProfileSettings />
+				<TwoFASettings />
+			</div>
+			<div className="flex justify-center">
+				<LogOutButton />
+			</div>
+		</div>
 	);
 }
 
