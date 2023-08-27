@@ -5,6 +5,9 @@ import NameInput from "../../components/Chat/CreateChannel/NameInput";
 import PasswordInput from "../../components/Chat/CreateChannel/PasswordInput";
 import HeaderCreateChannel from "../../components/Chat/CreateChannel/HeaderCreateChannel";
 
+import PublicButton from "../../components/Chat/CreateChannel/PublicButton";
+import PrivateButton from "../../components/Chat/CreateChannel/PrivateButton";
+
 function JoinChannelLayout({ open, onClose, newChannel }) {
 	const [name, setName] = useState("");
 	const [password, setPassword] = useState("");
@@ -41,8 +44,32 @@ function JoinChannelLayout({ open, onClose, newChannel }) {
 
 	if (!open) return null;
 	return (
-		<div id="create-channel" className="flex flex-col">
+		<div id="create-channel" className="flex flex-col h-full">
 			<HeaderCreateChannel onClose={onClose} />
+			<div
+				id="status"
+				className="flex flex-col space-y-2 items-center h-full justify-center"
+			>
+				<PublicButton />
+				<PrivateButton />
+			</div>
+		</div>
+	);
+	/*
+	return (
+		<div id="create-channel" className="flex flex-col h-full">
+			<HeaderCreateChannel onClose={onClose} />
+			<div
+				id="status"
+				className="flex flex-col space-y-2 items-center h-full justify-center"
+			>
+				<PublicButton />
+				<PrivateButton />
+			</div>
+		</div>
+	);
+	return (
+		<div id="create-channel" className="flex flex-col">
 			<NameInput name={name} setName={setName} />
 			<PasswordInput password={password} setPassword={setPassword} />
 			<button onClick={joinChannel} id="create-channel-button ">
@@ -50,6 +77,7 @@ function JoinChannelLayout({ open, onClose, newChannel }) {
 			</button>
 		</div>
 	);
+	*/
 }
 
 export default JoinChannelLayout;

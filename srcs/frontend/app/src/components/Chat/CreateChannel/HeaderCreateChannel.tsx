@@ -11,7 +11,7 @@ function HeaderCreateChannel({ onClose }: HeaderType) {
 				<img src={back} alt="" />
 			</button>
 			<p className="flex text-xl text-center justify-center items-center">
-				New Channel
+				New chat room
 			</p>
 		</div>
 	);
