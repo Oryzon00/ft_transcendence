@@ -35,14 +35,18 @@ export default function ChannelBoard({
 	}
 
 	return (
-		<div className="rounded w-full scroll-smooth hover:scroll-auto bg-blue-900">
-			<div className="flex">
-				<img src={Search} alt="" />
+		<div className="rounded w-full scroll-smooth hover:scroll-auto">
+			<div className="flex w-11/12 h-10 space-x-4 mt-2 mx-auto bg-[#2b2a33] rounded items-center">
+				<img
+					src={Search}
+					className="bg-[#2b2a33] w-[24px] h-[24px] ml-2 "
+				/>
 				<input
 					type="text"
 					value={query}
 					onChange={(e) => setQuery(e.target.value)}
-					className="w-full"
+					className="rounded h-full w-full"
+					placeholder="Search for a room"
 				/>
 			</div>
 			<ul className="h-full overflow-y-scroll scrollbar-thick scrollbar-thumb-blue-500 scrollbar-track-blue-100">
