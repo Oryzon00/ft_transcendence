@@ -56,7 +56,7 @@ function Modal2FA({ user }: Modal2FAProps) {
 			>
 				Open 2FA Modal
 			</button>
-			<Popup modal nested open={open} onClose={closeModal}>
+			<Popup modal nested open={open} onClose={closeModal} closeOnDocumentClick={false}>
 				<TwoFAOTPInput
 					OTP={OTP}
 					setOTP={setOTP}
