@@ -8,7 +8,7 @@ export function TwoFAOTPInput({ OTP, setOTP, callBack }: TwoFAOTPInputProps) {
 	}
 	return (
 		<div className="flex flex-col bg-zinc-800 rounded-md text-white items-center">
-			<h2 className="px-5 py-5 text-white text-lg font-bold">
+			<h2 className="px-5 py-5 text-white text-lg text-center font-bold">
 				Enter your One Time Password
 			</h2>
 			<div className="py-5 px-5 ">
