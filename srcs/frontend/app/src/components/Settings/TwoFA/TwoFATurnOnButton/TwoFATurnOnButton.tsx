@@ -58,7 +58,7 @@ function TwoFATurnOnButton() {
 			>
 				Turn on 2FA
 			</button>
-			<Popup modal nested open={open} onClose={closeModal}>
+			<Popup modal nested open={open} onClose={closeModal} className="my-popup">
 				<div>
 					<TwoFAOTPInput
 						OTP={OTP}

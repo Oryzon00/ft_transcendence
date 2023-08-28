@@ -7,6 +7,7 @@ import { Modal2FAProps } from "./TModal2FA";
 import { throwErrorMessage } from "../../utils/throwErrorMessage.ts";
 import { useNavigate } from "react-router";
 import { TwoFAOTPInput } from "../Settings/TwoFA/TwoFAOTPInput/TwoFAOTPInput.tsx";
+import "./Modal2FA.styles.css";
 
 function Modal2FA({ user }: Modal2FAProps) {
 	const [OTP, setOTP] = useState("");
@@ -56,7 +57,14 @@ function Modal2FA({ user }: Modal2FAProps) {
 			>
 				Open 2FA Modal
 			</button>
-			<Popup modal nested open={open} onClose={closeModal} closeOnDocumentClick={false}>
+			<Popup
+				modal
+				nested
+				open={open}
+				onClose={closeModal}
+				closeOnDocumentClick={false}
+				className="my-popup"
+			>
 				<TwoFAOTPInput
 					OTP={OTP}
 					setOTP={setOTP}
