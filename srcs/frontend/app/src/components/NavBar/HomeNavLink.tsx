@@ -2,8 +2,8 @@ import { NavLink } from "react-router-dom";
 import { AiFillHome } from "react-icons/ai";
 
 export function HomeNavLink() {
-	let activeClassName = " px-2 py-2 rounded-md shrink-0";
-	let normalClassName = " px-2 py-2 rounded-md shrink-0";
+	let activeClassName = "px-2 py-2 rounded-md shrink-0";
+	let normalClassName = "px-2 py-2 rounded-md shrink-0";
 
 	return (
 		<div className="flex">
@@ -32,7 +32,6 @@ export function HomeNavLink() {
 					)
 				}
 			</NavLink>
-			{/* <div className="w-48"></div> */}
 		</div>
 	);
 }
