@@ -5,30 +5,25 @@ import Discussion from "../../../assets/chat/not-clicked/channel.png";
 import JoinChannel from "../../../assets/chat/not-clicked/search-channel.png";
 import Dots from "../../../assets/chat/not-clicked/dots.png";
 
+import DiscussionClick from "../../../assets/chat/clicked/channel.png";
+import JoinChannelClick from "../../../assets/chat/clicked/compass-circular-tool(1).png";
+
+import ButtonNav from "./ButtonNav";
+
 type BoardButtonType = {
 	direct: any;
 	creation: any;
+	creationvalue: boolean
 };
 
-function ChannelBoardButton({ direct, creation }: BoardButtonType) {
-	const not_clicked =
-		"w-full bg-[#242424] hover:bg-amber-800 px-5 py-2 rounded-md flex justify-center";
-	const clicked = "";
+function ChannelBoardButton({ direct, creation, creationvalue }: BoardButtonType) {
 
 	return (
 		<div className="flex">
-			<button onClick={() => direct(true)} className={not_clicked}>
-				<img src={People} />
-			</button>
-			<button onClick={() => creation(true)} className={not_clicked}>
-				<img src={Discussion} />
-			</button>
-			<button className={not_clicked}>
-				<img src={JoinChannel} />
-			</button>
-			<button className={not_clicked}>
-				<img src={Dots} />
-			</button>
+			<ButtonNav action={creation} actionValue={creationvalue} image_clicked={People} image_not_clicked={People}/>
+			<ButtonNav action={creation} actionValue={creationvalue} image_clicked={DiscussionClick} image_not_clicked={Discussion}/>
+			<ButtonNav action={creation} actionValue={creationvalue} image_clicked={JoinChannelClick} image_not_clicked={JoinChannel}/>
+			<ButtonNav action={creation} actionValue={creationvalue} image_clicked={Dots} image_not_clicked={Dots}/>
 		</div>
 	);
 }

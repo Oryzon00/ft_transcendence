@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import apiAddress from "../../utils/apiAddress";
-import getJwtTokenFromCookie from "../../utils/getJWT";
-import { notifyError } from "../../utils/notify";
+import apiAddress from "../../../utils/apiAddress";
+import getJwtTokenFromCookie from "../../../utils/getJWT";
+import { notifyError } from "../../../utils/notify";
 
 function BlockUser({show, hide}) {
     const [query, setQuery] = useState('');

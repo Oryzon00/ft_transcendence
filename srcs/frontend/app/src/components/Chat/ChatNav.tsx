@@ -1,4 +1,4 @@
-import JoinChannelLayout from "../../layouts/ChatLayout/JoinChannelLayout";
+import JoinChannelLayout from "./Discussion/JoinChannelLayout";
 import { ChannelPayload, ListChannel } from "../../layouts/ChatLayout/chat.d";
 import ChannelBoard from "./ChannelBoard/ChannelBoard";
 import ChannelBoardButton from "./ChannelBoard/ChannelBoardButton";
@@ -20,23 +20,9 @@ function ChatNav({
 	setChannel,
 	setCurrent
 }: ChatNavType) {
-	if (creation) {
-		return (
-			<div className="flex-grow flex flex-col w-[20%] min-w-[18em] max-w-[18em] bg-[#1e2124] ">
-				<JoinChannelLayout
-					open={creation}
-					onClose={() => setCreation(false)}
-					newChannel={(e: ChannelPayload) => {
-						setCreation(false);
-						setChannel({ ...channel, [e.id]: e });
-					}}
-				/>
-			</div>
-		);
-	}
 	return (
 		<div className="flex-grow flex flex-col w-[20%] min-w-[18em] max-w-[18em] bg-[#1e2124] ">
-			<ChannelBoardButton direct={setDirect} creation={setCreation} />
+			<ChannelBoardButton direct={setDirect} creation={setCreation} creationvalue={creation}	/>
 			<ChannelBoard channels={channel} setCurrent={setCurrent} />
 		</div>
 	);

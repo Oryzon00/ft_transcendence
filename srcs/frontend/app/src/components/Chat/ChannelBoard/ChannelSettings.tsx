@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import SelectStatus from "../../components/Chat/CreateChannel/SelectStatus";
+import SelectStatus from "../CreateChannel/SelectStatus";
 
 // fetch info to the back for the new config
 function ChannelSettings({}) {

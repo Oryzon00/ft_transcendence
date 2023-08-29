@@ -1,26 +1,24 @@
 import { useContext, useEffect, useState } from "react";
 import { WebsocketContext } from "../../utils/contexts/WebsocketContext";
-import { ChannelPayload, ListChannel, MessagePayload } from "./chat.d";
+import { ListChannel, MessagePayload } from "./chat.d";
 import { UserHook } from "../../utils/hooks/TuseUser";
 import useUser from "../../utils/hooks/useUser";
 
 // Components
-import MessageEntry from "../../components/Chat/MessageEntry";
 import DiscussionBoard from "../../components/Chat/DiscussionBoard";
 import apiAddress from "../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../utils/getJWT";
 import { notifyError } from "../../utils/notify";
-import ChannelBoard from "../../components/Chat/ChannelBoard/ChannelBoard";
-import JoinChannelLayout from "./JoinChannelLayout";
 
-import ChannelBoardButton from "../../components/Chat/ChannelBoard/ChannelBoardButton";
 import ChatNav from "../../components/Chat/ChatNav";
+import OverlayPopup from "../../components/Chat/OverlayPopup";
 // Images
 
 function ChatLayout() {
 	const [current, setCurrent] = useState("");
 	const [channel, setChannel] = useState<ListChannel>({});
 
+	const [modal, setModal] = useState(false);
 	const [creation, setCreation] = useState(false);
 	const [direct, setDirect] = useState(false);
 
@@ -85,6 +83,7 @@ function ChatLayout() {
 
 	return (
 		<section className="h-[90%] w-auto flex flex-grow justify-center">
+			<OverlayPopup modal={modal} togglemodal={() => setModal(!modal)} creation={creation} togglecreation={() => setCreation(!creation)}/>
 			<ChatNav
 				creation={creation}
 				channel={channel}

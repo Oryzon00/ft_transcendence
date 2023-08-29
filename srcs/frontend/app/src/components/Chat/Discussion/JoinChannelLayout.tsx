@@ -1,12 +1,12 @@
 import { useState } from "react";
-import apiAddress from "../../utils/apiAddress";
-import getJwtTokenFromCookie from "../../utils/getJWT";
-import NameInput from "../../components/Chat/CreateChannel/NameInput";
-import PasswordInput from "../../components/Chat/CreateChannel/PasswordInput";
-import HeaderCreateChannel from "../../components/Chat/CreateChannel/HeaderCreateChannel";
+import apiAddress from "../../../utils/apiAddress";
+import getJwtTokenFromCookie from "../../../utils/getJWT";
+import NameInput from "../CreateChannel/NameInput";
+import PasswordInput from "../CreateChannel/PasswordInput";
+import HeaderCreateChannel from "../CreateChannel/HeaderCreateChannel";
 
-import PublicButton from "../../components/Chat/CreateChannel/PublicButton";
-import PrivateButton from "../../components/Chat/CreateChannel/PrivateButton";
+import PublicButton from "../CreateChannel/PublicButton";
+import PrivateButton from "../CreateChannel/PrivateButton";
 
 function JoinChannelLayout({ open, onClose, newChannel }) {
 	const [name, setName] = useState("");
@@ -44,16 +44,6 @@ function JoinChannelLayout({ open, onClose, newChannel }) {
 
 	if (!open) return null;
 	return (
-		<div id="create-channel" className="flex flex-col h-full">
-			<HeaderCreateChannel onClose={onClose} />
-			<div
-				id="status"
-				className="flex flex-col space-y-2 items-center h-full justify-center"
-			>
-				<PublicButton />
-				<PrivateButton />
-			</div>
-		</div>
 	);
 	/*
 	return (
