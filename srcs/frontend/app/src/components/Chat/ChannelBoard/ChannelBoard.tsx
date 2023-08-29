@@ -45,7 +45,7 @@ export default function ChannelBoard({
 					type="text"
 					value={query}
 					onChange={(e) => setQuery(e.target.value)}
-					className="rounded h-full w-full"
+					className="rounded h-full w-full outline-none"
 					placeholder="Search for a room"
 				/>
 			</div>

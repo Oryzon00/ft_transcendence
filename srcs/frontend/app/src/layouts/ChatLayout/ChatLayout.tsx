@@ -18,8 +18,8 @@ function ChatLayout() {
 	const [current, setCurrent] = useState("");
 	const [channel, setChannel] = useState<ListChannel>({});
 
-	const [modal, setModal] = useState(false);
 	const [creation, setCreation] = useState(false);
+	const [community, setCommunity] = useState(false);
 	const [direct, setDirect] = useState(false);
 
 	const sockets = useContext(WebsocketContext);
@@ -83,14 +83,21 @@ function ChatLayout() {
 
 	return (
 		<section className="h-[90%] w-auto flex flex-grow justify-center">
-			<OverlayPopup modal={modal} togglemodal={() => setModal(!modal)} creation={creation} togglecreation={() => setCreation(!creation)}/>
+			<OverlayPopup
+				creation={creation}
+				togglecreation={() => setCreation(!creation)}
+				community={community}
+				togglecommunity={() => setCommunity(!community)}
+			/>
 			<ChatNav
 				creation={creation}
+				community={community}
 				channel={channel}
 				setDirect={setDirect}
 				setCreation={setCreation}
 				setChannel={setChannel}
 				setCurrent={setCurrent}
+				setCommunity={setCommunity}
 			/>
 			<DiscussionBoard
 				channel={channel}
