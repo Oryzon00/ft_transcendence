@@ -3,7 +3,7 @@ import getJwtTokenFromCookie from "../../utils/getJWT";
 import { throwErrorMessage } from "../../utils/throwErrorMessage";
 import { notifyError } from "../../utils/notify";
 
-function AddFriendButton({friendname}) {
+function AddFriendButton({friendname} : any) {
 	function addFriend() {
 		
 		let url = apiAddress + "/user/friend/add";
