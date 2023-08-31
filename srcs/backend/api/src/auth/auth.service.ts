@@ -15,41 +15,89 @@ import { UserData42Dto } from "./dto/userData42.dto";
 import { JwtService } from "@nestjs/jwt";
 import { TokenDto } from "./dto/token.dto";
 import { authenticator } from "otplib";
-import { TwoFADto } from "./dto/twoFA.dto";
 import { toDataURL } from "qrcode";
-import { error } from "console";
+import { UserSafeDTO } from "src/user/dto";
+import { UserService } from "src/user/user.service";
 
 @Injectable()
 export class AuthService {
 	constructor(
 		private prisma: PrismaService,
 		private httpService: HttpService,
-		private jwt: JwtService
+		private jwt: JwtService,
+		private userService: UserService
 	) {}
+
+	/* Services */
+
+	async auth(body): Promise<TokenDto | UserSafeDTO> {
+		if (body.error || !body.code) throw new UnauthorizedException();
+
+		const token42 = await this.getToken42(body.code);
+		if (!token42) throw new BadGatewayException();
+
+		const userData42 = await this.getUserData42(token42);
+		if (!userData42) throw new BadGatewayException();
+
+		const user = await this.login(userData42);
+		if (user.is2FAOn) {
+			return this.userService.getUserSafe(user);
+		} else {
+			return await this.signToken(user);
+		}
+	}
+
+	async verifyTOTP(body): Promise<TokenDto> {
+		const trueUser = await this.userService.getTrueUser(body.user);
+		const isOTPValid = await this.verifyTOTPValid(trueUser, body.OTP);
+		if (!isOTPValid) throw new UnauthorizedException();
+		return await this.signToken(body.user);
+	}
+
+	async generate2FA(user: User): Promise<{ qrCodeUrl: string }> {
+		const otpAuthUrl = await this.generate2FASecretQRCode(user);
+		const qrCodeUrl = await this.generateQRCodeDataURL(otpAuthUrl);
+		return {
+			qrCodeUrl
+		};
+	}
+
+	async turnOn2FA(user: User, body): Promise<{ status: boolean }> {
+		if (!user.secret2FA) throw new UnauthorizedException();
+		const isTOTPValid = await this.verifyTOTPValid(user, body.TOTP);
+		if (!isTOTPValid) throw new UnauthorizedException();
+		const status = await this.turnOnOff2FA(user, true);
+		return { status: status };
+	}
+
+	async turnOff2FA(user: User): Promise<{ status: boolean }> {
+		const status = await this.turnOnOff2FA(user, false);
+		return { status: status };
+	}
+
+	/* ---------------------------------------------------------------------------------------------- */
 
 	/* 2FA */
 
 	async generate2FASecretQRCode(user: User): Promise<string> {
-		if (!user.secret2FA) {
-			const secret2FA = authenticator.generateSecret();
-			try {
-				await this.prisma.user.update({
-					where: {
-						id: user.id
-					},
-					data: {
-						secret2FA: secret2FA
-					}
-				});
-			} catch {
-				throw new ForbiddenException();
-			}
+		const secret2FA = authenticator.generateSecret();
+		try {
+			await this.prisma.user.update({
+				where: {
+					id: user.id
+				},
+				data: {
+					secret2FA: secret2FA
+				}
+			});
+		} catch {
+			throw new ForbiddenException();
 		}
 
 		const otpAuthUrl = authenticator.keyuri(
 			user.name,
 			"Transcendance",
-			user.secret2FA
+			secret2FA
 		);
 		return otpAuthUrl;
 	}

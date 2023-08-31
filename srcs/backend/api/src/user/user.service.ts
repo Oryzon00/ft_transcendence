@@ -38,41 +38,54 @@ export class UserService {
 		type: string,
 		base64Data: string
 	): Promise<{ image: string }> {
-
-		let buf = Buffer.from(base64Data.split(',')[1], 'base64');
-		const oldPath = user.image.split(`http://${process.env.SERVER_HOSTNAME}:3000/images/`)[1]
-		if (oldPath && oldPath.split('.')[1] != type.split('/')[1])
-			fs.unlink(join(process.cwd(), 'images', oldPath), (err) => {});
+		let buf = Buffer.from(base64Data.split(",")[1], "base64");
+		const oldPath = user.image.split(
+			`http://${process.env.SERVER_HOSTNAME}:3000/images/`
+		)[1];
+		if (oldPath && oldPath.split(".")[1] != type.split("/")[1])
+			fs.unlink(join(process.cwd(), "images", oldPath), (err) => {});
 
 		let imagePath = new Promise(function (resolve, reject) {
-			fs.writeFile(join(process.cwd(), 'images', user.id + '.' + type.split('/')[1]), buf, async (err) => {
-				if (err) reject(err);
-				else {
-					resolve("lol");
+			fs.writeFile(
+				join(
+					process.cwd(),
+					"images",
+					user.id + "." + type.split("/")[1]
+				),
+				buf,
+				async (err) => {
+					if (err) reject(err);
+					else {
+						resolve("lol");
+					}
+				}
+			);
+		}).then(() => {
+			return (
+				`http://${process.env.SERVER_HOSTNAME}:3000/images/` +
+				user.id +
+				"." +
+				type.split("/")[1]
+			); // Possibilité de mettre le path dans le resolve au lieu de .then
+		});
+		return imagePath.then(async (val) => {
+			await this.prisma.user.update({
+				where: {
+					id: user.id
+				},
+				data: {
+					image: val
 				}
 			});
-		})
-			.then (() => {
-				return (`http://${process.env.SERVER_HOSTNAME}:3000/images/` + user.id + "." + type.split('/')[1]) // Possibilité de mettre le path dans le resolve au lieu de .then
-		})
-		 return (imagePath.then( async (val) => {
-			 await this.prisma.user.update({
-				 where: {
-					 id: user.id
-				 },
-				 data: {
-					 image: val
-				 }
-			 });
-			 return { image: val };
-		 }));
+			return { image: val };
+		});
 	}
-
 
 	async updateUserName(
 		user: User,
 		newName: string
 	): Promise<{ name: string }> {
+		if (newName.length > 15) throw new UnauthorizedException();
 		try {
 			await this.prisma.user.update({
 				where: {

@@ -8,7 +8,7 @@ function AuthLayout() {
 	if (user) {
 		return <Modal2FA user={user as User} />;
 	} else {
-		return <div>An error occured</div>;
+		return <h2 className="flex justify-center items-center text-white text-xl text-center font-bold">Loading</h2>;
 	}
 }
 

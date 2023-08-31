@@ -1,12 +1,12 @@
 import { useContext, useState } from "react";
 import apiAddress from "../../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../../utils/getJWT";
-import OtpInput from "react-otp-input";
 import Popup from "reactjs-popup";
 import "./TwoFATurnOnButton.styles.css";
 import { UserContext } from "../../../../utils/contexts/userContext";
 import { notifyError, notifyInfo } from "../../../../utils/notify";
 import { throwErrorMessage } from "../../../../utils/throwErrorMessage";
+import { TwoFAOTPInput } from "../TwoFAOTPInput/TwoFAOTPInput";
 
 function TwoFATurnOnButton() {
 	const [open, setOpen] = useState(false);
@@ -50,27 +50,27 @@ function TwoFATurnOnButton() {
 			});
 	}
 
-	if (OTP.length == 6) {
-		turnOn2FA(OTP);
-		setOTP("");
-	}
-
 	return (
-		<div>
-			<button onClick={openModal}>Turn on 2FA</button>
-			<Popup modal nested open={open} onClose={closeModal}>
-				<div className="modal">
-					<button className="close" onClick={closeModal}>
+		<div className="py-10">
+			<button
+				className="mx-2 px-2 py-1 rounded-md hover:bg-amber-800 text-white font-semibold border-4 bg-zinc-500"
+				onClick={openModal}
+			>
+				Turn on 2FA
+			</button>
+			<Popup modal nested open={open} onClose={closeModal} className="my-popup">
+				<div>
+					<TwoFAOTPInput
+						OTP={OTP}
+						setOTP={setOTP}
+						callBack={turnOn2FA}
+					/>
+					<button
+						className="px-2 pt-0 pb-1 absolute -top-3 -right-3 rounded-full bg-zinc-500 hover:bg-amber-800 text-xl font-bold"
+						onClick={closeModal}
+					>
 						&times;
 					</button>
-					<h2>Enter your OTP</h2>
-					<OtpInput
-						value={OTP}
-						onChange={setOTP}
-						numInputs={6}
-						renderSeparator={<span></span>}
-						renderInput={(props) => <input {...props} />}
-					/>
 				</div>
 			</Popup>
 		</div>

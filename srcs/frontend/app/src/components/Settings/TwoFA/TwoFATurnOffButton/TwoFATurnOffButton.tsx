@@ -34,8 +34,14 @@ function TwoFATurnOffButton() {
 	}
 
 	return (
-		<div>
-			<button onClick={turnOff2FA}> Turn off 2FA </button>
+		<div className="py-10">
+			<button
+				className="mx-2 px-2 py-1 rounded-md hover:bg-amber-800 text-white font-semibold border-4 bg-zinc-500"
+				onClick={turnOff2FA}
+			>
+				{" "}
+				Turn off 2FA{" "}
+			</button>
 		</div>
 	);
 }

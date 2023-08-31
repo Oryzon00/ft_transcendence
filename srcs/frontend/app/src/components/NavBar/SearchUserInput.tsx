@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { FaSearch } from "react-icons/fa";
 
 export function SearchUserInput() {
 	const [search, setSearch] = useState("");
@@ -14,13 +15,18 @@ export function SearchUserInput() {
 		}
 	}
 	return (
-		<input
-			className="px-2 lg:px-3 py-2 rounded-md lg:w-52 w-28"
-			type="search"
-			placeholder="Search for a user..."
-			value={search}
-			onKeyDown={handleEnterKey}
-			onChange={handleSearch}
-		></input>
+		<div className="flex items-center">
+			<div className="flex items-center h-14 bg-zinc-700 px-5 py-2 rounded-full">
+				<FaSearch className="w-5 h-5" />
+				<input
+					className=" px-2 w-48 bg-zinc-700 outline-none"
+					type="search"
+					placeholder="Search a user..."
+					value={search}
+					onKeyDown={handleEnterKey}
+					onChange={handleSearch}
+				></input>
+			</div>
+		</div>
 	);
 }
