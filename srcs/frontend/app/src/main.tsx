@@ -17,6 +17,7 @@ import GamePage from "./pages/GamePage/GamePage.tsx";
 import { LeaderboardPage } from "./pages/LeaderboardPage/LeaderboardPage.tsx";
 import { NavBarPage } from "./pages/NavBarPage/NavBarPage.tsx";
 import ChatPage from "./pages/ChatPage/ChatPage.tsx";
+import FriendsPage from "./pages/FriendsPage/FriendsPage.tsx";
 
 const router = createBrowserRouter([
 	{
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
 				loader: ProfileLayoutLoader,
 				errorElement: <NotFoundPage />
 			},
+			{
+				path: "/friends",
+				element: <FriendsPage />
+			}
 		]
 	}
 ]);
