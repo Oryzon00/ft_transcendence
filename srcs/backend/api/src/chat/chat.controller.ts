@@ -27,27 +27,39 @@ import {
 	ListName,
 	MessageWrite
 } from "./dto/chat";
+import { channel } from "diagnostics_channel";
 
 @UseGuards(JwtGuard)
 @Controller("chat")
 export class ChatController {
 	constructor(private ChatService: ChatService) {}
 
+	// Get all the information about himself
 	@Get("getData")
 	async getData(@GetUser() user: User): Promise<ListChannel> {
 		return await this.ChatService.getData(user);
 	}
 
+	// To send a message
 	@Post("message")
 	message(@GetUser() user: User, @Body() message: MessageWrite) {
 		message.authorId = user.id;
 		this.ChatService.message(user, message);
 	}
 
+	// Create a new channel
+	@Post("/channel/create")
+	create(@GetUser() user: User, @Body() channel: ChannelCreation) {
+		return this.ChatService.createChannel(user, channel);
+	}
+
+	/*
+	// Join an existing channel
 	@Post("/channel/join")
 	join(@GetUser() user: User, @Body() channel: ChannelJoin) {
 		return this.ChatService.joinChannel(user, channel);
 	}
+	*/
 
 	@Patch("/channel/quit")
 	quit(@GetUser() user: User, @Body() channel: { id: string }) {

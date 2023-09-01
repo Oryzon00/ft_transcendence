@@ -4,6 +4,8 @@ import apiAddress from "../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../utils/getJWT";
 import { notifyError } from "../../utils/notify";
 
+import Send from "../../assets/chat/send.png"
+
 type MessageEntryType = {
 	current: string;
 	sockets: Socket;
@@ -40,16 +42,18 @@ function MessageEntry({ current }: MessageEntryType) {
 	};
 
 	return (
-		<div className="flex flex-row space-x-1 flex-none w-full justify-center">
+		<div className="bottom-0 inset-x-0 flex flex-row space-x-1 flex-none w-[98%] rounded-3xl justify-center bg-[#424549] mx-auto">
 			<input
 				type="text"
 				value={value}
-				className="rounded-[5px] w-[80%] bg-[#424549]"
-				placeholder=" Send a message"
+				className="rounded-3xl w-[90%] bg-[#424549] outline-none"
+				placeholder=" Send a message..."
 				onChange={(e) => setValue(e.target.value)}
 				maxLength={2000}
 			/>
-			<button onClick={sendMessage}>Send</button>
+			<button onClick={sendMessage} className="bg-[#424549] rounded-3xl">
+				<img src={Send} alt="" />
+			</button>
 		</div>
 	);
 }

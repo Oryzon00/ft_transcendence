@@ -6,7 +6,7 @@ type ButtonNavType = {
 };
 
 function ButtonNav({action, actionValue, image_clicked, image_not_clicked} : ButtonNavType) {
-	const not_clicked = "w-full bg-[#242424] hover:bg-amber-800 px-5 py-2 rounded-md flex justify-center";
+	const not_clicked = "w-full bg-[#242424] hover:bg-amber-800 px-5 py-2 rounded-md flex justify-center rounded-none";
 	const clicked = "w-full bg-[#242424] px-5 py-2 rounded-md flex justify-center";
 
     return (

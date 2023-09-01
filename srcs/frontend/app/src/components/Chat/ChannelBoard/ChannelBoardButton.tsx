@@ -26,7 +26,7 @@ function ChannelBoardButton({
 	communityvalue
 }: BoardButtonType) {
 	return (
-		<div className="flex">
+		<div className="flex w-full h-13">
 			<ButtonNav
 				action={creation}
 				actionValue={creationvalue}

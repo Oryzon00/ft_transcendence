@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
-import apiAddress from "../../utils/apiAddress";
-import getJwtTokenFromCookie from "../../utils/getJWT";
-import { ChannelInfo } from "../ChatLayout/chat.d";
+import apiAddress from "../../../utils/apiAddress";
+import getJwtTokenFromCookie from "../../../utils/getJWT";
+import { ChannelInfo } from "../../../layouts/ChatLayout/chat.d";
+
+// Old version community toggle
+// Need the function getSearch but can redo the interface completely
 
 function SearchChannelLayout({open, onClose, newChannel}) {
     const [value, setValue] = useState('')

@@ -5,8 +5,8 @@ import NameInput from "../CreateChannel/NameInput";
 import PasswordInput from "../CreateChannel/PasswordInput";
 import HeaderCreateChannel from "../CreateChannel/HeaderCreateChannel";
 
-import PublicButton from "../CreateChannel/PublicButton";
-import PrivateButton from "../CreateChannel/PrivateButton";
+import PublicButton from "../CreateChannel/Status/PublicButton";
+import PrivateButton from "../CreateChannel/Status/PrivateButton";
 
 function JoinChannelLayout({ open, onClose, newChannel }) {
 	const [name, setName] = useState("");

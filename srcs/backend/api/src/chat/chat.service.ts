@@ -73,8 +73,11 @@ export class ChatService {
 	}
 
 	// Creation of a channel
-	async createChannel(user: User, name: string): Promise<ChannelPayload> {
-		const res: Channel = await this.channeldb.createChannel(name, user.id);
+	async createChannel(user: User, channel: ChannelCreation): Promise<ChannelPayload> {
+		if (channel.name.length == 0)
+			return (null);
+		const res: Channel = await this.channeldb.createChannel(channel, user.id);
+		this.chatGateway.onJoinChannel(user.id, res.id);
 		return {
 			id: res.id,
 			name: res.name,
@@ -150,6 +153,7 @@ export class ChatService {
 		this.userdb.unBlock(user.id, body.name);
 	}
 
+	/*
 	async joinChannel(
 		user: User,
 		channel: ChannelJoin
@@ -174,6 +178,7 @@ export class ChatService {
 			this.listBlocked(await this.userdb.listBlockedUser(user.id))
 		);
 	}
+	*/
 
 	async invite(user: User, channel: ChannelInvitation) {
 		if ((await this.userdb.findMember(user.id, channel.id)) == undefined)

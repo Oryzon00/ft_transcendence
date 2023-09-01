@@ -5,7 +5,7 @@ import { UserHook } from "../../utils/hooks/TuseUser";
 import useUser from "../../utils/hooks/useUser";
 
 // Components
-import DiscussionBoard from "../../components/Chat/DiscussionBoard";
+import DiscussionBoard from "../../components/Chat/Discussion/DiscussionBoard";
 import apiAddress from "../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../utils/getJWT";
 import { notifyError } from "../../utils/notify";
@@ -73,6 +73,9 @@ function ChatLayout() {
 			getChatData();
 		});
 
+		// Preparation for invitation in a room.
+		sockets.on("onInvitation", (data: any) => {})
+
 		return () => {
 			console.log("Unregistered events...");
 			sockets.off("connect");
@@ -93,6 +96,7 @@ function ChatLayout() {
 				creation={creation}
 				community={community}
 				channel={channel}
+				current={current}
 				setDirect={setDirect}
 				setCreation={setCreation}
 				setChannel={setChannel}

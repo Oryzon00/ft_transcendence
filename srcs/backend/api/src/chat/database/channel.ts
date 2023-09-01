@@ -53,17 +53,18 @@ class ChannelDatabase {
 
 	}
 	// Demo of the creation of a channel
-	async createChannel(name : string, user: number) : Promise<Channel> {
+	async createChannel(channel : ChannelCreation, user: number) : Promise<Channel> {
 		try {
 		const res : Channel = await this.prisma.channel.create({
 					data: {
-						name: name,
+						name: channel.name,
 						owner: {
 							connect: {
 								id: user,
 							}
 						},
-						status: Status.PUBLIC,
+						status: this.convertStatus(channel.status.toLowerCase()),
+						password: channel.password,
 					},
 			});
 		this.joinChannel(res.id, res.ownerId, true);

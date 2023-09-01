@@ -18,9 +18,9 @@ function OverlayPopup({
 
 	if (creation)
 		return (
-			<div className="flex justify-center items-center relative">
+			<div className="flex justify-center items-center absolute w-full h-[90%]">
 				<div className={overlay} onClick={togglecreation} />
-				<div className="absolute left-1/2 translate-x-1/2">
+				<div className="absolute">
 					<CreateChannel togglemodal={togglecreation} />
 				</div>
 			</div>
