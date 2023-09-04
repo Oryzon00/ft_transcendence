@@ -35,10 +35,14 @@ export class UserController {
 		return this.userService.findUser(username);
 	}
 
-	@Post("friend/add")
+	@Post("friends/add")
 	async addFriend(@GetUser() user: User,
 	                @Body() body):
 					Promise<{ name: string}> {
 		return this.userService.addFriend(user, body.username);
+	}
+	@Get("friends/get")
+	async getFriends(@GetUser() user: User): Promise<{friends: Array<User>}> {
+		return this.userService.getFriends(user); //ATTENTION ARRAY PAS SAFE
 	}
 }

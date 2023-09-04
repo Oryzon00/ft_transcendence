@@ -6,7 +6,7 @@ import { notifyError } from "../../utils/notify";
 function AddFriendButton({friendname} : any) {
 	function addFriend() {
 		
-		let url = apiAddress + "/user/friend/add";
+		let url = apiAddress + "/user/friends/add";
 		fetch (url, {
 			method: "POST",
 			headers: {

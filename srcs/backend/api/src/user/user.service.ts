@@ -134,4 +134,20 @@ export class UserService {
 			throw new NotFoundException();
 		}
 	}
+
+	async getFriends(user: any): Promise<{friends: Array<User>}> {
+		try {
+			const fullUser = await this.prisma.user.findUnique({
+				where: {
+					id: user.id
+				},
+				include: {
+					friends: true
+				},
+			});
+			return ({friends: fullUser.friends}); //ARRAY PAS SAFE LEAK D'INFO PRIVE
+		} catch {
+			throw new NotFoundException();
+		}
+	}
 }

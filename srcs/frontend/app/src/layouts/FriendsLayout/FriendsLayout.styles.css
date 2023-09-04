@@ -11,3 +11,19 @@
 	display: flex;
 	flex-direction: column;
 }
+.friends-friendlist img {
+	height: 60px;
+	border-radius: 50%;
+}
+
+.friends-friendlist-component {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: 10px;
+}
+
+.friends-friendlist-name {
+	text-align: center;
+	margin-left: 15px;
+}
