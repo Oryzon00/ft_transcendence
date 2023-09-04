@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import Cross from "../../../assets/common/cross.png";
 
 // Components
-import Password from "./Password/Password"
-import Status from "./Status/Status"
-import Customize from "./Customize/Customize"
+import Password from "./Password/Password";
+import Status from "./Status/Status";
+import Customize from "./Customize/Customize";
 import apiAddress from "../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../utils/getJWT";
 import { notifyError } from "../../../utils/notify";
@@ -22,9 +22,9 @@ type JoinChannel = {
 	name: string;
 	status: string;
 	password: string;
-}
+};
 
-const fetchCreateChannel = (newChannel: JoinChannel, setChannel : any) => {
+const fetchCreateChannel = (newChannel: JoinChannel, setChannel: any) => {
 	fetch(apiAddress + "/chat/channel/create", {
 		method: "POST",
 		headers: {
@@ -50,13 +50,14 @@ const fetchCreateChannel = (newChannel: JoinChannel, setChannel : any) => {
 function CreateChannel({ togglemodal, setChannel }: CreateChannelType) {
 	const [position, setPosition] = useState(0);
 
-	const [name, setName] = useState('');
-	const [password, setPassword] = useState('');
-	const [status, setStatus] = useState('PUBLIC');
+	const [name, setName] = useState("");
+	const [password, setPassword] = useState("");
+	const [status, setStatus] = useState("PUBLIC");
 
 	useEffect(() => {
-		if (position == 3) { 
-			fetchCreateChannel({name, password, status}, setChannel);
+		if (position == 3) {
+			if (!password) setStatus("PROTECTED");
+			fetchCreateChannel({ name, password, status }, setChannel);
 			togglemodal();
 		}
 	});
@@ -72,15 +73,22 @@ function CreateChannel({ togglemodal, setChannel }: CreateChannelType) {
 			>
 				<img src={Cross} alt="" />
 			</button>
-			{
-				(position == 0) ? <Status setPosition={setPosition} setStatus={setStatus}/> : 
-				(position == 1) ? <Password setPosition={setPosition} setPassword={setPassword} password={password}/> :
-				(position == 2) ? <Customize
-						setPosition={setPosition}
-						previous={((status == 'PUBLIC') ? 1 : 0 )}
-						result={name} setResult={setName}
-					/> : null
-			}
+			{position == 0 ? (
+				<Status setPosition={setPosition} setStatus={setStatus} />
+			) : position == 1 ? (
+				<Password
+					setPosition={setPosition}
+					setPassword={setPassword}
+					password={password}
+				/>
+			) : position == 2 ? (
+				<Customize
+					setPosition={setPosition}
+					previous={status == "PUBLIC" ? 1 : 0}
+					result={name}
+					setResult={setName}
+				/>
+			) : null}
 		</div>
 	);
 }

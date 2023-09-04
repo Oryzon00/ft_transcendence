@@ -73,10 +73,15 @@ export class ChatService {
 	}
 
 	// Creation of a channel
-	async createChannel(user: User, channel: ChannelCreation): Promise<ChannelPayload> {
-		if (channel.name.length == 0)
-			return (null);
-		const res: Channel = await this.channeldb.createChannel(channel, user.id);
+	async createChannel(
+		user: User,
+		channel: ChannelCreation
+	): Promise<ChannelPayload> {
+		if (channel.name.length == 0) return null;
+		const res: Channel = await this.channeldb.createChannel(
+			channel,
+			user.id
+		);
 		this.chatGateway.onJoinChannel(user.id, res.id);
 		return {
 			id: res.id,
@@ -122,6 +127,48 @@ export class ChatService {
 		const msg: Message = await this.channeldb.stockMessages(message);
 		await this.chatGateway.emitToRoom(msg.channelId, msg, "onMessage");
 	}
+
+	// Give all the public channel the user is not in
+	async publicChannel(user: User) {
+		const channels: Channel[] = await this.channeldb.getPublicChannel();
+		console.log(channels);
+		if (channels == undefined) return [];
+		for (let i = 0; i < channels.length; i++) {
+			delete channels[i]["password"];
+			delete channels[i]["ownerId"];
+			delete channels[i]["messagesId"];
+			/*
+			if (this.userdb.isMember(user.id, channels[i].id) || this.userdb.isBan(user.id, channels[i].id))
+				channels.splice(i, 1);
+			*/
+		}
+		console.log(channels);
+		return channels;
+	}
+
+	// Give all the protected channel the user is not in
+	async protectedChannel(user: User) {
+		const channels: Channel[] = await this.channeldb.getProtectChannel();
+		if (channels == undefined) return [];
+		for (let i = 0; i < channels.length; i++) {
+			delete channels[i]["password"];
+			delete channels[i]["ownerId"];
+			delete channels[i]["messagesId"];
+			/*
+			if (this.userdb.isMember(user.id, channels[i].id) || this.userdb.isBan(user.id, channels[i].id))
+				channels.splice(i, 1);
+			*/
+		}
+		return channels;
+	}
+
+	/*
+	async allChannel(user: User) {
+		const publicChannel: Channel[] = await this.publicChannel(user);
+		const privateChannel: Channel[] = await this.protectedChannel(user);
+		return publicChannel.concat(privateChannel);
+	}
+	*/
 
 	async searchChannel(
 		user: User,

@@ -4,7 +4,7 @@ import apiAddress from "../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../utils/getJWT";
 import { notifyError } from "../../utils/notify";
 
-import Send from "../../assets/chat/send.png"
+import Send from "../../assets/chat/send.png";
 
 type MessageEntryType = {
 	current: string;
@@ -46,10 +46,13 @@ function MessageEntry({ current }: MessageEntryType) {
 			<input
 				type="text"
 				value={value}
-				className="rounded-3xl w-[90%] bg-[#424549] outline-none"
+				className="rounded-3xl w-[90%] px-4 mx-4 bg-[#424549] outline-none"
 				placeholder=" Send a message..."
 				onChange={(e) => setValue(e.target.value)}
 				maxLength={2000}
+				onKeyDown={(event: any) => {
+					if (event.key == "Enter") sendMessage();
+				}}
 			/>
 			<button onClick={sendMessage} className="bg-[#424549] rounded-3xl">
 				<img src={Send} alt="" />

@@ -53,6 +53,24 @@ export class ChatController {
 		return this.ChatService.createChannel(user, channel);
 	}
 
+	// Get list of channels
+	@Get("/channel/public")
+	public(@GetUser() user: User) {
+		return this.ChatService.publicChannel(user);
+	}
+
+	@Get("/channel/protected")
+	protected(@GetUser() user: User) {
+		return this.ChatService.protectedChannel(user);
+	}
+
+	/*
+	@Get("/channel/all")
+	all(@GetUser() user : User) {
+		return this.ChatService.allChannel(user);
+	}
+	*/
+
 	/*
 	// Join an existing channel
 	@Post("/channel/join")
@@ -95,6 +113,7 @@ export class ChatController {
 		return res;
 	}
 
+	// Moderation
 	@Get("/isBlocked")
 	async getBlocked(@GetUser() user: User): Promise<string[]> {
 		return await this.ChatService.getBlocked(user);

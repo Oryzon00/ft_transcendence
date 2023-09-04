@@ -51,7 +51,7 @@ function ChatLayout() {
 		getChatData();
 
 		sockets.on("connect", () => {
-			console.log(useUser())
+			console.log("connection established");
 			sockets.emit("authenticate", user.user);
 		});
 
@@ -75,7 +75,7 @@ function ChatLayout() {
 		});
 
 		// Preparation for invitation in a room.
-		sockets.on("onInvitation", (data: any) => {})
+		sockets.on("onInvitation", (data: any) => {});
 
 		return () => {
 			console.log("Unregistered events...");
@@ -92,7 +92,9 @@ function ChatLayout() {
 				togglecreation={() => setCreation(!creation)}
 				community={community}
 				togglecommunity={() => setCommunity(!community)}
-				setChannel={(e: ChannelPayload) => setChannel({...channel, [e.id]: e})}
+				setChannel={(e: ChannelPayload) =>
+					setChannel({ ...channel, [e.id]: e })
+				}
 			/>
 			<ChatNav
 				creation={creation}

@@ -32,24 +32,28 @@ function ChannelBoardButton({
 				actionValue={creationvalue}
 				image_clicked={People}
 				image_not_clicked={People}
+				title={"private"}
 			/>
 			<ButtonNav
 				action={creation}
 				actionValue={creationvalue}
 				image_clicked={DiscussionClick}
 				image_not_clicked={Discussion}
+				title="create"
 			/>
 			<ButtonNav
 				action={community}
 				actionValue={communityvalue}
 				image_clicked={JoinChannelClick}
 				image_not_clicked={JoinChannel}
+				title="join"
 			/>
 			<ButtonNav
 				action={creation}
 				actionValue={creationvalue}
 				image_clicked={Dots}
 				image_not_clicked={Dots}
+				title="more"
 			/>
 		</div>
 	);
