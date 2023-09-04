@@ -70,7 +70,7 @@ model Channel {
   createdAt DateTime @default(now())
   updateAt  DateTime @default(now()) @updatedAt
 
-  name        String  @unique
+  name        String
   avatar      String?
   description String  @default("")
 

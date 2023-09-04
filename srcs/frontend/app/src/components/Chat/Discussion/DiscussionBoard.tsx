@@ -7,11 +7,14 @@ import { ChannelPayload } from "../../../layouts/ChatLayout/chat.d";
 import { UserHook } from "../../../utils/hooks/TuseUser";
 import getJwtTokenFromCookie from "../../../utils/getJWT";
 import apiAddress from "../../../utils/apiAddress";
+
+// Dependencies
 import MessageEntry from "../MessageEntry";
+import Conversation from "./Conversation";
 
 // Images
-import Default from "./default";
-import Header from "./header";
+import Default from "./Default";
+import Header from "./Header";
 
 type CurrentChannel = {
 	channel: { [key: string]: ChannelPayload };
@@ -66,6 +69,7 @@ function DiscussionBoard({
 	return (
 		<div className={base_css}>
 			<Header channel={channel} current={current}/>
+			<Conversation message={channel[current].message} me={me}/>
 			<div className="w-full h-[7vh]"></div>
 			<MessageEntry current={current} sockets={sockets} />
 		</div>

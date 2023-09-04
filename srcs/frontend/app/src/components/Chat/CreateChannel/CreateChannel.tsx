@@ -10,9 +10,12 @@ import Customize from "./Customize/Customize"
 import apiAddress from "../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../utils/getJWT";
 import { notifyError } from "../../../utils/notify";
+import { ListChannel } from "../../../layouts/ChatLayout/chat.d";
 
 type CreateChannelType = {
 	togglemodal: any;
+	channel: ListChannel;
+	setChannel: any;
 };
 
 type JoinChannel = {
@@ -21,7 +24,7 @@ type JoinChannel = {
 	password: string;
 }
 
-const fetchCreateChannel = (newChannel: JoinChannel) => {
+const fetchCreateChannel = (newChannel: JoinChannel, setChannel : any) => {
 	fetch(apiAddress + "/chat/channel/create", {
 		method: "POST",
 		headers: {
@@ -34,14 +37,17 @@ const fetchCreateChannel = (newChannel: JoinChannel) => {
 			if (!res.ok) {
 				throw new Error("Request failed with status " + res.status);
 			}
-			return res.json;
+			return res.json();
+		})
+		.then(function (e) {
+			setChannel(e);
 		})
 		.catch(function (error) {
 			notifyError(error.message);
 		});
 };
 
-function CreateChannel({ togglemodal }: CreateChannelType) {
+function CreateChannel({ togglemodal, setChannel }: CreateChannelType) {
 	const [position, setPosition] = useState(0);
 
 	const [name, setName] = useState('');
@@ -50,7 +56,7 @@ function CreateChannel({ togglemodal }: CreateChannelType) {
 
 	useEffect(() => {
 		if (position == 3) { 
-			fetchCreateChannel({name, password, status});
+			fetchCreateChannel({name, password, status}, setChannel);
 			togglemodal();
 		}
 	});
@@ -59,7 +65,6 @@ function CreateChannel({ togglemodal }: CreateChannelType) {
 		<div
 			id="create-channel"
 			className="flex flex-col bg-white w-[440px] h-[550px] relative rounded"
-			onClick={() => {}}
 		>
 			<button
 				className="bg-white absolute top-3 right-1"

@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { WebsocketContext } from "../../utils/contexts/WebsocketContext";
-import { ListChannel, MessagePayload } from "./chat.d";
+import { ChannelPayload, ListChannel, MessagePayload } from "./chat.d";
 import { UserHook } from "../../utils/hooks/TuseUser";
 import useUser from "../../utils/hooks/useUser";
 
@@ -51,6 +51,7 @@ function ChatLayout() {
 		getChatData();
 
 		sockets.on("connect", () => {
+			console.log(useUser())
 			sockets.emit("authenticate", user.user);
 		});
 
@@ -91,6 +92,7 @@ function ChatLayout() {
 				togglecreation={() => setCreation(!creation)}
 				community={community}
 				togglecommunity={() => setCommunity(!community)}
+				setChannel={(e: ChannelPayload) => setChannel({...channel, [e.id]: e})}
 			/>
 			<ChatNav
 				creation={creation}

@@ -1,6 +1,7 @@
 
 // Images
 import Dots from "../../../assets/chat/not-clicked/dots.png";
+import Add from "../../../assets/chat/not-clicked/add-user.png"
 import Modo from "../../../assets/chat/not-clicked/modo.png";
 import Quit from "../../../assets/chat/not-clicked/quit.png";
 
@@ -19,10 +20,13 @@ function Header({channel, current} : HeaderType) {
 			>
 					<h2 className="ml-2">{channel[current].name}</h2>
                     {channel[current].description != "" ? <p>{channel[current].description}</p> : null}
-				<div>
+				<div className="flex flex-row items-center">
                     <button className="bg-[#282b30]">
                         <img src={Modo} />
                     </button>
+					<button className="bg-[#282b30] h-full">
+						<img src={Add} alt="" />
+					</button>
 					<button  className="bg-[#282b30]">
 						<img src={Quit} />
 					</button>

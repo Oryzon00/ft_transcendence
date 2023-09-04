@@ -203,6 +203,7 @@ class ChannelDatabase {
 		}))
 	}
 
+	/*	
 	async getChannelInfoName(name: string) : Promise<Channel> {
 		return (await this.prisma.channel.findUnique({
 			where: {
@@ -210,6 +211,7 @@ class ChannelDatabase {
 			}
 		}))
 	}
+	*/
 
 	// Do not take all the user blocked
 	async getChannelMessage(id: string, blocked: number[]) : Promise<Message[]> {

@@ -1,3 +1,4 @@
+import Community from "./Community/Community";
 import CreateChannel from "./CreateChannel/CreateChannel";
 
 type OverlayPopupType = {
@@ -5,13 +6,15 @@ type OverlayPopupType = {
 	togglecreation: any;
 	community: boolean;
 	togglecommunity: any;
+	setChannel: any;
 };
 
 function OverlayPopup({
 	creation,
 	togglecreation,
 	community,
-	togglecommunity
+	togglecommunity,
+	setChannel,
 }: OverlayPopupType) {
 	const overlay: string =
 		"w-screen h-screen fixed top-0 left-0 bg-opacity-30 bg-[#313131cc] flex justify-center items-center";
@@ -21,16 +24,16 @@ function OverlayPopup({
 			<div className="flex justify-center items-center absolute w-full h-[90%]">
 				<div className={overlay} onClick={togglecreation} />
 				<div className="absolute">
-					<CreateChannel togglemodal={togglecreation} />
+					<CreateChannel togglemodal={togglecreation} setChannel={setChannel} />
 				</div>
 			</div>
 		);
 	if (community)
 		return (
-			<div className="flex justify-center items-center relative">
+			<div className="flex justify-center items-center absolute w-full h-[90%]">
 				<div className={overlay} onClick={togglecommunity} />
-				<div className="absolute left-1/2 translate-x-1/2">
-					<CreateChannel togglemodal={togglecommunity} />
+				<div className="absolute">
+					<Community togglemodal={togglecommunity} />
 				</div>
 			</div>
 		);

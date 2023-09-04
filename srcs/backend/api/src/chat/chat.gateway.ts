@@ -59,10 +59,12 @@ export class ChatGateway implements OnModuleInit {
 		@ConnectedSocket() client: AuthSocket,
 		@MessageBody() body
 	) {
+		console.log(body);
 		if (body != null && Object.keys(body).length > 0) {
 			client.userId = body.id;
 			client.name = body.name;
 			const members: Member[] = await this.userdb.getMembers(body.id);
+			console.log(members)
 			if (!members) return;
 			members.map((rooms) => client.join(rooms.channelId));
 			client.join(String(body.id));
