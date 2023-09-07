@@ -219,7 +219,7 @@ export class AuthService {
 		};
 
 		const token = await this.jwt.signAsync(payload, {
-			expiresIn: "60m",
+			expiresIn: 7 * 24 * 3600000,
 			secret: process.env.JWT_SECRET
 		});
 
