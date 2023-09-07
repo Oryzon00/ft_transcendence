@@ -28,8 +28,8 @@ model User {
 
   // Connexion from another table
   members   Member[]
-  friends   User[]   @relation("friends")
-  friendsTo User[]   @relation("friends")
+  friends User[] @relation("friends")
+  pendingFriends User[] @relation("friends")
 
   channelOwner Channel[] @relation("owners")
   isBan        Ban[]     @relation("bans")
