@@ -159,7 +159,7 @@ export class AuthService {
 			);
 			return responseData;
 		} catch (error) {
-			console.log(error.message);
+			console.log(`${error.message}: ${error.code}`);
 			throw new BadGatewayException();
 		}
 	}
