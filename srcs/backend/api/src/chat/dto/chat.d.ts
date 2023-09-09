@@ -64,8 +64,7 @@ export type ChannelMute = {
 };
 
 export type ChannelJoin = {
-	name: string;
-	status: string;
+	id: string;
 	password: string;
 };
 

@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Ban, Block, Member, User } from "@prisma/client";
+import { channel } from "diagnostics_channel";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
@@ -77,11 +78,12 @@ class UserDatabase {
 	}
 
 	async isMember(userId: number, channelId: string): Promise<boolean> {
-		return (await this.findMember(userId, channelId)) != undefined;
+		console.log(await this.findMember(userId, channelId) != null)
+		return (await this.findMember(userId, channelId) != null);
 	}
 
 	async isBan(userId: number, channelId: string): Promise<boolean> {
-		return (await this.findBan(userId, channelId)) != undefined;
+		return (await this.findBan(userId, channelId) != null);
 	}
 
 	async findMember(userId: number, channelId: string): Promise<Member> {

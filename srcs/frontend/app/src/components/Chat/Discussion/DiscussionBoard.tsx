@@ -68,7 +68,7 @@ function DiscussionBoard({
 
 	return (
 		<div className={base_css}>
-			<Header channel={channel} current={current}/>
+			<Header channel={channel} current={current} setChannel={setChannel} setCurrent={setCurrent}/>
 			<Conversation message={channel[current].message} me={me}/>
 			<div className="w-full h-[7vh]"></div>
 			<MessageEntry current={current} sockets={sockets} />

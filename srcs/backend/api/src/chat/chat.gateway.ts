@@ -33,6 +33,7 @@ import { JwtGuard } from "src/auth/guard";
 import { PrismaService } from "src/prisma/prisma.service";
 import { GetUser } from "src/auth/decorator";
 import { AuthSocket } from "./AuthSocket.types";
+import { WsGuard } from "./WsGuard";
 
 @Injectable()
 @WebSocketGateway({
@@ -54,21 +55,17 @@ export class ChatGateway implements OnModuleInit {
 		this.server.on("connection", (socket: Socket) => {});
 	}
 
+	@UseGuards(WsGuard)
 	@SubscribeMessage("authenticate")
 	async authenticate(
 		@ConnectedSocket() client: AuthSocket,
 		@MessageBody() body
 	) {
-		console.log(body);
-		if (body != null && Object.keys(body).length > 0) {
-			client.userId = body.id;
-			client.name = body.name;
-			const members: Member[] = await this.userdb.getMembers(body.id);
-			console.log(members)
-			if (!members) return;
-			members.map((rooms) => client.join(rooms.channelId));
-			client.join(String(body.id));
-		}
+		const members : Member[] = await this.userdb.getMembers(client.userId)
+		client.join(String(client.userId));
+		members.map(member => {
+			client.join(member.channelId);
+		})
 	}
 
 	async onJoinChannel(userId: number, channelId: string) {

@@ -10,9 +10,11 @@ import Content from "./Content/Content";
 
 type CommunityType = {
 	togglemodal: any;
+	channel: ChannelPayload[];
+	setChannel: any;
 };
 
-function Community({ togglemodal }: CommunityType) {
+function Community({ togglemodal, channel, setChannel }: CommunityType) {
 	const [publicChannel, setPublic] = useState([]);
 	const [protectedChannel, setProtected] = useState([]);
 
@@ -74,7 +76,7 @@ function Community({ togglemodal }: CommunityType) {
 					ListProtectedChannel();
 				}}
 			/>
-			<Content channels={publicChannel.concat(protectedChannel)} />
+			<Content channels={publicChannel.concat(protectedChannel)} channel={channel} setChannel={setChannel} />
 		</div>
 	);
 }

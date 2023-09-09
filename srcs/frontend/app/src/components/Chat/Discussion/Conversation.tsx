@@ -8,7 +8,7 @@ type ConversationType = {
 
 function Conversation({ message, me }: ConversationType) {
 	return (
-		<div className="w-full h-[79%]">
+		<div className="w-full h-[79%] overflow-y-scroll ">
 			{message.map((e) => (
 				<div>
 					{e.authorId}

@@ -5,6 +5,8 @@ import ChannelBox from "./ChannelBox";
 
 type ContentType = {
 	channels: ChannelPayload[];
+	channel: ChannelPayload[];
+	setChannel: any;
 };
 
 function searchElements(
@@ -20,14 +22,14 @@ function searchElements(
 	return res;
 }
 
-function Content({ channels }: ContentType) {
+function Content({ channels, channel, setChannel }: ContentType) {
 	const [query, setQuery] = useState("");
 	const filtredItems: ChannelPayload[] = searchElements(channels, query);
 
 	return (
 		<div className="flex flex-col items-center h-[90%]">
 			<SearchBar query={query} setQuery={setQuery} />
-			<ChannelBox channels={filtredItems} />
+			<ChannelBox channels={filtredItems} channel={channel} setChannel={setChannel}/>
 		</div>
 	);
 }

@@ -112,54 +112,36 @@ export class ChatService {
 		return res;
 	}
 
-	async message(user: User, message: MessageWrite) {
-		const member: Member = await this.prisma.member.findFirst({
-			where: {
-				channelId: message.channelId,
-				userId: user.id
-			}
-		});
+	async message(user: User, message: MessageWrite) : Promise<string> {
+		const member: Member = await this.userdb.findMember(user.id, message.channelId)
 		if (member == undefined || member.mute) {
-			throw new UnauthorizedException(
+			return (
 				"You cannot send message in this channel, refresh the page"
 			);
 		}
 		const msg: Message = await this.channeldb.stockMessages(message);
 		await this.chatGateway.emitToRoom(msg.channelId, msg, "onMessage");
+		return ("");
 	}
 
 	// Give all the public channel the user is not in
 	async publicChannel(user: User) {
 		const channels: Channel[] = await this.channeldb.getPublicChannel();
-		console.log(channels);
-		if (channels == undefined) return [];
-		for (let i = 0; i < channels.length; i++) {
-			delete channels[i]["password"];
-			delete channels[i]["ownerId"];
-			delete channels[i]["messagesId"];
-			/*
-			if (this.userdb.isMember(user.id, channels[i].id) || this.userdb.isBan(user.id, channels[i].id))
-				channels.splice(i, 1);
-			*/
-		}
-		console.log(channels);
-		return channels;
+		let res : ChannelInfo[] = [];
+		for (let i = 0; channels != undefined && i < channels.length; i++)
+			if (!(await this.userdb.isMember(user.id, channels[i].id) || await this.userdb.isBan(user.id, channels[i].id)))
+				res.push({id: channels[i].id, name: channels[i].name, status: channels[i].status});
+		return (res);
 	}
 
 	// Give all the protected channel the user is not in
 	async protectedChannel(user: User) {
 		const channels: Channel[] = await this.channeldb.getProtectChannel();
-		if (channels == undefined) return [];
-		for (let i = 0; i < channels.length; i++) {
-			delete channels[i]["password"];
-			delete channels[i]["ownerId"];
-			delete channels[i]["messagesId"];
-			/*
-			if (this.userdb.isMember(user.id, channels[i].id) || this.userdb.isBan(user.id, channels[i].id))
-				channels.splice(i, 1);
-			*/
-		}
-		return channels;
+		let res : ChannelInfo[] = [];
+		for (let i = 0; channels != undefined && i < channels.length; i++)
+			if (!(await this.userdb.isMember(user.id, channels[i].id) || await this.userdb.isBan(user.id, channels[i].id)))
+				res.push({id: channels[i].id, name: channels[i].name, status: channels[i].status});
+		return (res);
 	}
 
 	/*
@@ -200,24 +182,27 @@ export class ChatService {
 		this.userdb.unBlock(user.id, body.name);
 	}
 
-	/*
 	async joinChannel(
 		user: User,
 		channel: ChannelJoin
 	): Promise<ChannelPayload> {
-		const searchChannel: Channel = await this.channeldb.getChannelInfoName(
-			channel.name
+		const searchChannel: Channel = await this.channeldb.getChannelInfoId(
+			channel.id
 		);
-		console.log(searchChannel);
-		if (searchChannel == null)
-			return await this.createChannel(user, channel.name);
 		if (
+			(searchChannel == null) ||
 			searchChannel.status == Status.PROTECT &&
 			searchChannel.password != channel.password
 		)
+		{
+			console.log('joinNull')
 			throw new UnauthorizedException();
-		if (this.channeldb.findBanChannel(channel.name, user.id) == undefined)
+		}
+		if (this.channeldb.findBanChannel(channel.id, user.id) == undefined)
+		{
+			console.log('joinBan')
 			throw new UnauthorizedException();
+		}
 		await this.channeldb.joinChannel(searchChannel.id, user.id);
 		this.chatGateway.onJoinChannel(user.id, searchChannel.id);
 		return this.getChannel(
@@ -225,7 +210,6 @@ export class ChatService {
 			this.listBlocked(await this.userdb.listBlockedUser(user.id))
 		);
 	}
-	*/
 
 	async invite(user: User, channel: ChannelInvitation) {
 		if ((await this.userdb.findMember(user.id, channel.id)) == undefined)

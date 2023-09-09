@@ -51,7 +51,7 @@ function ChatLayout() {
 		getChatData();
 
 		sockets.on("connect", () => {
-			console.log("connection established");
+			console.log(user);
 			sockets.emit("authenticate", user.user);
 		});
 
@@ -70,7 +70,6 @@ function ChatLayout() {
 
 		sockets.on("onMessage", (data: MessagePayload) => {
 			console.log(data);
-			// Temp solution
 			getChatData();
 		});
 
@@ -92,6 +91,7 @@ function ChatLayout() {
 				togglecreation={() => setCreation(!creation)}
 				community={community}
 				togglecommunity={() => setCommunity(!community)}
+				channel={channel}
 				setChannel={(e: ChannelPayload) =>
 					setChannel({ ...channel, [e.id]: e })
 				}

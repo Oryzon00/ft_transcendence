@@ -5,7 +5,8 @@ import {
 	UseGuards,
 	Patch,
 	Body,
-	Put
+	Put,
+	UnauthorizedException
 } from "@nestjs/common";
 import { ChatService } from "./chat.service";
 import { GetUser } from "src/auth/decorator";
@@ -42,9 +43,13 @@ export class ChatController {
 
 	// To send a message
 	@Post("message")
-	message(@GetUser() user: User, @Body() message: MessageWrite) {
+	async message(@GetUser() user: User, @Body() message: MessageWrite) {
 		message.authorId = user.id;
-		this.ChatService.message(user, message);
+		const error : string = await this.ChatService.message(user, message);
+		if (error.length > 0)
+		throw new UnauthorizedException(
+			error	
+		);
 	}
 
 	// Create a new channel
@@ -55,8 +60,8 @@ export class ChatController {
 
 	// Get list of channels
 	@Get("/channel/public")
-	public(@GetUser() user: User) {
-		return this.ChatService.publicChannel(user);
+	async public(@GetUser() user: User) {
+		return await this.ChatService.publicChannel(user);
 	}
 
 	@Get("/channel/protected")
@@ -71,16 +76,15 @@ export class ChatController {
 	}
 	*/
 
-	/*
 	// Join an existing channel
 	@Post("/channel/join")
 	join(@GetUser() user: User, @Body() channel: ChannelJoin) {
 		return this.ChatService.joinChannel(user, channel);
 	}
-	*/
 
 	@Patch("/channel/quit")
 	quit(@GetUser() user: User, @Body() channel: { id: string }) {
+		console.log(channel);
 		return this.ChatService.quitChannel(user, channel);
 	}
 
