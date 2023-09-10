@@ -1,5 +1,6 @@
 import "./FriendsLayout.styles.css"
 import FriendList from "../../components/Friends/FriendsList";
+import PendingFriendList from "../../components/Friends/PendingFriendsList.tsx";
 
 function FriendsLayout () {
 
@@ -9,8 +10,9 @@ function FriendsLayout () {
 			<span>Friend column</span>
 			<FriendList />
 		</div>
-		<div>
+		<div className="friends-friendlist">
 			<span>Friends demand column</span>
+			<PendingFriendList />
 		</div>
 	</div>
 	)

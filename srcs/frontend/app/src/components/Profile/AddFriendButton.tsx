@@ -1,7 +1,7 @@
 import apiAddress from "../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../utils/getJWT";
 import { throwErrorMessage } from "../../utils/throwErrorMessage";
-import { notifyError } from "../../utils/notify";
+import { notifyError, notifyInfo } from "../../utils/notify";
 
 function AddFriendButton({friendname} : any) {
 	function addFriend() {
@@ -23,7 +23,7 @@ function AddFriendButton({friendname} : any) {
 				return response.json();
 			})
 			.then(function (result) {
-				console.log(result.name);
+				notifyInfo("Friend request to " + result.name + " has been sent !");
 			})
 			.catch(function () {
 				notifyError("Error while adding friend");

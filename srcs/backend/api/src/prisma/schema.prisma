@@ -17,7 +17,7 @@ model User {
   id    Int    @id @unique @default(autoincrement())
   id42  Int    @unique
   image String
-	rank		Int			@default(1)
+  rank  Int    @default(1)
 
   name        String       @unique
   gameProfile GameProfile?
@@ -27,9 +27,12 @@ model User {
   updatedAt   DateTime     @updatedAt
 
   // Connexion from another table
-  members   Member[]
-  friends User[] @relation("friends")
-  pendingFriends User[] @relation("friends")
+  members        Member[]
+  friends        User[]   @relation("friends")
+  pendingFriends User[]   @relation("pendingFriends")
+
+  friendsRelation        User[] @relation("friends")
+  pendingFriendsRelation User[] @relation("pendingFriends")
 
   channelOwner Channel[] @relation("owners")
   isBan        Ban[]     @relation("bans")

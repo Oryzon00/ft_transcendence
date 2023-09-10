@@ -23,7 +23,6 @@ function FriendList () {
 				return response.json();
 			})
 			.then(function (result) {
-				console.log("polling...");
 				setData(result);
 			})
 			.catch(function () {

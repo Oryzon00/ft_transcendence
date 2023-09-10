@@ -123,10 +123,10 @@ export class UserService {
 			});
 			await this.prisma.user.update({
 				where: {
-					id: user.id
+					id: myfriend.id
 				},
 				data: {
-					friends: { connect: { id: myfriend.id}},
+					pendingFriends: { connect: { id: user.id}},
 				}
 			});
 			return ({name: friendName});
@@ -146,6 +146,83 @@ export class UserService {
 				},
 			});
 			return ({friends: fullUser.friends}); //ARRAY PAS SAFE LEAK D'INFO PRIVE
+		} catch {
+			throw new NotFoundException();
+		}
+	}
+
+	async getPendingFriends(user: any): Promise<{friends: Array<User>}> {
+		try {
+			const fullUser = await this.prisma.user.findUnique({
+				where: {
+					id: user.id
+				},
+				include: {
+					pendingFriends: true
+				},
+			});
+			return ({friends: fullUser.pendingFriends}); //ARRAY PAS SAFE LEAK D'INFO PRIVE
+		} catch {
+			throw new NotFoundException();
+		}
+	}
+
+	async acceptFriend(user: User, friendName: string): Promise<{name: string}> {
+		try {
+			const myfriend = await this.prisma.user.findUnique({
+				where: {
+					name: friendName
+				}
+			});
+			await this.prisma.user.update({
+				where: {
+					id: user.id
+				},
+				data: {
+					friends: { connect: { id: myfriend.id}},
+				}
+			});
+
+			await this.prisma.user.update({
+				where: {
+					id: myfriend.id
+				},
+				data: {
+					friends: { connect: { id: user.id}},
+				}
+			});
+
+			await this.prisma.user.update({
+				where: {
+					id: user.id
+				},
+				data: {
+					pendingFriends: { disconnect: { id: myfriend.id}},
+				}
+			});
+
+			return ({name: friendName});
+		} catch {
+			throw new NotFoundException();
+		}
+	}
+
+	async declineFriend(user: User, friendName: string): Promise<{name: string}> {
+		try {
+			const myfriend = await this.prisma.user.findUnique({
+				where: {
+					name: friendName
+				}
+			});
+			await this.prisma.user.update({
+				where: {
+					id: user.id
+				},
+				data: {
+					pendingFriends: { disconnect: { id: myfriend.id}},
+				}
+			});
+			return ({name: friendName});
 		} catch {
 			throw new NotFoundException();
 		}

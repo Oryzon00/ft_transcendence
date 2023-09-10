@@ -45,4 +45,23 @@ export class UserController {
 	async getFriends(@GetUser() user: User): Promise<{friends: Array<User>}> {
 		return this.userService.getFriends(user); //ATTENTION ARRAY PAS SAFE
 	}
+
+	@Get("friends/getPending")
+	async getPendingFriends(@GetUser() user: User): Promise<{friends: Array<User>}> {
+		return this.userService.getPendingFriends(user); //ATTENTION ARRAY PAS SAFE
+	}
+
+	@Post ("friends/accept")
+	async acceptFriend(@GetUser() user: User,
+					@Body() body):
+		Promise<{ name: string}> {
+		return this.userService.acceptFriend(user, body.username);
+	}
+
+	@Post ("friends/decline")
+	async declineFriend(@GetUser() user: User,
+					   @Body() body):
+		Promise<{ name: string}> {
+		return this.userService.declineFriend(user, body.username);
+	}
 }
