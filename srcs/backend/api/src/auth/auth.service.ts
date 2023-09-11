@@ -31,15 +31,18 @@ export class AuthService {
 	/* Services */
 
 	async auth(body): Promise<TokenDto | UserSafeDTO> {
+		console.log("test1");
 		if (body.error || !body.code) throw new UnauthorizedException();
 
 		const token42 = await this.getToken42(body.code);
 		if (!token42) throw new BadGatewayException();
+		console.log("test2");
 
 		const userData42 = await this.getUserData42(token42);
 		if (!userData42) throw new BadGatewayException();
-
+		console.log("test3");
 		const user = await this.login(userData42);
+		console.log(user);
 		if (user.is2FAOn) {
 			return this.userService.getUserSafe(user);
 		} else {
@@ -190,23 +193,33 @@ export class AuthService {
 	async login(userData42: UserData42Dto): Promise<User> {
 		let user: User;
 		try {
-			user = await this.prisma.user.create({
-				data: {
-					name: userData42.login,
-					image: userData42.image,
+			user = await this.prisma.user.findUniqueOrThrow({
+				where: {
 					id42: userData42.id
 				}
 			});
 		} catch (error) {
-			if (error instanceof Prisma.PrismaClientKnownRequestError) {
-				if (error.code === "P2002") {
-					user = await this.prisma.user.findUnique({
-						where: {
+			let username = userData42.login;
+			console.log(`username: ${username}`);
+			while (!user) {
+				try {
+					user = await this.prisma.user.create({
+						data: {
+							name: username,
+							image: userData42.image,
 							id42: userData42.id
 						}
 					});
+				} catch (error) {
+					if (
+						error instanceof Prisma.PrismaClientKnownRequestError &&
+						error.code === "P2002"
+					) {
+						username += "-";
+						continue;
+					}
 				}
-			} else throw error;
+			}
 		}
 		return user;
 	}
