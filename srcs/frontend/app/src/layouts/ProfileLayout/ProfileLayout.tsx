@@ -24,9 +24,6 @@ function ProfileLayout () {
 						<span>0 / 0</span>
 						<span>WL</span>
 					</div>
-					<div className='profile-leaderboard'>
-						leaderboard
-					</div>
 					<div className='profile-history'>
 						history
 					</div>

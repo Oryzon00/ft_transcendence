@@ -64,4 +64,16 @@ export class UserController {
 		Promise<{ name: string}> {
 		return this.userService.declineFriend(user, body.username);
 	}
+
+	@Post ("friends/delete")
+	async deleteFriend(@GetUser() user: User,
+					   @Body() body):
+		Promise<{ name: string}> {
+		return this.userService.deleteFriend(user, body.username);
+	}
+
+	@Get("leaderboard")
+	async getLeaderboard(@GetUser() user: User): Promise<{leaderboard: Array<User>}> {
+		return this.userService.getLeaderboard(user); //ATTENTION ARRAY PAS SAFE
+	}
 }

@@ -227,4 +227,49 @@ export class UserService {
 			throw new NotFoundException();
 		}
 	}
+
+	async deleteFriend(user: User, friendName: string): Promise<{name: string}> {
+		try {
+			const myfriend = await this.prisma.user.findUnique({
+				where: {
+					name: friendName
+				}
+			});
+
+			await this.prisma.user.update({
+				where: {
+					id: user.id
+				},
+				data: {
+					friends: { disconnect: { id: myfriend.id}},
+				}
+			});
+
+			await this.prisma.user.update({
+				where: {
+					id: myfriend.id
+				},
+				data: {
+					friends: { disconnect: { id: user.id}},
+				}
+			});
+
+			return ({name: friendName});
+		} catch {
+			throw new NotFoundException();
+		}
+	}
+
+	async getLeaderboard(user: any): Promise<{leaderboard: Array<User>}> {
+		try {
+			const fullUser = await this.prisma.user.findMany({
+				orderBy: {
+					rank: 'asc'
+				},
+			});
+			return ({leaderboard: fullUser}); //ARRAY PAS SAFE LEAK D'INFO PRIVE
+		} catch {
+			throw new NotFoundException();
+		}
+	}
 }

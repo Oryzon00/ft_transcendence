@@ -1,7 +1,7 @@
+import LeaderboardLayout from "../../layouts/LeaderboardLayout/LeaderboardLayout";
+
 export function LeaderboardPage() {
 	return (
-		<>
-			<h1>Leaderboard Page</h1>
-		</>
+		<LeaderboardLayout />
 	);
 }
