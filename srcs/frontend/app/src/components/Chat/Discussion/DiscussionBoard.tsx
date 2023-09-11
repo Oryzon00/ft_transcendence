@@ -1,12 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Socket } from "socket.io-client";
 
 // Type
 import { ChannelPayload } from "../../../layouts/ChatLayout/chat.d";
 
 import { UserHook } from "../../../utils/hooks/TuseUser";
-import getJwtTokenFromCookie from "../../../utils/getJWT";
-import apiAddress from "../../../utils/apiAddress";
 
 // Dependencies
 import MessageEntry from "../MessageEntry";
@@ -35,31 +33,7 @@ function DiscussionBoard({
 }: CurrentChannel) {
 	const base_css: string =
 		"w-full h-full bg-[#282b30]";
-
-	const [value, setValue] = useState(0);
-
-	const leaveChannel = () => {
-		fetch(apiAddress + "/chat/channel/quit", {
-			method: "PATCH",
-			headers: {
-				Authorization: "Bearer " + getJwtTokenFromCookie(),
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify({
-				id: current
-			})
-		})
-			.then(function (res: Response) {
-				if (!res.ok) {
-					throw new Error("Request failed with status " + res.status);
-				}
-			})
-			.then(function () {
-				setChannel(getChatData());
-				console.log(channel);
-				setCurrent("");
-			});
-	};
+	const [modo, setModo] = useState(false);
 
 	if (current == "")
 		return (
@@ -68,15 +42,15 @@ function DiscussionBoard({
 
 	return (
 		<div className={base_css}>
-			<Header channel={channel} current={current} setChannel={setChannel} setCurrent={setCurrent}/>
-			<Conversation message={channel[current].message} me={me}/>
-			<div className="w-full h-[7vh]"></div>
-			<MessageEntry current={current} sockets={sockets} />
+			<Header channel={channel} current={current} setChannel={setChannel} setCurrent={setCurrent} modoValue={modo} modo={() => setModo(!modo)}/>
+			{ (modo) ? <></> : 
+				<>
+					<Conversation message={channel[current].message} me={me}/>
+					<MessageEntry current={current} sockets={sockets} />
+				</>
+			}
 		</div>
 	);
 }
 
 export default DiscussionBoard;
-function getChatData(): any {
-	throw new Error("Function not implemented.");
-}

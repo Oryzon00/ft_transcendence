@@ -85,7 +85,7 @@ function ChatLayout() {
 	}, []);
 
 	return (
-		<section className="h-[90%] w-auto flex flex-grow justify-center">
+		<section className="h-[calc(100%-5rem)] w-auto flex flex-grow justify-center">
 			<OverlayPopup
 				creation={creation}
 				togglecreation={() => setCreation(!creation)}

@@ -42,7 +42,7 @@ function MessageEntry({ current }: MessageEntryType) {
 	};
 
 	return (
-		<div className="bottom-0 inset-x-0 flex flex-row space-x-1 flex-none w-[98%] rounded-3xl justify-center bg-[#424549] mx-auto">
+		<div className="flex flex-row space-x-1 flex-none w-[98%] rounded-3xl justify-center bg-[#424549] mx-auto">
 			<input
 				type="text"
 				value={value}
@@ -55,7 +55,7 @@ function MessageEntry({ current }: MessageEntryType) {
 				}}
 			/>
 			<button onClick={sendMessage} className="bg-[#424549] rounded-3xl">
-				<img src={Send} alt="" />
+				<img src={Send}/>
 			</button>
 		</div>
 	);

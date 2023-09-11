@@ -4,6 +4,8 @@ import Add from "../../../assets/chat/not-clicked/add-user.png"
 import Modo from "../../../assets/chat/not-clicked/modo.png";
 import Quit from "../../../assets/chat/not-clicked/quit.png";
 
+import ModoClicked from "../../../assets/chat/clicked/modo.png";
+
 import { ChannelPayload } from "../../../layouts/ChatLayout/chat.d";
 import apiAddress from "../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../utils/getJWT";
@@ -14,6 +16,8 @@ type HeaderType = {
 	setChannel: any;
     current: string;
 	setCurrent: any;
+	modo: any;
+	modoValue: boolean;
 };
 
 type quitType = {
@@ -40,7 +44,7 @@ const fetchQuit = (channel: quitType) => {
 		});
 };
 
-function Header({channel, setChannel, current, setCurrent} : HeaderType) {
+function Header({channel, setChannel, current, setCurrent, modo, modoValue} : HeaderType) {
 	const quitChannel = (id: string) => {
 		console.log(id);
 		const copy = {...channel};
@@ -59,8 +63,10 @@ function Header({channel, setChannel, current, setCurrent} : HeaderType) {
 					<h2 className="ml-2">{channel[current].name}</h2>
                     {channel[current].description != "" ? <p>{channel[current].description}</p> : null}
 				<div className="flex flex-row items-center">
-                    <button className="bg-[#282b30] h-full">
-                        <img src={Modo} />
+                    <button className="bg-[#282b30] h-full" onClick={() => modo()}>
+						{
+						(modoValue) ? <img src={ModoClicked} /> : <img src={Modo} />
+						}
                     </button>
 					<button className="bg-[#282b30] h-full">
 						<img src={Add} alt="" />
