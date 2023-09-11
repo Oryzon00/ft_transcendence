@@ -59,7 +59,9 @@ model Block {
 }
 
 model GameProfile {
-  userId 	Int  @unique
+  
+  id 	String  @id @unique @default(uuid())
+  userId	Int @unique
   user   	User @relation(fields: [userId], references: [id])
   playSocketId	String
   
@@ -71,6 +73,7 @@ model GameProfile {
   matchMakingRanking	Int @default(1000)
 
   wins Int	@default(0)
+  gameWons Game[] @relation("winners")
   loss Int	@default(0)
 
   @@map("gameProfiles")
@@ -86,10 +89,10 @@ model Game {
 
   gamemode	String
 
-  players User[]
+  players	GameProfile[]
   
   winnerId	Int?
-  winner	User? @relation(fields: [winnerId], references: [id])
+  winner	GameProfile?	@relation("winners", fields: [winnerId], references: [userId]) 
 
   scores	Int[]
   timerMS	Int

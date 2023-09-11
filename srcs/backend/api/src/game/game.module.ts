@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { GameGateway } from './game.gateway';
 import { LobbyManager } from './Lobby/LobbyManager';
 import { ScheduleModule } from '@nestjs/schedule';

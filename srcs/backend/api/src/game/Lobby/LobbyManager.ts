@@ -3,24 +3,27 @@ import { LobbyMode } from "./lobby.types";
 import { Lobby } from "./Lobby";
 import { AuthenticatedSocket } from "../types/AuthenticatedSocket";
 import { WebSocketServer, WsException } from "@nestjs/websockets";
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { Cron, Interval } from "@nestjs/schedule";
 import { ServerResponseDTO } from "../types/ServerResponseDTO";
 import { ServerEvents } from "../types/ServerEvents";
 import { GameService } from "../game.service";
+import { GameGateway } from "../game.gateway";
+import { PrismaService } from "src/prisma/prisma.service";
+import { AppModule } from "src/app.module";
 
 @Injectable()
 export class LobbyManager {
 	@WebSocketServer()
 	public server: Server;
 
-	private gameService: GameService;
+	constructor(@Inject(GameService) private gameService: GameService) {};
 
 	public readonly lobbies: Map<Lobby["Id"], Lobby> = new Map<Lobby["Id"], Lobby>();
 
 	public initSocket(client: AuthenticatedSocket): void {
 		client.data.lobby = null;
-		this.gameService.updateSocket()
+		this.gameService.updateSocket(client.user, client);
 	}
 
 	public endSocket(client: AuthenticatedSocket): void {

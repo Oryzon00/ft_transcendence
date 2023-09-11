@@ -7,7 +7,6 @@ import { AuthenticatedSocket } from "./types/AuthenticatedSocket";
 @Injectable()
 export class GameService {
 	constructor(
-		private gameGateway: GameGateway,
 		private prisma: PrismaService) {}
 
 	async getGameProfile(user: User): Promise<GameProfile> {
@@ -15,13 +14,20 @@ export class GameService {
 	}
 
 	async updateSocket(user: User, socket: AuthenticatedSocket) {
-		const updateGameProfile = await this.prisma.gameProfile.update({
+		console.log(user);
+		const updateGameProfile = await this.prisma.gameProfile.upsert({
 			where: {
 				userId: user.id,
 			},
-			data: {
-				playSocketId: socket.id
+			update: {
+				playSocketId: socket.id,
 			},
+			create: {
+				playSocketId: socket.id,
+				userId: user.id
+			}
 		});
+		console.log("test2");
+
 	}
 }
