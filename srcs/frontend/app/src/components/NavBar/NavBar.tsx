@@ -3,6 +3,7 @@ import { SearchUserInput } from "./SearchUserInput";
 import { HomeNavLink } from "./HomeNavLink";
 import { ChatNavLink } from "./ChatNavLink";
 import { LeaderboardNavLink } from "./LeaderboardNavLink";
+import { SocialNavLink } from "./SocialNavLink";
 
 export function NavBar() {
 	return (
@@ -13,6 +14,7 @@ export function NavBar() {
 					<div className="flex">
 						<LeaderboardNavLink />
 						<ChatNavLink />
+						<SocialNavLink />
 						<SearchUserInput />
 					</div>
 					<UserMenu />
