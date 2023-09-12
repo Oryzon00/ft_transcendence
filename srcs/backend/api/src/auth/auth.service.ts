@@ -31,18 +31,16 @@ export class AuthService {
 	/* Services */
 
 	async auth(body): Promise<TokenDto | UserSafeDTO> {
-		console.log("test1");
 		if (body.error || !body.code) throw new UnauthorizedException();
 
 		const token42 = await this.getToken42(body.code);
 		if (!token42) throw new BadGatewayException();
-		console.log("test2");
 
 		const userData42 = await this.getUserData42(token42);
 		if (!userData42) throw new BadGatewayException();
-		console.log("test3");
+
 		const user = await this.login(userData42);
-		console.log(user);
+
 		if (user.is2FAOn) {
 			return this.userService.getUserSafe(user);
 		} else {
@@ -200,7 +198,6 @@ export class AuthService {
 			});
 		} catch (error) {
 			let username = userData42.login;
-			console.log(`username: ${username}`);
 			while (!user) {
 				try {
 					user = await this.prisma.user.create({
