@@ -1,8 +1,8 @@
-import "./FriendsLayout.styles.css"
-import FriendList from "../../components/Friends/FriendsList";
-import PendingFriendList from "../../components/Friends/PendingFriendsList.tsx";
+import "./SocialLayout.styles.css"
+import FriendList from "../../components/Social/Friends/FriendsList";
+import PendingFriendList from "../../components/Social/Friends/PendingFriendsList";
 
-function FriendsLayout () {
+function SocialLayout () {
 
 	return (
 	<div className="friends-main">
@@ -18,4 +18,4 @@ function FriendsLayout () {
 	)
 }
 
-export default FriendsLayout;
+export default SocialLayout;

@@ -1,7 +1,7 @@
-import apiAddress from "../../utils/apiAddress";
-import getJwtTokenFromCookie from "../../utils/getJWT";
-import { throwErrorMessage } from "../../utils/throwErrorMessage";
-import { notifyError, notifyInfo } from "../../utils/notify";
+import apiAddress from "../../../utils/apiAddress";
+import getJwtTokenFromCookie from "../../../utils/getJWT";
+import { throwErrorMessage } from "../../../utils/throwErrorMessage";
+import { notifyError, notifyInfo } from "../../../utils/notify";
 
 function DeclineFriendButton({friendname} : any) {
 	function declineFriend() {

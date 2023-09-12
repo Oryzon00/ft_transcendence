@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import apiAddress from "../../utils/apiAddress.ts";
-import getJwtTokenFromCookie from "../../utils/getJWT.ts";
-import {throwErrorMessage} from "../../utils/throwErrorMessage.ts";
-import {notifyError} from "../../utils/notify.ts";
+import apiAddress from "../../../utils/apiAddress.ts";
+import getJwtTokenFromCookie from "../../../utils/getJWT.ts";
+import {throwErrorMessage} from "../../../utils/throwErrorMessage.ts";
+import {notifyError} from "../../../utils/notify.ts";
 import DeleteFriendButton from "./DeleteFriendButton.tsx";
 
 function FriendList () {

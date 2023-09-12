@@ -40,6 +40,7 @@ export class AuthService {
 		if (!userData42) throw new BadGatewayException();
 
 		const user = await this.login(userData42);
+
 		if (user.is2FAOn) {
 			return this.userService.getUserSafe(user);
 		} else {
@@ -190,23 +191,32 @@ export class AuthService {
 	async login(userData42: UserData42Dto): Promise<User> {
 		let user: User;
 		try {
-			user = await this.prisma.user.create({
-				data: {
-					name: userData42.login,
-					image: userData42.image,
+			user = await this.prisma.user.findUniqueOrThrow({
+				where: {
 					id42: userData42.id
 				}
 			});
 		} catch (error) {
-			if (error instanceof Prisma.PrismaClientKnownRequestError) {
-				if (error.code === "P2002") {
-					user = await this.prisma.user.findUnique({
-						where: {
+			let username = userData42.login;
+			while (!user) {
+				try {
+					user = await this.prisma.user.create({
+						data: {
+							name: username,
+							image: userData42.image,
 							id42: userData42.id
 						}
 					});
+				} catch (error) {
+					if (
+						error instanceof Prisma.PrismaClientKnownRequestError &&
+						error.code === "P2002"
+					) {
+						username += "-";
+						continue;
+					}
 				}
-			} else throw error;
+			}
 		}
 		return user;
 	}
