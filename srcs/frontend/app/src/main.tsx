@@ -17,6 +17,7 @@ import GamePage from "./pages/GamePage/GamePage.tsx";
 import { LeaderboardPage } from "./pages/LeaderboardPage/LeaderboardPage.tsx";
 import { NavBarPage } from "./pages/NavBarPage/NavBarPage.tsx";
 import ChatPage from "./pages/ChatPage/ChatPage.tsx";
+import { SocialPage } from "./pages/SocialPage/SocialPage.tsx";
 
 const router = createBrowserRouter([
 	{
@@ -35,7 +36,7 @@ const router = createBrowserRouter([
 		children: [
 			{
 				path: "/home",
-				element: <HomePage />,
+				element: <HomePage />
 			},
 			{
 				path: "/settings",
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
 				loader: ProfileLayoutLoader,
 				errorElement: <NotFoundPage />
 			},
+			{
+				path: "/social",
+				element: <SocialPage />
+			}
 		]
 	}
 ]);
