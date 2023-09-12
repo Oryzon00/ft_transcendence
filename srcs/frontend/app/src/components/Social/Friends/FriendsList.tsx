@@ -6,7 +6,7 @@ import {notifyError} from "../../../utils/notify.ts";
 import DeleteFriendButton from "./DeleteFriendButton.tsx";
 
 function FriendList () {
-	const [data, setData] = useState(null); // Utiliser un array
+	const [data, setData]:any = useState(null); // Utiliser un array
 	let listFriend = null;
 
 	function getFriends () {

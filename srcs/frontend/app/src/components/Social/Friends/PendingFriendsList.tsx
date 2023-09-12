@@ -7,7 +7,7 @@ import AcceptFriendButton from "./AcceptFriendButton.tsx";
 import DeclineFriendButton from "./DeclineFriendButton.tsx";
 
 function PendingFriendList () {
-	const [data, setData] = useState(null); // Utiliser un array
+	const [data, setData]:any = useState(null); // Utiliser un array
 	let listFriend = null;
 
 	function getPendingFriends () {
