@@ -8,6 +8,7 @@ import { Point } from "./types/Point";
 import { MovePaddleDTO } from "./MovePaddleDTO";
 import { Interval } from "@nestjs/schedule";
 import { Injectable } from "@nestjs/common";
+import { AuthenticatedSocket } from "../types/AuthenticatedSocket";
 
 export class Pong {
 	//States
@@ -19,8 +20,8 @@ export class Pong {
 
 	public countdown: number = 0;
 
-	private startTimer: number;
-	private endTimer: number = 300000;
+	public startTimer: number;
+	public endTimer: number = 300000;
 
 	private lastUpdate: number = (new Date()).getTime();
 
@@ -30,9 +31,9 @@ export class Pong {
 
 	public readonly ball: Ball = new Ball(800, 800, 7);
 
-	public readonly paddles: Map<Socket["id"], Paddle> = new Map<Socket["id"], Paddle>();
+	public readonly paddles: Map<AuthenticatedSocket["id"], Paddle> = new Map<AuthenticatedSocket["id"], Paddle>();
 
-	public scores: Map<Socket["id"], number> = new Map<Socket["id"], number>();
+	public scores: Map<AuthenticatedSocket["id"], number> = new Map<AuthenticatedSocket["id"], number>();
 
 	constructor(public readonly lobby: Lobby) {
 		for (const id of this.lobby.clients.keys())
@@ -74,8 +75,10 @@ export class Pong {
 		if ((new Date()).getTime() - this.startTimer === this.endTimer)
 			this.end();
 		for (const id of this.lobby.clients.keys()) {
-			if (this.scores.get(id) >= 5)
+			if (this.scores.get(id) >= 5) {
+				this.lobby.endInstance(id);
 				this.end();
+			}
 		}
 	}
 
@@ -129,6 +132,7 @@ export class Pong {
 
 		this.hasFinished = true;
 
+		
 		this.lobby.sendEvent<ServerResponseDTO[ServerEvents.GameMessage]>(
 			ServerEvents.GameMessage,
 			{

@@ -30,10 +30,11 @@ export class LobbyManager {
 		client.data.lobby?.removeClient(client);
 	}
 
-	public createLobby(mode: LobbyMode): Lobby {
+	public async createLobby(mode: LobbyMode): Promise<Lobby> {
 		let maxClients: number = mode === "PvE" ? 1 : 2;
 
 		const lobby = new Lobby(this.server, maxClients, this.gameService.prisma);
+		await lobby.addToDb();
 
 		this.lobbies.set(lobby.Id, lobby);
 

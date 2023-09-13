@@ -55,7 +55,7 @@ export class GameGateway
 	}
 
 	@SubscribeMessage(ClientEvents.LobbyCreate)
-	onLobbyCreate( client: AuthenticatedSocket, data: LobbyCreateDto ): WsResponse<ServerResponseDTO[ServerEvents.GameMessage]> {
+	async onLobbyCreate( client: AuthenticatedSocket, data: LobbyCreateDto ): Promise< WsResponse<ServerResponseDTO[ServerEvents.GameMessage]> > {
 		let lobby = this.lobbyManager.findLobby(client.id, data.mode);
 		if (lobby) {
 			this.lobbyManager.joinLobby(client, lobby.Id);
@@ -68,7 +68,7 @@ export class GameGateway
 				}
 			};
 		} else {
-			lobby = this.lobbyManager.createLobby(data.mode);
+			lobby = await this.lobbyManager.createLobby(data.mode);
 			lobby.addClient(client);
 
 			return {
