@@ -1,0 +1,68 @@
+.leaderboard-main {
+	height: 90vh;
+	width: 100vw;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: #1a1a1a;
+}
+
+.leaderboard-default {
+	overflow: auto;
+}
+
+.leaderboard-default::-webkit-scrollbar {
+	display: none;
+}
+
+.leaderboard-main img {
+	height: 60px;
+	border-radius: 50%;
+}
+
+.leaderboard-component {
+	background-color: #242424;
+
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-around;
+	padding: 10px;
+}
+
+.leaderboard-name {
+	text-align: center;
+	margin-left: 15px;
+}
+
+.leaderboard-1 {
+	background-color: gold;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-around;
+
+	padding: 10px;
+}
+.leaderboard-2 {
+	background-color: silver;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-around;
+
+	padding: 10px;
+}
+.leaderboard-3 {
+	background-color: #cd7f32;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-around;
+
+	padding: 10px;
+}
+
+.leaderboard-winrate {
+	padding: 20px;
+}

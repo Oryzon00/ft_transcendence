@@ -18,33 +18,43 @@ enum GameStatus {
 	IN_QUEUE
 	IDLE
 }
+enum UserStatus {
+	ONLINE
+	OFFLINE
+	INGAME
+	DONOTDISTURB
+}
 
 
 model User {
-  id    Int    @id @unique @default(autoincrement())
-  id42  Int    @unique
-  image String
-  rank		Int			@default(1)
+  id			Int			@id @unique @default(autoincrement())
+  id42			Int			@unique
+  image			String
+  rank			Int			@default(1)
+  status		UserStatus	@default(OFFLINE)
+  name			String		@unique
+  is2FAOn		Boolean		@default(false)
+  createdAt		DateTime	@default(now())
+  updatedAt		DateTime	@updatedAt
+  secret2FA		String?
+  gameProfile	GameProfile?
 
-  name        String       @unique
-  gameProfile GameProfile?
-  is2FAOn     Boolean      @default(false)
-  secret2FA   String?
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
 
   // Connexion from another table
-  members   Member[]
-  friends   User[]   @relation("friends")
-  friendsTo User[]   @relation("friends")
+  members        Member[]
+  friends        User[]   @relation("friends")
+  pendingFriends User[]   @relation("pendingFriends")
 
-  channelOwner Channel[] @relation("owners")
-  isBan        Ban[]     @relation("bans")
+  friendsRelation        User[] @relation("friends")
+  pendingFriendsRelation User[] @relation("pendingFriends")
 
-  hasBlock Block[] @relation("block")
-  isBlock  Block[] @relation("blocked")
+  channelOwner	Channel[]	@relation("owners")
+  isBan			Ban[]		@relation("bans")
 
-  message Message[]
+  hasBlock		Block[]		@relation("block")
+  isBlock		Block[]		@relation("blocked")
+
+  message		Message[]
 
   @@map("users")
 }

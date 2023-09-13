@@ -14,5 +14,7 @@ migrations/
 42.api.env
 api.secret.env
 
-# Images
-images/
+#Images
+
+srcs/backend/api/images/*
+!srcs/backend/api/images/.forGit

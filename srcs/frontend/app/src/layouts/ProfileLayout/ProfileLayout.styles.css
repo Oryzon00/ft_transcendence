@@ -1,21 +1,24 @@
 .profile-main {
-	height: 100vh;
+	height: 90vh;
 	width: 100vw;
 	display: flex;
-	flex-direction: column;
-	justify-content: center;
+	flex-direction: row;
+	justify-content: space-around;
+	background-color: #1a1a1a;
+
 }
 
 .profile-div {
 	background-color:gray;
-	height: 50vh;
-	width: 15vw;
+	height: 80vh;
+	width: 200px;
 	display: flex;
-	align-self: center;
+
 	align-items: center;
-	justify-content: space-around;
+	justify-content: flex-end;
 	flex-direction: column;
-	border-radius: 8px;
+	border-bottom-left-radius: 8px;
+	border-bottom-right-radius: 8px;
 	box-shadow: -10px 10px 10px rgb(24, 24, 24);
 	/*animation-name: grow;
 	animation-duration: 0.2s;
@@ -33,8 +36,7 @@
   }*/
 
 .profile-div img {
-	height: 15%;
-	width: fit-content;
+	height: 120px;
 	border-radius: 50%;
 }
 
@@ -43,4 +45,25 @@
 	align-self: center;
 	margin-top: 20px;
 
+}
+
+.profile-login {
+	padding: 20px;
+}
+.profile-desc {
+	padding-bottom: 120px;
+}
+
+.profile-rank {
+	display: flex;
+	align-self: center;
+	flex-direction: column;
+}
+
+.profile-leaderboard {
+	align-self: center;
+}
+
+.profile-history {
+	align-self: center;
 }

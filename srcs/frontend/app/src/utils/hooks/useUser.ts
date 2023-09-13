@@ -24,21 +24,21 @@ async function getUserAPI(): Promise<User> {
 		.catch(function (error) {
 			notifyError(error.message);
 		});
-		
+
 	return user;
 }
 
-function useUser() : UserHook {
+function useUser(): UserHook {
 	const [user, setUser] = useState<User>({} as User);
+
+	useEffect(function () {
+		fetchUser();
+	}, []);
 
 	async function fetchUser() {
 		const user: User = await getUserAPI();
 		setUser(user);
 	}
-
-	useEffect(function () {
-		fetchUser();
-	}, []);
 
 	const userHook = {
 		user,
