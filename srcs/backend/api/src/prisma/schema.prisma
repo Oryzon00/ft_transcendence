@@ -24,7 +24,7 @@ model User {
   id			Int			@id @unique @default(autoincrement())
   id42			Int			@unique
   image			String
-  rank			Int			@default(1)
+  mmr			Int			@default(1000)
   status		UserStatus	@default(OFFLINE)
   name			String		@unique
   is2FAOn		Boolean		@default(false)

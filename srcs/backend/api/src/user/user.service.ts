@@ -264,7 +264,7 @@ export class UserService {
 		try {
 			const fullUser = await this.prisma.user.findMany({
 				orderBy: {
-					rank: 'asc'
+					mmr: 'asc'
 				},
 			});
 			return ({leaderboard: fullUser}); //ARRAY PAS SAFE LEAK D'INFO PRIVE
