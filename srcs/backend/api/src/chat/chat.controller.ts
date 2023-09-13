@@ -28,7 +28,6 @@ import {
 	ListName,
 	MessageWrite
 } from "./dto/chat";
-import { channel } from "diagnostics_channel";
 
 @UseGuards(JwtGuard)
 @Controller("chat")
@@ -45,11 +44,8 @@ export class ChatController {
 	@Post("message")
 	async message(@GetUser() user: User, @Body() message: MessageWrite) {
 		message.authorId = user.id;
-		const error : string = await this.ChatService.message(user, message);
-		if (error.length > 0)
-		throw new UnauthorizedException(
-			error	
-		);
+		const error: string = await this.ChatService.message(user, message);
+		if (error.length > 0) throw new UnauthorizedException(error);
 	}
 
 	// Create a new channel

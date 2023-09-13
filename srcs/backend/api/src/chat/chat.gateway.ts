@@ -41,7 +41,13 @@ import { WsGuard } from "./WsGuard";
 		origins: ["http://localhost:3000"]
 	}
 })
-export class ChatGateway implements OnModuleInit {
+export class ChatGateway
+	implements
+		OnModuleInit,
+		OnGatewayConnection,
+		OnGatewayDisconnect,
+		OnGatewayInit
+{
 	constructor(
 		private userdb: UserDatabase,
 		private channeldb: ChannelDatabase,
@@ -55,17 +61,19 @@ export class ChatGateway implements OnModuleInit {
 		this.server.on("connection", (socket: Socket) => {});
 	}
 
+	afterInit(server: Server) {}
+
 	@UseGuards(WsGuard)
-	@SubscribeMessage("authenticate")
-	async authenticate(
-		@ConnectedSocket() client: AuthSocket,
-		@MessageBody() body
-	) {
-		const members : Member[] = await this.userdb.getMembers(client.userId)
+	async handleConnection(@ConnectedSocket() client: AuthSocket) {
+		const members: Member[] = await this.userdb.getMembers(client.userId);
 		client.join(String(client.userId));
-		members.map(member => {
+		members.map((member) => {
 			client.join(member.channelId);
-		})
+		});
+	}
+
+	async handleDisconnect(client: any) {
+		// Need to leave all the room my user in
 	}
 
 	async onJoinChannel(userId: number, channelId: string) {

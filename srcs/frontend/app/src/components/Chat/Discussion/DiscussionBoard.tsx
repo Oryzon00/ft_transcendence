@@ -9,6 +9,7 @@ import { UserHook } from "../../../utils/hooks/TuseUser";
 // Dependencies
 import MessageEntry from "../MessageEntry";
 import Conversation from "./Conversation";
+import Modo from "./Modo/Modo";
 
 // Images
 import Default from "./Default";
@@ -31,24 +32,29 @@ function DiscussionBoard({
 	me,
 	sockets
 }: CurrentChannel) {
-	const base_css: string =
-		"w-full h-full bg-[#282b30]";
+	const base_css: string = "w-full h-full bg-[#282b30]";
 	const [modo, setModo] = useState(false);
 
-	if (current == "")
-		return (
-			<Default css={base_css}/>
-		);
+	if (current == "") return <Default css={base_css} />;
 
 	return (
 		<div className={base_css}>
-			<Header channel={channel} current={current} setChannel={setChannel} setCurrent={setCurrent} modoValue={modo} modo={() => setModo(!modo)}/>
-			{ (modo) ? <></> : 
+			<Header
+				channel={channel}
+				current={current}
+				setChannel={setChannel}
+				setCurrent={setCurrent}
+				modoValue={modo}
+				modo={() => setModo(!modo)}
+			/>
+			{modo ? (
+				<Modo />
+			) : (
 				<>
-					<Conversation message={channel[current].message} me={me}/>
+					<Conversation message={channel[current].message} me={me} />
 					<MessageEntry current={current} sockets={sockets} />
 				</>
-			}
+			)}
 		</div>
 	);
 }

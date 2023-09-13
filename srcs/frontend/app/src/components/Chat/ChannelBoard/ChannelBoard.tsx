@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
 	ChannelId,
 	ChannelPayload,
@@ -12,7 +12,7 @@ function searchElements(channels: ListChannel, query: string): ChannelId[] {
 
 	for (let key in channels) {
 		let name: string = channels[key].name;
-		if (query == "" || name.startsWith(query))
+		if (query == "" || name.includes(query))
 			res.push({ id: channels[key].id, name: channels[key].name });
 	}
 	return res;
@@ -27,7 +27,7 @@ type TypeChannelBoard = {
 export default function ChannelBoard({
 	channels,
 	setCurrent,
-	current,
+	current
 }: TypeChannelBoard) {
 	const [query, setQuery] = useState("");
 	const filtredItems: ChannelId[] = searchElements(channels, query);
@@ -39,9 +39,13 @@ export default function ChannelBoard({
 	}
 
 	return (
-		<div className="rounded h-full w-full scroll-smooth hover:scroll-auto">
-			<RoomInput query={query} setQuery={setQuery}/>
-			<ChannelList filtredItems={filtredItems} changeCurrent={changeCurrent} current={current}/>
+		<div className="rounded h-[calc(100%-3rem)] w-full scroll-smooth hover:scroll-auto">
+			<RoomInput query={query} setQuery={setQuery} />
+			<ChannelList
+				filtredItems={filtredItems}
+				changeCurrent={changeCurrent}
+				current={current}
+			/>
 		</div>
 	);
 }

@@ -28,7 +28,7 @@ function ChatNav({
 	setCurrent
 }: ChatNavType) {
 	return (
-		<div className="flex-grow flex flex-col h-full w-[20%] min-w-[18em] max-w-[18em] bg-[#1e2124] ">
+		<div className="flex-grow flex flex-col h-full w-[20%] min-w-[18em] max-w-[18em] bg-[#1e2124]">
 			<ChannelBoardButton
 				direct={setDirect}
 				creation={setCreation}
@@ -36,7 +36,11 @@ function ChatNav({
 				community={setCommunity}
 				communityvalue={community}
 			/>
-			<ChannelBoard channels={channel} setCurrent={setCurrent} current={current}/>
+			<ChannelBoard
+				channels={channel}
+				setCurrent={setCurrent}
+				current={current}
+			/>
 		</div>
 	);
 }

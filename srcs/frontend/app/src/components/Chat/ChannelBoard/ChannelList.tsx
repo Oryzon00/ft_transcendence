@@ -17,8 +17,8 @@ function ChannelList({
 		"w-full h-24 border-0 border-b-2 border-[#282b30] rounded-none text-center flex items-center justify-center ";
 
 	return (
-		<div className="h-[86%] overflow-y-scroll no-scrollbar ">
-			<ul className="w-full overflow-y-scroll scrollbar-thick flex flex-col items-center scrollbar-track-blue-100">
+		<div className="h-[calc(100%-4rem)] overflow-y-scroll no-scrollbar ">
+			<ul className="w-full flex flex-col items-center">
 				{filtredItems.map((value) => (
 					<li
 						className={
