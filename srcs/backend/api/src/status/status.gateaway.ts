@@ -1,7 +1,9 @@
 import {
+	MessageBody,
 	OnGatewayConnection,
 	OnGatewayDisconnect,
 	OnGatewayInit,
+	SubscribeMessage,
 	WebSocketGateway,
 	WebSocketServer
 } from "@nestjs/websockets";
@@ -21,28 +23,23 @@ export class StatusGateway
 	constructor(private statusService: StatusService) {}
 
 	@WebSocketServer()
-	private server: Server;
+	public server: Server;
 
 	afterInit(server: Server): void {
-		console.log("Status websocket server init");
+		console.log("\n\n\nStatus websocket server init\n\n\n");
 	}
 
-	async handleConnection(
-		client: AuthenticatedSocket,
-		...args: any[]
-	): Promise<void> {
+	handleConnection(client: AuthenticatedSocket, ...args: any[]): void {
 		this.statusService.handleConnection(client);
 	}
 
-	async handleDisconnect(client: AuthenticatedSocket): Promise<void> {
+	handleDisconnect(client: AuthenticatedSocket): void {
 		this.statusService.handleDisconnect(client);
 	}
-}
 
-// IoAdapter("localhost3000", {
-// 	transport: {
-// 		polling: {
-// 			Authorization: "Bearer " + getJWT
-// 		}
-// 	}
-// });
+	@SubscribeMessage("test")
+	handleEvent(@MessageBody() data: string): string {
+		console.log("\n Message received, mirror message sent\n");
+		return data;
+	}
+}
