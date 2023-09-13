@@ -26,7 +26,7 @@ export function UserMenu() {
 					to="/leaderboard"
 					className="text-gray-400 text-base font-semibold rounded-md hover:underline"
 				>
-					rank: {userHook.user.rank}
+					mmr: {userHook.user.mmr}
 				</NavLink>
 			</div>
 			<SettingsNavLink />

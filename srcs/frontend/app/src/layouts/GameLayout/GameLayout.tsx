@@ -3,13 +3,15 @@ import PlayVSBotButton from "../../components/Play/PlayVSBotButton";
 import { cookieProtection } from "../../utils/cookieProtection";
 
 function GameLayout() {
-	// cookieProtection();
+	cookieProtection();
 
 	return (
 		<>
 			<h1>Game Menu</h1>
-			<PlayVSBotButton />
-			<PlayPvPButton />
+			<div className="flex justify-around h-9/10">
+				<PlayVSBotButton />
+				<PlayPvPButton />	
+			</div>
 		</>
 	);
 }

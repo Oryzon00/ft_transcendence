@@ -1,6 +1,7 @@
 import { io, Socket } from 'socket.io-client';
 import { createContext } from 'react';
 import { Listener, ServerEvents, ClientEvents } from './types';
+import getJwtTokenFromCookie from '../getJWT';
 
 type EmitOptions<T> = {
 	event: ClientEvents;
@@ -13,7 +14,18 @@ export default class SocketWrapper
 	private connectionLost: boolean = false;
 
 	constructor() {
-		this.socket = io(`http://${window.location.hostname}:3000`);
+		// this.socket = io();
+
+		this.socket = io(`http://${window.location.hostname}:3000`, {
+			transportOptions: {
+				polling: {
+					extraHeaders: {
+						Authorization: "Bearer " + getJwtTokenFromCookie(),
+					}
+				}
+			}
+		});
+		this.socket.connect()
 
 		this.onConnect();
 		this.onDisconnect();
@@ -60,7 +72,7 @@ export default class SocketWrapper
 	}
 
 	private onDisconnect(): void {
-		this.socket.on('disconnect',async (reason: string) => {
+		this.socket.on('disconnect', async (reason: string) => {
 			if (reason === 'io client disconnect') {
 
 			}

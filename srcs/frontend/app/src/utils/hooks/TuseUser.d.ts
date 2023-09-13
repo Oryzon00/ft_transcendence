@@ -5,7 +5,7 @@ export type User = {
 	is2FAOn: boolean;
 	createdAt: string;
 	updatedAt: string;
-	rank: number;
+	mmr: number;
 };
 
 export type UserHook = {
