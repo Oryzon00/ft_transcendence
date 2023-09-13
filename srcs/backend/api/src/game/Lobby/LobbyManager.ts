@@ -23,7 +23,7 @@ export class LobbyManager {
 
 	public initSocket(client: AuthenticatedSocket): void {
 		client.data.lobby = null;
-		this.gameService.updateSocket(client.user, client);
+		this.gameService.updateSocket(client);
 	}
 
 	public endSocket(client: AuthenticatedSocket): void {
@@ -33,7 +33,7 @@ export class LobbyManager {
 	public createLobby(mode: LobbyMode): Lobby {
 		let maxClients: number = mode === "PvE" ? 1 : 2;
 
-		const lobby = new Lobby(this.server, maxClients);
+		const lobby = new Lobby(this.server, maxClients, this.gameService.prisma);
 
 		this.lobbies.set(lobby.Id, lobby);
 

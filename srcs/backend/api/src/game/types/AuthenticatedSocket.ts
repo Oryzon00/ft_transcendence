@@ -7,7 +7,8 @@ export type AuthenticatedSocket = Socket & {
 	data: {
 		lobby: null | Lobby;
 	};
-	user: any
+	userId: number;
+	username: string;
 
 	emit: <T>(ev: ServerEvents, data: T) => boolean;
 };

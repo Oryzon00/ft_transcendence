@@ -7,27 +7,24 @@ import { AuthenticatedSocket } from "./types/AuthenticatedSocket";
 @Injectable()
 export class GameService {
 	constructor(
-		private prisma: PrismaService) {}
+		public prisma: PrismaService) {}
 
 	async getGameProfile(user: User): Promise<GameProfile> {
 		return await this.prisma.gameProfile.findUnique({where: {userId: user.id}})
 	}
 
-	async updateSocket(user: User, socket: AuthenticatedSocket) {
-		console.log(user);
+	async updateSocket(client: AuthenticatedSocket) {
 		const updateGameProfile = await this.prisma.gameProfile.upsert({
 			where: {
-				userId: user.id,
+				userId: client.userId,
 			},
 			update: {
-				playSocketId: socket.id,
+				playSocketId: client.id,
 			},
 			create: {
-				playSocketId: socket.id,
-				userId: user.id
+				playSocketId: client.id,
+				userId: client.userId
 			}
 		});
-		console.log("test2");
-
 	}
 }

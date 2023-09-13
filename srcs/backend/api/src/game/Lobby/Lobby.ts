@@ -7,9 +7,12 @@ import { ServerEvents } from "../types/ServerEvents";
 import { ServerResponseDTO } from "../types/ServerResponseDTO";
 import { Paddle } from "../Pong/types/Paddle";
 import { Point } from "../Pong/types/Point";
+import { PrismaService } from "src/prisma/prisma.service";
+import { Game } from "@prisma/client";
 
 export class Lobby {
-	public readonly Id: string = v4();
+	private prisma: PrismaService;
+	public Id: string;
 	public startedAt: number;
 
 	public readonly clients: Map<Socket["id"], AuthenticatedSocket> = new Map<
@@ -19,7 +22,24 @@ export class Lobby {
 
 	public readonly game: Pong = new Pong(this);
 
-	constructor(private readonly server: Server, public readonly maxClients: number) {}
+ 	constructor(private readonly server: Server, public readonly maxClients: number, prisma: PrismaService) {
+		this.prisma = prisma;
+		this.addToDb();
+	}
+
+	private async addToDb() {
+		try {
+			const prismGame: any = await this.prisma.game.create({
+				data: {
+					gamemode: this.maxClients === 1 ? 'PvE' : 'PvP',					
+				}
+			});
+			
+			this.Id = prismGame.id;
+		} catch(err) {
+			console.log(err);
+		}
+	}
 
 	public removeClient(client: AuthenticatedSocket): void {}
 

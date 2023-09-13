@@ -72,7 +72,7 @@ export default class SocketWrapper
 	}
 
 	private onDisconnect(): void {
-		this.socket.on('disconnect',async (reason: string) => {
+		this.socket.on('disconnect', async (reason: string) => {
 			if (reason === 'io client disconnect') {
 
 			}

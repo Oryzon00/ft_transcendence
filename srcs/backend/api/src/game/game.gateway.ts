@@ -36,27 +36,8 @@ export class GameGateway
 		this.lobbyManager.server = server;
 	}
 
-	async handleConnection(client: Socket, ...args: any[]): Promise<void> {
-		try {
-			const token: string = client.handshake.headers.authorization.split(' ')[1];
-			const decoded: any = jwt.verify(token, process.env.JWT_SECRET);
-			const AClient: AuthenticatedSocket = client as AuthenticatedSocket;
-			console.log("test");
-			console.log(decoded.name);
-			
-			const resp = await this.prisma.user.findUnique({
-				where: {
-					name: decoded.name,
-				}
-			});
-			console.log(resp);
-			AClient.user = resp
-			this.lobbyManager.initSocket(AClient);
-			
-		} catch (err) {
-			client._error('Unauthorized');
-			client.disconnect();
-		}
+	async handleConnection(client: AuthenticatedSocket, ...args: any[]): Promise<void> {
+		this.lobbyManager.initSocket(client);	
 	}
 
 	async handleDisconnect(client: AuthenticatedSocket): Promise<void> {
@@ -99,6 +80,7 @@ export class GameGateway
 			};
 		}
 	}
+
 
 	@SubscribeMessage(ClientEvents.LobbyJoin)
 	onLobbyJoin(
