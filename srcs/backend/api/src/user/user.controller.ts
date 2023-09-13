@@ -81,4 +81,5 @@ export class UserController {
 	async getLeaderboardOthers(@GetUser() user: User): Promise<{leaderboard: Array<User>}> {
 		return this.userService.getLeaderboardOthers(user); //ATTENTION ARRAY PAS SAFE
 	}
+
 }

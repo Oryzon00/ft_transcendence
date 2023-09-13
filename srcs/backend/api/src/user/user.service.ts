@@ -106,9 +106,16 @@ export class UserService {
 			const user = await this.prisma.user.findUnique({
 				where: {
 					name: username
-				}
+				},
+				include: {
+					gameProfile: {
+						include: {
+							history: true
+						}
+					}
+				},
 			});
-			return this.getUserSafe(user);
+			return user;
 		} catch {
 			throw new NotFoundException();
 		}
@@ -264,7 +271,7 @@ export class UserService {
 		try {
 			const fullUser = await this.prisma.user.findMany({
 				orderBy: {
-					mmr: 'asc'
+					mmr: 'desc'
 				},
 				take: 3
 			});
@@ -278,7 +285,7 @@ export class UserService {
 		try {
 			const fullUser = await this.prisma.user.findMany({
 				orderBy: {
-					rank: 'asc'
+					mmr: 'desc'
 				},
 				skip: 3
 			});

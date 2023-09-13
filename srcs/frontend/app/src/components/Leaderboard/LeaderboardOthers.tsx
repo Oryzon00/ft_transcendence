@@ -53,7 +53,7 @@ function LeaderboardOthers () {
 						    </div>
 							<div className="leaderboard-winrate">
 								<p>MMR:</p>
-								<p>1000</p>
+								<p>{currentUser.mmr}</p>
 							</div>
 							<div>
 								<ViewProfileButton username={currentUser.name} />
