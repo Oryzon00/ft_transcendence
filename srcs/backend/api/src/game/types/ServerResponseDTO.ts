@@ -10,6 +10,7 @@ export type ServerResponseDTO = {
 		lobbyMode: LobbyMode,
 		hasStarted: boolean,
 		hasFinished: boolean,
+		countdown: number,
 		isPaused: boolean,
 		playersCount: number,
 		gameWidth: number,

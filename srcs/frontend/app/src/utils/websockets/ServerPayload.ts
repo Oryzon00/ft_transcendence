@@ -17,6 +17,7 @@ export type ServerPayload = {
 		lobbyMode: "PvP" | "PvE",
 		hasStarted: boolean,
 		hasFinished: boolean,
+		countdown: number,
 		isPaused: boolean,
 		playersCount: number,
 		gameWidth: number,

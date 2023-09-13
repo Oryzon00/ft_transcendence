@@ -1,3 +1,9 @@
+.PongLayout {
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: center;
+}
+
 canvas {
 	z-index: 100;
 	width: 60vh;

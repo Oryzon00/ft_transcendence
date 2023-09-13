@@ -7,9 +7,12 @@ import { ServerEvents } from "../types/ServerEvents";
 import { ServerResponseDTO } from "../types/ServerResponseDTO";
 import { Paddle } from "../Pong/types/Paddle";
 import { Point } from "../Pong/types/Point";
+import { PrismaService } from "src/prisma/prisma.service";
+import { Game } from "@prisma/client";
 
 export class Lobby {
-	public readonly Id: string = v4();
+	private prisma: PrismaService;
+	public Id: string;
 	public startedAt: number;
 
 	public readonly clients: Map<Socket["id"], AuthenticatedSocket> = new Map<
@@ -19,7 +22,50 @@ export class Lobby {
 
 	public readonly game: Pong = new Pong(this);
 
-	constructor(private readonly server: Server, public readonly maxClients: number) {}
+ 	constructor(private readonly server: Server, public readonly maxClients: number, prisma: PrismaService) {
+		this.prisma = prisma;
+	}
+
+	public async addToDb() {
+		try {
+			const prismGame: any = await this.prisma.game.create({
+				data: {
+					gamemode: this.maxClients === 1 ? 'PvE' : 'PvP',					
+				}
+			});
+			
+			this.Id = prismGame.id;
+		} catch(err) {
+			console.log(err);
+		}
+	}
+
+	public async endInstance(socketId: string) {
+		try {
+			const winner: any = await this.prisma.gameProfile.findFirst({
+				where: {
+					playSocketId: socketId,
+				},
+			});
+			console.log(winner);
+			await this.prisma.game.update({
+				where: {
+					id: this.Id,
+				},
+				data: {
+					winner: {
+						connect: {
+							id: winner.id,
+						}
+					},
+					scores: Array.from(this.game.scores.values()),
+					timerMS: (new Date()).getTime() - this.game.startTimer,
+				}
+			});
+		} catch(err) {
+			console.log(err);
+		}
+	}
 
 	public removeClient(client: AuthenticatedSocket): void {}
 
@@ -39,6 +85,7 @@ export class Lobby {
 			lobbyMode: this.maxClients === 1 ? 'PvE' : 'PvP',
 			hasStarted: this.game.hasStarted,
 			hasFinished: this.game.hasFinished,
+			countdown: this.game.countdown,
 			isPaused: this.game.isPaused,
 			playersCount: this.clients.size,
 			gameWidth: this.game.width,
@@ -59,12 +106,31 @@ export class Lobby {
 	private startGame(mode: number) {
 		this.game.start();
 		this.startedAt = (new Date()).getTime();
+		
 	}
 
-	public addClient(client: AuthenticatedSocket): void {
+	public async addClient(client: AuthenticatedSocket): Promise<void> {
 		this.clients.set(client.id, client);
 		client.join(this.Id);
 		client.data.lobby = this;
+		const user: any = await this.prisma.user.findUnique({
+			where: {
+				id: client.userId
+			},
+		});
+
+		await this.prisma.game.update({
+			where: {
+				id: this.Id,
+			},
+			data: {
+				players: {
+					connect: {
+						userId: user.id,
+					}
+				},
+			}
+		});
 
 		if (this.clients.size >= this.maxClients) {
 			this.startGame(this.maxClients);
