@@ -1,13 +1,33 @@
-// import { Injectable } from "@nestjs/common";
-// import { PrismaService } from "src/prisma/prisma.service";
-// import { StatusGateway } from "./status.gateaway";
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "src/prisma/prisma.service";
+import { AuthenticatedSocket } from "src/game/types/AuthenticatedSocket";
+import { UserStatus } from "@prisma/client";
 
-// @Injectable()
-// export class StatusService {
-// 	constructor(
-// 		private prisma: PrismaService,
-// 		private statusGateway: StatusGateway
-// 	) {}
+@Injectable()
+export class StatusService {
+	constructor(private prisma: PrismaService) {}
 
-// 	async get
-// }
+	async handleConnection(client: AuthenticatedSocket) {
+		console.log(`${client.username} connected`);
+		this.prisma.user.update({
+			where: {
+				id: client.userId
+			},
+			data: {
+				status: UserStatus.ONLINE
+			}
+		});
+	}
+
+	async handleDisconnect(client: AuthenticatedSocket) {
+		console.log(`${client.username} disconnected`);
+		this.prisma.user.update({
+			where: {
+				id: client.userId
+			},
+			data: {
+				status: UserStatus.OFFLINE
+			}
+		});
+	}
+}
