@@ -72,8 +72,13 @@ export class UserController {
 		return this.userService.deleteFriend(user, body.username);
 	}
 
-	@Get("leaderboard")
-	async getLeaderboard(@GetUser() user: User): Promise<{leaderboard: Array<User>}> {
-		return this.userService.getLeaderboard(user); //ATTENTION ARRAY PAS SAFE
+	@Get("leaderboard/firsts")
+	async getLeaderboardFirsts(@GetUser() user: User): Promise<{leaderboard: Array<User>}> {
+		return this.userService.getLeaderboardFirsts(user); //ATTENTION ARRAY PAS SAFE
+	}
+
+	@Get("leaderboard/others")
+	async getLeaderboardOthers(@GetUser() user: User): Promise<{leaderboard: Array<User>}> {
+		return this.userService.getLeaderboardOthers(user); //ATTENTION ARRAY PAS SAFE
 	}
 }

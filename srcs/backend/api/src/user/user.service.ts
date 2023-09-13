@@ -260,12 +260,27 @@ export class UserService {
 		}
 	}
 
-	async getLeaderboard(user: any): Promise<{leaderboard: Array<User>}> {
+	async getLeaderboardFirsts(user: any): Promise<{leaderboard: Array<User>}> {
 		try {
 			const fullUser = await this.prisma.user.findMany({
 				orderBy: {
 					rank: 'asc'
 				},
+				take: 3
+			});
+			return ({leaderboard: fullUser}); //ARRAY PAS SAFE LEAK D'INFO PRIVE
+		} catch {
+			throw new NotFoundException();
+		}
+	}
+
+	async getLeaderboardOthers(user: any): Promise<{leaderboard: Array<User>}> {
+		try {
+			const fullUser = await this.prisma.user.findMany({
+				orderBy: {
+					rank: 'asc'
+				},
+				skip: 3
 			});
 			return ({leaderboard: fullUser}); //ARRAY PAS SAFE LEAK D'INFO PRIVE
 		} catch {

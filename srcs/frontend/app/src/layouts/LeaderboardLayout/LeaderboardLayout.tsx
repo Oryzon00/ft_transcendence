@@ -1,11 +1,13 @@
-import Leaderboard from "../../components/Leaderboard/Leaderboard";
+import LeaderboardFirsts from "../../components/Leaderboard/LeaderboardFirsts";
+import LeaderboardOthers from "../../components/Leaderboard/LeaderboardOthers";
 import "./LeaderboardLayout.styles.css"
 
 function LeaderboardLayout() {
 	return (
 		<div className="leaderboard-main">
-			<h1>Leaderboard</h1>
-			<Leaderboard />
+			<LeaderboardFirsts />
+			<span className="leaderboard-mc">Meow t'es trop Low Bebou Nyaa~</span>
+			<LeaderboardOthers />
 		</div>
 	)
 }

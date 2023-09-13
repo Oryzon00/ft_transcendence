@@ -5,12 +5,12 @@ import {throwErrorMessage} from "../../utils/throwErrorMessage.ts";
 import {notifyError} from "../../utils/notify.ts";
 import ViewProfileButton from "./ViewProfileButton.tsx";
 
-function Leaderboard () {
-	const [data, setData] = useState(null); // Utiliser un array
+function LeaderboardOthers () {
+	const [data, setData] :any = useState(null); // Utiliser un array
 	let leaderboardList = null;
 
-	function getLeaderboard () {
-		let url = apiAddress + "/user/leaderboard";
+	function getLeaderboardOthers () {
+		let url = apiAddress + "/user/leaderboard/others";
 		fetch (url, {
 			method: "GET",
 			headers: {
@@ -32,28 +32,28 @@ function Leaderboard () {
 	}
 
  	useEffect (() => {
-		getLeaderboard();
+		getLeaderboardOthers();
 		const interval = window.setInterval(() => {
-			getLeaderboard()
+			getLeaderboardOthers()
 		}, 1000);
 
 		return () => window.clearInterval(interval);
 	}, []);
 
 	 if (data !== null) {
-		let rank = 1;
+		let rank = 4;
 		 leaderboardList = data.leaderboard.map(
 			(currentUser :any) => (
 				 <li key={currentUser.id}>
-					 <div className={rank === 1 || rank === 2 || rank === 3 ? "leaderboard-" + rank : "leaderboard-component"}>
+					 <div className={"leaderboard-component"}>
 					        <img src={currentUser.image}></img>
 						    <div className="leaderboard-name">
 							    <p>{currentUser.name}</p>
 								<p>Rank: {rank++}</p>
 						    </div>
 							<div className="leaderboard-winrate">
-								<p>W/L</p>
-								<p>0/0</p>
+								<p>MMR:</p>
+								<p>1000</p>
 							</div>
 							<div>
 								<ViewProfileButton username={currentUser.name} />
@@ -72,4 +72,4 @@ function Leaderboard () {
 	)
 }
 
-export default Leaderboard;
+export default LeaderboardOthers;
