@@ -25,7 +25,9 @@ export class StatusGateway
 	@WebSocketServer()
 	public server: Server;
 
-	afterInit(server: Server): void {}
+	afterInit(server: Server): void {
+		console.log("\n\n Init socket server status user \n\n");
+	}
 
 	handleConnection(client: AuthenticatedSocket, ...args: any[]): void {
 		this.statusService.handleConnection(client);

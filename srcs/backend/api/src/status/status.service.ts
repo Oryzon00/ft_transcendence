@@ -10,7 +10,7 @@ export class StatusService {
 	constructor(private prisma: PrismaService, ) {}
 
 	async handleConnection(client: AuthenticatedSocket) {
-		console.log(`${client.username} connected`);
+		console.log(`\n${client.username} connected\n`);
 		this.prisma.user.update({
 			where: {
 				id: client.userId
@@ -22,7 +22,7 @@ export class StatusService {
 	}
 
 	async handleDisconnect(client: AuthenticatedSocket) {
-		console.log(`${client.username} disconnected`);
+		console.log(`\n${client.username} disconnected\n`);
 		this.prisma.user.update({
 			where: {
 				id: client.userId
