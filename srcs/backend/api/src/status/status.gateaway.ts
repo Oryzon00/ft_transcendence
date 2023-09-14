@@ -25,9 +25,7 @@ export class StatusGateway
 	@WebSocketServer()
 	public server: Server;
 
-	afterInit(server: Server): void {
-		console.log("\n\n\nStatus websocket server init\n\n\n");
-	}
+	afterInit(server: Server): void {}
 
 	handleConnection(client: AuthenticatedSocket, ...args: any[]): void {
 		this.statusService.handleConnection(client);
@@ -35,11 +33,5 @@ export class StatusGateway
 
 	handleDisconnect(client: AuthenticatedSocket): void {
 		this.statusService.handleDisconnect(client);
-	}
-
-	@SubscribeMessage("test")
-	handleEvent(@MessageBody() data: string): string {
-		console.log("\n Message received, mirror message sent\n");
-		return data;
 	}
 }
