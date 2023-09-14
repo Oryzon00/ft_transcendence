@@ -13,7 +13,40 @@
 }
 .friends-friendlist img {
 	height: 60px;
+	width: 60px;
 	border-radius: 50%;
+}
+
+.friends-friendlist-status-ONLINE {
+	height: 70px;
+	width: 70px;
+	border-radius: 50%;
+	background-color: lightgreen;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.friends-friendlist-status-OFFLINE {
+	height: 70px;
+	width: 70px;
+	border-radius: 50%;
+	background-color: rgb(126, 126, 126);
+
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.friends-friendlist-status-INGAME {
+	height: 70px;
+	width: 70px;
+	border-radius: 50%;
+	background-color: lightskyblue;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .friends-friendlist-component {
@@ -26,4 +59,14 @@
 .friends-friendlist-name {
 	text-align: center;
 	margin-left: 15px;
+}
+
+.friends-friendlist-nameStatus-ONLINE {
+	color: lightgreen;
+}
+.friends-friendlist-nameStatus-OFFLINE {
+	color: rgb(126, 126, 126);
+}
+.friends-friendlist-nameStatus-INGAME {
+	color: lightskyblue;
 }

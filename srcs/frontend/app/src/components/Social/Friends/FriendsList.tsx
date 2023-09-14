@@ -44,11 +44,14 @@ function FriendList () {
 		 listFriend = data.friends.map((friend :any) => (
 			 <li key={friend.id}>
 				 <div className="friends-friendlist-component">
+					<div className={"friends-friendlist-status-" + friend.status}>
 				        <img src={friend.image}></img>
-					    <div className="friends-friendlist-name">
-						    <p>{friend.name}</p>
-					    </div>
-						<DeleteFriendButton friendname={friend.name} />
+					</div>
+					<div className="friends-friendlist-name">
+						<p>{friend.name}</p>
+						<span className={"friends-friendlist-nameStatus-" + friend.status}>{friend.status == "INGAME" ? "IN GAME" : friend.status}</span>
+					</div>
+					<DeleteFriendButton friendname={friend.name} />
 				 </div>
 			 </li>
 		 ));

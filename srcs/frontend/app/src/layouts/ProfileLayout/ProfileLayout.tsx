@@ -23,6 +23,9 @@ function ProfileLayout () {
 					<div className='profile-rank'>
 						<span>Winrate</span>
 						<span>{userData.gameProfile.wins} / {userData.gameProfile.loss}</span>
+						{ userData.gameProfile.wins + userData.gameProfile.loss > 0 && 
+							<span>{Math.round(((userData.gameProfile.wins) / (userData.gameProfile.wins + userData.gameProfile.loss)) * 100)}%</span>
+						}
 					</div>
 					<div className='profile-history'>
 						history
