@@ -47,9 +47,14 @@ function ChatLayout() {
 			});
 	};
 
-	useEffect(() => {
-		getChatData();
+	const addMessage = (message: MessagePayload) => {
+		let clone: ListChannel = channel;
+		clone[message.id].message.push(message);
+		setChannel(clone);
+	};
 
+	getChatData();
+	useEffect(() => {
 		sockets.on("connect", () => {
 			console.log(user);
 			sockets.emit("authenticate", user.user);
@@ -70,7 +75,7 @@ function ChatLayout() {
 
 		sockets.on("onMessage", (data: MessagePayload) => {
 			console.log(data);
-			getChatData();
+			addMessage(data);
 		});
 
 		// Preparation for invitation in a room.
@@ -81,8 +86,9 @@ function ChatLayout() {
 			sockets.off("connect");
 			sockets.off("onMessage");
 			sockets.off("onChannel");
+			sockets.disconnect();
 		};
-	}, []);
+	}, [channel]);
 
 	return (
 		<section className="h-[calc(100%-5rem)] w-auto flex flex-grow justify-center">

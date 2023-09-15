@@ -20,6 +20,17 @@ class UserDatabase {
 		}
 	}
 
+	async getMembersfromChannel(channelId: string): Promise<Member[]> {
+		try {
+			return await this.prisma.member.findMany({
+				where: {
+					channelId: channelId
+				}
+			});
+		} catch (error) {
+			return error;
+		}
+	}
 	async getAllChannels(userid: number): Promise<{ channelId: string }[]> {
 		try {
 			return await this.prisma.member.findMany({
@@ -78,12 +89,12 @@ class UserDatabase {
 	}
 
 	async isMember(userId: number, channelId: string): Promise<boolean> {
-		console.log(await this.findMember(userId, channelId) != null)
-		return (await this.findMember(userId, channelId) != null);
+		console.log((await this.findMember(userId, channelId)) != null);
+		return (await this.findMember(userId, channelId)) != null;
 	}
 
 	async isBan(userId: number, channelId: string): Promise<boolean> {
-		return (await this.findBan(userId, channelId) != null);
+		return (await this.findBan(userId, channelId)) != null;
 	}
 
 	async findMember(userId: number, channelId: string): Promise<Member> {

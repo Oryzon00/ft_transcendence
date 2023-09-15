@@ -82,7 +82,6 @@ export class ChatService {
 			channel,
 			user.id
 		);
-		this.chatGateway.onJoinChannel(user.id, res.id);
 		return {
 			id: res.id,
 			name: res.name,
@@ -112,36 +111,58 @@ export class ChatService {
 		return res;
 	}
 
-	async message(user: User, message: MessageWrite) : Promise<string> {
-		const member: Member = await this.userdb.findMember(user.id, message.channelId)
+	async message(user: User, message: MessageWrite): Promise<string> {
+		const member: Member = await this.userdb.findMember(
+			user.id,
+			message.channelId
+		);
+		const members: Member[] = await this.userdb.getMembersfromChannel(
+			message.channelId
+		);
 		if (member == undefined || member.mute) {
-			return (
-				"You cannot send message in this channel, refresh the page"
-			);
+			return "You cannot send message in this channel, refresh the page";
 		}
 		const msg: Message = await this.channeldb.stockMessages(message);
-		await this.chatGateway.emitToRoom(msg.channelId, msg, "onMessage");
-		return ("");
+		await this.chatGateway.emitToRoom(members, msg, "onMessage");
+		return "";
 	}
 
 	// Give all the public channel the user is not in
 	async publicChannel(user: User) {
 		const channels: Channel[] = await this.channeldb.getPublicChannel();
-		let res : ChannelInfo[] = [];
+		let res: ChannelInfo[] = [];
 		for (let i = 0; channels != undefined && i < channels.length; i++)
-			if (!(await this.userdb.isMember(user.id, channels[i].id) || await this.userdb.isBan(user.id, channels[i].id)))
-				res.push({id: channels[i].id, name: channels[i].name, status: channels[i].status});
-		return (res);
+			if (
+				!(
+					(await this.userdb.isMember(user.id, channels[i].id)) ||
+					(await this.userdb.isBan(user.id, channels[i].id))
+				)
+			)
+				res.push({
+					id: channels[i].id,
+					name: channels[i].name,
+					status: channels[i].status
+				});
+		return res;
 	}
 
 	// Give all the protected channel the user is not in
 	async protectedChannel(user: User) {
 		const channels: Channel[] = await this.channeldb.getProtectChannel();
-		let res : ChannelInfo[] = [];
+		let res: ChannelInfo[] = [];
 		for (let i = 0; channels != undefined && i < channels.length; i++)
-			if (!(await this.userdb.isMember(user.id, channels[i].id) || await this.userdb.isBan(user.id, channels[i].id)))
-				res.push({id: channels[i].id, name: channels[i].name, status: channels[i].status});
-		return (res);
+			if (
+				!(
+					(await this.userdb.isMember(user.id, channels[i].id)) ||
+					(await this.userdb.isBan(user.id, channels[i].id))
+				)
+			)
+				res.push({
+					id: channels[i].id,
+					name: channels[i].name,
+					status: channels[i].status
+				});
+		return res;
 	}
 
 	/*
@@ -190,21 +211,18 @@ export class ChatService {
 			channel.id
 		);
 		if (
-			(searchChannel == null) ||
-			searchChannel.status == Status.PROTECT &&
-			searchChannel.password != channel.password
-		)
-		{
-			console.log('joinNull')
+			searchChannel == null ||
+			(searchChannel.status == Status.PROTECT &&
+				searchChannel.password != channel.password)
+		) {
+			console.log("joinNull");
 			throw new UnauthorizedException();
 		}
-		if (this.channeldb.findBanChannel(channel.id, user.id) == undefined)
-		{
-			console.log('joinBan')
+		if (this.channeldb.findBanChannel(channel.id, user.id) == undefined) {
+			console.log("joinBan");
 			throw new UnauthorizedException();
 		}
 		await this.channeldb.joinChannel(searchChannel.id, user.id);
-		this.chatGateway.onJoinChannel(user.id, searchChannel.id);
 		return this.getChannel(
 			searchChannel.id,
 			this.listBlocked(await this.userdb.listBlockedUser(user.id))
@@ -233,7 +251,6 @@ export class ChatService {
 	async quitChannel(user: User, channelId: { id: string }) {
 		console.log(channelId.id);
 		this.deleteMember(channelId.id, user.id);
-		this.chatGateway.onLeaveChannel(user.id, channelId.id);
 	}
 
 	// it's just quit with a check if you are a modo

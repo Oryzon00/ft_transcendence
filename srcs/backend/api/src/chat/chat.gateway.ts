@@ -65,39 +65,16 @@ export class ChatGateway
 
 	@UseGuards(WsGuard)
 	async handleConnection(@ConnectedSocket() client: AuthSocket) {
-		const members: Member[] = await this.userdb.getMembers(client.userId);
 		client.join(String(client.userId));
-		members.map((member) => {
-			client.join(member.channelId);
+	}
+
+	async handleDisconnect(@ConnectedSocket() client: AuthSocket) {
+		client.leave(String(client.userId));
+	}
+
+	async emitToRoom(users: Member[], message: MessagePayload, status: string) {
+		users.map((user) => {
+			this.server.to(String(user.userId)).emit(status, message);
 		});
-	}
-
-	async handleDisconnect(client: any) {
-		// Need to leave all the room my user in
-	}
-
-	async onJoinChannel(userId: number, channelId: string) {
-		const socket = await this.getSocketFromUserID(String(userId));
-		if (!socket) return null;
-		socket.join(channelId);
-	}
-
-	async getSocketFromUserID(userId: string): Promise<Socket> {
-		return await this.server.in(userId).fetchSockets()[0];
-	}
-
-	async emitToRoom(room: string, message: MessagePayload, status: string) {
-		console.log(
-			"message:",
-			message,
-			await this.server.in(room).fetchSockets()
-		);
-		this.server.to(room).emit(status, message);
-	}
-
-	async onLeaveChannel(userId: number, channelId: string) {
-		const socket = await this.getSocketFromUserID(String(userId));
-		if (!socket) return null;
-		socket.leave(channelId);
 	}
 }
