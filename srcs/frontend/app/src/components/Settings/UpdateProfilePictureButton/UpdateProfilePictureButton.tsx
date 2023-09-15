@@ -62,7 +62,7 @@ function updateProfilePictureButton() {
 			<div className="px-2 py-2 flex justify-center items-center">
 				<img
 					src={userHook.user.image}
-					className="shrink-0 rounded-full border-2 h-24"
+					className="shrink-0 rounded-full border-2 h-24 w-24"
 				/>
 				<button
 					className="mx-5 px-3 py-1 rounded-md hover:bg-amber-800 text-white font-semibold border-4 bg-zinc-500"
