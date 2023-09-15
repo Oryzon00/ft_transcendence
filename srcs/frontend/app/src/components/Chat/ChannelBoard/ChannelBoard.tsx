@@ -34,7 +34,6 @@ export default function ChannelBoard({
 
 	function changeCurrent(id: string) {
 		setCurrent(id);
-		console.log(current);
 		setQuery("");
 	}
 

@@ -17,6 +17,7 @@ import OverlayPopup from "../../components/Chat/OverlayPopup";
 function ChatLayout() {
 	const [current, setCurrent] = useState("");
 	const [channel, setChannel] = useState<ListChannel>({});
+	const [refresh, setRefresh] = useState(false);
 
 	const [creation, setCreation] = useState(false);
 	const [community, setCommunity] = useState(false);
@@ -53,18 +54,16 @@ function ChatLayout() {
 		setChannel(clone);
 	};
 
-	getChatData();
 	useEffect(() => {
-		sockets.on("connect", () => {
-			console.log(user);
-			sockets.emit("authenticate", user.user);
-		});
+		sockets.connect();
+		getChatData();
 
 		// Create new channel
 		sockets.on("onChannel", (data: any) => {
 			setCurrent(() => {
 				return data.id;
 			});
+
 			if (channel[data.id] == undefined) {
 				setChannel((prev) => {
 					prev[data.id] = data;
@@ -74,21 +73,23 @@ function ChatLayout() {
 		});
 
 		sockets.on("onMessage", (data: MessagePayload) => {
-			console.log(data);
+			console.log("message: ", data);
 			addMessage(data);
 		});
 
 		// Preparation for invitation in a room.
-		sockets.on("onInvitation", (data: any) => {});
+		sockets.on("onInvitation", (data: any) => {
+			console.log(data);
+		});
 
 		return () => {
 			console.log("Unregistered events...");
 			sockets.off("connect");
 			sockets.off("onMessage");
 			sockets.off("onChannel");
-			sockets.disconnect();
+			sockets.close();
 		};
-	}, [channel]);
+	}, []);
 
 	return (
 		<section className="h-[calc(100%-5rem)] w-auto flex flex-grow justify-center">

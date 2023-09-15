@@ -42,11 +42,7 @@ import { WsGuard } from "./WsGuard";
 	}
 })
 export class ChatGateway
-	implements
-		OnModuleInit,
-		OnGatewayConnection,
-		OnGatewayDisconnect,
-		OnGatewayInit
+	implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
 	constructor(
 		private userdb: UserDatabase,
@@ -57,23 +53,26 @@ export class ChatGateway
 	@WebSocketServer()
 	public server: Server;
 
-	onModuleInit() {
+	afterInit(server: Server) {
 		this.server.on("connection", (socket: Socket) => {});
 	}
 
-	afterInit(server: Server) {}
-
 	@UseGuards(WsGuard)
 	async handleConnection(@ConnectedSocket() client: AuthSocket) {
+		console.log("connection");
 		client.join(String(client.userId));
 	}
 
 	async handleDisconnect(@ConnectedSocket() client: AuthSocket) {
+		console.log("disconnect");
 		client.leave(String(client.userId));
 	}
 
 	async emitToRoom(users: Member[], message: MessagePayload, status: string) {
 		users.map((user) => {
+			console.log(
+				`this.server.to(String(${user.userId})).emit(${status}, ${message.content});`
+			);
 			this.server.to(String(user.userId)).emit(status, message);
 		});
 	}
