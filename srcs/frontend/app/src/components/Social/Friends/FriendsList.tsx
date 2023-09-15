@@ -44,8 +44,8 @@ function FriendList () {
 		 listFriend = data.friends.map((friend :any) => (
 			 <li key={friend.id}>
 				 <div className="friends-friendlist-component">
-					<div className={"friends-friendlist-status-" + friend.status}>
-				        <img src={friend.image}></img>
+					<div>
+				        <img className={"friends-friendlist-img-" + friend.status} src={friend.image}></img>
 					</div>
 					<div className="friends-friendlist-name">
 						<p>{friend.name}</p>
