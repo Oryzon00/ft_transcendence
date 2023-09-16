@@ -3,11 +3,11 @@ import { useLoaderData } from 'react-router';
 import {UserContext} from "../../utils/contexts/userContext.tsx";
 import {useContext} from "react";
 import AddFriendButton from "../../components/Profile/AddFriendButton.tsx";
+import History from "../../components/Profile/History.tsx";
 
 function ProfileLayout () {
 	const userData :any = useLoaderData();
 	const userHook= useContext(UserContext);
-	console.log(userData);
 		return (
 			<>
 				<div className='profile-main'>
@@ -28,7 +28,7 @@ function ProfileLayout () {
 						}
 					</div>
 					<div className='profile-history'>
-						history
+						<History user={userData}/>
 					</div>
 				</div>
 			</>

@@ -110,7 +110,20 @@ export class UserService {
 				include: {
 					gameProfile: {
 						include: {
-							history: true
+							history: {
+								include: {
+									winner: {
+										include: {
+											user: true
+										}
+									},
+									loser: {
+										include: {
+											user: true
+										}
+									}
+								}
+							}
 						}
 					}
 				},
