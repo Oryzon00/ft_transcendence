@@ -20,6 +20,7 @@ import {
 } from "@nestjs/websockets";
 import { Namespace, Socket, Server } from "socket.io";
 import socketioJwt from "socketio-jwt";
+import { verify } from "jsonwebtoken";
 import {
 	MessagePayload,
 	ChannelPayload,
@@ -34,6 +35,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { GetUser } from "src/auth/decorator";
 import { AuthSocket } from "./AuthSocket.types";
 import { WsGuard } from "./WsGuard";
+import { JwtPayload } from "src/auth/dto/jwtPayload.dto";
 
 @Injectable()
 @WebSocketGateway({
@@ -44,23 +46,31 @@ import { WsGuard } from "./WsGuard";
 export class ChatGateway
 	implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-	constructor(
-		private userdb: UserDatabase,
-		private channeldb: ChannelDatabase,
-		private prisma: PrismaService
-	) {}
-
 	@WebSocketServer()
 	public server: Server;
 
 	afterInit(server: Server) {
-		this.server.on("connection", (socket: Socket) => {});
+		server.on("connection", (socket: Socket) => {});
 	}
 
-	@UseGuards(WsGuard)
+	getId(client: AuthSocket) : number{
+		if (client.handshake.headers.authorization == undefined) return null
+
+		try {
+
+			const decoded: string | JwtPayload | any = verify(
+				client.handshake.headers.authorization.split(' ')[1],
+				process.env.JWT_SECRET
+			);
+			return (decoded.sub)
+		} catch (ex) {
+			console.log("ERROR");
+		}
+	}
+
 	async handleConnection(@ConnectedSocket() client: AuthSocket) {
-		console.log("connection");
-		client.join(String(client.userId));
+		console.log('connection');
+		client.join(String(this.getId(client)));
 	}
 
 	async handleDisconnect(@ConnectedSocket() client: AuthSocket) {

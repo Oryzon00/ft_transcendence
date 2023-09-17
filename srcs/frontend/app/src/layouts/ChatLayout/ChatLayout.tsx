@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { WebsocketContext } from "../../utils/contexts/WebsocketContext";
+import { WebsocketContext, WebsocketProvider, socket } from "../../utils/contexts/WebsocketContext";
 import { ChannelPayload, ListChannel, MessagePayload } from "./chat.d";
 import { UserHook } from "../../utils/hooks/TuseUser";
 import useUser from "../../utils/hooks/useUser";
@@ -49,13 +49,13 @@ function ChatLayout() {
 	};
 
 	const addMessage = (message: MessagePayload) => {
-		let clone: ListChannel = channel;
-		clone[message.id].message.push(message);
-		setChannel(clone);
+		setChannel((prev) => {
+			prev[message.channelId].message.push(message);
+			return prev;
+		});
 	};
 
 	useEffect(() => {
-		sockets.connect();
 		getChatData();
 
 		// Create new channel
@@ -73,8 +73,9 @@ function ChatLayout() {
 		});
 
 		sockets.on("onMessage", (data: MessagePayload) => {
-			console.log("message: ", data);
 			addMessage(data);
+
+			setRefresh(!refresh);
 		});
 
 		// Preparation for invitation in a room.
@@ -84,15 +85,15 @@ function ChatLayout() {
 
 		return () => {
 			console.log("Unregistered events...");
-			sockets.off("connect");
 			sockets.off("onMessage");
 			sockets.off("onChannel");
-			sockets.close();
+			sockets.off("onInvitation");
 		};
-	}, []);
+	}, [refresh]);
 
 	return (
-		<section className="h-[calc(100%-5rem)] w-auto flex flex-grow justify-center">
+		<WebsocketProvider value={socket}>
+			<div className="h-[calc(100%-5rem)] w-auto flex flex-grow justify-center">
 			<OverlayPopup
 				creation={creation}
 				togglecreation={() => setCreation(!creation)}
@@ -122,7 +123,8 @@ function ChatLayout() {
 				me={user}
 				sockets={sockets}
 			/>
-		</section>
+			</div>
+	</WebsocketProvider>
 	);
 }
 

@@ -36,6 +36,7 @@ export class WsGuard implements CanActivate {
 			return new Promise((resolve, reject) => {
 				return this.findUser(decoded.sub).then((user) => {
 					context.args[0].userId = user.id;
+					console.log(user.id)
 					if (user) {
 						resolve(user);
 					} else {
