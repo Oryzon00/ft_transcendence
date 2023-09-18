@@ -1,3 +1,6 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -118,7 +121,7 @@ model Channel {
   createdAt DateTime @default(now())
   updateAt  DateTime @default(now()) @updatedAt
 
-  name        String  @unique
+  name        String
   avatar      String?
   description String  @default("")
 
@@ -158,7 +161,7 @@ model Member {
 model Ban {
   id String @id @unique @default(uuid())
 
-  channelId String
+ channelId String
   userId    Int
   channel   Channel @relation("bans", fields: [channelId], references: [id])
   user      User    @relation("bans", fields: [userId], references: [id])
