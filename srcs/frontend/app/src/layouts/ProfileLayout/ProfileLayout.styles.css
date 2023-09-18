@@ -25,6 +25,13 @@
 	animation-fill-mode: forwards;*/
 }
 
+.history-default {
+	overflow: auto;
+}
+
+.history-default::-webkit-scrollbar {
+	display: none;
+}
   
 /*@keyframes grow {
 	from {

@@ -21,8 +21,9 @@ function History ({user}: any) {
 		));
 
 	return (
-		<ul>{listHistory}</ul>
-
+		<div className="history-default">
+			<ul>{listHistory}</ul>
+		</div>
 	)
 }
 
