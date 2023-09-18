@@ -2,6 +2,8 @@ import apiAddress from "../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../utils/getJWT";
 import { throwErrorMessage } from "../../utils/throwErrorMessage";
 import { notifyError, notifyInfo } from "../../utils/notify";
+import { AiOutlineUserAdd } from 'react-icons/ai'
+
 
 function AddFriendButton({friendname} : any) {
 	function addFriend() {
@@ -30,7 +32,7 @@ function AddFriendButton({friendname} : any) {
 			});
 	}
 	return (
-		<button onClick={addFriend}>Add Friend</button>
+		<button className='profile-addfriend-button' onClick={addFriend}><AiOutlineUserAdd size='50'/></button>
 	);
 }
 

@@ -1,11 +1,10 @@
-.profile-main {
-	height: 90vh;
-	width: 100vw;
-	display: flex;
-	flex-direction: row;
-	justify-content: space-around;
-	background-color: #1a1a1a;
+@import url('https://fonts.cdnfonts.com/css/racing-sans-one');
 
+.profile-main {
+	height: 91%;
+	display: flex;
+	background-color: #1a1a1a;
+	justify-content: space-evenly;
 }
 
 .profile-div {
@@ -23,14 +22,64 @@
 	/*animation-name: grow;
 	animation-duration: 0.2s;
 	animation-fill-mode: forwards;*/
+
 }
 
-.history-default {
-	overflow: auto;
+.profile-text-mmr {
+	font-family: 'Racing Sans One', sans-serif;
+	font-size: 25px;
+	padding-top: 20px;
 }
 
-.history-default::-webkit-scrollbar {
-	display: none;
+.profile-text-login {
+	font-size: 25px;
+	font-weight: bold;
+}
+
+.profile-first-part {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.profile-text {
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+	align-items:  center;
+	padding: 50px;
+}
+
+.profile-other-part {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	text-align: center;
+}
+
+.profile-winrate {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.profile-winrate h2 {
+	text-align: center;
+	font-weight: bold;
+	font-size: 36px;	
+}
+
+.profile-winrate h3 {
+	text-align: center;
+	font-size: 30px;	
+}
+
+.profile-addfriend-button {
+	background: #3f3f46;
+
+	border-radius: 50%;
 }
   
 /*@keyframes grow {
@@ -42,7 +91,7 @@
 	}
   }*/
 
-.profile-div img {
+.profile-data img {
 	height: 120px;
 	width: 120px;
 	border-radius: 50%;
@@ -63,7 +112,8 @@
 	border-color: lightgreen;
 }
 
-.game-component-LOSER {
+.game-component-LOSER {	text-align: center;
+
 	background: #3f3f46;
 	display: flex;
 	flex-direction: row;
@@ -97,17 +147,26 @@
 
 }
 
-.profile-login {
-	padding: 20px;
-}
-.profile-desc {
-	padding-bottom: 120px;
-}
 
 .profile-rank {
 	display: flex;
 	align-self: center;
-	flex-direction: column;
+	flex-direction: row;
+	background: #3f3f46;
+	padding: 10px;
+	border-radius: 0.375rem;
+}
+
+.profile-data {
+	width: 500px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: row;
+	background: #3f3f46;
+	padding: 10px;
+	border-radius: 0.375rem;
+	margin: 10px;
 }
 
 .profile-leaderboard {
@@ -115,5 +174,77 @@
 }
 
 .profile-history {
-	align-self: center;
+	overflow: auto;
 }
+
+.profile-history::-webkit-scrollbar {
+	display: none;
+}
+
+
+
+/*
+ * react-circular-progressbar styles
+ * All of the styles in this file are configurable!
+ */
+
+ .CircularProgressbar {
+	/*
+	 * This fixes an issue where the CircularProgressbar svg has
+	 * 0 width inside a "display: flex" container, and thus not visible.
+	 */
+	width: 100%;
+	/*
+	 * This fixes a centering issue with CircularProgressbarWithChildren:
+	 * https://github.com/kevinsqi/react-circular-progressbar/issues/94
+	 */
+	vertical-align: middle;
+  }
+  
+  .CircularProgressbar .CircularProgressbar-path {
+	stroke: #3e98c7;
+	stroke-linecap: round;
+	transition: stroke-dashoffset 0.5s ease 0s;
+  }
+  
+  .CircularProgressbar .CircularProgressbar-trail {
+	stroke: #d6d6d6;
+	/* Used when trail is not full diameter, i.e. when props.circleRatio is set */
+	stroke-linecap: round;
+  }
+  
+  .CircularProgressbar .CircularProgressbar-text {
+	fill: #3e98c7;
+	font-size: 20px;
+	dominant-baseline: middle;
+	text-anchor: middle;
+  }
+  
+  .CircularProgressbar .CircularProgressbar-background {
+	fill: #d6d6d6;
+  }
+  
+  /*
+   * Sample background styles. Use these with e.g.:
+   *
+   *   <CircularProgressbar
+   *     className="CircularProgressbar-inverted"
+   *     background
+   *     percentage={50}
+   *   />
+   */
+  .CircularProgressbar.CircularProgressbar-inverted .CircularProgressbar-background {
+	fill: #3e98c7;
+  }
+  
+  .CircularProgressbar.CircularProgressbar-inverted .CircularProgressbar-text {
+	fill: #fff;
+  }
+  
+  .CircularProgressbar.CircularProgressbar-inverted .CircularProgressbar-path {
+	stroke: #fff;
+  }
+  
+  .CircularProgressbar.CircularProgressbar-inverted .CircularProgressbar-trail {
+	stroke: transparent;
+  }

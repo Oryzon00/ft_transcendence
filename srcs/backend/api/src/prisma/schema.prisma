@@ -106,9 +106,6 @@ model Game {
   loserId	Int?
   loser	GameProfile?	@relation("losers", fields: [loserId], references: [userId])
 
-  loserId	Int?
-  loser		GameProfile?	@relation("losers", fields: [loserId], references: [userId]) 
-
   scores	Int[] @default([0, 0])
   timerMS	Int @default(0)
 

@@ -123,9 +123,11 @@ export class UserService {
 										}
 									}
 								}
-							}
+							},
+							gameWons: true
 						}
-					}
+					},
+					friends: true
 				},
 			});
 			return user;
@@ -139,8 +141,17 @@ export class UserService {
 			const myfriend = await this.prisma.user.findUnique({
 				where: {
 					name: friendName
+				},
+				include: {
+					friends: true
 				}
 			});
+
+			for (const friend of myfriend.friends) {
+					if (friend.id === user.id)
+						throw new NotFoundException();
+				}
+
 			await this.prisma.user.update({
 				where: {
 					id: myfriend.id
