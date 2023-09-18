@@ -3,6 +3,7 @@ import { io, Socket } from "socket.io-client";
 import getJwtTokenFromCookie from "../getJWT";
 
 const socketOptions = {
+	path: "/chatSocket",
     transportOptions: {
         polling: {
             extraHeaders: {

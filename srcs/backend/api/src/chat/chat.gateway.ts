@@ -39,9 +39,7 @@ import { JwtPayload } from "src/auth/dto/jwtPayload.dto";
 
 @Injectable()
 @WebSocketGateway({
-	cors: {
-		origins: ["http://localhost:3000"]
-	}
+	path: "/chatSocket"
 })
 export class ChatGateway
 	implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
