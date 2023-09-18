@@ -53,6 +53,7 @@ class ChannelDatabase {
 		channel: ChannelCreation,
 		user: number
 	): Promise<Channel> {
+		if (channel.password.length > 0) channel.status = "protect";
 		try {
 			const res: Channel = await this.prisma.channel.create({
 				data: {

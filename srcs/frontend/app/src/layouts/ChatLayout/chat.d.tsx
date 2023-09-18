@@ -40,3 +40,8 @@ export type ChannelInfo = {
 };
 
 export type ListChannel = { [key: string]: ChannelPayload };
+
+export type ChannelJoin = {
+	id: string;
+	password: string;
+};

@@ -53,6 +53,7 @@ export class ChatController {
 	// Create a new channel
 	@Post("/channel/create")
 	create(@GetUser() user: User, @Body() channel: ChannelCreation) {
+		console.log(channel);
 		console.log("/channel/create");
 		return this.ChatService.createChannel(user, channel);
 	}
