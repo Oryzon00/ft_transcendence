@@ -1,69 +1,70 @@
 import { useContext, useEffect, useState } from "react";
-import { WebsocketContext } from "../../utils/contexts/WebsocketContext";
-import { ChannelPayload, ListChannel, MessagePayload } from "./chat.d"
+import { WebsocketContext, WebsocketProvider, socket } from "../../utils/contexts/WebsocketContext";
+import { ChannelPayload, ListChannel, MessagePayload } from "./chat.d";
 import { UserHook } from "../../utils/hooks/TuseUser";
 import useUser from "../../utils/hooks/useUser";
 
 // Components
-import MessageEntry from "../../components/Chat/MessageEntry";
-import DiscussionBoard from "../../components/Chat/DiscussionBoard";
+import DiscussionBoard from "../../components/Chat/Discussion/DiscussionBoard";
 import apiAddress from "../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../utils/getJWT";
 import { notifyError } from "../../utils/notify";
-import ChannelBoard from "../../components/Chat/ChannelBoard";
-import JoinChannelLayout from "../JoinChannelLayout/JoinChannelLayout";
 
-export function getChatData() {}
+import ChatNav from "../../components/Chat/ChatNav";
+import OverlayPopup from "../../components/Chat/OverlayPopup";
+// Images
 
 function ChatLayout() {
-	const [current, setCurrent] = useState('');
+	const [current, setCurrent] = useState("");
 	const [channel, setChannel] = useState<ListChannel>({});
+	const [refresh, setRefresh] = useState(false);
 
 	const [creation, setCreation] = useState(false);
+	const [community, setCommunity] = useState(false);
 	const [direct, setDirect] = useState(false);
 
 	const sockets = useContext(WebsocketContext);
-	const user : UserHook = useUser();
+	const user: UserHook = useUser();
 
-	const getChatData = () => { // Get all the data for the variable channel
-	fetch(apiAddress + '/chat/getData', {
-		method: "GET",
-		headers: {
-			Authorization: "Bearer " + getJwtTokenFromCookie()
-		}
-	})
-	.then(
-		function (res: Response) {
-			if (!res.ok) {
-				throw new Error(
-					"Request failed with status " + res.status
-				);
+	const getChatData = () => {
+		// Get all the data for the variable channel
+		fetch(apiAddress + "/chat/getData", {
+			method: "GET",
+			headers: {
+				Authorization: "Bearer " + getJwtTokenFromCookie()
 			}
-			return (res.json());
-
 		})
-		.then (
-			function (data) : void {
+			.then(function (res: Response) {
+				if (!res.ok) {
+					throw new Error("Request failed with status " + res.status);
+				}
+				return res.json();
+			})
+			.then(function (data): void {
 				setChannel(data);
 			})
-		.catch (
-			function(error) {
+			.catch(function (error) {
 				notifyError(error.message);
-			}
-		)
+			});
+	};
+
+	const addMessage = (message: MessagePayload) => {
+		setChannel((prev) => {
+			prev[message.channelId].message.push(message);
+			return prev;
+		});
 	};
 
 	useEffect(() => {
-		sockets.on('connect', () => {
-			sockets.emit('authenticate', user.user);
-			getChatData();
-		})
+		getChatData();
 
 		// Create new channel
-		sockets.on('onChannel', (data: any) => {
-			setCurrent(() => { return data.id });
-			if (channel[data.id] == undefined)
-			{
+		sockets.on("onChannel", (data: any) => {
+			setCurrent(() => {
+				return data.id;
+			});
+
+			if (channel[data.id] == undefined) {
 				setChannel((prev) => {
 					prev[data.id] = data;
 					return prev;
@@ -71,42 +72,58 @@ function ChatLayout() {
 			}
 		});
 
-		sockets.on('onMessage', (data: MessagePayload) => {
-			console.log(data)
-				//channel[data.channelId].message.push(data);
-				//setChannel(channel);
-				getChatData()
-		})
-
-		return () => {
-			console.log('Unregistered events...');
-			sockets.off('connect');
-			sockets.off('onMessage');
-			sockets.off('onChannel');
-		};
+		sockets.on("onMessage", (data: MessagePayload) => {
+			addMessage(data);
+			setRefresh(!refresh)
 		});
 
-	return ( 
-		<section className="h-screen w-screen bg-black flex">
-					<JoinChannelLayout open={creation} onClose={() => setCreation(false)} newChannel={(e: ChannelPayload) => setChannel({...channel, [e.id]: e})}/>
-			<div className="bg-white w[30vw] flex flex-col">
-				<div className="flex flex-col">
-					<button onClick={() => setDirect(true)}>Direct Message</button>
-					<button onClick={() => setCreation(true)}>Join Channel</button>
-				</div>
-				<ChannelBoard channels={channel} setCurrent={setCurrent}/>
+		// Preparation for invitation in a room.
+		sockets.on("onInvitation", (data: any) => {
+			console.log(data);
+		});
+
+		return () => {
+			console.log("Unregistered events...");
+			sockets.off("onMessage");
+			sockets.off("onChannel");
+			sockets.off("onInvitation");
+		};
+	}, [refresh]);
+
+	return (
+		<WebsocketProvider value={socket}>
+			<div className="h-[calc(100%-5rem)] w-auto flex flex-grow justify-center">
+			<OverlayPopup
+				creation={creation}
+				togglecreation={() => setCreation(!creation)}
+				community={community}
+				togglecommunity={() => setCommunity(!community)}
+				channel={channel}
+				setChannel={(e: ChannelPayload) =>
+					setChannel({ ...channel, [e.id]: e })
+				}
+			/>
+			<ChatNav
+				creation={creation}
+				community={community}
+				channel={channel}
+				current={current}
+				setDirect={setDirect}
+				setCreation={setCreation}
+				setChannel={setChannel}
+				setCurrent={setCurrent}
+				setCommunity={setCommunity}
+			/>
+			<DiscussionBoard
+				channel={channel}
+				setChannel={(e: ListChannel) => setChannel(e)}
+				current={current}
+				setCurrent={setCurrent}
+				me={user}
+				sockets={sockets}
+			/>
 			</div>
-			<div className="w-screen h-screen bg-blue-400 flex flex-col items-center justify-center" >
-				<div className="flex-grow w-full h-full ">
-					<div className="bg-white text-black w-[100%] h-[80%] border-black border-4">
-						<DiscussionBoard channel={channel} setChannel={setChannel} current={current} setCurrent={setCurrent} me={user}/>
-					</div>
-				</div>
-				<div className="flex-none w-full">
-					<MessageEntry current={current} sockets={sockets}/>
-				</div>
-			</div>
-		</section>
+	</WebsocketProvider>
 	);
 }
 

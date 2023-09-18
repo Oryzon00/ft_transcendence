@@ -18,7 +18,16 @@ function PlayVSBotButton() {
 
 	return (
 			 <button className="bg-[#242424] hover:bg-[#323232] text-white font-bold py-2 px-4 border-2 border-amber-800" onClick={createPvEGame}>
-    			Practice againt Bot
+				<h1>
+					NOTS
+				</h1>
+				<span>
+					LERGERGVSF R HHBR GV RTH B AS
+				</span>
+				<span>
+					LERGERGVSF R HHBR GV RTH B AS
+				</span>
+
   			</button>
 	);
 }

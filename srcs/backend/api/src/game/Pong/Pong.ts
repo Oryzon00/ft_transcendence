@@ -74,12 +74,22 @@ export class Pong {
 		this.lobby.sendLobbyState();
 		if ((new Date()).getTime() - this.startTimer === this.endTimer)
 			this.end();
+		
+		
 		for (const id of this.lobby.clients.keys()) {
-			if (this.scores.get(id) >= 5) {
-				this.lobby.endInstance(id);
-				this.end();
+			if (this.scores.get(id) >= 1) {
+				this.endgame(id);
 			}
 		}
+	}
+
+	private endgame(winnerId: string) {
+		let loserId: string;
+		for (const id of this.lobby.clients.keys()) {
+			if (id != winnerId)
+				this.lobby.endInstance(this.lobby.clients.get(winnerId).userId, this.lobby.clients.get(id).userId);
+		}
+		this.end();
 	}
 
 	private updateball() {		

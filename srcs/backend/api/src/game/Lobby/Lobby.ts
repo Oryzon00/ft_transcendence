@@ -22,7 +22,11 @@ export class Lobby {
 
 	public readonly game: Pong = new Pong(this);
 
- 	constructor(private readonly server: Server, public readonly maxClients: number, prisma: PrismaService) {
+	constructor(
+		private readonly server: Server,
+		public readonly maxClients: number,
+		prisma: PrismaService
+	) {
 		this.prisma = prisma;
 	}
 
@@ -30,39 +34,80 @@ export class Lobby {
 		try {
 			const prismGame: any = await this.prisma.game.create({
 				data: {
-					gamemode: this.maxClients === 1 ? 'PvE' : 'PvP',					
+					gamemode: this.maxClients === 1 ? "PvE" : "PvP"
 				}
 			});
-			
+
 			this.Id = prismGame.id;
-		} catch(err) {
+		} catch (err) {
 			console.log(err);
 		}
 	}
 
-	public async endInstance(socketId: string) {
+	public async endInstance(winnerId: number, loserId: number) {
 		try {
-			const winner: any = await this.prisma.gameProfile.findFirst({
+			const winner: any = await this.prisma.user.findFirst({
 				where: {
-					playSocketId: socketId,
-				},
+					id: winnerId
+				}
 			});
+
 			console.log(winner);
+
+			const loser: any = await this.prisma.user.findFirst({
+				where: {
+					id: loserId
+				}
+			});
+
+			console.log(loser);
+
+			let mmrUpdate: number =
+				25 +
+				(Math.round((loser.mmr - winner.mmr) / 50) > 15
+					? 15
+					: Math.round((loser.mmr - winner.mmr) / 50) < -15
+					? -15
+					: Math.round((loser.mmr - winner.mmr) / 50));
+
+			await this.prisma.user.update({
+				where: {
+					id: loser.id
+				},
+				data: {
+					mmr: loser.mmr - mmrUpdate
+				}
+			});
+
+			await this.prisma.user.update({
+				where: {
+					id: winner.id
+				},
+				data: {
+					mmr: winner.mmr + mmrUpdate
+				}
+			});
+
 			await this.prisma.game.update({
 				where: {
-					id: this.Id,
+					id: this.Id
 				},
 				data: {
 					winner: {
 						connect: {
-							id: winner.id,
+							userId: winner.id
+						}
+					},
+					loser: {
+						connect: {
+							userId: loser.id
 						}
 					},
 					scores: Array.from(this.game.scores.values()),
-					timerMS: (new Date()).getTime() - this.game.startTimer,
+					timerMS: new Date().getTime() - this.game.startTimer
 				}
 			});
-		} catch(err) {
+		} catch (err) {
 			console.log(err);
 		}
 	}
@@ -70,19 +115,17 @@ export class Lobby {
 	public removeClient(client: AuthenticatedSocket): void {}
 
 	public sendLobbyState(): void {
-		
-		
 		function MapToRecord<V>(map: Map<string, V>): Record<string, V> {
-		let newRecord: Record<string, V> = {};
+			let newRecord: Record<string, V> = {};
 			for (let [key, value] of map) {
-			  newRecord[key] = value;
+				newRecord[key] = value;
 			}
-			return newRecord
+			return newRecord;
 		}
-		
+
 		const payload: ServerResponseDTO[ServerEvents.LobbyState] = {
 			lobbyId: this.Id,
-			lobbyMode: this.maxClients === 1 ? 'PvE' : 'PvP',
+			lobbyMode: this.maxClients === 1 ? "PvE" : "PvP",
 			hasStarted: this.game.hasStarted,
 			hasFinished: this.game.hasFinished,
 			countdown: this.game.countdown,
@@ -92,21 +135,22 @@ export class Lobby {
 			gameHeight: this.game.height,
 			ballPosition: this.game.ball.pos,
 			padPositions: MapToRecord(this.game.paddles),
-			scores: MapToRecord(this.game.scores),
-		}
-		
-		this.sendEvent<ServerResponseDTO[ServerEvents.LobbyState]>(ServerEvents.LobbyState, payload);
+			scores: MapToRecord(this.game.scores)
+		};
+
+		this.sendEvent<ServerResponseDTO[ServerEvents.LobbyState]>(
+			ServerEvents.LobbyState,
+			payload
+		);
 	}
 
-	public sendEvent<T>(event: ServerEvents, payload: T): void
-	{
-    	this.server.to(this.Id).emit(event, payload);
+	public sendEvent<T>(event: ServerEvents, payload: T): void {
+		this.server.to(this.Id).emit(event, payload);
 	}
 
 	private startGame(mode: number) {
 		this.game.start();
-		this.startedAt = (new Date()).getTime();
-		
+		this.startedAt = new Date().getTime();
 	}
 
 	public async addClient(client: AuthenticatedSocket): Promise<void> {
@@ -116,19 +160,19 @@ export class Lobby {
 		const user: any = await this.prisma.user.findUnique({
 			where: {
 				id: client.userId
-			},
+			}
 		});
 
 		await this.prisma.game.update({
 			where: {
-				id: this.Id,
+				id: this.Id
 			},
 			data: {
 				players: {
 					connect: {
-						userId: user.id,
+						userId: user.id
 					}
-				},
+				}
 			}
 		});
 
