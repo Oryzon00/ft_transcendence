@@ -98,6 +98,11 @@ export class Lobby {
 							userId: winner.id
 						}
 					},
+					loser: {
+						connect: {
+							userId: loser.id
+						}
+					},
 					scores: Array.from(this.game.scores.values()),
 					timerMS: new Date().getTime() - this.game.startTimer
 				}
