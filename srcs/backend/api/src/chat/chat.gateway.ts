@@ -68,6 +68,8 @@ export class ChatGateway
 		}
 	}
 
+
+	@UseGuards(WsGuard)
 	async handleConnection(@ConnectedSocket() client: AuthSocket) {
 		console.log('connection');
 		client.join(String(this.getId(client)));

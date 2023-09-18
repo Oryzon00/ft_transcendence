@@ -74,8 +74,7 @@ function ChatLayout() {
 
 		sockets.on("onMessage", (data: MessagePayload) => {
 			addMessage(data);
-
-			setRefresh(!refresh);
+			setRefresh(!refresh)
 		});
 
 		// Preparation for invitation in a room.
