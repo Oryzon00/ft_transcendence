@@ -79,12 +79,11 @@ model GameProfile {
 
   history	Game[]
 
-  matchMakingRanking	Int @default(1000)
-
   wins Int	@default(0)
   gameWons	Game[] @relation("winners")
   loss Int	@default(0)
-  gameLoss	Game[] @relation("losers")
+  gameLosts	Game[] @relation("losers")
+
 
   @@map("gameProfiles")
 }
@@ -106,6 +105,9 @@ model Game {
 
   loserId	Int?
   loser	GameProfile?	@relation("losers", fields: [loserId], references: [userId])
+
+  loserId	Int?
+  loser		GameProfile?	@relation("losers", fields: [loserId], references: [userId]) 
 
   scores	Int[] @default([0, 0])
   timerMS	Int @default(0)
