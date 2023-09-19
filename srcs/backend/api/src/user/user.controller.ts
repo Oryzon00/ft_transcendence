@@ -14,6 +14,11 @@ export class UserController {
 		return this.userService.getUserSafe(user);
 	}
 
+	@Get("trueMe")
+	getTrueMe(@GetUser() user: User): Promise<User> {
+		return this.userService.getTrueUser(user);
+	}
+
 	@Patch("update/image")
 	async updateImage(
 		@GetUser() user: User,
@@ -35,12 +40,27 @@ export class UserController {
 		return this.userService.findUser(username);
 	}
 
+	@Post("block")
+	async blockUser(@GetUser() user: User,
+	                @Body() body):
+					Promise<{ name: string}> {
+		return this.userService.blockUser(user, body.username);
+	}
+
+	@Post("unblock")
+	async unblockUser(@GetUser() user: User,
+	                @Body() body):
+					Promise<{ name: string}> {
+		return this.userService.unblockUser(user, body.username);
+	}
+
 	@Post("friends/add")
 	async addFriend(@GetUser() user: User,
 	                @Body() body):
 					Promise<{ name: string}> {
 		return this.userService.addFriend(user, body.username);
 	}
+
 	@Get("friends/get")
 	async getFriends(@GetUser() user: User): Promise<{friends: Array<User>}> {
 		return this.userService.getFriends(user); //ATTENTION ARRAY PAS SAFE

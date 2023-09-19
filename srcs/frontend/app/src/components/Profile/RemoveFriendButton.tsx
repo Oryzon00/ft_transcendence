@@ -2,13 +2,13 @@ import apiAddress from "../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../utils/getJWT";
 import { throwErrorMessage } from "../../utils/throwErrorMessage";
 import { notifyError, notifyInfo } from "../../utils/notify";
-import { AiOutlineUserAdd } from 'react-icons/ai'
+import { AiOutlineUserDelete } from 'react-icons/ai'
 
 
-function AddFriendButton({friendname} : any) {
-	function addFriend() {
+function RemoveFriendButton({friendname} : any) {
+	function removeFriend() {
 		
-		let url = apiAddress + "/user/friends/add";
+		let url = apiAddress + "/user/friends/delete";
 		fetch (url, {
 			method: "POST",
 			headers: {
@@ -24,16 +24,16 @@ function AddFriendButton({friendname} : any) {
 					throwErrorMessage(response);
 				return response.json();
 			})
-			.then(function (result) {
-				notifyInfo("Friend request to " + result.name + " has been sent !");
+			.then(function () {
+				window.location.reload();
 			})
 			.catch(function () {
-				notifyError("Error while adding friend");
+				notifyError("Error while deleting friend");
 			});
 	}
 	return (
-		<button className='profile-addfriend-button' onClick={addFriend}><AiOutlineUserAdd size='35' color='lightgreen'/></button>
+		<button className='profile-addfriend-button' onClick={removeFriend}><AiOutlineUserDelete size='35' color='crimson'/></button>
 	);
 }
 
-export default AddFriendButton;
+export default RemoveFriendButton;

@@ -1,21 +1,27 @@
 import './ProfileLayout.styles.css'
 import { useLoaderData } from 'react-router';
-import {UserContext} from "../../utils/contexts/userContext.tsx";
-import {useContext} from "react";
 import AddFriendButton from "../../components/Profile/AddFriendButton.tsx";
 import History from "../../components/Profile/History.tsx";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import BlockUserButton from '../../components/Profile/BlockUserButton.tsx';
+import RemoveFriendButton from '../../components/Profile/RemoveFriendButton.tsx';
+import UnblockUserButton from '../../components/Profile/UnblockUserButton.tsx';
 
 function ProfileLayout () {
-	const userData :any = useLoaderData();
-	const userHook= useContext(UserContext);
-
-
-	const winrate = Math.round(((userData.gameProfile.gameWons.length) / (userData.gameProfile.history.length)) * 100)
+	const userDataArray :any = useLoaderData();
+	const winrate = Math.round(((userDataArray[0].gameProfile.gameWons.length) / (userDataArray[0].gameProfile.history.length)) * 100)
 
 	function isFriend () {
-		for (const friend of userData.friends) {
-			if (friend.id === userHook.user.id)
+		for (const friend of userDataArray[0].friends) {
+			if (friend.id === userDataArray[1].id)
+				return (true);
+		}
+		return (false);
+	}
+
+	function isBlocked () {
+		for (const blockedUser of userDataArray[1].blockedUsers) {
+			if (blockedUser.id === userDataArray[0].id)
 				return (true);
 		}
 		return (false);
@@ -26,19 +32,29 @@ function ProfileLayout () {
 				<div className='profile-main'>
 					<div className='profile-first-part'>			
 						<div className='profile-data'>
-								<img src={userData.image}></img>
+								<img src={userDataArray[0].image}></img>
 								<div className='profile-text'>
-									<span className='profile-text-login'>{userData.name}</span>
-									<span className='profile-text-mmr'>MMR : {userData.mmr}</span>
+									<span className='profile-text-login'>{userDataArray[0].name}</span>
+									<span className='profile-text-mmr'>MMR : {userDataArray[0].mmr}</span>
 								</div>
-								{ userHook.user.name !== userData.name && !isFriend() &&  
-                    	    	    <AddFriendButton
-									friendname={userData.name} />
-								}
+								<div className='profile-buttons'>
+									{ userDataArray[1].name !== userDataArray[0].name && !isFriend() && !isBlocked() && 
+                    	    		    <AddFriendButton
+										friendname={userDataArray[0].name} /> || userDataArray[1].name !== userDataArray[0].name && !isBlocked() &&
+										<RemoveFriendButton
+										friendname={userDataArray[0].name} />
+									}
+									{ userDataArray[1].name !== userDataArray[0].name && !isBlocked() && !isFriend() &&
+										<BlockUserButton 
+										username={userDataArray[0].name} />  || userDataArray[1].name !== userDataArray[0].name && !isFriend() &&
+										<UnblockUserButton
+										username={userDataArray[0].name} />
+									}
+								</div>
 						</div>
 						<div className='profile-winrate'>
 							<h2>Winrate</h2>
-							{ userData.gameProfile.history.length > 0 && 
+							{ userDataArray[0].gameProfile.history.length > 0 && 
 								<div style={{width: 250, height: 250}}>
 									<CircularProgressbar 
 										value={winrate} 
@@ -56,13 +72,13 @@ function ProfileLayout () {
 									/>
 								</div>
 							}
-							<h3>Total games : {userData.gameProfile.history.length}</h3>
+							<h3>Total games : {userDataArray[0].gameProfile.history.length}</h3>
 						</div>
 					</div>
 					<div className='profile-other-part'>
 						<h1>History</h1>
 						<div className='profile-history'>
-							<History user={userData}/>
+							<History user={userDataArray[0]}/>
 						</div>
 					</div>
 				</div>

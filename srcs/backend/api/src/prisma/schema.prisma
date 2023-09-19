@@ -43,9 +43,12 @@ model User {
   members        Member[]
   friends        User[]   @relation("friends")
   pendingFriends User[]   @relation("pendingFriends")
+  blockedUsers   User[]   @relation("blockedUsers")
 
   friendsRelation        User[] @relation("friends")
   pendingFriendsRelation User[] @relation("pendingFriends")
+  blockedUsersRelation   User[] @relation("blockedUsers")
+
 
   channelOwner	Channel[]	@relation("owners")
   isBan			Ban[]		@relation("bans")

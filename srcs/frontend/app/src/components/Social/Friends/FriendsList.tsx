@@ -4,6 +4,7 @@ import getJwtTokenFromCookie from "../../../utils/getJWT.ts";
 import {throwErrorMessage} from "../../../utils/throwErrorMessage.ts";
 import {notifyError} from "../../../utils/notify.ts";
 import DeleteFriendButton from "./DeleteFriendButton.tsx";
+import { Link } from "react-router-dom";
 
 function FriendList () {
 	const [data, setData]:any = useState(null); // Utiliser un array
@@ -45,7 +46,9 @@ function FriendList () {
 			 <li key={friend.id}>
 				 <div className="friends-friendlist-component">
 					<div>
-				        <img className={"friends-friendlist-img-" + friend.status} src={friend.image}></img>
+						<Link to={'/profile/' + friend.name}>
+				        	<img className={"friends-friendlist-img-" + friend.status} src={friend.image}></img>
+						</Link>
 					</div>
 					<div className="friends-friendlist-name">
 						<p>{friend.name}</p>

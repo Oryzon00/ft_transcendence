@@ -28,6 +28,9 @@ export class UserService {
 		const trueUser = await this.prisma.user.findUnique({
 			where: {
 				id: user.id
+			},
+			include: {
+				blockedUsers: true
 			}
 		});
 		return trueUser;
@@ -127,7 +130,8 @@ export class UserService {
 							gameWons: true
 						}
 					},
-					friends: true
+					friends: true,
+					blockedUsers: true
 				},
 			});
 			return user;
@@ -143,7 +147,8 @@ export class UserService {
 					name: friendName
 				},
 				include: {
-					friends: true
+					friends: true,
+					blockedUsers: true
 				}
 			});
 
@@ -151,6 +156,12 @@ export class UserService {
 					if (friend.id === user.id)
 						throw new NotFoundException();
 				}
+			
+			for (const blockedUser of myfriend.blockedUsers) {
+					if (blockedUser.id === user.id)
+						return ({name: friendName});
+				}
+			
 
 			await this.prisma.user.update({
 				where: {
@@ -231,6 +242,16 @@ export class UserService {
 					pendingFriends: { disconnect: { id: myfriend.id}},
 				}
 			});
+
+			await this.prisma.user.update({
+				where: {
+					id: myfriend.id
+				},
+				data: {
+					pendingFriends: { disconnect: { id: user.id}},
+				}
+			});
+
 
 			return ({name: friendName});
 		} catch {
@@ -314,6 +335,50 @@ export class UserService {
 				skip: 3
 			});
 			return ({leaderboard: fullUser}); //ARRAY PAS SAFE LEAK D'INFO PRIVE
+		} catch {
+			throw new NotFoundException();
+		}
+	}
+
+	async blockUser(user: any, otherUsername: string): Promise<{name: string}> {
+		try {
+			const blockedUser = await this.prisma.user.findUnique({
+				where: {
+					name: otherUsername
+				},
+			});
+			await this.prisma.user.update({
+				where: {
+					id: user.id
+				},
+				data: {
+					friends: { disconnect: { id: blockedUser.id } },
+					pendingFriends: { disconnect: { id: blockedUser.id } },
+					blockedUsers: { connect: { id: blockedUser.id } }
+				}
+			});
+			return ({name: blockedUser.name});
+		} catch {
+			throw new NotFoundException();
+		}
+	}
+
+	async unblockUser(user: any, otherUsername: string): Promise<{name: string}> {
+		try {
+			const blockedUser = await this.prisma.user.findUnique({
+				where: {
+					name: otherUsername
+				},
+			});
+			await this.prisma.user.update({
+				where: {
+					id: user.id
+				},
+				data: {
+					blockedUsers: { disconnect: { id: blockedUser.id } }
+				}
+			});
+			return ({name: blockedUser.name});
 		} catch {
 			throw new NotFoundException();
 		}
