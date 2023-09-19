@@ -19,7 +19,7 @@ function searchElements(channels: ListChannel, query: string): ChannelId[] {
 }
 
 type TypeChannelBoard = {
-	channels: { [key: string]: ChannelPayload };
+	channels: ListChannel;
 	current: string;
 	setCurrent: any;
 };

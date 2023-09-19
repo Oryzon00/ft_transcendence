@@ -28,6 +28,7 @@ import {
 	ListName,
 	MessageWrite
 } from "./dto/chat";
+import { get } from "http";
 
 @UseGuards(JwtGuard)
 @Controller("chat")
@@ -37,10 +38,13 @@ export class ChatController {
 	// Get all the information about himself
 	@Get("getData")
 	async getData(@GetUser() user: User): Promise<ListChannel> {
-		console.log("getData ");
 		return await this.ChatService.getData(user);
 	}
 
+	@Get("getDirect")
+	async getDirect(@GetUser() user: User): Promise<ListChannel> {
+		return await this.ChatService.getDirect(user);
+	}
 	// To send a message
 	@Post("message")
 	async message(@GetUser() user: User, @Body() message: MessageWrite) {

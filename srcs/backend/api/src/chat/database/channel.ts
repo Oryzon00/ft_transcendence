@@ -74,6 +74,22 @@ class ChannelDatabase {
 		}
 	}
 
+	async createDirect(user: number[]): Promise<Channel> {
+		try {
+			const res: Channel = await this.prisma.channel.create({
+				data: {
+					name: "DIRECT",
+					direct: true,
+					status: Status.PRIVATE
+				}
+			});
+			this.joinChannel(res.id, user[0]);
+			this.joinChannel(res.id, user[1]);
+			return res;
+		} catch (error) {
+			return error;
+		}
+	}
 	async setChannel(
 		userId: number,
 		channelId: string,

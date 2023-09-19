@@ -55,8 +55,11 @@ function MessageEntry({ current }: MessageEntryType) {
 					placeholder=" Send a message..."
 					onChange={(e) => setValue(e.target.value)}
 					maxLength={2000}
-					onKeyDown={(event: any) => {
-						if (event.key == "Enter") sendMessage();
+					onKeyDown={(
+						event: React.KeyboardEvent<HTMLInputElement>
+					) => {
+						if (event.key == "Enter" && value.length > 0)
+							sendMessage();
 					}}
 				/>
 				{isPickerVisible ? (

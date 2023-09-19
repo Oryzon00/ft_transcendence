@@ -55,6 +55,18 @@ export class ChatService {
 		return res;
 	}
 
+	async getDirect(user: User): Promise<ListChannel> {
+		const members: Member[] = await this.userdb.getMembers(user.id);
+		const blocked: number[] = this.listBlocked(
+			await this.userdb.listBlockedUser(user.id)
+		);
+		let res: ListChannel = {};
+
+		if (members != undefined) {
+		}
+		return res;
+	}
+
 	async getChannel(
 		channelId: string,
 		blocked: number[]
@@ -121,6 +133,9 @@ export class ChatService {
 		);
 		if (member == undefined || member.mute) {
 			return "You cannot send message in this channel, refresh the page";
+		}
+		if (message.content.length == 0) {
+			return "No empty message";
 		}
 		const msg: Message = await this.channeldb.stockMessages(message);
 		await this.chatGateway.emitToRoom(members, msg, "onMessage");
@@ -332,5 +347,11 @@ export class ChatService {
 		return null;
 	}
 
-	async createDirect(user: User, channelId: { name: string }) {}
+	async createDirect(
+		user: User,
+		channelId: { name: string }
+	): Promise<ChannelPayload> {
+		let res: ChannelPayload;
+		return res;
+	}
 }

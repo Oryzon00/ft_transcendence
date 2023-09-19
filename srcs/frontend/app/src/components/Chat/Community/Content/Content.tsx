@@ -25,6 +25,12 @@ function Content({ channels, clickedChannel }: ContentType) {
 	const [query, setQuery] = useState("");
 	const filtredItems: ChannelPayload[] = searchElements(channels, query);
 
+	if (channels.length == 0)
+		return (
+			<div className="flex flex-col items-center justify-center h-[90%]">
+				<p className="text-black text-3xl">No channel</p>
+			</div>
+		);
 	return (
 		<div className="flex flex-col items-center h-[90%]">
 			<SearchBar query={query} setQuery={setQuery} />
