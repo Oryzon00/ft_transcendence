@@ -45,7 +45,7 @@ function DiscussionBoard({
 				setChannel={setChannel}
 				setCurrent={setCurrent}
 				modoValue={modo}
-				modo={() => setModo(!modo)}
+				modo={setModo}
 			/>
 			{modo ? (
 				<Modo />

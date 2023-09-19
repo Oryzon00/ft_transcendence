@@ -98,14 +98,14 @@ function Community({ togglemodal, channel, setChannel }: CommunityType) {
 			});
 	};
 
-	const refresh = (): void => {
+	const refresh = () => {
 		ListPublicChannel();
 		ListProtectedChannel();
 	};
 
 	useEffect(() => {
 		refresh();
-	}, [current]);
+	}, []);
 
 	return (
 		<div className="flex flex-col bg-white h-[550px] w-[650px] rounded-md ">
@@ -143,10 +143,15 @@ function Community({ togglemodal, channel, setChannel }: CommunityType) {
 				<Content
 					channels={publicChannel.concat(protectedChannel)}
 					clickedChannel={(e: ChannelPayload) => {
-						console.log(e.status);
-						setCurrent(e);
 						if (e.status == "PROTECT") {
+							setCurrent(e);
 							setClickProtected(!isClickProtected);
+						} else {
+							fetchJoinChannel(
+								{ id: e.id, password: "" },
+								setChannel
+							);
+							refresh();
 						}
 					}}
 				/>

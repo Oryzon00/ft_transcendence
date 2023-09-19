@@ -18,7 +18,7 @@ function Header({ togglemodal, refresh }: HeaderType) {
 	const [current, setCurrent] = useState(status[index]);
 
 	return (
-		<div className="flex justify-between px-3 w-full h-[10%] bg-[#eaecee] rounded-md">
+		<div className="flex justify-between px-3 w-full h-[10%] bg-[#eaecee] rounded-t-md">
 			<h2 className="bg-[#eaecee] text-black text-4xl rounded-md flex items-center">
 				Community
 			</h2>

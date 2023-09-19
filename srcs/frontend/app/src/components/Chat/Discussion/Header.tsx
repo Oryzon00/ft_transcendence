@@ -9,6 +9,7 @@ import { ChannelPayload } from "../../../layouts/ChatLayout/chat.d";
 import apiAddress from "../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../utils/getJWT";
 import { notifyError } from "../../../utils/notify";
+import { useEffect } from "react";
 
 type HeaderType = {
 	channel: { [key: string]: ChannelPayload };
@@ -61,6 +62,9 @@ function Header({
 		setCurrent("");
 	};
 
+	useEffect(() => {
+		modo(false);
+	}, [current]);
 	return (
 		<div
 			id="header-discussion-bar"
@@ -71,7 +75,10 @@ function Header({
 				<p>{channel[current].description}</p>
 			) : null}
 			<div className="flex flex-row items-center">
-				<button className="bg-[#282b30] h-full" onClick={() => modo()}>
+				<button
+					className="bg-[#282b30] h-full"
+					onClick={() => modo(!modoValue)}
+				>
 					{modoValue ? <img src={ModoClicked} /> : <img src={Modo} />}
 				</button>
 				<button className="bg-[#282b30] h-full">

@@ -1,5 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { WebsocketContext, WebsocketProvider, socket } from "../../utils/contexts/WebsocketContext";
+import {
+	WebsocketContext,
+	WebsocketProvider,
+	socket
+} from "../../utils/contexts/WebsocketContext";
 import { ChannelPayload, ListChannel, MessagePayload } from "./chat.d";
 import { UserHook } from "../../utils/hooks/TuseUser";
 import useUser from "../../utils/hooks/useUser";
@@ -15,13 +19,16 @@ import OverlayPopup from "../../components/Chat/OverlayPopup";
 // Images
 
 function ChatLayout() {
+	// Info on room
 	const [current, setCurrent] = useState("");
 	const [channel, setChannel] = useState<ListChannel>({});
-	const [refresh, setRefresh] = useState(false);
+	const [directChannel, setDirectChannel] = useState<ListChannel>({});
 
 	const [creation, setCreation] = useState(false);
 	const [community, setCommunity] = useState(false);
 	const [direct, setDirect] = useState(false);
+
+	const [refresh, setRefresh] = useState(false);
 
 	const sockets = useContext(WebsocketContext);
 	const user: UserHook = useUser();
@@ -74,7 +81,7 @@ function ChatLayout() {
 
 		sockets.on("onMessage", (data: MessagePayload) => {
 			addMessage(data);
-			setRefresh(!refresh)
+			setRefresh(!refresh);
 		});
 
 		// Preparation for invitation in a room.
@@ -93,37 +100,38 @@ function ChatLayout() {
 	return (
 		<WebsocketProvider value={socket}>
 			<div className="h-[calc(100%-5rem)] w-auto flex flex-grow justify-center">
-			<OverlayPopup
-				creation={creation}
-				togglecreation={() => setCreation(!creation)}
-				community={community}
-				togglecommunity={() => setCommunity(!community)}
-				channel={channel}
-				setChannel={(e: ChannelPayload) =>
-					setChannel({ ...channel, [e.id]: e })
-				}
-			/>
-			<ChatNav
-				creation={creation}
-				community={community}
-				channel={channel}
-				current={current}
-				setDirect={setDirect}
-				setCreation={setCreation}
-				setChannel={setChannel}
-				setCurrent={setCurrent}
-				setCommunity={setCommunity}
-			/>
-			<DiscussionBoard
-				channel={channel}
-				setChannel={(e: ListChannel) => setChannel(e)}
-				current={current}
-				setCurrent={setCurrent}
-				me={user}
-				sockets={sockets}
-			/>
+				<OverlayPopup
+					creation={creation}
+					togglecreation={() => setCreation(!creation)}
+					community={community}
+					togglecommunity={() => setCommunity(!community)}
+					channel={channel}
+					setChannel={(e: ChannelPayload) =>
+						setChannel({ ...channel, [e.id]: e })
+					}
+				/>
+				<ChatNav
+					creation={creation}
+					community={community}
+					channel={channel}
+					current={current}
+					direct={direct}
+					setDirect={setDirect}
+					setCreation={setCreation}
+					setChannel={setChannel}
+					setCurrent={setCurrent}
+					setCommunity={setCommunity}
+				/>
+				<DiscussionBoard
+					channel={channel}
+					setChannel={(e: ListChannel) => setChannel(e)}
+					current={current}
+					setCurrent={setCurrent}
+					me={user}
+					sockets={sockets}
+				/>
 			</div>
-	</WebsocketProvider>
+		</WebsocketProvider>
 	);
 }
 

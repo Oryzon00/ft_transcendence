@@ -130,10 +130,11 @@ model Channel {
 
   status Status @default(PUBLIC)
 
-  ownerId Int
-  owner   User @relation("owners", fields: [ownerId], references: [id])
+  ownerId Int?
+  owner   User? @relation("owners", fields: [ownerId], references: [id])
 
   members Member[]
+  direct Boolean @default(false)
 
   bans Ban[] @relation("bans")
 
