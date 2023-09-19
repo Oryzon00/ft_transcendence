@@ -40,7 +40,6 @@ export class GameGateway
 		client: AuthenticatedSocket,
 		...args: any[]
 	): Promise<void> {
-		console.log("connection in game gateway");
 		this.lobbyManager.initSocket(client);
 	}
 

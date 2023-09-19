@@ -23,11 +23,9 @@ export class StatusGateway
 	public server: Server;
 
 	afterInit(server: Server): void {
-		console.log("\n\n Init socket server status user \n\n");
 	}
 
 	handleConnection(client: AuthenticatedSocket, ...args: any[]): void {
-		console.log("connection in status gateway");
 		this.statusService.handleConnection(client);
 	}
 
