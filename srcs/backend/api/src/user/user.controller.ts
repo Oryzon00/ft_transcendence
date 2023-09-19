@@ -54,6 +54,11 @@ export class UserController {
 		return this.userService.unblockUser(user, body.username);
 	}
 
+	@Get("getBlocked")
+	async getBlockedUsers(@GetUser() user: User): Promise<{friends: Array<User>}> {
+		return this.userService.getBlockedUsers(user); //ATTENTION ARRAY PAS SAFE
+	}
+
 	@Post("friends/add")
 	async addFriend(@GetUser() user: User,
 	                @Body() body):

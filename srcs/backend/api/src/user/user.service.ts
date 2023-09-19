@@ -209,6 +209,22 @@ export class UserService {
 		}
 	}
 
+	async getBlockedUsers(user: any): Promise<{friends: Array<User>}> {
+		try {
+			const fullUser = await this.prisma.user.findUnique({
+				where: {
+					id: user.id
+				},
+				include: {
+					blockedUsers: true
+				},
+			});
+			return ({friends: fullUser.blockedUsers}); //ARRAY PAS SAFE LEAK D'INFO PRIVE
+		} catch {
+			throw new NotFoundException();
+		}
+	}
+
 	async acceptFriend(user: User, friendName: string): Promise<{name: string}> {
 		try {
 			const myfriend = await this.prisma.user.findUnique({
