@@ -1,4 +1,12 @@
-import { Patch, Controller, Get, UseGuards, Body, Query, Post } from "@nestjs/common";
+import {
+	Patch,
+	Controller,
+	Get,
+	UseGuards,
+	Body,
+	Query,
+	Post
+} from "@nestjs/common";
 import { User } from "@prisma/client";
 import { GetUser } from "src/auth/decorator";
 import { JwtGuard } from "src/auth/guard";
@@ -19,7 +27,11 @@ export class UserController {
 		@GetUser() user: User,
 		@Body() body
 	): Promise<{ image: string }> {
-		return await this.userService.updateUserImage(user, body.imageType, body.base64Data);
+		return await this.userService.updateUserImage(
+			user,
+			body.imageType,
+			body.base64Data
+		);
 	}
 
 	@Patch("update/name")
@@ -30,50 +42,63 @@ export class UserController {
 		return this.userService.updateUserName(user, body.name);
 	}
 
+	@Patch("signup")
+	async signup(@GetUser() user: User): Promise<{ signUp: Boolean }> {
+		return this.userService.signUp(user);
+	}
+
 	@Get("find")
 	async findUser(@Query("username") username: string): Promise<UserSafeDTO> {
 		return this.userService.findUser(username);
 	}
 
 	@Post("friends/add")
-	async addFriend(@GetUser() user: User,
-	                @Body() body):
-					Promise<{ name: string}> {
+	async addFriend(
+		@GetUser() user: User,
+		@Body() body
+	): Promise<{ name: string }> {
 		return this.userService.addFriend(user, body.username);
 	}
 	@Get("friends/get")
-	async getFriends(@GetUser() user: User): Promise<{friends: Array<User>}> {
+	async getFriends(@GetUser() user: User): Promise<{ friends: Array<User> }> {
 		return this.userService.getFriends(user); //ATTENTION ARRAY PAS SAFE
 	}
 
 	@Get("friends/getPending")
-	async getPendingFriends(@GetUser() user: User): Promise<{friends: Array<User>}> {
+	async getPendingFriends(
+		@GetUser() user: User
+	): Promise<{ friends: Array<User> }> {
 		return this.userService.getPendingFriends(user); //ATTENTION ARRAY PAS SAFE
 	}
 
-	@Post ("friends/accept")
-	async acceptFriend(@GetUser() user: User,
-					@Body() body):
-		Promise<{ name: string}> {
+	@Post("friends/accept")
+	async acceptFriend(
+		@GetUser() user: User,
+		@Body() body
+	): Promise<{ name: string }> {
 		return this.userService.acceptFriend(user, body.username);
 	}
 
-	@Post ("friends/decline")
-	async declineFriend(@GetUser() user: User,
-					   @Body() body):
-		Promise<{ name: string}> {
+	@Post("friends/decline")
+	async declineFriend(
+		@GetUser() user: User,
+		@Body() body
+	): Promise<{ name: string }> {
 		return this.userService.declineFriend(user, body.username);
 	}
 
-	@Post ("friends/delete")
-	async deleteFriend(@GetUser() user: User,
-					   @Body() body):
-		Promise<{ name: string}> {
+	@Post("friends/delete")
+	async deleteFriend(
+		@GetUser() user: User,
+		@Body() body
+	): Promise<{ name: string }> {
 		return this.userService.deleteFriend(user, body.username);
 	}
 
 	@Get("leaderboard")
-	async getLeaderboard(@GetUser() user: User): Promise<{leaderboard: Array<User>}> {
+	async getLeaderboard(
+		@GetUser() user: User
+	): Promise<{ leaderboard: Array<User> }> {
 		return this.userService.getLeaderboard(user); //ATTENTION ARRAY PAS SAFE
 	}
 }

@@ -36,6 +36,7 @@ model User {
   status		UserStatus	@default(OFFLINE)
   name			String		@unique
   is2FAOn		Boolean		@default(false)
+  signUp		Boolean		@default(true)
   createdAt		DateTime	@default(now())
   updatedAt		DateTime	@updatedAt
   secret2FA		String?
