@@ -70,6 +70,15 @@
 	margin-left: 25px;
 	margin-right: 25px;
 	font-weight: bold;
+
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.leaderboard-main p {
+	width: 100px;
+	overflow: hidden;
+	white-space: nowrap;
 }
 
 .leaderboard-1 {
@@ -132,10 +141,14 @@
 }
 
 .leaderboard-racing {
+	width: 100px;
 	font-stretch: condensed;
 	font-kerning: none;
 	font-weight: bold;
-	font-size: 30px; 
+	font-size: 24px; 
+
+	overflow: hidden;
+	white-space: nowrap;
 }
 
 .leaderboard-mc {

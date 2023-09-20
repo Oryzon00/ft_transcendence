@@ -60,7 +60,9 @@ function BlockList () {
 	 }
 
 	return (
-		<ul>{listFriend}</ul>
+		<div className="social-list">
+			<ul>{listFriend}</ul>
+		</div>
 
 	)
 }

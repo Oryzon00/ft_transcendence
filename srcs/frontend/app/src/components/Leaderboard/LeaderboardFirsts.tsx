@@ -58,8 +58,8 @@ function LeaderboardFirsts () {
 									<span>Rank: {rank++}</span>
 						    	</div>
 								<div className="leaderboard-winrate">
-									<p>MMR:</p>
-									<p>{currentUser.mmr}</p>
+									<span>MMR:</span>
+									<span>{currentUser.mmr}</span>
 								</div>
 								<div>
 									<ViewProfileButton username={currentUser.name} />

@@ -7,6 +7,14 @@
 	background-color: #1a1a1a;
 }
 
+.social-list {
+	overflow: auto;
+}
+
+.social-list::-webkit-scrollbar {
+	display: none;
+}
+
 .friends-friends {
 	display: flex;
 	flex-direction: row;
@@ -88,6 +96,13 @@
 .friends-friendlist-name {
 	text-align: center;
 	margin-left: 15px;
+}
+
+.friends-friendlist-name p {
+	width: 100px;
+	
+	overflow: hidden;
+	white-space: nowrap;
 }
 
 .friends-friendlist-nameStatus-ONLINE {

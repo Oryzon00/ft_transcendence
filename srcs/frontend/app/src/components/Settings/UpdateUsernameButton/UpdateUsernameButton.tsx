@@ -50,7 +50,7 @@ function UpdateUsernameButton() {
 			.then(function (data) {
 				userHook.setUser({
 					...userHook.user,
-					name: data.name
+					name: data.name,
 				});
 				notifyInfo(`Your username has been changed to ${data.name}`);
 			})
