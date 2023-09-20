@@ -1,14 +1,12 @@
 import getJwtTokenFromCookie from "../../utils/getJWT.ts";
 import { notifyError } from "../../utils/notify.ts";
+import apiAddress from "../../utils/apiAddress.ts";
 
 export async function ProfileLayoutLoader({ params }:any) {
-	let url;
-	if (params.username === undefined)
-		url = `http://${window.location.hostname}:3000/user/me`;
-	else
-		url = `http://${window.location.hostname}:3000/user/find?username=` + params.username;
+	let url = apiAddress +'/user/find?username=' + params.username;
+	let dataArray = [];
 
-	const response = await fetch(url, {
+	let response = await fetch(url, {
 		method: "GET",
 		headers: {
 			Authorization: "Bearer " + getJwtTokenFromCookie()
@@ -18,12 +16,34 @@ export async function ProfileLayoutLoader({ params }:any) {
 		notifyError("User " + response.statusText);
 		throw new Response("User " + response.statusText, { status: response.status });
 	}
-	const data = await response.json()
+	let data = await response.json()
 		.then((data) => {
 			return data;
 		})
 		.catch((error) => {
 			notifyError(error.message);
 		});
-	return data;
+	dataArray.push(data);
+
+
+	url = apiAddress + "/user/trueMe";
+	response = await fetch(url, {
+		method: "GET",
+		headers: {
+			Authorization: "Bearer " + getJwtTokenFromCookie()
+		},
+	});
+	if (!response.ok) {
+		throw new Response("User " + response.statusText, { status: response.status });
+	}
+	data = await response.json()
+		.then((data) => {
+			return data;
+		})
+		.catch((error) => {
+			notifyError(error.message);
+		});
+
+	dataArray.push(data);
+	return dataArray;
 }

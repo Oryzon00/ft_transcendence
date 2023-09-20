@@ -28,6 +28,9 @@ export class UserService {
 		const trueUser = await this.prisma.user.findUnique({
 			where: {
 				id: user.id
+			},
+			include: {
+				blockedUsers: true
 			}
 		});
 		return trueUser;
@@ -101,41 +104,96 @@ export class UserService {
 		}
 	}
 
+	async signUp(user: User): Promise<{ signUp: Boolean }> {
+		try {
+			await this.prisma.user.update({
+				where: {
+					id: user.id
+				},
+				data: {
+					signUp: false
+				}
+			});
+			return { signUp: false };
+		} catch (error) {
+			throw new UnauthorizedException();
+		}
+	}
+
 	async findUser(username: string): Promise<UserSafeDTO> {
 		try {
 			const user = await this.prisma.user.findUnique({
 				where: {
 					name: username
-				}
+				},
+				include: {
+					gameProfile: {
+						include: {
+							history: {
+								include: {
+									winner: {
+										include: {
+											user: true
+										}
+									},
+									loser: {
+										include: {
+											user: true
+										}
+									}
+								}
+							},
+							gameWons: true
+						}
+					},
+					friends: true,
+					blockedUsers: true
+				},
 			});
-			return this.getUserSafe(user);
+			return user;
 		} catch {
 			throw new NotFoundException();
 		}
 	}
 
-	async addFriend(user: User, friendName: string): Promise<{name: string}> {
+	async addFriend(user: User, friendName: string): Promise<{ name: string }> {
 		try {
 			const myfriend = await this.prisma.user.findUnique({
 				where: {
 					name: friendName
+				},
+				include: {
+					friends: true,
+					blockedUsers: true
 				}
 			});
+
+			for (const friend of myfriend.friends) {
+					if (friend.id === user.id)
+						throw new NotFoundException();
+				}
+			
+			for (const blockedUser of myfriend.blockedUsers) {
+					if (blockedUser.id === user.id)
+						return ({name: friendName});
+				}
+			
+
 			await this.prisma.user.update({
 				where: {
 					id: myfriend.id
 				},
 				data: {
-					pendingFriends: { connect: { id: user.id}},
+					pendingFriends: { connect: { id: user.id } }
 				}
 			});
-			return ({name: friendName});
+			return { name: friendName };
 		} catch {
 			throw new NotFoundException();
 		}
 	}
 
-	async getFriends(user: any): Promise<{friends: Array<User>}> {
+	async getFriends(user: any): Promise<{ friends: Array<User> }> {
 		try {
 			const fullUser = await this.prisma.user.findUnique({
 				where: {
@@ -143,15 +201,15 @@ export class UserService {
 				},
 				include: {
 					friends: true
-				},
+				}
 			});
-			return ({friends: fullUser.friends}); //ARRAY PAS SAFE LEAK D'INFO PRIVE
+			return { friends: fullUser.friends }; //ARRAY PAS SAFE LEAK D'INFO PRIVE
 		} catch {
 			throw new NotFoundException();
 		}
 	}
 
-	async getPendingFriends(user: any): Promise<{friends: Array<User>}> {
+	async getPendingFriends(user: any): Promise<{ friends: Array<User> }> {
 		try {
 			const fullUser = await this.prisma.user.findUnique({
 				where: {
@@ -159,9 +217,25 @@ export class UserService {
 				},
 				include: {
 					pendingFriends: true
+				}
+			});
+			return { friends: fullUser.pendingFriends }; //ARRAY PAS SAFE LEAK D'INFO PRIVE
+		} catch {
+			throw new NotFoundException();
+		}
+	}
+
+	async getBlockedUsers(user: any): Promise<{friends: Array<User>}> {
+		try {
+			const fullUser = await this.prisma.user.findUnique({
+				where: {
+					id: user.id
+				},
+				include: {
+					blockedUsers: true
 				},
 			});
-			return ({friends: fullUser.pendingFriends}); //ARRAY PAS SAFE LEAK D'INFO PRIVE
+			return ({friends: fullUser.blockedUsers}); //ARRAY PAS SAFE LEAK D'INFO PRIVE
 		} catch {
 			throw new NotFoundException();
 		}
@@ -179,7 +253,7 @@ export class UserService {
 					id: user.id
 				},
 				data: {
-					friends: { connect: { id: myfriend.id}},
+					friends: { connect: { id: myfriend.id } }
 				}
 			});
 
@@ -188,7 +262,7 @@ export class UserService {
 					id: myfriend.id
 				},
 				data: {
-					friends: { connect: { id: user.id}},
+					friends: { connect: { id: user.id } }
 				}
 			});
 
@@ -197,9 +271,19 @@ export class UserService {
 					id: user.id
 				},
 				data: {
-					pendingFriends: { disconnect: { id: myfriend.id}},
+					pendingFriends: { disconnect: { id: myfriend.id } }
 				}
 			});
+
+			await this.prisma.user.update({
+				where: {
+					id: myfriend.id
+				},
+				data: {
+					pendingFriends: { disconnect: { id: user.id}},
+				}
+			});
+
 
 			return ({name: friendName});
 		} catch {
@@ -207,7 +291,10 @@ export class UserService {
 		}
 	}
 
-	async declineFriend(user: User, friendName: string): Promise<{name: string}> {
+	async declineFriend(
+		user: User,
+		friendName: string
+	): Promise<{ name: string }> {
 		try {
 			const myfriend = await this.prisma.user.findUnique({
 				where: {
@@ -219,16 +306,19 @@ export class UserService {
 					id: user.id
 				},
 				data: {
-					pendingFriends: { disconnect: { id: myfriend.id}},
+					pendingFriends: { disconnect: { id: myfriend.id } }
 				}
 			});
-			return ({name: friendName});
+			return { name: friendName };
 		} catch {
 			throw new NotFoundException();
 		}
 	}
 
-	async deleteFriend(user: User, friendName: string): Promise<{name: string}> {
+	async deleteFriend(
+		user: User,
+		friendName: string
+	): Promise<{ name: string }> {
 		try {
 			const myfriend = await this.prisma.user.findUnique({
 				where: {
@@ -241,7 +331,7 @@ export class UserService {
 					id: user.id
 				},
 				data: {
-					friends: { disconnect: { id: myfriend.id}},
+					friends: { disconnect: { id: myfriend.id } }
 				}
 			});
 
@@ -250,24 +340,83 @@ export class UserService {
 					id: myfriend.id
 				},
 				data: {
-					friends: { disconnect: { id: user.id}},
+					friends: { disconnect: { id: user.id } }
 				}
 			});
 
-			return ({name: friendName});
+			return { name: friendName };
 		} catch {
 			throw new NotFoundException();
 		}
 	}
 
-	async getLeaderboard(user: any): Promise<{leaderboard: Array<User>}> {
+	async getLeaderboardFirsts(user: any): Promise<{leaderboard: Array<User>}> {
 		try {
 			const fullUser = await this.prisma.user.findMany({
 				orderBy: {
-					mmr: 'asc'
+					mmr: 'desc'
 				},
+				take: 3
+			});
+			return { leaderboard: fullUser }; //ARRAY PAS SAFE LEAK D'INFO PRIVE
+		} catch {
+			throw new NotFoundException();
+		}
+	}
+
+	async getLeaderboardOthers(user: any): Promise<{leaderboard: Array<User>}> {
+		try {
+			const fullUser = await this.prisma.user.findMany({
+				orderBy: {
+					mmr: 'desc'
+				},
+				skip: 3
 			});
 			return ({leaderboard: fullUser}); //ARRAY PAS SAFE LEAK D'INFO PRIVE
+		} catch {
+			throw new NotFoundException();
+		}
+	}
+
+	async blockUser(user: any, otherUsername: string): Promise<{name: string}> {
+		try {
+			const blockedUser = await this.prisma.user.findUnique({
+				where: {
+					name: otherUsername
+				},
+			});
+			await this.prisma.user.update({
+				where: {
+					id: user.id
+				},
+				data: {
+					friends: { disconnect: { id: blockedUser.id } },
+					pendingFriends: { disconnect: { id: blockedUser.id } },
+					blockedUsers: { connect: { id: blockedUser.id } }
+				}
+			});
+			return ({name: blockedUser.name});
+		} catch {
+			throw new NotFoundException();
+		}
+	}
+
+	async unblockUser(user: any, otherUsername: string): Promise<{name: string}> {
+		try {
+			const blockedUser = await this.prisma.user.findUnique({
+				where: {
+					name: otherUsername
+				},
+			});
+			await this.prisma.user.update({
+				where: {
+					id: user.id
+				},
+				data: {
+					blockedUsers: { disconnect: { id: blockedUser.id } }
+				}
+			});
+			return ({name: blockedUser.name});
 		} catch {
 			throw new NotFoundException();
 		}

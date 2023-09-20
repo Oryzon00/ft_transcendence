@@ -4,9 +4,10 @@ import getJwtTokenFromCookie from "../../../utils/getJWT.ts";
 import {throwErrorMessage} from "../../../utils/throwErrorMessage.ts";
 import {notifyError} from "../../../utils/notify.ts";
 import DeleteFriendButton from "./DeleteFriendButton.tsx";
+import { Link } from "react-router-dom";
 
 function FriendList () {
-	const [data, setData] = useState(null); // Utiliser un array
+	const [data, setData]:any = useState(null); // Utiliser un array
 	let listFriend = null;
 
 	function getFriends () {
@@ -44,19 +45,25 @@ function FriendList () {
 		 listFriend = data.friends.map((friend :any) => (
 			 <li key={friend.id}>
 				 <div className="friends-friendlist-component">
-				        <img src={friend.image}></img>
-					    <div className="friends-friendlist-name">
-						    <p>{friend.name}</p>
-					    </div>
-						<DeleteFriendButton friendname={friend.name} />
+					<div>
+						<Link to={'/profile/' + friend.name}>
+				        	<img className={"friends-friendlist-img-" + friend.status} src={friend.image}></img>
+						</Link>
+					</div>
+					<div className="friends-friendlist-name">
+						<p>{friend.name}</p>
+						<span className={"friends-friendlist-nameStatus-" + friend.status}>{friend.status == "INGAME" ? "IN GAME" : friend.status}</span>
+					</div>
+					<DeleteFriendButton friendname={friend.name} />
 				 </div>
 			 </li>
 		 ));
 	 }
 
 	return (
-		<ul>{listFriend}</ul>
-
+		<div className="social-list">
+			<ul>{listFriend}</ul>
+		</div>
 	)
 }
 

@@ -1,23 +1,23 @@
 export type MessagePayload = {
 	id: string;
-    createdAt: Date;
-    updateAt: Date;
-    channelId: string;
-    authorId: number;
-    content: string;
+	createdAt: Date;
+	updateAt: Date;
+	channelId: string;
+	authorId: number;
+	content: string;
 };
 
 export type ChannelAllInfo = {
-    id: string;
-    createdAt: Date;
-    updateAt: Date;
-    name: string;
-    avatar: string | null;
-    description: string;
-    status: Status;
-    ownerId: number;
-    messagesId: number[];
-}
+	id: string;
+	createdAt: Date;
+	updateAt: Date;
+	name: string;
+	avatar: string | null;
+	description: string;
+	status: Status;
+	ownerId: number;
+	messagesId: number[];
+};
 
 export type MessageWrite = {
 	channelId: string;
@@ -26,56 +26,56 @@ export type MessageWrite = {
 };
 
 export type ChannelCreation = {
-    name: string;
-    status: status;
-    password: string;
-}
+	name: string;
+	status: status;
+	password: string;
+};
 
 export type ChannelChangement = {
-    id: string;
-    status: string;
-    password: string;
+	id: string;
+	status: string;
+	password: string;
 };
 
 export type ChannelNewPassword = {
-    id: string;
-    password: string;
-}
+	id: string;
+	password: string;
+};
 
 export type ChannelPayload = {
 	id: string;
 	name: string;
-    status: string;
+	status: string;
 	message: MessagePayload[];
-}
+};
 
 export type ChannelInvitation = {
-    id: string;
-    invited: number;
-}
+	id: string;
+	invited: number;
+};
 
 export type ChannelQuit = ChannelInvitation;
 export type ChannelKick = ChannelInvitation;
 export type ChannelBan = ChannelInvitation;
 export type ChannelMute = {
-    id: string;
-    muted: number;
-    until: Date;
-}
+	id: string;
+	muted: number;
+	until: Date;
+};
 
 export type ChannelJoin = {
-    name: string;
-    password: string;
-}
+	id: string;
+	password: string;
+};
 
 export type ListName = {
-    name: string;
-}
+	name: string;
+};
 
 export type ChannelInfo = {
-    id: string;
-    name: string;
-    status: string;
-}
+	id: string;
+	name: string;
+	status: string;
+};
 
-export type ListChannel = {[key: string]: ChannelPayload}
+export type ListChannel = { [key: string]: ChannelPayload };

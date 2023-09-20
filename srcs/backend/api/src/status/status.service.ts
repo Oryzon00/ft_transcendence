@@ -7,29 +7,35 @@ import { StatusGateway } from "./status.gateaway";
 
 @Injectable()
 export class StatusService {
-	constructor(private prisma: PrismaService, ) {}
+	constructor(private prisma: PrismaService) {}
 
 	async handleConnection(client: AuthenticatedSocket) {
-		console.log(`\n${client.username} connected\n`);
-		this.prisma.user.update({
-			where: {
-				id: client.userId
-			},
-			data: {
-				status: UserStatus.ONLINE
-			}
-		});
+		try {
+			const ret = await this.prisma.user.update({
+				where: {
+					id: client.userId
+				},
+				data: {
+					status: UserStatus.ONLINE
+				}
+			});
+		} catch (error) {
+			console.log(error.message);
+		}
 	}
 
 	async handleDisconnect(client: AuthenticatedSocket) {
-		console.log(`\n${client.username} disconnected\n`);
-		this.prisma.user.update({
-			where: {
-				id: client.userId
-			},
-			data: {
-				status: UserStatus.OFFLINE
-			}
-		});
+		try {
+			await this.prisma.user.update({
+				where: {
+					id: client.userId
+				},
+				data: {
+					status: UserStatus.OFFLINE
+				}
+			});
+		} catch (error) {
+			console.log(error.message);
+		}
 	}
 }

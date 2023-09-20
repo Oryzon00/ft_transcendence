@@ -1,3 +1,6 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -32,6 +35,7 @@ model User {
   status		UserStatus	@default(OFFLINE)
   name			String		@unique
   is2FAOn		Boolean		@default(false)
+  signUp		Boolean		@default(true)
   createdAt		DateTime	@default(now())
   updatedAt		DateTime	@updatedAt
   secret2FA		String?
@@ -42,9 +46,12 @@ model User {
   members        Member[]
   friends        User[]   @relation("friends")
   pendingFriends User[]   @relation("pendingFriends")
+  blockedUsers   User[]   @relation("blockedUsers")
 
   friendsRelation        User[] @relation("friends")
   pendingFriendsRelation User[] @relation("pendingFriends")
+  blockedUsersRelation   User[] @relation("blockedUsers")
+
 
   channelOwner	Channel[]	@relation("owners")
   isBan			Ban[]		@relation("bans")
@@ -100,10 +107,10 @@ model Game {
   players	GameProfile[]
   
   winnerId	Int?
-  winner	GameProfile?	@relation("winners", fields: [winnerId], references: [userId]) 
+  winner	GameProfile?	@relation("winners", fields: [winnerId], references: [userId])
 
   loserId	Int?
-  loser		GameProfile?	@relation("losers", fields: [loserId], references: [userId]) 
+  loser	GameProfile?	@relation("losers", fields: [loserId], references: [userId])
 
   scores	Int[] @default([0, 0])
   timerMS	Int @default(0)
@@ -117,7 +124,7 @@ model Channel {
   createdAt DateTime @default(now())
   updateAt  DateTime @default(now()) @updatedAt
 
-  name        String  @unique
+  name        String
   avatar      String?
   description String  @default("")
 
@@ -157,7 +164,7 @@ model Member {
 model Ban {
   id String @id @unique @default(uuid())
 
-  channelId String
+ channelId String
   userId    Int
   channel   Channel @relation("bans", fields: [channelId], references: [id])
   user      User    @relation("bans", fields: [userId], references: [id])
