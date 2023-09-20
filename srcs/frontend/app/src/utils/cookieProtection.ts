@@ -2,7 +2,7 @@ import getJwtTokenFromCookie from "./getJWT.ts";
 import { notifyError } from "./notify.ts";
 
 export async function checkUser() {
-	const url = `http://${window.location.hostname}:3000/user/me`;
+	const url = `http://${import.meta.env.VITE_SERVER_HOSTNAME}:3000/user/me`;
 
 	const response = await fetch(url, {
 		method: "GET",
@@ -18,9 +18,9 @@ export async function checkUser() {
 }
 
 export async function cookieProtection() {
-    if (!getJwtTokenFromCookie() || !await checkUser()) {
-        self.location.href = "/";
-    }
+	if (!getJwtTokenFromCookie() || !(await checkUser())) {
+		self.location.href = "/";
+	}
 }
 
 export function getUserPathTokenFromCookie(): string | null {

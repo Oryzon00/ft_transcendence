@@ -4,14 +4,17 @@ import getJwtTokenFromCookie from "../getJWT";
 
 const socketOptions = {
 	path: "/chatSocket",
-    transportOptions: {
-        polling: {
-            extraHeaders: {
+	transportOptions: {
+		polling: {
+			extraHeaders: {
 				Authorization: "Bearer " + getJwtTokenFromCookie()
-            }
-        }
-    }
-}
-export const socket = io(`http://${window.location.hostname}:3000`, socketOptions);
+			}
+		}
+	}
+};
+export const socket = io(
+	`http://${import.meta.env.VITE_SERVER_HOSTNAME}:3000`,
+	socketOptions
+);
 export const WebsocketContext = createContext<Socket>(socket);
 export const WebsocketProvider = WebsocketContext.Provider;

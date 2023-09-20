@@ -51,30 +51,26 @@ export class ChatGateway
 		server.on("connection", (socket: Socket) => {});
 	}
 
-	getId(client: AuthSocket) : number{
-		if (client.handshake.headers.authorization == undefined) return null
+	getId(client: AuthSocket): number {
+		if (client.handshake.headers.authorization == undefined) return null;
 
 		try {
-
 			const decoded: string | JwtPayload | any = verify(
-				client.handshake.headers.authorization.split(' ')[1],
+				client.handshake.headers.authorization.split(" ")[1],
 				process.env.JWT_SECRET
 			);
-			return (decoded.sub)
+			return decoded.sub;
 		} catch (ex) {
 			console.log("ERROR");
 		}
 	}
 
-
 	@UseGuards(WsGuard)
 	async handleConnection(@ConnectedSocket() client: AuthSocket) {
-		console.log('connection');
 		client.join(String(this.getId(client)));
 	}
 
 	async handleDisconnect(@ConnectedSocket() client: AuthSocket) {
-		console.log("disconnect");
 		client.leave(String(client.userId));
 	}
 
