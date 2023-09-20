@@ -1,5 +1,5 @@
 import { Server, Socket } from "socket.io";
-import * as jwt from 'jsonwebtoken';
+import * as jwt from "jsonwebtoken";
 import {
 	MessageBody,
 	OnGatewayConnection,
@@ -22,22 +22,25 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { User } from "@prisma/client";
 
 @WebSocketGateway({
-	cors: {
-		origins: ["http://localhost:3000"]//env address
-	}
+	path: "/game"
 })
 export class GameGateway
 	implements OnGatewayConnection, OnGatewayInit, OnGatewayDisconnect
 {
-	constructor(private lobbyManager: LobbyManager, private prisma: PrismaService) {
-	}
+	constructor(
+		private lobbyManager: LobbyManager,
+		private prisma: PrismaService
+	) {}
 
 	afterInit(server: Server): void {
 		this.lobbyManager.server = server;
 	}
 
-	async handleConnection(client: AuthenticatedSocket, ...args: any[]): Promise<void> {
-		this.lobbyManager.initSocket(client);	
+	async handleConnection(
+		client: AuthenticatedSocket,
+		...args: any[]
+	): Promise<void> {
+		this.lobbyManager.initSocket(client);
 	}
 
 	async handleDisconnect(client: AuthenticatedSocket): Promise<void> {
@@ -55,7 +58,10 @@ export class GameGateway
 	}
 
 	@SubscribeMessage(ClientEvents.LobbyCreate)
-	async onLobbyCreate( client: AuthenticatedSocket, data: LobbyCreateDto ): Promise< WsResponse<ServerResponseDTO[ServerEvents.GameMessage]> > {
+	async onLobbyCreate(
+		client: AuthenticatedSocket,
+		data: LobbyCreateDto
+	): Promise<WsResponse<ServerResponseDTO[ServerEvents.GameMessage]>> {
 		let lobby = this.lobbyManager.findLobby(client.id, data.mode);
 		if (lobby) {
 			this.lobbyManager.joinLobby(client, lobby.Id);
@@ -80,7 +86,6 @@ export class GameGateway
 			};
 		}
 	}
-
 
 	@SubscribeMessage(ClientEvents.LobbyJoin)
 	onLobbyJoin(

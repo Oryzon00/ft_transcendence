@@ -6,6 +6,7 @@ export type User = {
 	createdAt: string;
 	updatedAt: string;
 	mmr: number;
+	signUp: boolean;
 };
 
 export type UserHook = {

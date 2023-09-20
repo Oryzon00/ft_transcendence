@@ -13,9 +13,9 @@ export default class SocketWrapper {
 	private connectionLost: boolean = false;
 
 	constructor() {
-		// this.socket = io();
 
-		this.socket = io(`http://${window.location.hostname}:3000`, {
+		this.socket = io(`http://${window.location.hostname}:3000/`, {
+			path: "/game",
 			transportOptions: {
 				polling: {
 					extraHeaders: {

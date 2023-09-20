@@ -12,9 +12,9 @@ export class WebSocketAdapter extends IoAdapter {
 	createIOServer(port: number, options?: any) {
 		const cors = {
 			credentials: true,
-			origin: ["http://localhost:8000"],
+			origin: ["http://localhost:8000", "*", "http://localhost:3000"],
 			methods: ["GET", "POST"],
-			allowedHeaders: ['Authorization'],
+			allowedHeaders: ["Authorization"]
 		};
 		const optionsWithCors: ServerOptions = {
 			...options,

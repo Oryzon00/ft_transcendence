@@ -12,10 +12,7 @@ import { StatusService } from "./status.service";
 import { AuthenticatedSocket } from "src/game/types/AuthenticatedSocket";
 
 @WebSocketGateway({
-	cors: {
-		//{ cors: true }?
-		origins: ["http://localhost:3000"]
-	}
+	path: "/game"
 })
 export class StatusGateway
 	implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
@@ -26,7 +23,6 @@ export class StatusGateway
 	public server: Server;
 
 	afterInit(server: Server): void {
-		console.log("\n\n Init socket server status user \n\n");
 	}
 
 	handleConnection(client: AuthenticatedSocket, ...args: any[]): void {

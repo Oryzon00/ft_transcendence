@@ -20,6 +20,7 @@ import {
 } from "@nestjs/websockets";
 import { Namespace, Socket, Server } from "socket.io";
 import socketioJwt from "socketio-jwt";
+import { verify } from "jsonwebtoken";
 import {
 	MessagePayload,
 	ChannelPayload,
@@ -33,64 +34,56 @@ import { JwtGuard } from "src/auth/guard";
 import { PrismaService } from "src/prisma/prisma.service";
 import { GetUser } from "src/auth/decorator";
 import { AuthSocket } from "./AuthSocket.types";
+import { WsGuard } from "./WsGuard";
+import { JwtPayload } from "src/auth/dto/jwtPayload.dto";
 
 @Injectable()
 @WebSocketGateway({
-	cors: {
-		origins: ["http://localhost:3000"]
-	}
+	path: "/chatSocket"
 })
-export class ChatGateway implements OnModuleInit {
-	constructor(
-		private userdb: UserDatabase,
-		private channeldb: ChannelDatabase,
-		private prisma: PrismaService
-	) {}
-
+export class ChatGateway
+	implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+{
 	@WebSocketServer()
 	public server: Server;
 
-	onModuleInit() {
-		this.server.on("connection", (socket: Socket) => {});
+	afterInit(server: Server) {
+		server.on("connection", (socket: Socket) => {});
 	}
 
-	@SubscribeMessage("authenticate")
-	async authenticate(
-		@ConnectedSocket() client: AuthSocket,
-		@MessageBody() body
-	) {
-		if (body != null && Object.keys(body).length > 0) {
-			client.userId = body.id;
-			client.name = body.name;
-			const members: Member[] = await this.userdb.getMembers(body.id);
-			if (!members) return;
-			members.map((rooms) => client.join(rooms.channelId));
-			client.join(String(body.id));
+	getId(client: AuthSocket) : number{
+		if (client.handshake.headers.authorization == undefined) return null
+
+		try {
+
+			const decoded: string | JwtPayload | any = verify(
+				client.handshake.headers.authorization.split(' ')[1],
+				process.env.JWT_SECRET
+			);
+			return (decoded.sub)
+		} catch (ex) {
+			console.log("ERROR");
 		}
 	}
 
-	async onJoinChannel(userId: number, channelId: string) {
-		const socket = await this.getSocketFromUserID(String(userId));
-		if (!socket) return null;
-		socket.join(channelId);
+
+	@UseGuards(WsGuard)
+	async handleConnection(@ConnectedSocket() client: AuthSocket) {
+		console.log('connection');
+		client.join(String(this.getId(client)));
 	}
 
-	async getSocketFromUserID(userId: string): Promise<Socket> {
-		return await this.server.in(userId).fetchSockets()[0];
+	async handleDisconnect(@ConnectedSocket() client: AuthSocket) {
+		console.log("disconnect");
+		client.leave(String(client.userId));
 	}
 
-	async emitToRoom(room: string, message: MessagePayload, status: string) {
-		console.log(
-			"message:",
-			message,
-			await this.server.in(room).fetchSockets()
-		);
-		this.server.to(room).emit(status, message);
-	}
-
-	async onLeaveChannel(userId: number, channelId: string) {
-		const socket = await this.getSocketFromUserID(String(userId));
-		if (!socket) return null;
-		socket.leave(channelId);
+	async emitToRoom(users: Member[], message: MessagePayload, status: string) {
+		users.map((user) => {
+			console.log(
+				`this.server.to(String(${user.userId})).emit(${status}, ${message.content});`
+			);
+			this.server.to(String(user.userId)).emit(status, message);
+		});
 	}
 }

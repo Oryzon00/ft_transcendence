@@ -104,6 +104,22 @@ export class UserService {
 		}
 	}
 
+	async signUp(user: User): Promise<{ signUp: Boolean }> {
+		try {
+			await this.prisma.user.update({
+				where: {
+					id: user.id
+				},
+				data: {
+					signUp: false
+				}
+			});
+			return { signUp: false };
+		} catch (error) {
+			throw new UnauthorizedException();
+		}
+	}
+
 	async findUser(username: string): Promise<UserSafeDTO> {
 		try {
 			const user = await this.prisma.user.findUnique({
@@ -140,7 +156,7 @@ export class UserService {
 		}
 	}
 
-	async addFriend(user: User, friendName: string): Promise<{name: string}> {
+	async addFriend(user: User, friendName: string): Promise<{ name: string }> {
 		try {
 			const myfriend = await this.prisma.user.findUnique({
 				where: {
@@ -168,16 +184,16 @@ export class UserService {
 					id: myfriend.id
 				},
 				data: {
-					pendingFriends: { connect: { id: user.id}},
+					pendingFriends: { connect: { id: user.id } }
 				}
 			});
-			return ({name: friendName});
+			return { name: friendName };
 		} catch {
 			throw new NotFoundException();
 		}
 	}
 
-	async getFriends(user: any): Promise<{friends: Array<User>}> {
+	async getFriends(user: any): Promise<{ friends: Array<User> }> {
 		try {
 			const fullUser = await this.prisma.user.findUnique({
 				where: {
@@ -185,15 +201,15 @@ export class UserService {
 				},
 				include: {
 					friends: true
-				},
+				}
 			});
-			return ({friends: fullUser.friends}); //ARRAY PAS SAFE LEAK D'INFO PRIVE
+			return { friends: fullUser.friends }; //ARRAY PAS SAFE LEAK D'INFO PRIVE
 		} catch {
 			throw new NotFoundException();
 		}
 	}
 
-	async getPendingFriends(user: any): Promise<{friends: Array<User>}> {
+	async getPendingFriends(user: any): Promise<{ friends: Array<User> }> {
 		try {
 			const fullUser = await this.prisma.user.findUnique({
 				where: {
@@ -201,9 +217,9 @@ export class UserService {
 				},
 				include: {
 					pendingFriends: true
-				},
+				}
 			});
-			return ({friends: fullUser.pendingFriends}); //ARRAY PAS SAFE LEAK D'INFO PRIVE
+			return { friends: fullUser.pendingFriends }; //ARRAY PAS SAFE LEAK D'INFO PRIVE
 		} catch {
 			throw new NotFoundException();
 		}
@@ -237,7 +253,7 @@ export class UserService {
 					id: user.id
 				},
 				data: {
-					friends: { connect: { id: myfriend.id}},
+					friends: { connect: { id: myfriend.id } }
 				}
 			});
 
@@ -246,7 +262,7 @@ export class UserService {
 					id: myfriend.id
 				},
 				data: {
-					friends: { connect: { id: user.id}},
+					friends: { connect: { id: user.id } }
 				}
 			});
 
@@ -255,7 +271,7 @@ export class UserService {
 					id: user.id
 				},
 				data: {
-					pendingFriends: { disconnect: { id: myfriend.id}},
+					pendingFriends: { disconnect: { id: myfriend.id } }
 				}
 			});
 
@@ -275,7 +291,10 @@ export class UserService {
 		}
 	}
 
-	async declineFriend(user: User, friendName: string): Promise<{name: string}> {
+	async declineFriend(
+		user: User,
+		friendName: string
+	): Promise<{ name: string }> {
 		try {
 			const myfriend = await this.prisma.user.findUnique({
 				where: {
@@ -287,16 +306,19 @@ export class UserService {
 					id: user.id
 				},
 				data: {
-					pendingFriends: { disconnect: { id: myfriend.id}},
+					pendingFriends: { disconnect: { id: myfriend.id } }
 				}
 			});
-			return ({name: friendName});
+			return { name: friendName };
 		} catch {
 			throw new NotFoundException();
 		}
 	}
 
-	async deleteFriend(user: User, friendName: string): Promise<{name: string}> {
+	async deleteFriend(
+		user: User,
+		friendName: string
+	): Promise<{ name: string }> {
 		try {
 			const myfriend = await this.prisma.user.findUnique({
 				where: {
@@ -309,7 +331,7 @@ export class UserService {
 					id: user.id
 				},
 				data: {
-					friends: { disconnect: { id: myfriend.id}},
+					friends: { disconnect: { id: myfriend.id } }
 				}
 			});
 
@@ -318,11 +340,11 @@ export class UserService {
 					id: myfriend.id
 				},
 				data: {
-					friends: { disconnect: { id: user.id}},
+					friends: { disconnect: { id: user.id } }
 				}
 			});
 
-			return ({name: friendName});
+			return { name: friendName };
 		} catch {
 			throw new NotFoundException();
 		}
@@ -336,7 +358,7 @@ export class UserService {
 				},
 				take: 3
 			});
-			return ({leaderboard: fullUser}); //ARRAY PAS SAFE LEAK D'INFO PRIVE
+			return { leaderboard: fullUser }; //ARRAY PAS SAFE LEAK D'INFO PRIVE
 		} catch {
 			throw new NotFoundException();
 		}
