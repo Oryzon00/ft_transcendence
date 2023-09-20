@@ -12,4 +12,4 @@ export class LobbyJoinDto
 	lobbyId: string
 }
 
-export type LobbyMode = 'PvE' | 'PvP';
+export type LobbyMode = 'PvE' | 'PvP' | 'Rumble';

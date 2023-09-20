@@ -4,7 +4,7 @@ import SocketWrapper, {
 } from "../../utils/websockets/SocketWrapper";
 import { ClientEvents } from "../../utils/websockets/types";
 
-function PlayVSBotButton() {
+export function PlayVSBotButton() {
 	const sm: SocketWrapper = useContext(SocketWrapperContext);
 
 	function createPvEGame() {

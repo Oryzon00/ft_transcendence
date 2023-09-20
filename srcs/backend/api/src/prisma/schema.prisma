@@ -14,8 +14,7 @@ enum Status {
 }
 
 enum GameStatus {
-	IN_GAME
-	IN_QUEUE
+	IN_LOBBY
 	IDLE
 }
 enum UserStatus {

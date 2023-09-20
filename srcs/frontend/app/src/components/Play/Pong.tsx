@@ -8,12 +8,14 @@ import { ServerPayload } from "../../utils/websockets/ServerPayload";
 import SocketWrapper, {
 	SocketWrapperContext
 } from "../../utils/websockets/SocketWrapper";
-import { Point } from "../../utils/websockets/ServerPayload";
+import { Point, Paddle } from "../../utils/websockets/ServerPayload";
 import { PongScores } from "./PongScores";
+import useUser from "../../utils/hooks/useUser";
+import { UserHook } from "../../utils/hooks/TuseUser";
 
 class GameInfo {
 	lobbyId: string = "";
-	lobbyMode: "PvP" | "PvE" | undefined = undefined;
+	lobbyMode: "PvP" | "PvE" | "Rumble" | undefined = undefined;
 	countdown: number = 0;
 	hasStarted: boolean = false;
 	hasFinished: boolean = false;
@@ -21,20 +23,27 @@ class GameInfo {
 	playersCount: number = 0;
 	gameWidth: number = 800;
 	gameHeight: number = 800;
+	powerUpPosition: Point | null = null;
+	powerUpType: "Freeze" | "Giant" | "SpeedUp" | null = null;
 	ballPosition: Point = { x: 400, y: 400 };
-	myPad: Point | undefined = { x: 40, y: 350 };
-	OpponentPad: Point | undefined = { x: 756, y: 350 };
+	ballSpeedUp: boolean = false;
+	myPad: Paddle | undefined = {pos: { x: 40, y: 350 }, height: 100, width: 4, isFrozen: false};
+	OpponentPad: Paddle | undefined = {pos: { x: 756, y: 350 }, height: 100, width: 4, isFrozen: false};
 	myScore: number | undefined = 0;
 	OpponentScore: number | undefined = 0;
+	opponentName: string = "";
 }
 
 function Pong() {
 	const sm: SocketWrapper = useContext(SocketWrapperContext);
+	const userData: UserHook = useUser();
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const [GameState] = useState<GameInfo>(new GameInfo());
+	const [MyScoreState, setMyScoreState] = useState(0);
+	const [OppScoreState, setOppScoreState] = useState(0);
 	const clientId: string | null = sm.getSocketId();
 	let keyPressed: Array<Boolean> = new Array<Boolean>(false, false);
-	let side: Boolean = false;
+	const [sideState, setsideState] = useState(false);
 
 	function readServerPayload(data: ServerPayload[ServerEvents.LobbyState]) {
 		if (GameState) {
@@ -48,25 +57,36 @@ function Pong() {
 			GameState.hasStarted = data.hasStarted;
 			GameState.playersCount = data.playersCount;
 			GameState.lobbyMode = data.lobbyMode;
-			// console.log(data.scores);
+			GameState.powerUpPosition = data.powerUpPosition;
+			GameState.powerUpType = data.powerUpType;
+			GameState.ballSpeedUp = data.ballSpeedUp;
+
 			for (let [Id, value] of Object.entries(data.scores)) {
 				if (Id === clientId) {
 					GameState.myScore = value;
+					setMyScoreState(value);
 				} else {
 					GameState.OpponentScore = value;
+					setOppScoreState(value);
 				}
 			}
+
+			for (let [Id, value] of Object.entries(data.playerNames)) {
+				if (Id !== clientId)
+					GameState.opponentName = value;
+			}
+
 			for (let [Id, value] of Object.entries(data.padPositions)) {
 				if (Id === clientId) {
-					GameState.myPad = value.pos;
+					GameState.myPad = value;
 				} else {
-					GameState.OpponentPad = value.pos;
+					GameState.OpponentPad = value;
 				}
 			}
-			if (GameState.myPad && GameState.myPad.x < data.gameWidth / 2)
-				side = false;
+			if (GameState.myPad && GameState.myPad.pos.x < data.gameWidth / 2)
+				setsideState(false);
 			else
-				side = true;
+				setsideState(true);
 		}
 	}
 
@@ -77,15 +97,16 @@ function Pong() {
 				canvasRef.current.getContext("2d");
 
 			function drawPaddles(ctx: CanvasRenderingContext2D) {
-				ctx.fillStyle = "white";
 				if (GameState.OpponentPad && GameState.myPad) {
+					ctx.fillStyle = (GameState.OpponentPad.isFrozen) ? "lightblue" : "white";
 					ctx.fillRect(
-						GameState.OpponentPad.x,
-						GameState.OpponentPad.y,
+						GameState.OpponentPad.pos.x,
+						GameState.OpponentPad.pos.y,
 						4,
-						100
+						GameState.OpponentPad.height
 					);
-					ctx.fillRect(GameState.myPad.x, GameState.myPad.y, 4, 100);
+					ctx.fillStyle = (GameState.myPad.isFrozen) ? "lightblue" : "white";
+					ctx.fillRect(GameState.myPad.pos.x, GameState.myPad.pos.y, 4, GameState.myPad.height);
 				}
 			}
 
@@ -103,7 +124,7 @@ function Pong() {
 			}
 
 			function drawBall(ctx: CanvasRenderingContext2D) {
-				ctx.fillStyle = "white";
+				ctx.fillStyle = (GameState.ballSpeedUp) ? "crimson" : "white";
 				ctx.beginPath();
 				ctx.arc(
 					GameState.ballPosition.x,
@@ -114,6 +135,23 @@ function Pong() {
 				);
 				ctx.fill();
 				ctx.closePath();
+			}
+
+			function drawPowerUp(ctx: CanvasRenderingContext2D) {
+				if (GameState.lobbyMode == "Rumble" && GameState.powerUpPosition)
+				{
+					ctx.fillStyle = (GameState.powerUpType == "Freeze") ? "lightblue" : (GameState.powerUpType == "Giant") ? "purple" : "crimson";
+					ctx.beginPath();
+					ctx.arc(
+						GameState.powerUpPosition.x,
+						GameState.powerUpPosition.y,
+						60,
+						0,
+						2 * Math.PI
+					);
+					ctx.fill();
+					ctx.closePath();
+				}
 			}
 
 			function drawCountdown(ctx: CanvasRenderingContext2D) {
@@ -147,8 +185,9 @@ function Pong() {
 				renderCtx.fillRect(0, 0, 800, 800);
 				drawPaddles(renderCtx);
 				drawNet(renderCtx);
-				drawBall(renderCtx);
+				drawPowerUp(renderCtx);
 				drawCountdown(renderCtx);
+				drawBall(renderCtx);
 			}
 		}
 	}
@@ -229,7 +268,8 @@ function Pong() {
 	return (
 		<>
 			<div>
-				<PongScores side={side} myScore={GameState.myScore ? GameState.myScore : 0} OpponentScore={GameState.OpponentScore ? GameState.OpponentScore : 0}/>
+				{(sideState == false && <PongScores player1={userData.user.name} score1={MyScoreState} player2={GameState.opponentName} score2={OppScoreState}/>)
+				 || <PongScores player2={userData.user.name} score2={MyScoreState} player1={GameState.opponentName} score1={OppScoreState}/>}
 				<canvas ref={canvasRef} width={800} height={800} />
 			</div>
 		</>

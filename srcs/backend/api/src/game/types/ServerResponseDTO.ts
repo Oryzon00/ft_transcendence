@@ -1,8 +1,8 @@
 import { LobbyMode } from "../Lobby/lobby.types";
 import { Paddle } from "../Pong/types/Paddle";
 import { Point } from "../Pong/types/Point";
+import { PowerUpType } from "../Pong/types/PowerUp";
 import { ServerEvents } from "./ServerEvents";
-
 
 export type ServerResponseDTO = {
 	[ServerEvents.LobbyState]: {
@@ -15,14 +15,21 @@ export type ServerResponseDTO = {
 		playersCount: number,
 		gameWidth: number,
 		gameHeight: number,
+		powerUpPosition: Point | null,
+		powerUpType: PowerUpType | null,
 		ballPosition: Point,
+		ballSpeedUp: boolean,
 		padPositions: Record<string, Paddle>,
 		scores: Record<string, number>,
+		playerNames: Record<string, string>,
 	}
 
 	[ServerEvents.GameMessage]: {
 		message: string;
-		mode: LobbyMode;		
+		mode: LobbyMode;
+		lobbyId: string;
+		player1MMR: string;
+		player2MMR: string;
 	}
 
 	[ServerEvents.Pong]: {

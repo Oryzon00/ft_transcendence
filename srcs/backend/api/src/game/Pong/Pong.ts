@@ -9,6 +9,7 @@ import { MovePaddleDTO } from "./MovePaddleDTO";
 import { Interval } from "@nestjs/schedule";
 import { Injectable } from "@nestjs/common";
 import { AuthenticatedSocket } from "../types/AuthenticatedSocket";
+import { PowerUp } from "./types/PowerUp";
 
 export class Pong {
 	//States
@@ -35,13 +36,17 @@ export class Pong {
 
 	public scores: Map<AuthenticatedSocket["id"], number> = new Map<AuthenticatedSocket["id"], number>();
 
+	public powerUp: PowerUp;
+
 	constructor(public readonly lobby: Lobby) {
 		for (const id of this.lobby.clients.keys())
 			this.scores.set(id, 0);
+		if (this.lobby.gamemode == "PvE")
+			this.scores.set("bot", 0);
 	}
 
 	//Methods
-	public start(): void {
+	public start(): Promise<void> {
 		if (this.hasStarted) return;
 
 		this.hasStarted = true;
@@ -50,13 +55,22 @@ export class Pong {
 			this.scores.set(id, 0);
 			if (this.paddles.size !== 0) this.paddles.set(id, new Paddle("away"));
 			else this.paddles.set(id, new Paddle("home"));
+			this.lobby.setStatus(this.lobby.clients.get(id).userId, "INGAME");
+		}
+
+		if (this.paddles.size < 2 && this.lobby.gamemode === "PvE")
+		{
+			this.paddles.set("bot", new Paddle("away"));
 		}
 
 		this.lobby.sendEvent<ServerResponseDTO[ServerEvents.GameMessage]>(
 			ServerEvents.GameMessage,
 			{
 				message: "Game is Starting",
-				mode: this.lobby.maxClients === 2 ? "PvP" : "PvE"
+				mode: this.lobby.gamemode,
+				lobbyId: this.lobby.Id,
+				player1MMR: "",
+				player2MMR: "",
 			}
 		);
 
@@ -73,26 +87,38 @@ export class Pong {
 		this.nextFrame();
 		this.lobby.sendLobbyState();
 		if ((new Date()).getTime() - this.startTimer === this.endTimer)
-			this.end();
-		
+		{
+			for (const id of this.lobby.clients.keys()) {
+				this.endgame(id);
+				break ;
+			}
+		}
 		
 		for (const id of this.lobby.clients.keys()) {
-			if (this.scores.get(id) >= 1) {
+			if (this.scores.get(id) >= 2) {
+				this.hasFinished = true;
 				this.endgame(id);
 			}
 		}
-	}
-
-	private endgame(winnerId: string) {
-		let loserId: string;
-		for (const id of this.lobby.clients.keys()) {
-			if (id != winnerId)
-				this.lobby.endInstance(this.lobby.clients.get(winnerId).userId, this.lobby.clients.get(id).userId);
+		if (this.lobby.gamemode === "PvE" && (this.scores.get("bot") >= 2)) {
+				this.hasFinished = true;
+				this.endgame("");
 		}
-		this.end();
 	}
 
-	private updateball() {		
+	private async endgame(winnerId: string): Promise<void> {
+		if (winnerId !== "")
+		{
+			for (const id of this.lobby.clients.keys()) {
+				if (id != winnerId)
+					await this.lobby.endInstance(this.lobby.clients.get(winnerId).userId, this.lobby.clients.get(id).userId);
+			}
+		}
+		await this.end();
+	}
+
+	private updateball() {
+		if (this.lobby.gamemode == 'Rumble') this.ball.updateSpeedUp();
 		if (this.ball.speed.angle > Math.PI / 2 || this.ball.speed.angle < -Math.PI / 2)
 			this.ball.checkBounce(this.paddles.values().next().value);
 		else {
@@ -103,8 +129,12 @@ export class Pong {
 
 		let score: 0 | 1 | 2 | undefined = this.ball.respawn();
 		if (score) {
-			let arr = Array.from(this.lobby.clients.keys());
-			this.scores.set(arr[score - 1], this.scores.get(arr[score - 1]) + 1);
+			if (score == 2 && this.lobby.gamemode == "PvE")
+				this.scores.set("bot", this.scores.get("bot") + 1);
+			else {
+				let arr = Array.from(this.lobby.clients.keys());
+				this.scores.set(arr[score - 1], this.scores.get(arr[score - 1]) + 1);
+			}
 			for (let pad of this.paddles.values()){
 				pad.pos.y = 350;
 				pad.downKey = false;
@@ -114,19 +144,101 @@ export class Pong {
 		}
 	}
 
+	private getBallDestBot(botPadX: number): Point {
+		let pos : Point = {x: this.ball.pos.x, y : this.ball.pos.y};
+
+		while(pos.x < botPadX && pos.y > 0 && pos.y < this.height) {
+			pos.x +=  Math.cos(this.ball.speed.angle) * this.ball.speed.length;
+			pos.y +=  Math.sin(this.ball.speed.angle) * this.ball.speed.length;
+		}
+		if (pos.y < 0)
+			pos.y = 0;
+		else if (pos.y > this.height)
+			pos.y = this.height;
+
+		return ({x: 0, y: pos.y})
+	}
+
+	private updateBotPaddle() {
+		let pad : Paddle = this.paddles.get("bot");
+
+		if (pad !== undefined)
+		{
+			
+
+			if (this.ball.speed.angle > -(Math.PI /2) && this.ball.speed.angle < Math.PI / 2) {
+				let dest: Point  = this.getBallDestBot(pad.pos.x);
+				if (Math.abs(dest.y - (pad.pos.y + pad.height / 2)) < 10) {
+					pad.pos.y = dest.y - pad.height / 2;
+					pad.upKey = false;
+					pad.downKey = false;
+				}
+				else if (dest.y < pad.pos.y + pad.height / 2) {
+					pad.upKey = true;
+					pad.downKey = false;
+				}
+				else if (dest.y > pad.pos.y + pad.height / 2) {
+					pad.upKey = false;
+					pad.downKey = true;
+				}
+			} else {
+				pad.downKey = false;
+				pad.upKey = false;
+			}
+		}
+		else {
+			console.log(this.paddles);
+		}
+	}
+
 	private updatePaddles() {
+		this.updateBotPaddle();
 		for (const pad of this.paddles.values()) {
-			if (pad.upKey) pad.pos.y -= 10;
-			if (pad.downKey) pad.pos.y += 10;
+			if (this.lobby.gamemode == 'Rumble') pad.updatePowerUp();
+
+			if (pad.upKey) pad.pos.y -= 10 * (pad.isFrozen ? 0.5 : 1);
+			if (pad.downKey) pad.pos.y += 10 * (pad.isFrozen ? 0.5 : 1);
 			
 			if (pad.pos.y < -50) pad.pos.y = -50;
 			if (pad.pos.y > 750) pad.pos.y = 750;
 		}
 	}
 
+	private newPowerUp() {
+		this.powerUp = new PowerUp(this.height);
+	}
+
+	private updatePowerUp() {
+		if (!this.powerUp)
+			return ;
+		
+		let distanceBallPowerUp = (this.ball.pos.x - this.powerUp.pos.x) * (this.ball.pos.x - this.powerUp.pos.x) + (this.ball.pos.y - this.powerUp.pos.y) * (this.ball.pos.y - this.powerUp.pos.y);
+		
+		if(distanceBallPowerUp <= (this.ball.rad + this.powerUp.rad) * (this.ball.rad + this.powerUp.rad))
+		{
+			let arr = Array.from(this.paddles.values());
+			
+			switch(this.powerUp.type){
+				case "Freeze":
+					Math.cos(this.ball.speed.angle) > 0 ? arr[1].freeze() : arr[0].freeze();
+					break;
+				case "Giant":
+					Math.cos(this.ball.speed.angle) > 0 ? arr[0].giant() : arr[1].giant();
+					break;
+				case "SpeedUp":
+					this.ball.speedUp();
+					break;
+			}
+			this.powerUp = null;
+		}
+	}
+
 	private nextFrame() {
 		
 		if (this.countdown === 0) {
+			if (this.lobby.gamemode == 'Rumble' && Math.floor(Math.random() * 600) == 1)
+				this.newPowerUp();
+			this.updatePowerUp(); 
 			this.updatePaddles();
 			this.updateball();
 		} else {
@@ -137,17 +249,34 @@ export class Pong {
 		this.lastUpdate = (new Date().getTime());
 	}
 
-	public end(): void {
-		if (this.hasFinished || !this.hasStarted) return;
+	public async end(): Promise<void> {
+		if (!this.hasStarted) return;
 
 		this.hasFinished = true;
+		let player1MMR: string = "";
+		let player2MMR: string = "";
+
+		for (const client of this.lobby.clients.values()) {
+			let playerMMR: string = client.userId + " " + (await this.lobby.getPlayerMMR(client));
+			if (player1MMR === "")
+				player1MMR = playerMMR;
+			else
+				player2MMR = playerMMR;
+			if (this.lobby.gamemode === "PvE") {
+				this.lobby.setStatus(client.userId, "ONLINE");
+				this.lobby.quitQueue(client.userId);
+			}
+		}
 
 		
 		this.lobby.sendEvent<ServerResponseDTO[ServerEvents.GameMessage]>(
 			ServerEvents.GameMessage,
 			{
 				message: "Game is Finished",
-				mode: this.lobby.maxClients === 2 ? "PvP" : "PvE"
+				mode: this.lobby.gamemode,
+				lobbyId: this.lobby.Id,
+				player1MMR: player1MMR,
+				player2MMR: player2MMR,
 			}
 		);
 	}
@@ -157,7 +286,5 @@ export class Pong {
 		if (pad && !pad.isCheatedPosition(data.keyPressed)) {
 			pad.newPosition(data.keyPressed);
 		}
-		
-		// this.lobby.sendLobbyState();
 	}
 }

@@ -4,28 +4,23 @@ import SocketWrapper, {
 } from "../../utils/websockets/SocketWrapper";
 import { ClientEvents } from "../../utils/websockets/types";
 
-export function PlayPvPButton() {
+export function PlayRumbleButton() {
 	const sm: SocketWrapper = useContext(SocketWrapperContext);
 
-	function searchPvPGame() {
+	function searchRumbleGame() {
 		sm.emit({
 			event: ClientEvents.LobbyCreate,
 			data: {
-				mode: "PvP"
+				mode: "Rumble"
 			}
 		});
 	}
 
 	return (
 		<div>
-			<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={searchPvPGame}>
-    			Play Ranked PvP
+			<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={searchRumbleGame}>
+    			Play Rumble PvP
   			</button>
 		</div>
 	);
 }
-
-
- 
-
-export default PlayPvPButton;

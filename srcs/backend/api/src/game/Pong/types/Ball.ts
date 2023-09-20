@@ -7,6 +7,9 @@ export class Ball {
 	speed: Vector;
 	rad: number;
 
+	public speedPowerUp: boolean = false;
+	public speedTimer: number;
+
 	constructor(private CanWidth: number, private CanHeight: number, rad: number) {
 		this.pos = new Point(CanWidth / 2, CanHeight / 2);
 		this.speed = { angle: -Math.PI + Math.random() * 2 * Math.PI, length: 6 };
@@ -27,8 +30,8 @@ export class Ball {
 	}
 
 	private continuePath() {
-		this.pos.x += Math.cos(this.speed.angle) * this.speed.length;
-		this.pos.y += Math.sin(this.speed.angle) * this.speed.length;
+		this.pos.x += Math.cos(this.speed.angle) * this.speed.length * (this.speedPowerUp ? 1.5 : 1);
+		this.pos.y += Math.sin(this.speed.angle) * this.speed.length * (this.speedPowerUp ? 1.5 : 1);
 	}
 
 	private bounceCanvas() {
@@ -40,8 +43,8 @@ export class Ball {
 
 	nextPos(coord: "x" | "y"): number {
 		if (coord === "x")
-			return this.pos.x + Math.cos(this.speed.angle) * this.speed.length;
-		return this.pos.y + Math.sin(this.speed.angle) * this.speed.length;
+			return this.pos.x + Math.cos(this.speed.angle) * this.speed.length * (this.speedPowerUp ? 1.5 : 1);
+		return this.pos.y + Math.sin(this.speed.angle) * this.speed.length * (this.speedPowerUp ? 1.5 : 1);
 	}
 
 	private bounceEdges(edge: "top" | "bot"): Point {
@@ -99,6 +102,20 @@ export class Ball {
 
 		if (this.speed.length < 100) this.speed.length *= 1.1;
 		this.continuePath();
+	}
+
+	public speedUp() {
+		this.speedPowerUp = true;
+		this.speedTimer = (new Date()).getTime();	
+	}
+
+	public updateSpeedUp() {
+		if (this.speedPowerUp)
+		{
+			let time: number = (new Date()).getTime();
+			if (time - this.speedTimer >= 5000)
+				this.speedPowerUp = false;
+		}
 	}
 
 	checkBounce(pad: Paddle) {

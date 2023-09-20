@@ -2,25 +2,18 @@ import { useEffect, useState } from 'react'
 import './PongScores.styles.css'
 
 interface PongScoresProps {
-	side: Boolean,
-	myScore: number,
-	OpponentScore: number,
+	player1: string,
+	score1: number,
+	player2: string,
+	score2: number,
 }
 
-export function PongScores({side, myScore, OpponentScore}: PongScoresProps) {
-	const [spanLeftText, setSpanLeftText] = useState<string>('');
-	const [spanRightText, setSpanRightText] = useState<string>('');
-
-	useEffect(() => {
-		console.log("pong scores:" + myScore + " " + OpponentScore);
-		setSpanLeftText(side === false ? "Your Score : " + myScore : "Opponent Score : " + OpponentScore);
-		setSpanRightText(side === true ? "Your Score : " + myScore : "Opponent Score : " + OpponentScore);
-	},[myScore, OpponentScore]);
+export function PongScores({player1, score1, player2, score2}: PongScoresProps) {
 
 	return(
 		<div className="PongScores">
-			<span>{spanLeftText}</span>
-			<span>{spanRightText}</span>
+			<span>{player1} : {score1}</span>
+			<span>{player2} : {score2}</span>
 		</div>
 	)
 }

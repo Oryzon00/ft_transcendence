@@ -33,7 +33,7 @@ export class LobbyManager {
 	public async createLobby(mode: LobbyMode): Promise<Lobby> {
 		let maxClients: number = mode === "PvE" ? 1 : 2;
 
-		const lobby = new Lobby(this.server, maxClients, this.gameService.prisma);
+		const lobby = new Lobby(this.server, maxClients, mode, this.gameService.prisma);
 		await lobby.addToDb();
 
 		this.lobbies.set(lobby.Id, lobby);
@@ -57,7 +57,7 @@ export class LobbyManager {
 
 	public findLobby(clientId : string, mode: LobbyMode): Lobby | undefined {
 		for(let lobby of this.lobbies.values())
-			if (lobby.maxClients === 2 && mode === 'PvP' && lobby.clients.size < 2 && !lobby.clients.has(clientId))
+			if (lobby.gamemode === mode && lobby.clients.size < 2 && !lobby.clients.has(clientId))
 				return(lobby);
 		return undefined;
 	}
@@ -66,7 +66,7 @@ export class LobbyManager {
 	public refreshGame()
 	{
 		for(let lobby of this.lobbies.values()) {
-			if (lobby.game.hasStarted)
+			if (lobby.game.hasStarted && !lobby.game.hasFinished)
 				lobby.game.loop();
 		}
 	}
@@ -82,6 +82,9 @@ export class LobbyManager {
 				lobby.sendEvent<ServerResponseDTO[ServerEvents.GameMessage]>(ServerEvents.GameMessage, {
 					message: 'Game timed out',
 					mode: lobby.maxClients === 1 ? 'PvE' : 'PvP',
+					lobbyId: lobby.Id,
+					player1MMR: "",
+					player2MMR: "",
 				});
 				this.lobbies.delete(id);
 			}
