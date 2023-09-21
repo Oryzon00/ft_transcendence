@@ -56,7 +56,7 @@ function UpdateUsernameButton() {
 				notifyInfo(`Your username has been changed to ${data.name}`);
 			})
 			.catch(function () {
-				notifyError(`Username ${mymessage} is already taken`);
+				notifyError(`Username ${mymessage} is already taken or illegal`);
 			});
 	}
 
