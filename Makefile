@@ -1,4 +1,4 @@
-DOCKER-COMPOSE	=	srcs/docker-compose.yml
+DOCKER-COMPOSE	=	docker-compose.yml
 
 VOL				=	$(shell docker volume ls --quiet)
 
