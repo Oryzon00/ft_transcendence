@@ -395,6 +395,17 @@ export class UserService {
 					blockedUsers: { connect: { id: blockedUser.id } }
 				}
 			});
+
+			await this.prisma.user.update({
+				where: {
+					id: blockedUser.id
+				},
+				data: {
+					friends: { disconnect: { id: user.id } },
+					pendingFriends: { disconnect: { id: user.id } },
+				}
+			});
+
 			return ({name: blockedUser.name});
 		} catch {
 			throw new NotFoundException();

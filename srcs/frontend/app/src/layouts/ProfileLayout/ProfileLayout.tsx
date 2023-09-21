@@ -6,10 +6,10 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import BlockUserButton from '../../components/Profile/BlockUserButton.tsx';
 import RemoveFriendButton from '../../components/Profile/RemoveFriendButton.tsx';
 import UnblockUserButton from '../../components/Profile/UnblockUserButton.tsx';
+import ProfileError from '../../components/Profile/ProfileError.tsx';
 
 function ProfileLayout () {
 	const userDataArray :any = useLoaderData();
-	const winrate = Math.round(((userDataArray[0].gameProfile.gameWons.length) / (userDataArray[0].gameProfile.history.length)) * 100)
 
 	function isFriend () {
 		for (const friend of userDataArray[0].friends) {
@@ -26,7 +26,8 @@ function ProfileLayout () {
 		}
 		return (false);
 	}
-
+	if (userDataArray[0] !== undefined) {
+		const winrate = Math.round(((userDataArray[0].gameProfile.gameWons.length) / (userDataArray[0].gameProfile.history.length)) * 100)
 		return (
 			<>
 				<div className='profile-main'>
@@ -84,5 +85,8 @@ function ProfileLayout () {
 				</div>
 			</>
 		);
+	}
+	else
+		return <ProfileError />
 }
 export default ProfileLayout;

@@ -184,7 +184,18 @@
 	display: none;
 }
 
+.profile-error-main {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 100px;
+}
 
+.profile-error-main span {
+	font-size: 54px;
+	font-weight: bold;
+	padding: 10px
+}
 
 /*
  * react-circular-progressbar styles

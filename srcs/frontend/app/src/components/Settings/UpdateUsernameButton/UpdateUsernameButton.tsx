@@ -4,6 +4,7 @@ import apiAddress from "../../../utils/apiAddress.ts";
 import getJwtTokenFromCookie from "../../../utils/getJWT.ts";
 import { notifyError, notifyInfo } from "../../../utils/notify.ts";
 import { throwErrorMessage } from "../../../utils/throwErrorMessage.ts";
+import usernameProtection from "../../../utils/regexUsernameProtection.ts";
 
 function UpdateUsernameButton() {
 	const userHook = useContext(UserContext);
@@ -25,8 +26,8 @@ function UpdateUsernameButton() {
 
 	const handleClick = (event: any) => {
 		if (event.key == "Enter" && username !== "") {
-			if (username.length > 15)
-				notifyError("Username must be under 15 chars");
+			if (!usernameProtection(username))
+				notifyError("Username must be under 15 chars and alphanumeric");
 			else sendToBack(username);
 		}
 	};
