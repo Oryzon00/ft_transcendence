@@ -1,7 +1,6 @@
 import "./PongLayout.styles.css";
 import Pong from "../../components/Play/Pong";
 import { cookieProtection } from "../../utils/cookieProtection";
-import useUser from "../../utils/hooks/useUser";
 import { UserHook } from "../../utils/hooks/TuseUser";
 import SocketWrapper, { SocketWrapperContext } from "../../utils/websockets/SocketWrapper";
 import { useContext, useEffect, useState } from "react";
@@ -59,7 +58,7 @@ function PongLayout() {
 					<Pong />
 				</div>)
 			||  
-				<div className="flex justify-around h-9/10">
+				<div className="play-page">
 					<PlayVSBotButton />
 					<PlayPvPButton />	
 					<PlayRumbleButton />
