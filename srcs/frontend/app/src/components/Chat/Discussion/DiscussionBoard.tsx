@@ -48,7 +48,7 @@ function DiscussionBoard({
 				modo={setModo}
 			/>
 			{modo ? (
-				<Modo />
+				<Modo id={current} />
 			) : (
 				<>
 					<Conversation message={channel[current].message} me={me} />

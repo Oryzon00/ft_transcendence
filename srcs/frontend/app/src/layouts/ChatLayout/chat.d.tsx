@@ -45,3 +45,15 @@ export type ChannelJoin = {
 	id: string;
 	password: string;
 };
+
+export type ChannelAllInfo = {
+	id: string;
+	createdAt: Date;
+	updateAt: Date;
+	name: string;
+	avatar: string | null;
+	description: string;
+	status: string;
+	ownerId: number;
+	messagesId: number[];
+};

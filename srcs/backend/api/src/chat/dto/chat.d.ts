@@ -14,8 +14,7 @@ export type ChannelAllInfo = {
 	name: string;
 	avatar: string | null;
 	description: string;
-	status: Status;
-	ownerId: number;
+	status: string;
 	messagesId: number[];
 };
 
@@ -33,6 +32,8 @@ export type ChannelCreation = {
 
 export type ChannelChangement = {
 	id: string;
+	name: string;
+	description: string;
 	status: string;
 	password: string;
 };
@@ -79,3 +80,9 @@ export type ChannelInfo = {
 };
 
 export type ListChannel = { [key: string]: ChannelPayload };
+
+export enum Status {
+	PROTECT,
+	PRIVATE,
+	PUBLIC
+}

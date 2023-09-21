@@ -57,21 +57,23 @@ function CreateChannel({ togglemodal, setChannel }: CreateChannelType) {
 	useEffect(() => {
 		if (position == 3) {
 			if (!password) setStatus("PROTECTED");
-			fetchCreateChannel({ name, password, status }, setChannel);
-			togglemodal();
+			if (name.length > 0) {
+				fetchCreateChannel({ name, password, status }, setChannel);
+				togglemodal();
+			} else setPosition(2);
 		}
 	});
 
 	return (
 		<div
 			id="create-channel"
-			className="flex flex-col bg-white w-[440px] h-[550px] relative rounded"
+			className="flex flex-col bg-zinc-700 border-4 w-[440px] h-[550px] relative rounded"
 		>
 			<button
-				className="bg-white absolute top-3 right-1"
+				className="bg-[#3f3f46] absolute top-3 right-1 rounded-full hover:bg-[#92400e]"
 				onClick={togglemodal}
 			>
-				<img src={Cross} alt="" />
+				<img src={Cross} className="w-4 h-4" alt="" />
 			</button>
 			{position == 0 ? (
 				<Status setPosition={setPosition} setStatus={setStatus} />

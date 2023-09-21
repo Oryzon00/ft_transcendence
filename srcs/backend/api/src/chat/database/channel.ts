@@ -103,6 +103,8 @@ class ChannelDatabase {
 						id: channelId
 					},
 					data: {
+						name: body.name,
+						description: body.description,
 						status: this.convertStatus(body.status),
 						password: body.password
 					}
