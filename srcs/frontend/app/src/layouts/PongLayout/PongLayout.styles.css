@@ -4,15 +4,32 @@
 	align-items: center;
 }
 
-canvas {
-	z-index: 100;
-	width: 80vh;
-	height: 80vh;
-    padding: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
+@media (min-aspect-ratio: 1/1) {
+	canvas {
+		z-index: 100;
+		width: 80vh;
+		height: 80vh;
+	    padding-top: 0.75rem; /* 12px */
+		padding-bottom: 0.75rem; /* 12px */
+	    margin-left: auto;
+	    margin-right: auto;
+	    display: block;
+	}
 }
+
+@media (max-aspect-ratio: 1/1) {
+	canvas {
+		z-index: 100;
+		width: 80vw;
+		height: 80vw;
+	    padding-top: 0.75rem; /* 12px */
+		padding-bottom: 0.75rem; /* 12px */
+	    margin-left: auto;
+	    margin-right: auto;
+	    display: block;
+	}
+}
+
 
 .PVE-button {
 	display: flex;

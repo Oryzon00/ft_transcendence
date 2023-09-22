@@ -272,7 +272,7 @@ export class Pong {
 		if (this.hasStarted && this.hasFinished === false) {
 			for (const id of this.lobby.clients.keys()) {
 				if (id !== idLoser) {
-					console.log(id);
+					// console.log(id);
 					this.scores.set(id, 42);
 				}
 			}

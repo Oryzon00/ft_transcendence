@@ -5,3 +5,13 @@
 	flex-flow: row wrap;
 	justify-content: space-around;
 }
+
+.PongScores span {
+	font-size: 1.875rem; /* 30px */
+	line-height: 2.25rem; /* 36px */
+	font-weight: bold;
+	padding-top: 0.75rem; /* 12px */
+	padding-bottom: 0.75rem; /* 12px */
+	padding-left: 0.75rem; /* 12px */
+	padding-right: 0.75rem; /* 12px */
+}
