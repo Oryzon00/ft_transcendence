@@ -19,7 +19,7 @@ services:
         depends_on:
             - database
         build:
-            context: backend/
+            context: srcs/backend/
             dockerfile: Dockerfile
         volumes:
             - type: volume
@@ -41,7 +41,7 @@ services:
         depends_on:
             - api
         build:
-            context: frontend/
+            context: srcs/frontend/
             dockerfile: Dockerfile
         volumes:
             - type: volume
