@@ -59,3 +59,9 @@ export type ChannelAllInfo = {
 	ownerId: number;
 	messagesId: number[];
 };
+
+export type Friends = {
+	id: number;
+    image: string;
+    name: string;
+}
