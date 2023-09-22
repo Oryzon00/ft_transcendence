@@ -79,7 +79,13 @@ function TwoFARegisterButton() {
 			>
 				Register via Google Authenticator
 			</button>
-			<Popup modal nested open={open} onClose={closeModal} className="my-popup">
+			<Popup
+				modal
+				nested
+				open={open}
+				onClose={closeModal}
+				className="my-popup"
+			>
 				<div className="flex flex-col bg-zinc-800 rounded-md text-white items-center w-min">
 					<h2 className="px-2 py-2 text-white text-center text-lg font-bold">
 						Scan the QR Code using Google Authenticator

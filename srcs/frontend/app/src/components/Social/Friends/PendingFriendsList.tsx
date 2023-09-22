@@ -5,9 +5,10 @@ import {throwErrorMessage} from "../../../utils/throwErrorMessage.ts";
 import {notifyError} from "../../../utils/notify.ts";
 import AcceptFriendButton from "./AcceptFriendButton.tsx";
 import DeclineFriendButton from "./DeclineFriendButton.tsx";
+import { Link } from "react-router-dom";
 
 function PendingFriendList () {
-	const [data, setData] = useState(null); // Utiliser un array
+	const [data, setData]:any = useState(null); // Utiliser un array
 	let listFriend = null;
 
 	function getPendingFriends () {
@@ -45,7 +46,9 @@ function PendingFriendList () {
 		listFriend = data.friends.map((friend :any) => (
 			<li key={friend.id}>
 				<div className="friends-friendlist-component">
-					<img src={friend.image}></img>
+					<Link to={'/profile/' + friend.name}>
+						<img src={friend.image}></img>
+					</Link>
 					<div className="friends-friendlist-name">
 						<p>{friend.name}</p>
 					</div>
@@ -57,7 +60,9 @@ function PendingFriendList () {
 	}
 
 	return (
-		<ul>{listFriend}</ul>
+		<div className="social-list">
+			<ul>{listFriend}</ul>
+		</div>
 
 	)
 }

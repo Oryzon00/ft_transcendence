@@ -13,17 +13,19 @@ export default class SocketWrapper {
 	private connectionLost: boolean = false;
 
 	constructor() {
-
-		this.socket = io(`http://${window.location.hostname}:3000/`, {
-			path: "/game",
-			transportOptions: {
-				polling: {
-					extraHeaders: {
-						Authorization: "Bearer " + getJwtTokenFromCookie()
+		this.socket = io(
+			`http://${import.meta.env.VITE_SERVER_HOSTNAME}:3000/`,
+			{
+				path: "/game",
+				transportOptions: {
+					polling: {
+						extraHeaders: {
+							Authorization: "Bearer " + getJwtTokenFromCookie()
+						}
 					}
 				}
 			}
-		});
+		);
 		this.socket.connect();
 
 		this.onConnect();

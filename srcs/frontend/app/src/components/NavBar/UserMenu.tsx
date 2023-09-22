@@ -8,7 +8,7 @@ export function UserMenu() {
 
 	return (
 		<div className="flex items-center space-x-4 px-2 lg:px-3 py-2 shrink-0">
-			<NavLink to="/profile" className="shrink-0 px-2 lg:px-3 ">
+			<NavLink to={"/profile/" + userHook.user.name}  className="shrink-0 px-2 lg:px-3 ">
 				<img
 					className="h-12 w-12 rounded-full "
 					src={userHook.user.image}
@@ -17,7 +17,7 @@ export function UserMenu() {
 			</NavLink>
 			<div className="flex flex-col">
 				<NavLink
-					to="/profile"
+					to={"/profile/" + userHook.user.name} 
 					className="text-white text-lg font-semibold rounded-md hover:underline"
 				>
 					{userHook.user.name}

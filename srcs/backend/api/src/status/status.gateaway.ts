@@ -22,12 +22,9 @@ export class StatusGateway
 	@WebSocketServer()
 	public server: Server;
 
-	afterInit(server: Server): void {
-		console.log("\n\n Init socket server status user \n\n");
-	}
+	afterInit(server: Server): void {}
 
 	handleConnection(client: AuthenticatedSocket, ...args: any[]): void {
-		console.log("connection in status gateway");
 		this.statusService.handleConnection(client);
 	}
 

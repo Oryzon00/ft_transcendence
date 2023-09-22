@@ -4,13 +4,14 @@ import getJwtTokenFromCookie from "../../utils/getJWT.ts";
 import {throwErrorMessage} from "../../utils/throwErrorMessage.ts";
 import {notifyError} from "../../utils/notify.ts";
 import ViewProfileButton from "./ViewProfileButton.tsx";
+import {GiTrophy} from 'react-icons/gi';
 
-function Leaderboard () {
-	const [data, setData] = useState(null); // Utiliser un array
+function LeaderboardFirsts () {
+	const [data, setData] :any = useState(null); // Utiliser un array
 	let leaderboardList = null;
 
-	function getLeaderboard () {
-		let url = apiAddress + "/user/leaderboard";
+	function getLeaderboardFirsts () {
+		let url = apiAddress + "/user/leaderboard/firsts";
 		fetch (url, {
 			method: "GET",
 			headers: {
@@ -32,9 +33,9 @@ function Leaderboard () {
 	}
 
  	useEffect (() => {
-		getLeaderboard();
+		getLeaderboardFirsts();
 		const interval = window.setInterval(() => {
-			getLeaderboard()
+			getLeaderboardFirsts()
 		}, 1000);
 
 		return () => window.clearInterval(interval);
@@ -45,18 +46,24 @@ function Leaderboard () {
 		 leaderboardList = data.leaderboard.map(
 			(currentUser :any) => (
 				 <li key={currentUser.id}>
-					 <div className={rank === 1 || rank === 2 || rank === 3 ? "leaderboard-" + rank : "leaderboard-component"}>
-					        <img src={currentUser.image}></img>
-						    <div className="leaderboard-name">
-							    <p>{currentUser.name}</p>
-								<p>Rank: {rank++}</p>
-						    </div>
-							<div className="leaderboard-winrate">
-								<p>W/L</p>
-								<p>0/0</p>
-							</div>
+					 <div className={"leaderboard-" + rank}>
+							<span className="leaderboard-span">
+								{ rank === 1 && <GiTrophy /> } 
+								# {rank} 
+							</span>
 							<div>
-								<ViewProfileButton username={currentUser.name} />
+								<img src={currentUser.image}></img>
+						    	<div className="leaderboard-name">
+								    <span className="leaderboard-racing">{currentUser.name}</span>
+									<span>Rank: {rank++}</span>
+						    	</div>
+								<div className="leaderboard-winrate">
+									<span>MMR:</span>
+									<span>{currentUser.mmr}</span>
+								</div>
+								<div>
+									<ViewProfileButton username={currentUser.name} />
+								</div>
 							</div>
 					 </div>
 				 </li>
@@ -64,12 +71,12 @@ function Leaderboard () {
 	 }
 
 	return (
-		<div className="leaderboard-default">
-			<ul>{leaderboardList}</ul>
+		<div>
+			<ul className="leaderboard-firsts-default">{leaderboardList}</ul>
 		</div>
 
 
 	)
 }
 
-export default Leaderboard;
+export default LeaderboardFirsts;

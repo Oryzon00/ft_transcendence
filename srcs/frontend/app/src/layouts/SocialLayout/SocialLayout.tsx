@@ -1,16 +1,23 @@
 import "./SocialLayout.styles.css"
 import FriendList from "../../components/Social/Friends/FriendsList";
 import PendingFriendList from "../../components/Social/Friends/PendingFriendsList";
+import BlockList from "../../components/Social/Friends/BlockList";
 
 function SocialLayout () {
 
 	return (
 	<div className="friends-main">
-		<div className="friends-friendlist">
-			<span>Friend column</span>
-			<FriendList />
+		<div className="friends-friends">
+			<div className="friends-friendlist">
+				<span>Friend column</span>
+				<FriendList />
+			</div>
+			<div className="friends-friendlist">
+				<span>Blocked Users Column</span>
+				<BlockList />
+			</div>
 		</div>
-		<div className="friends-friendlist">
+		<div className="friends-friends-demand">
 			<span>Friends demand column</span>
 			<PendingFriendList />
 		</div>

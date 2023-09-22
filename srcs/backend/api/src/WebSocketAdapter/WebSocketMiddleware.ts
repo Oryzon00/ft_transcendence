@@ -15,7 +15,7 @@ function WebSocketUserMiddleware(prisma: PrismaService): SocketMiddleware {
 			const user = await prisma.user.findUniqueOrThrow({
 				where: {
 					name: jwtData.name
-				}
+				},
 			});
 			authSocket.username = user.name;
 			authSocket.userId = user.id;

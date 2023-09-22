@@ -3,15 +3,15 @@ import apiAddress from "../../../utils/apiAddress.ts";
 import getJwtTokenFromCookie from "../../../utils/getJWT.ts";
 import {throwErrorMessage} from "../../../utils/throwErrorMessage.ts";
 import {notifyError} from "../../../utils/notify.ts";
-import DeleteFriendButton from "./DeleteFriendButton.tsx";
 import { Link } from "react-router-dom";
+import UnblockButton from "./UnblockButton.tsx";
 
-function FriendList () {
+function BlockList () {
 	const [data, setData]:any = useState(null); // Utiliser un array
 	let listFriend = null;
 
-	function getFriends () {
-		let url = apiAddress + "/user/friends/get";
+	function getBlocked () {
+		let url = apiAddress + "/user/getBlocked";
 		fetch (url, {
 			method: "GET",
 			headers: {
@@ -28,14 +28,14 @@ function FriendList () {
 				setData(result);
 			})
 			.catch(function () {
-				notifyError("Error while getting friend");
+				notifyError("Error while getting blocked");
 			});
 	}
 
  	useEffect (() => {
-		getFriends();
+		getBlocked();
 		const interval = window.setInterval(() => {
-			getFriends()
+			getBlocked()
 		}, 1000);
 
 		return () => window.clearInterval(interval);
@@ -47,14 +47,13 @@ function FriendList () {
 				 <div className="friends-friendlist-component">
 					<div>
 						<Link to={'/profile/' + friend.name}>
-				        	<img className={"friends-friendlist-img-" + friend.status} src={friend.image}></img>
+				        	<img src={friend.image}></img>
 						</Link>
 					</div>
 					<div className="friends-friendlist-name">
 						<p>{friend.name}</p>
-						<span className={"friends-friendlist-nameStatus-" + friend.status}>{friend.status == "INGAME" ? "IN GAME" : friend.status}</span>
 					</div>
-					<DeleteFriendButton friendname={friend.name} />
+					<UnblockButton username={friend.name} />
 				 </div>
 			 </li>
 		 ));
@@ -64,7 +63,8 @@ function FriendList () {
 		<div className="social-list">
 			<ul>{listFriend}</ul>
 		</div>
+
 	)
 }
 
-export default FriendList;
+export default BlockList;

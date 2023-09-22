@@ -62,7 +62,6 @@ const router = createBrowserRouter([
 				path: "/profile/:username?",
 				element: <ProfileLayout />,
 				loader: ProfileLayoutLoader,
-				errorElement: <NotFoundPage />
 			},
 			{
 				path: "/social",

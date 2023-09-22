@@ -3,8 +3,9 @@ import SocketWrapper, {
 	SocketWrapperContext
 } from "../../utils/websockets/SocketWrapper";
 import { ClientEvents } from "../../utils/websockets/types";
+import { LuSwords } from "react-icons/lu"
 
-function PlayPvPButton() {
+export function PlayPvPButton() {
 	const sm: SocketWrapper = useContext(SocketWrapperContext);
 
 	function searchPvPGame() {
@@ -18,8 +19,21 @@ function PlayPvPButton() {
 
 	return (
 		<div>
-			<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={searchPvPGame}>
-    			Play Ranked PvP
+			<button className="bg-[#1a1a1a] hover:bg-[#323232] text-white font-bold py-2 px-4 border-2 border-amber-800" onClick={searchPvPGame}>
+			<div className="PVE-button">
+					<LuSwords size='200'/>
+					<h1>
+						PLAYER VS PLAYER
+					</h1>
+					<h2>Ranked mode</h2>
+					<div className="PVE-button-li">
+						<li>Game duration: 5min</li>
+						<li>Score 5 goals to win</li>
+						<li>Use arrow keys to move the paddle</li>
+						<li>Fight others to reach the top</li>
+						<li>Check your rank on the leaderboard</li>
+					</div>
+				</div>
   			</button>
 		</div>
 	);

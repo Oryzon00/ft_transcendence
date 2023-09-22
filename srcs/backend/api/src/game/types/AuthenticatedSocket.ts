@@ -1,7 +1,6 @@
 import { Socket } from "socket.io";
 import { Lobby } from "../Lobby/Lobby";
 import { ServerEvents } from "./ServerEvents";
-import { User } from "@prisma/client";
 
 export type AuthenticatedSocket = Socket & {
 	data: {

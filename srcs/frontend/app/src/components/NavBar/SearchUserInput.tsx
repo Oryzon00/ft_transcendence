@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { FaSearch } from "react-icons/fa";
+import usernameProtection from "../../utils/regexUsernameProtection";
+import { notifyError } from "../../utils/notify";
 
 export function SearchUserInput() {
 	const [search, setSearch] = useState("");
@@ -10,7 +12,10 @@ export function SearchUserInput() {
 	}
 	function handleEnterKey(event: React.KeyboardEvent<HTMLInputElement>) {
 		if (event.key == "Enter") {
-			navigate("/profile/" + search);
+			if (!usernameProtection(search))
+				notifyError("Username not valid")
+			else
+				navigate("/profile/" + search);
 			setSearch("");
 		}
 	}
