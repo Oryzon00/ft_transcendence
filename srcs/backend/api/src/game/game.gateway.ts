@@ -42,10 +42,11 @@ export class GameGateway
 		client: AuthenticatedSocket,
 		...args: any[]
 	): Promise<void> {
-		this.lobbyManager.initSocket(client);
+		await this.lobbyManager.initSocket(client);
 	}
 
 	async handleDisconnect(client: AuthenticatedSocket): Promise<void> {
+		console.log("test");
 		this.lobbyManager.endSocket(client);
 	}
 
@@ -73,10 +74,6 @@ export class GameGateway
 			let lobby = this.lobbyManager.findLobby(client.id, data.mode);
 			if (lobby) {
 				this.lobbyManager.joinLobby(client, lobby.Id);
-
-				const user = await this.prisma.user.findUnique({where : {
-					id : client.userId}
-				})
 
 				return {
 					event: ServerEvents.GameMessage,
@@ -133,6 +130,7 @@ export class GameGateway
 
 	@SubscribeMessage(ClientEvents.LobbyLeave)
 	onLobbyLeave(client: AuthenticatedSocket): void {
-		client.data.lobby?.removeClient(client);
+		console.log("test 2")
+		this.lobbyManager.endSocket(client);
 	}
 }

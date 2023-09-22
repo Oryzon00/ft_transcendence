@@ -21,13 +21,17 @@ export class LobbyManager {
 
 	public readonly lobbies: Map<Lobby["Id"], Lobby> = new Map<Lobby["Id"], Lobby>();
 
-	public initSocket(client: AuthenticatedSocket): void {
+	public async initSocket(client: AuthenticatedSocket): Promise<void> {
 		client.data.lobby = null;
-		this.gameService.updateSocket(client);
+		await this.gameService.updateSocket(client);
 	}
 
 	public endSocket(client: AuthenticatedSocket): void {
-		client.data.lobby?.removeClient(client);
+		for(let lobby of this.lobbies.values()) {
+			if (lobby.clients.has(client.id)) {
+				lobby.removeClient(client);
+			}
+		}
 	}
 
 	public async createLobby(mode: LobbyMode): Promise<Lobby> {
@@ -44,15 +48,18 @@ export class LobbyManager {
 	public joinLobby(client: AuthenticatedSocket, id: string): void {
 		const lobby: Lobby | undefined = this.lobbies.get(id);
 
-		if (!lobby) {
-			throw new WsException("lobby not found.");
-		}
+		try {
+			if (!lobby) {
+				throw new WsException("lobby not found.");
+			}
 
-		if (lobby.clients.size >= lobby.maxClients) {
-			throw new WsException("lobby is already full.");
+			if (lobby.clients.size >= lobby.maxClients) {
+				throw new WsException("lobby is already full.");
+			}
+			lobby.addClient(client);
+		} catch(error) {
+			console.log(error);
 		}
-
-		lobby.addClient(client);
 	}
 
 	public findLobby(clientId : string, mode: LobbyMode): Lobby | undefined {

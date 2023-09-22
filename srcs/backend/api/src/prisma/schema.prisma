@@ -81,7 +81,7 @@ model GameProfile {
   playSocketId	String
   
   status 	GameStatus @default(IDLE)
-  lobby		String?
+  lobby		String @default("")
 
   history	Game[]
 

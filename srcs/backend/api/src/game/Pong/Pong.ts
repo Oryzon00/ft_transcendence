@@ -46,22 +46,28 @@ export class Pong {
 	}
 
 	//Methods
-	public start(): Promise<void> {
+	public async start(): Promise<void> {
 		if (this.hasStarted) return;
 
 		this.hasStarted = true;
 
 		for (const id of this.lobby.clients.keys()) {
 			this.scores.set(id, 0);
-			if (this.paddles.size !== 0) this.paddles.set(id, new Paddle("away"));
-			else this.paddles.set(id, new Paddle("home"));
+			
+			if (this.paddles.size !== 0) 
+				this.paddles.set(id, new Paddle("away"));
+			else 
+				this.paddles.set(id, new Paddle("home"));
+			
 			this.lobby.setStatus(this.lobby.clients.get(id).userId, "INGAME");
+			await this.lobby.refreshAuthSocket(id);
 		}
 
 		if (this.paddles.size < 2 && this.lobby.gamemode === "PvE")
 		{
 			this.paddles.set("bot", new Paddle("away"));
 		}
+
 
 		this.lobby.sendEvent<ServerResponseDTO[ServerEvents.GameMessage]>(
 			ServerEvents.GameMessage,
@@ -160,34 +166,37 @@ export class Pong {
 	}
 
 	private updateBotPaddle() {
-		let pad : Paddle = this.paddles.get("bot");
-
-		if (pad !== undefined)
+		if (this.lobby.gamemode === "PvE")
 		{
-			
+			let pad : Paddle = this.paddles.get("bot");
 
-			if (this.ball.speed.angle > -(Math.PI /2) && this.ball.speed.angle < Math.PI / 2) {
-				let dest: Point  = this.getBallDestBot(pad.pos.x);
-				if (Math.abs(dest.y - (pad.pos.y + pad.height / 2)) < 10) {
-					pad.pos.y = dest.y - pad.height / 2;
-					pad.upKey = false;
+			if (pad !== undefined)
+			{
+
+
+				if (this.ball.speed.angle > -(Math.PI /2) && this.ball.speed.angle < Math.PI / 2) {
+					let dest: Point  = this.getBallDestBot(pad.pos.x);
+					if (Math.abs(dest.y - (pad.pos.y + pad.height / 2)) < 10) {
+						pad.pos.y = dest.y - pad.height / 2;
+						pad.upKey = false;
+						pad.downKey = false;
+					}
+					else if (dest.y < pad.pos.y + pad.height / 2) {
+						pad.upKey = true;
+						pad.downKey = false;
+					}
+					else if (dest.y > pad.pos.y + pad.height / 2) {
+						pad.upKey = false;
+						pad.downKey = true;
+					}
+				} else {
 					pad.downKey = false;
-				}
-				else if (dest.y < pad.pos.y + pad.height / 2) {
-					pad.upKey = true;
-					pad.downKey = false;
-				}
-				else if (dest.y > pad.pos.y + pad.height / 2) {
 					pad.upKey = false;
-					pad.downKey = true;
 				}
-			} else {
-				pad.downKey = false;
-				pad.upKey = false;
 			}
-		}
-		else {
-			console.log(this.paddles);
+			else {
+				console.log(this.paddles);
+			}
 		}
 	}
 
@@ -233,20 +242,34 @@ export class Pong {
 		}
 	}
 
-	private nextFrame() {
-		
-		if (this.countdown === 0) {
-			if (this.lobby.gamemode == 'Rumble' && Math.floor(Math.random() * 600) == 1)
-				this.newPowerUp();
-			this.updatePowerUp(); 
-			this.updatePaddles();
-			this.updateball();
-		} else {
-			this.countdown -= ((new Date()).getTime() - this.lastUpdate);
-			this.countdown = this.countdown < 0 ? 0 : this.countdown; 
+	public defWin(idLoser: string) {
+		if (this.hasStarted && this.hasFinished === false) {
+			for (const id of this.lobby.clients.keys()) {
+				if (id !== idLoser) {
+					console.log(id);
+					this.scores.set(id, 42);
+				}
+			}
+			if (this.lobby.gamemode === "PvE")
+				this.scores.set(idLoser, 42);
 		}
-		
-		this.lastUpdate = (new Date().getTime());
+	}
+
+	private nextFrame() {
+		if (this.isPaused === false) {
+			if (this.countdown === 0) {
+				if (this.lobby.gamemode == 'Rumble' && Math.floor(Math.random() * 600) == 1)
+					this.newPowerUp();
+				this.updatePowerUp(); 
+				this.updatePaddles();
+				this.updateball();
+			} else {
+				this.countdown -= ((new Date()).getTime() - this.lastUpdate);
+				this.countdown = this.countdown < 0 ? 0 : this.countdown; 
+			}
+
+			this.lastUpdate = (new Date().getTime());
+		}
 	}
 
 	public async end(): Promise<void> {
@@ -268,7 +291,6 @@ export class Pong {
 			}
 		}
 
-		
 		this.lobby.sendEvent<ServerResponseDTO[ServerEvents.GameMessage]>(
 			ServerEvents.GameMessage,
 			{

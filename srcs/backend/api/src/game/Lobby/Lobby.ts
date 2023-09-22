@@ -59,6 +59,12 @@ export class Lobby {
 		}});
 	}
 
+	public async refreshAuthSocket(id: string) {
+		let client: AuthenticatedSocket = this.clients.get(id);
+		if (client)
+			client.username = (await (this.prisma.user.findUnique({where: {id : client.userId}}))).name;
+	}
+
 	public async setStatus(clientid: number, status: string) {
 		if (status === "INGAME") {
 			await this.prisma.user.update({
@@ -133,6 +139,8 @@ export class Lobby {
 					},
 					data: {
 						status: GameStatus.IDLE,
+						lobby: "",
+
 					}
 				})
 
@@ -142,6 +150,7 @@ export class Lobby {
 					},
 					data: {
 						status: GameStatus.IDLE,
+						lobby: "",
 					}
 				})
 
@@ -176,7 +185,18 @@ export class Lobby {
 		}
 	}
 
-	public removeClient(client: AuthenticatedSocket): void {}
+	public removeClient(client: AuthenticatedSocket): void {
+		this.game.defWin(client.id)
+		this.prisma.gameProfile.update({
+			where: {
+				userId: client.userId,
+			},
+			data: {
+				status: GameStatus.IDLE,
+			}
+		})
+		// this.clients.delete(client.id);
+	}
 
 	public sendLobbyState(): void {
 		function MapToRecord<V>(map: Map<string, V>): Record<string, V> {
@@ -187,11 +207,14 @@ export class Lobby {
 			return newRecord;
 		}
 
-		function MapToRecordName(map: Map<string, AuthenticatedSocket>): Record<string, string> {
+		function MapToRecordName(map: Map<string, AuthenticatedSocket>, gamemode: LobbyMode): Record<string, string> {
 			let newRecord: Record<string, string> = {};
 			for (let [key, value] of map) {
 				newRecord[key] = value.username;
 			}
+			if (gamemode === "PvE")
+				newRecord["bot"] = "bot";
+
 			return newRecord;
 		}
 
@@ -211,7 +234,7 @@ export class Lobby {
 			ballSpeedUp: this.game.ball.speedPowerUp,
 			padPositions: MapToRecord(this.game.paddles),
 			scores: MapToRecord(this.game.scores),
-			playerNames: MapToRecordName(this.clients),
+			playerNames: MapToRecordName(this.clients, this.gamemode),
 		};
 
 		this.sendEvent<ServerResponseDTO[ServerEvents.LobbyState]>(
@@ -233,7 +256,7 @@ export class Lobby {
 		this.startedAt = new Date().getTime();
 	}
 
-	public addClient(client: AuthenticatedSocket): void {
+	public async addClient(client: AuthenticatedSocket): Promise<void> {
 		this.clients.set(client.id, client);
 		client.join(this.Id);
 		client.data.lobby = this;

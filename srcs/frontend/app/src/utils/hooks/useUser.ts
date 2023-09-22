@@ -44,8 +44,6 @@ function useUser(): UserHook {
 		user,
 		setUser
 	};
-	console.log("in useUser");
-	console.log(`user mmr = ${user.mmr}`);
 	return userHook;
 }
 

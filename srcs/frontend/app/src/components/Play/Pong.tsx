@@ -162,19 +162,19 @@ function Pong() {
 					ctx.textBaseline = 'middle'
 					if (GameState.countdown > 3000) {
 						ctx.fillStyle = 'white'
-						ctx.fillText('GOAL !', 400, 400);
+						ctx.fillText('GOAL !', 400, 200);
 					}
 					else if (GameState.countdown > 2000) {
 						ctx.fillStyle = 'red'
-						ctx.fillText('3', 400, 400);
+						ctx.fillText('3', 400, 200);
 					}
 					else if (GameState.countdown > 1000) {
 						ctx.fillStyle = 'orange'
-						ctx.fillText('2', 400, 400);
+						ctx.fillText('2', 400, 200);
 					}
 					else {
 						ctx.fillStyle = 'yellow'
-						ctx.fillText('1', 400, 400);
+						ctx.fillText('1', 400, 200);
 					}
 					ctx.stroke();
 				}
@@ -259,6 +259,7 @@ function Pong() {
 		window.addEventListener("keyup", keyReleaseHandler, false);
 
 		return () => {
+			sm.emit({event: ClientEvents.LobbyLeave});
 			sm.removeListener(ServerEvents.LobbyState, onLobbyState);
 			window.removeEventListener("keydown", keyPressHandler);
 			window.removeEventListener("keyup", keyReleaseHandler);

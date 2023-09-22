@@ -5,7 +5,7 @@ import useUser from "../../utils/hooks/useUser";
 import { UserHook } from "../../utils/hooks/TuseUser";
 import SocketWrapper, { SocketWrapperContext } from "../../utils/websockets/SocketWrapper";
 import { useContext, useEffect, useState } from "react";
-import { Listener, ServerEvents } from "../../utils/websockets/types";
+import { ClientEvents, Listener, ServerEvents } from "../../utils/websockets/types";
 import { ServerPayload } from "../../utils/websockets/ServerPayload";
 import { notifyInfo } from "../../utils/notify";
 import { PlayRumbleButton } from "../../components/Play/PlayRumbleButton";
