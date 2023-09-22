@@ -9,10 +9,10 @@ export function GameNavLink() {
 		>
 			<div className="flex flex-row justify-center items-center">
 				<RiPingPongFill
-					className="h-36 w-36 mr-4"
+					className="h-32 w-32 mr-4"
 					title="GameNavLink"
 				/>
-				<h2 className="text-8xl"> PLAY </h2>
+				<h2 className="text-7xl"> PLAY </h2>
 			</div>
 		</NavLink>
 	);

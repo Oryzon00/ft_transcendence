@@ -8,7 +8,7 @@ function LoginLayout() {
 			<div className=" flex flex-row items-center justify-center my-10">
 				<GiAngelWings
 					className="h-28 w-28 mx-5"
-					title="GameNavLink"
+					title="AngelWings"
 					color="#92400e"
 				/>
 				<h2 className="flex text-center  text-white text-6xl font-bold py-5">
@@ -16,7 +16,7 @@ function LoginLayout() {
 				</h2>
 				<GiAngelWings
 					className="h-28 w-28 mx-5"
-					title="GameNavLink"
+					title="AngelWings"
 					color="#92400e"
 				/>
 			</div>
