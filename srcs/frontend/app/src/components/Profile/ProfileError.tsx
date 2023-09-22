@@ -1,12 +1,12 @@
-import { TbUserQuestion } from "react-icons/tb"
+import { TbUserQuestion } from "react-icons/tb";
 
-function ProfileError () {
+function ProfileError() {
 	return (
 		<div className="profile-error-main">
-			<TbUserQuestion size='500'/>
-			<span>Sorry the user you are looking for does not exist…</span>
+			<TbUserQuestion size="500" />
+				<span className="text-center">Sorry the user you are looking for does not exist…</span>
 		</div>
-	)
+	);
 }
 
 export default ProfileError;
