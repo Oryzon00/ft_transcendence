@@ -5,12 +5,21 @@ import apiAddress from "../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../utils/getJWT";
 import { notifyError } from "../../../utils/notify";
 import Content from "./Content"
+import useUser from "../../../utils/hooks/useUser";
+import { UserHook } from "../../../utils/hooks/TuseUser";
 
 type CreateDirectType = {
     togglemodal: any;
 }
 function CreateDirect({togglemodal} : CreateDirectType) {
-    const [friends, setFriends] = useState<Friends[]>([]);
+	const user: UserHook = useUser();
+	let friends : Friends[] = [
+					{
+						id: user.user.id,
+						name: user.user.name,
+						image: user.user.image
+					}
+	];
 
     const listFriends = () => {
 		fetch(apiAddress + "/user/friends/get", {
@@ -25,8 +34,12 @@ function CreateDirect({togglemodal} : CreateDirectType) {
 				}
 				return res.json();
 			})
-			.then(function (data): void {
-				setFriends(data);
+			.then(function (data : Friends[]): void {
+				console.log('salut')
+				if (data.length > 0 && data[0].id != undefined)
+				{
+					friends = (data);
+				}
 			})
 			.catch(function (error) {
 				notifyError(error.message);
