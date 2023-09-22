@@ -10,11 +10,9 @@ import Customize from "./Customize/Customize";
 import apiAddress from "../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../utils/getJWT";
 import { notifyError } from "../../../utils/notify";
-import { ListChannel } from "../../../layouts/ChatLayout/chat.d";
 
 type CreateChannelType = {
 	togglemodal: any;
-	channel: ListChannel;
 	setChannel: any;
 };
 

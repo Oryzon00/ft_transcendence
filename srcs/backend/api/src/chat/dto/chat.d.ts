@@ -86,3 +86,14 @@ export enum Status {
 	PRIVATE,
 	PUBLIC
 }
+
+export type MessageSend = {
+	id: string;
+	createdAt: Date;
+	updateAt: Date;
+	channelId: string;
+	authorId: number;
+	username: string;
+	avatar: string;
+	content: string;
+};

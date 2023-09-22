@@ -1,7 +1,6 @@
 import { useState } from "react";
 import {
 	ChannelId,
-	ChannelPayload,
 	ListChannel
 } from "../../../layouts/ChatLayout/chat.d";
 import RoomInput from "./RoomInput";

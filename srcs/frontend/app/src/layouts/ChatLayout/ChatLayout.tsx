@@ -109,6 +109,7 @@ function ChatLayout() {
 					setChannel={(e: ChannelPayload) =>
 						setChannel({ ...channel, [e.id]: e })
 					}
+					direct={direct}
 				/>
 				<ChatNav
 					creation={creation}

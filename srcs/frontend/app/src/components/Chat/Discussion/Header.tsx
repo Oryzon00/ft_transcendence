@@ -9,7 +9,7 @@ import { ChannelPayload } from "../../../layouts/ChatLayout/chat.d";
 import apiAddress from "../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../utils/getJWT";
 import { notifyError } from "../../../utils/notify";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 type HeaderType = {
 	channel: { [key: string]: ChannelPayload };
@@ -52,8 +52,9 @@ function Header({
 	modo,
 	modoValue
 }: HeaderType) {
+	const [isModo, setModo] = useState<boolean>(false);
+
 	const quitChannel = (id: string) => {
-		console.log(id);
 		const copy = { ...channel };
 		const quit: quitType = { id: id };
 		delete copy[current];
@@ -64,6 +65,26 @@ function Header({
 
 	useEffect(() => {
 		modo(false);
+		fetch(apiAddress + "/chat/channel/modo", {
+			method: "POST",
+			headers: {
+				Authorization: "Bearer " + getJwtTokenFromCookie(),
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({ id: current })
+		})
+			.then(function (res: Response) {
+				if (!res.ok) {
+					throw new Error("Request failed with status " + res.status);
+				}
+				return res.json();
+			})
+			.then(function (e) {
+				setModo(e);
+			})
+			.catch(function (error) {
+				notifyError(error.message);
+			});
 	}, [current]);
 	return (
 		<div
@@ -75,15 +96,16 @@ function Header({
 				<p>{channel[current].description}</p>
 			) : null}
 			<div className="flex flex-row items-center">
+				{
+					(isModo) ? 
 				<button
 					className="bg-[#282b30] h-full"
 					onClick={() => modo(!modoValue)}
 				>
 					{modoValue ? <img src={ModoClicked} /> : <img src={Modo} />}
 				</button>
-				<button className="bg-[#282b30] h-full">
-					<img src={Add} alt="" />
-				</button>
+				: null
+				}
 				<button
 					className="bg-[#282b30] h-full"
 					onClick={() => quitChannel(current)}

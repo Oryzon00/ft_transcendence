@@ -5,7 +5,8 @@ import {
 	ChannelPayload,
 	ChannelCreation,
 	MessageWrite,
-	ChannelChangement
+	ChannelChangement,
+	MessageSend
 } from "../dto/chat.d";
 import { Status } from "@prisma/client";
 import { Injectable } from "@nestjs/common";
@@ -236,15 +237,35 @@ class ChannelDatabase {
 	*/
 
 	// Do not take all the user blocked
-	async getChannelMessage(id: string, blocked: number[]): Promise<Message[]> {
-		let res: Message[] = [];
+	async getChannelMessage(id: string, blocked: number[]): Promise<MessageSend[]> {
+		let res: MessageSend[] = [];
 		const messages: Message[] = await this.prisma.message.findMany({
 			where: {
 				channelId: id
 			}
 		});
 		for (let i = 0; i < messages.length; i++) {
-			if (!(messages[i].authorId in blocked)) res.push(messages[i]);
+			let add : MessageSend = {
+				id: messages[i].id,
+				createdAt: messages[i].createdAt,
+				updateAt: messages[i].updateAt,
+				authorId: messages[i].authorId,
+				content: messages[i].content,
+				channelId: messages[i].channelId,
+				avatar: '',
+				username: '',
+			}
+			if (!(messages[i].authorId in blocked))
+			{
+				let user: User = await this.prisma.user.findFirst({
+					where: {
+						id: messages[i].authorId
+					}
+				})
+				add.username = user.name;
+				add.avatar = user.image;
+				res.push(add);
+			}
 		}
 		return res;
 	}

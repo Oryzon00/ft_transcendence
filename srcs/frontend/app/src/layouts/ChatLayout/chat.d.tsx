@@ -5,6 +5,8 @@ export type MessagePayload = {
 	channelId: string;
 	authorId: number;
 	content: string;
+	username: string;
+	avatar: string;
 };
 
 export type ChannelPayload = {
