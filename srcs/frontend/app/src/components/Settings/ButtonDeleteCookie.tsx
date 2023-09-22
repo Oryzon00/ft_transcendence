@@ -14,7 +14,7 @@ export function LogOutButton() {
 
 	return (
 		<button
-			className="mx-2 px-2 py-1 rounded-md hover:bg-red-800 text-white font-semibold border-4 bg-zinc-500"
+			className="mx-2 px-4 py-2 rounded-md hover:bg-red-800 text-white text border-white text-xl font-semibold border-4 bg-zinc-500"
 			onClick={deleteCookie}
 		>
 			Log Out
