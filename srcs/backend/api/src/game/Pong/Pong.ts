@@ -83,6 +83,7 @@ export class Pong {
 		//countdown 5
 		
 		this.startTimer = (new Date().getTime());
+		this.countdown = 2999;
 		//gameLoop
 		//send event winner + update players MMR
 	}

@@ -63,9 +63,11 @@ export class LobbyManager {
 	}
 
 	public findLobby(clientId : string, mode: LobbyMode): Lobby | undefined {
-		for(let lobby of this.lobbies.values())
-			if (lobby.gamemode === mode && lobby.clients.size < 2 && !lobby.clients.has(clientId))
-				return(lobby);
+		if (mode === "PvP" || mode === "Rumble") {
+			for(let lobby of this.lobbies.values())
+				if (lobby.gamemode === mode && lobby.clients.size < 2 && !lobby.clients.has(clientId))
+					return(lobby);
+		}
 		return undefined;
 	}
 

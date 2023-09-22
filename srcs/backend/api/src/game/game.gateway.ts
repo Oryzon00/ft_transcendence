@@ -46,7 +46,6 @@ export class GameGateway
 	}
 
 	async handleDisconnect(client: AuthenticatedSocket): Promise<void> {
-		console.log("test");
 		this.lobbyManager.endSocket(client);
 	}
 
@@ -130,7 +129,6 @@ export class GameGateway
 
 	@SubscribeMessage(ClientEvents.LobbyLeave)
 	onLobbyLeave(client: AuthenticatedSocket): void {
-		console.log("test 2")
 		this.lobbyManager.endSocket(client);
 	}
 }

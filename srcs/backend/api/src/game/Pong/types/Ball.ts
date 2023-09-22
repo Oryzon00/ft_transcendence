@@ -12,8 +12,12 @@ export class Ball {
 
 	constructor(private CanWidth: number, private CanHeight: number, rad: number) {
 		this.pos = new Point(CanWidth / 2, CanHeight / 2);
-		this.speed = { angle: -Math.PI + Math.random() * 2 * Math.PI, length: 6 };
 		this.rad = rad;
+
+		if (Math.random() > 0.5)
+			this.speed = { angle: -(Math.PI/3) + Math.random() * 2 * Math.PI/3, length: 6 };
+		else
+			this.speed = { angle: (Math.random() > 0.5) ? -(Math.PI) + Math.random() * Math.PI/3 : (2 * Math.PI/3 ) + Math.random() * Math.PI/3, length: 6 };
 	}
 
 	respawn(): 1 | 2 | undefined {
