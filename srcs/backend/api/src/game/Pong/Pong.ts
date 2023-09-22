@@ -22,7 +22,7 @@ export class Pong {
 	public countdown: number = 0;
 
 	public startTimer: number;
-	public endTimer: number = 300000;
+	public endTimer: number = 5000;
 
 	private lastUpdate: number = (new Date()).getTime();
 
@@ -93,12 +93,37 @@ export class Pong {
 		if (this.hasStarted !== true || this.hasFinished) return;
 		this.nextFrame();
 		this.lobby.sendLobbyState();
-		if ((new Date()).getTime() - this.startTimer === this.endTimer)
+		if ((new Date()).getTime() - this.startTimer >= this.endTimer)
 		{
-			for (const id of this.lobby.clients.keys()) {
-				this.endgame(id);
-				break ;
+			if (this.lobby.gamemode === "PvE") {
+				this.hasFinished = true;
+				this.endgame("");
+				return ;
 			}
+
+			let id1: string = "";
+			let id2: string = "";
+			for (const id of this.lobby.clients.keys()) {
+				if (id1 === "") {
+					id1 = id;
+				} else {
+					id2 = id;
+				}
+			}
+			if (this.scores.get(id1) === this.scores.get(id2))
+			{
+				this.hasFinished = true;
+				this.endgame("");
+				this.lobby.quitQueue(this.lobby.clients.get(id1).userId);
+				this.lobby.quitQueue(this.lobby.clients.get(id2).userId);
+			} else if (this.scores.get(id1) > this.scores.get(id2)) {
+				this.hasFinished = true;
+				this.endgame(id1);
+			} else {
+				this.hasFinished = true;
+				this.endgame(id2);
+			}
+			return ;
 		}
 		
 		for (const id of this.lobby.clients.keys()) {
