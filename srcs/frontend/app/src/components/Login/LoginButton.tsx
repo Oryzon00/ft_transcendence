@@ -25,10 +25,9 @@ function LoginButton() {
 			className="text-white text-xl my-10 font-bold border-white border-4 bg-zinc-700 hover:bg-amber-800 px-6 py-4 rounded-md"
 			onClick={goToApi42}
 		>
-			<h2 className="text-7xl">LOGIN</h2>
+			<h2 className="text-6xl">LOGIN</h2>
 		</button>
 	);
 }
 
 export default LoginButton;
-
