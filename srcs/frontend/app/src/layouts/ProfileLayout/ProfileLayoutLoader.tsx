@@ -3,6 +3,7 @@ import { notifyError } from "../../utils/notify.ts";
 import apiAddress from "../../utils/apiAddress.ts";
 
 export async function ProfileLayoutLoader({ params }:any) {
+	
 	let url = apiAddress +'/user/find?username=' + params.username;
 	let dataArray = [];
 
@@ -20,11 +21,10 @@ export async function ProfileLayoutLoader({ params }:any) {
 		.then((data) => {
 			return data;
 		})
-		.catch((error) => {
-			notifyError(error.message);
+		.catch(() => {
+			notifyError("User not found");
 		});
 	dataArray.push(data);
-
 
 	url = apiAddress + "/user/trueMe";
 	response = await fetch(url, {
@@ -40,8 +40,8 @@ export async function ProfileLayoutLoader({ params }:any) {
 		.then((data) => {
 			return data;
 		})
-		.catch((error) => {
-			notifyError(error.message);
+		.catch(() => {
+			notifyError("Other Error");
 		});
 
 	dataArray.push(data);

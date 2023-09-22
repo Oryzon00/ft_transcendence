@@ -88,7 +88,9 @@ export class UserService {
 		user: User,
 		newName: string
 	): Promise<{ name: string }> {
-		if (newName.length > 15) throw new UnauthorizedException();
+		const regex = new RegExp('^[a-zA-Z0-9-_]{1,15}$')
+
+		if (!regex.test(newName)) throw new UnauthorizedException();
 		try {
 			await this.prisma.user.update({
 				where: {
@@ -395,6 +397,17 @@ export class UserService {
 					blockedUsers: { connect: { id: blockedUser.id } }
 				}
 			});
+
+			await this.prisma.user.update({
+				where: {
+					id: blockedUser.id
+				},
+				data: {
+					friends: { disconnect: { id: user.id } },
+					pendingFriends: { disconnect: { id: user.id } },
+				}
+			});
+
 			return ({name: blockedUser.name});
 		} catch {
 			throw new NotFoundException();

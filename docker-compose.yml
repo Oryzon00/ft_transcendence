@@ -9,7 +9,7 @@ services:
             - type: volume
               source: database
               target: /var/lib/postgresql/data
-        env_file: env_files/database.env
+        env_file: srcs/env_files/database.env
         networks:
             - transcendance
 
@@ -19,16 +19,16 @@ services:
         depends_on:
             - database
         build:
-            context: backend/
+            context: srcs/backend/
             dockerfile: Dockerfile
         volumes:
             - type: volume
               source: api
               target: /api
         env_file:
-            - env_files/api.env
-            - env_files/42.api.env
-            - env_files/api.secret.env
+            - srcs/env_files/api.env
+            - srcs/env_files/42.api.env
+            - srcs/env_files/api.secret.env
         networks:
             - transcendance
         ports:
@@ -41,14 +41,14 @@ services:
         depends_on:
             - api
         build:
-            context: frontend/
+            context: srcs/frontend/
             dockerfile: Dockerfile
         volumes:
             - type: volume
               source: frontend
               target: /app
         env_file:
-            - env_files/42.api.env
+            - srcs/env_files/42.api.env
         networks:
             - transcendance
         ports:
