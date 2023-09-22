@@ -22,7 +22,7 @@ export class Pong {
 	public countdown: number = 0;
 
 	public startTimer: number;
-	public endTimer: number = 5000;
+	public endTimer: number = 300000;
 
 	private lastUpdate: number = (new Date()).getTime();
 

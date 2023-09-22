@@ -6,10 +6,9 @@
 
 canvas {
 	z-index: 100;
-	width: 60vh;
-	height: 60vh;
-    padding-left: 0;
-    padding-right: 0;
+	width: 80vh;
+	height: 80vh;
+    padding: 10px;
     margin-left: auto;
     margin-right: auto;
     display: block;
