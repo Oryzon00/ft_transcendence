@@ -284,6 +284,7 @@ export class ChatService {
 
 	// it's just quit with a1C274C check if you are a modo
 	async kick(user: User, body: ChannelKick) {
+		console.log();
 		if (!(await this.userdb.isModo(user.id, body.id)))
 			throw new UnauthorizedException();
 		this.deleteMember(body.id, body.invited);

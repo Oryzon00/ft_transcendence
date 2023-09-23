@@ -81,7 +81,7 @@ export class ChatController {
 		return this.ChatService.quitChannel(user, channel);
 	}
 
-	@Get("/channel/list")
+	@Patch("/channel/list")
 	async list(
 		@GetUser() user: User,
 		@Body() body: { channelId: string }
@@ -137,7 +137,6 @@ export class ChatController {
 	@Patch("/channel/kick")
 	kick(@GetUser() user: User, @Body() body: ChannelKick) {
 		this.ChatService.kick(user, body);
-		return null;
 	}
 
 	@Patch("/channel/ban")
