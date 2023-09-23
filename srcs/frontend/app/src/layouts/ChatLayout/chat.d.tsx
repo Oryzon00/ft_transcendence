@@ -12,6 +12,7 @@ export type MessagePayload = {
 export type ChannelPayload = {
 	id: string;
 	name: string;
+	direct: boolean;
 	description: string;
 	status: string;
 	message: MessagePayload[];
@@ -62,6 +63,6 @@ export type ChannelAllInfo = {
 
 export type Friends = {
 	id: number;
-    image: string;
-    name: string;
-}
+	image: string;
+	name: string;
+};

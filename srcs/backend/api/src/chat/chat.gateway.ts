@@ -1,26 +1,20 @@
-import {
-	Injectable,
-	UseGuards
-} from "@nestjs/common";
+import { Injectable, UseGuards } from "@nestjs/common";
 import {
 	WebSocketGateway,
 	WebSocketServer,
 	ConnectedSocket,
 	OnGatewayInit,
 	OnGatewayConnection,
-	OnGatewayDisconnect,
+	OnGatewayDisconnect
 } from "@nestjs/websockets";
 import { Socket, Server } from "socket.io";
 import { verify } from "jsonwebtoken";
-import {
-	MessagePayload, MessageSend,
-} from "./dto/chat";
-import { Member, User} from "@prisma/client";
+import { MessagePayload, MessageSend } from "./dto/chat";
+import { Member, User } from "@prisma/client";
 import { AuthSocket } from "./AuthSocket.types";
 import { WsGuard } from "./WsGuard";
 import { JwtPayload } from "src/auth/dto/jwtPayload.dto";
 import UserDatabase from "./database/user";
-
 
 @Injectable()
 @WebSocketGateway({
@@ -62,8 +56,8 @@ export class ChatGateway
 	}
 
 	async emitToRoom(users: Member[], message: MessagePayload, status: string) {
-		let user : User = await this.user.getUser(message.authorId);
-		let res : MessageSend = {
+		let user: User = await this.user.getUser(message.authorId);
+		let res: MessageSend = {
 			id: message.id,
 			createdAt: message.createdAt,
 			updateAt: message.updateAt,
@@ -75,7 +69,11 @@ export class ChatGateway
 		};
 
 		users.map((user) => {
-			this.server.to(String(user.userId)).emit(status, res);
+			this.emit(user.userId, res, status);
 		});
+	}
+
+	emit(userId: number, send: any, status: string) {
+		this.server.to(String(userId)).emit(status, send);
 	}
 }

@@ -8,7 +8,6 @@ type ChatNavType = {
 	community: boolean;
 	current: string;
 	direct: boolean;
-	directChannel: ListChannel;
 
 	setDirect: any;
 	setCommunity: any;
@@ -24,7 +23,6 @@ function ChatNav({
 	current,
 	direct,
 	setDirect,
-	directChannel,
 	setCreation,
 	setCommunity,
 	setCurrent
@@ -40,9 +38,10 @@ function ChatNav({
 				communityvalue={community}
 			/>
 			<ChannelBoard
-				channels={direct ? directChannel : channel}
+				channels={channel}
 				setCurrent={setCurrent}
 				current={current}
+				direct={direct}
 			/>
 		</div>
 	);

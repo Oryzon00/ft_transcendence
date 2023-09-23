@@ -49,7 +49,8 @@ export class ChatService {
 			for (let i: number = 0; i < members.length; i++)
 				res[members[i].channelId] = await this.getChannel(
 					members[i].channelId,
-					blocked
+					blocked,
+					user.id
 				);
 		}
 		return res;
@@ -69,9 +70,13 @@ export class ChatService {
 
 	async getChannel(
 		channelId: string,
-		blocked: number[]
+		blocked: number[],
+		userId: number
 	): Promise<ChannelPayload> {
-		const channel = await this.channeldb.getChannelInfoId(channelId);
+		const channel: Channel = await this.channeldb.getChannelInfoId(
+			channelId,
+			userId
+		);
 		const messages: Message[] = await this.channeldb.getChannelMessage(
 			channelId,
 			blocked
@@ -79,6 +84,7 @@ export class ChatService {
 		return await {
 			id: channel.id,
 			name: channel.name,
+			direct: channel.direct,
 			status: this.channeldb.convertString(channel.status),
 			message: messages
 		};
@@ -97,6 +103,7 @@ export class ChatService {
 		return {
 			id: res.id,
 			name: res.name,
+			direct: res.direct,
 			status: this.channeldb.convertString(res.status),
 			message: []
 		};
@@ -187,7 +194,6 @@ export class ChatService {
 		return publicChannel.concat(privateChannel);
 	}
 	*/
-
 	async searchChannel(
 		user: User,
 		body: { name: string }
@@ -223,7 +229,8 @@ export class ChatService {
 		channel: ChannelJoin
 	): Promise<ChannelPayload> {
 		const searchChannel: Channel = await this.channeldb.getChannelInfoId(
-			channel.id
+			channel.id,
+			user.id
 		);
 		if (
 			searchChannel == null ||
@@ -240,7 +247,8 @@ export class ChatService {
 		await this.channeldb.joinChannel(searchChannel.id, user.id);
 		return this.getChannel(
 			searchChannel.id,
-			this.listBlocked(await this.userdb.listBlockedUser(user.id))
+			this.listBlocked(await this.userdb.listBlockedUser(user.id)),
+			user.id
 		);
 	}
 
@@ -256,6 +264,12 @@ export class ChatService {
 	}
 
 	async deleteMember(channelId: string, userId: number) {
+		const channel: Channel = await this.prisma.channel.findFirst({
+			where: {
+				id: channelId
+			}
+		});
+		if (channel.direct) return;
 		const find: Member = await this.userdb.findMember(userId, channelId);
 		if (find == undefined) throw new UnauthorizedException();
 		await this.prisma.member.delete({
@@ -268,7 +282,7 @@ export class ChatService {
 		this.deleteMember(channelId.id, user.id);
 	}
 
-	// it's just quit with a check if you are a modo
+	// it's just quit with a1C274C check if you are a modo
 	async kick(user: User, body: ChannelKick) {
 		if (!(await this.userdb.isModo(user.id, body.id)))
 			throw new UnauthorizedException();
@@ -337,7 +351,7 @@ export class ChatService {
 
 	async getChannelInfo(user: User, channelId: string): Promise<Channel> {
 		if (this.userdb.isMember(user.id, channelId))
-			return await this.channeldb.getChannelInfoId(channelId);
+			return await this.channeldb.getChannelInfoId(channelId, user.id);
 		throw new UnauthorizedException();
 	}
 
@@ -347,11 +361,37 @@ export class ChatService {
 		return null;
 	}
 
-	async createDirect(
-		user: User,
-		channelId: { name: string }
-	): Promise<ChannelPayload> {
-		let res: ChannelPayload;
+	async createDirect(user: number[]): Promise<ChannelPayload> {
+		if ((await this.channeldb.findDirectChannel(user)) != null) return null;
+		console.log("salut");
+		const channel: Channel = await this.channeldb.createDirect(user);
+		let res: ChannelPayload = {
+			id: channel.id,
+			name: channel.name,
+			direct: channel.direct,
+			status: this.channeldb.convertString(channel.status),
+			message: []
+		};
+		res.name = String(user[1]);
+		this.chatGateway.emit(user[0], res, "onChannel");
+		res.name = String(user[0]);
+		this.chatGateway.emit(user[1], res, "onChannel");
 		return res;
+	}
+
+	async getOtherInfo(userId: number, channelId: string): Promise<User> {
+		try {
+			let member: Member[] = await this.prisma.member.findMany({
+				where: {
+					channelId: channelId
+				}
+			});
+			if (member.length > 1) member.pop();
+			return await this.prisma.user.findFirst({
+				where: { id: member[0].userId }
+			});
+		} catch (error) {
+			return error;
+		}
 	}
 }

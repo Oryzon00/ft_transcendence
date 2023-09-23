@@ -5,8 +5,6 @@ import {
 	socket
 } from "../../utils/contexts/WebsocketContext";
 import { ChannelPayload, ListChannel, MessagePayload } from "./chat.d";
-import { UserHook } from "../../utils/hooks/TuseUser";
-import useUser from "../../utils/hooks/useUser";
 
 // Components
 import DiscussionBoard from "../../components/Chat/Discussion/DiscussionBoard";
@@ -16,13 +14,11 @@ import { notifyError } from "../../utils/notify";
 
 import ChatNav from "../../components/Chat/ChatNav";
 import OverlayPopup from "../../components/Chat/OverlayPopup";
-// Images
 
 function ChatLayout() {
 	// Info on room
 	const [current, setCurrent] = useState("");
 	const [channel, setChannel] = useState<ListChannel>({});
-	const [directChannel, setDirectChannel] = useState<ListChannel>({});
 
 	const [creation, setCreation] = useState(false);
 	const [community, setCommunity] = useState(false);
@@ -31,7 +27,6 @@ function ChatLayout() {
 	const [refresh, setRefresh] = useState(false);
 
 	const sockets = useContext(WebsocketContext);
-	const user: UserHook = useUser();
 
 	const getChatData = () => {
 		// Get all the data for the variable channel
@@ -64,6 +59,7 @@ function ChatLayout() {
 
 	useEffect(() => {
 		getChatData();
+		console.log(channel);
 
 		// Create new channel
 		sockets.on("onChannel", (data: any) => {
@@ -128,7 +124,6 @@ function ChatLayout() {
 					setChannel={(e: ListChannel) => setChannel(e)}
 					current={current}
 					setCurrent={setCurrent}
-					me={user}
 					sockets={sockets}
 				/>
 			</div>

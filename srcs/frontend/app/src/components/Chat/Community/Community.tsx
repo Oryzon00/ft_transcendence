@@ -14,7 +14,6 @@ import ProtectedChannel from "./ProtectedPassword/ProtectedPassword";
 
 type CommunityType = {
 	togglemodal: any;
-	channel: ChannelPayload[];
 	setChannel: any;
 };
 
@@ -41,7 +40,7 @@ const fetchJoinChannel = (room: ChannelJoin, setChannel: any) => {
 		});
 };
 
-function Community({ togglemodal, channel, setChannel }: CommunityType) {
+function Community({ togglemodal, setChannel }: CommunityType) {
 	const [publicChannel, setPublic] = useState([]);
 	const [protectedChannel, setProtected] = useState([]);
 
@@ -49,6 +48,7 @@ function Community({ togglemodal, channel, setChannel }: CommunityType) {
 		id: "",
 		name: "",
 		description: "",
+		direct: false,
 		status: "",
 		message: []
 	});
@@ -119,6 +119,7 @@ function Community({ togglemodal, channel, setChannel }: CommunityType) {
 							id: "",
 							name: "",
 							description: "",
+							direct: false,
 							status: "",
 							message: []
 						});
@@ -132,6 +133,7 @@ function Community({ togglemodal, channel, setChannel }: CommunityType) {
 							id: "",
 							name: "",
 							description: "",
+							direct: false,
 							status: "",
 							message: []
 						});

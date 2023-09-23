@@ -68,7 +68,7 @@ class ChannelDatabase {
 					password: channel.password
 				}
 			});
-			this.joinChannel(res.id, res.ownerId, true);
+			this.joinChannel(res.id, user, true);
 			return res;
 		} catch (error) {
 			return error;
@@ -91,6 +91,25 @@ class ChannelDatabase {
 			return error;
 		}
 	}
+
+	async findDirectChannel(user: number[]): Promise<Channel> {
+		try {
+			const res: Channel = await this.prisma.channel.findFirst({
+				where: {
+					name: "DIRECT",
+					members: {
+						every: {
+							userId: { in: user }
+						}
+					}
+				}
+			});
+			return res;
+		} catch (error) {
+			return error;
+		}
+	}
+
 	async setChannel(
 		userId: number,
 		channelId: string,
@@ -218,12 +237,31 @@ class ChannelDatabase {
 		});
 	}
 
-	async getChannelInfoId(id: string): Promise<Channel> {
-		return await this.prisma.channel.findUnique({
+	async getChannelInfoId(id: string, userId: number = 0): Promise<Channel> {
+		let res: Channel = await this.prisma.channel.findUnique({
 			where: {
 				id: id
 			}
 		});
+		if (res.direct && userId != 0) {
+			const member = await this.prisma.member.findMany({
+				where: {
+					channelId: id
+				},
+				include: {
+					user: true
+				}
+			});
+			if (member.length > 1) {
+				res.name =
+					member[0].user.id == userId
+						? member[1].user.name
+						: member[0].user.name;
+			} else {
+				res.name = member[0].user.name;
+			}
+		}
+		return res;
 	}
 
 	/*	
@@ -237,7 +275,10 @@ class ChannelDatabase {
 	*/
 
 	// Do not take all the user blocked
-	async getChannelMessage(id: string, blocked: number[]): Promise<MessageSend[]> {
+	async getChannelMessage(
+		id: string,
+		blocked: number[]
+	): Promise<MessageSend[]> {
 		let res: MessageSend[] = [];
 		const messages: Message[] = await this.prisma.message.findMany({
 			where: {
@@ -245,23 +286,22 @@ class ChannelDatabase {
 			}
 		});
 		for (let i = 0; i < messages.length; i++) {
-			let add : MessageSend = {
+			let add: MessageSend = {
 				id: messages[i].id,
 				createdAt: messages[i].createdAt,
 				updateAt: messages[i].updateAt,
 				authorId: messages[i].authorId,
 				content: messages[i].content,
 				channelId: messages[i].channelId,
-				avatar: '',
-				username: '',
-			}
-			if (!(messages[i].authorId in blocked))
-			{
+				avatar: "",
+				username: ""
+			};
+			if (!(messages[i].authorId in blocked)) {
 				let user: User = await this.prisma.user.findFirst({
 					where: {
 						id: messages[i].authorId
 					}
-				})
+				});
 				add.username = user.name;
 				add.avatar = user.image;
 				res.push(add);

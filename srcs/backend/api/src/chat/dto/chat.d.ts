@@ -47,6 +47,7 @@ export type ChannelPayload = {
 	id: string;
 	name: string;
 	status: string;
+	direct: boolean;
 	message: MessagePayload[];
 };
 

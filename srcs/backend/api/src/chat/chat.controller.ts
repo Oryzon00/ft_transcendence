@@ -25,6 +25,7 @@ import {
 	MessageWrite
 } from "./dto/chat";
 import UserDatabase from "./database/user";
+import { channel } from "diagnostics_channel";
 
 @UseGuards(JwtGuard)
 @Controller("chat")
@@ -37,10 +38,6 @@ export class ChatController {
 		return await this.ChatService.getData(user);
 	}
 
-	@Get("getDirect")
-	async getDirect(@GetUser() user: User): Promise<ListChannel> {
-		return await this.ChatService.getDirect(user);
-	}
 	// To send a message
 	@Post("message")
 	async message(@GetUser() user: User, @Body() message: MessageWrite) {
@@ -164,8 +161,21 @@ export class ChatController {
 	}
 
 	@Post("/channel/direct")
-	direct_message(@GetUser() user: User, @Body() body: { name: string }) {
-		this.ChatService.createDirect(user, body);
+	direct_message(@GetUser() user: User, @Body() body: { id: string }) {
+		this.ChatService.createDirect([user.id, Number(body.id)]);
+	}
+
+	@Post("/channel/direct/other")
+	async get_other_info(
+		@GetUser() user: User,
+		@Body() body: { id: string }
+	): Promise<{ name: string; image: string }> {
+		const oUser: User = await this.ChatService.getOtherInfo(
+			user.id,
+			body.id
+		);
+		console.log(oUser);
+		return { name: oUser.name, image: oUser.image };
 	}
 
 	@Post("/channel/owner")
