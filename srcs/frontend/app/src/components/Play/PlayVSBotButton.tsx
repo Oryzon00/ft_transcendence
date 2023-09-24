@@ -18,7 +18,8 @@ export function PlayVSBotButton() {
 	}
 
 	return (
-			 <button className="bg-[#1a1a1a] hover:bg-[#323232] text-white font-bold py-2 px-4 border-2 border-amber-800" onClick={createPvEGame}>
+		<div className="pb-6">
+			 <button className="w-[600px] h-[750px] bg-[#1a1a1a] hover:bg-[#323232] text-white font-bold py-2 px-4 border-2 border-amber-800 " onClick={createPvEGame}>
 				<div className="PVE-button">
 					<FaRobot size='200'/>
 					<h1>
@@ -28,12 +29,13 @@ export function PlayVSBotButton() {
 					<div className="PVE-button-li">
 						<li>Game duration: 5min</li>
 						<li>Score 5 goals to win</li>
-						<li>Use arrow keys to move the paddle</li>
-						<li>No MMR update feel free to train</li>
-						<li>WARNING: BOT IS REACTIVE</li>
+						<li>Use arrow keys to move</li>
+						<li>No MMR update go train</li>
+						<li>Warning: Bot is reactive</li>
 					</div>
 				</div>
   			</button>
+		</div>
 	);
 }
 

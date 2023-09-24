@@ -18,8 +18,8 @@ export function PlayRumbleButton() {
 	}
 
 	return (
-		<div>
-			<button className="bg-[#1a1a1a] hover:bg-[#323232] text-white font-bold py-2 px-4 border-2 border-amber-800" onClick={searchRumbleGame}>
+		<div className="pb-6">
+			<button className="w-[600px] h-[750px] bg-[#1a1a1a] hover:bg-[#323232] text-white font-bold py-2 px-4 border-2 border-amber-800" onClick={searchRumbleGame}>
 			<div className="PVE-button">
 					<TbBrandAppleArcade size='200'/>
 					<h1>

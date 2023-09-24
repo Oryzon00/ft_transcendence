@@ -48,11 +48,12 @@
 
 .PVE-button-li li {
 	padding: 20px;
+	text-align: start;
 }
 
 .play-page {
 	display: flex;
-	flex-direction: row;
 	justify-content: space-around;
 	padding-top: 50px;
+	flex-wrap: wrap;
 }
