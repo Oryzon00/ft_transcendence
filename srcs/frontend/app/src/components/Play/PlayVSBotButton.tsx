@@ -19,9 +19,9 @@ export function PlayVSBotButton() {
 
 	return (
 		<div className="pb-6">
-			 <button className="w-[600px] h-[750px] bg-[#1a1a1a] hover:bg-[#323232] text-white font-bold py-2 px-4 border-2 border-amber-800 " onClick={createPvEGame}>
+			 <button className="w-[500px] h-[650px] bg-[#1a1a1a] hover:bg-[#323232] text-white font-bold py-2 px-4 border-2 border-amber-800 " onClick={createPvEGame}>
 				<div className="PVE-button">
-					<FaRobot size='200'/>
+					<FaRobot size='150'/>
 					<h1>
 						PLAYER VS BOT
 					</h1>

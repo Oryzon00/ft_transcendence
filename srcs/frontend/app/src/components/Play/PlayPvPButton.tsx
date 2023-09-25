@@ -19,9 +19,9 @@ export function PlayPvPButton() {
 
 	return (
 		<div className="pb-6">
-			<button className="w-[600px] h-[750px] bg-[#1a1a1a] hover:bg-[#323232] text-white font-bold py-2 px-4 border-2 border-amber-800" onClick={searchPvPGame}>
+			<button className="w-[500px] h-[650px] bg-[#1a1a1a] hover:bg-[#323232] text-white font-bold py-2 px-4 border-2 border-amber-800" onClick={searchPvPGame}>
 			<div className="PVE-button">
-					<LuSwords size='200'/>
+					<LuSwords size='150'/>
 					<h1>
 						PLAYER VS PLAYER
 					</h1>
@@ -31,7 +31,7 @@ export function PlayPvPButton() {
 						<li>Score 5 goals to win</li>
 						<li>Use arrow keys to move</li>
 						<li>Fight others to reach the top</li>
-						<li>Your rank is on the leaderboard</li>
+						<li>Your MMR is updated</li>
 					</div>
 				</div>
   			</button>
