@@ -11,6 +11,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { Game, GameStatus } from "@prisma/client";
 import { LobbyMode } from "./lobby.types";
 import { UserStatus } from "@prisma/client";
+import { ServerResponse } from "http";
 
 
 export class Lobby {
@@ -188,7 +189,7 @@ export class Lobby {
 	public async removeClient(client: AuthenticatedSocket): Promise<void> {
 		if (this.game.hasStarted)
 			this.game.defWin(client.id);
-		console.log(client.id);
+		
 		this.clients.delete(client.id);
 		try {
 			await this.prisma.gameProfile.update({
@@ -200,7 +201,7 @@ export class Lobby {
 				}
 			})
 		} catch(error) {
-			console.log("dfbefdvfd" + error)
+			console.log(error);
 		}
 		// this.clients.delete(client.id);
 	}

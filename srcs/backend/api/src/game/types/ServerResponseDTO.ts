@@ -35,4 +35,12 @@ export type ServerResponseDTO = {
 	[ServerEvents.Pong]: {
 		message: string
 	}
+
+	[ServerEvents.QueueJoined]: {
+
+	}
+
+	[ServerEvents.QueueLeft]: {
+		
+	}
 }

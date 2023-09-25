@@ -51,10 +51,10 @@ function PongLayout() {
 		};
 
 		const onQueueJoined: Listener<ServerPayload[ServerEvents.QueueJoined]>
-		 = () => {setInQueue(true)};
+		 = () => {console.log("queue joined "); setInQueue(true)};
 
 		const onQueueLeft: Listener<ServerPayload[ServerEvents.QueueLeft]>
-		 = () => {setInQueue(false)};
+		 = () => {console.log("queue left "); setInQueue(false)};
 
 
 		console.log("adding listeners");

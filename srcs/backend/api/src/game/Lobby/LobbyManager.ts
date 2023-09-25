@@ -27,11 +27,8 @@ export class LobbyManager {
 	}
 
 	public async endSocket(client: AuthenticatedSocket): Promise<void> {
-		console.log(this.lobbies.size);
 		for(let lobby of this.lobbies.values()) {
-			console.log(lobby.clients);
 			if (lobby.clients.has(client.id)) {
-				console.log("found client in lobby")
 				await lobby.removeClient(client);
 				if (!lobby.clients.size)
 					this.lobbies.delete(lobby.Id);

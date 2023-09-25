@@ -88,6 +88,8 @@ export class GameGateway
 				lobby = await this.lobbyManager.createLobby(data.mode);
 				lobby.addClient(client);
 
+				lobby.sendEvent<ServerResponseDTO[ServerEvents.QueueJoined]>(ServerEvents.QueueJoined, {});
+
 				return {
 					event: ServerEvents.GameMessage,
 					data: {
@@ -129,7 +131,7 @@ export class GameGateway
 
 	@SubscribeMessage(ClientEvents.LobbyLeave)
 	async onLobbyLeave(client: AuthenticatedSocket): Promise<void> {
-		console.log("receiving");
+		client.emit(ServerEvents.QueueLeft);
 		await this.lobbyManager.endSocket(client);
 	}
 }
