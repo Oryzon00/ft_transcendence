@@ -185,16 +185,23 @@ export class Lobby {
 		}
 	}
 
-	public removeClient(client: AuthenticatedSocket): void {
-		this.game.defWin(client.id)
-		this.prisma.gameProfile.update({
-			where: {
-				userId: client.userId,
-			},
-			data: {
-				status: GameStatus.IDLE,
-			}
-		})
+	public async removeClient(client: AuthenticatedSocket): Promise<void> {
+		if (this.game.hasStarted)
+			this.game.defWin(client.id);
+		console.log(client.id);
+		this.clients.delete(client.id);
+		try {
+			await this.prisma.gameProfile.update({
+				where: {
+					userId: client.userId,
+				},
+				data: {
+					status: GameStatus.IDLE,
+				}
+			})
+		} catch(error) {
+			console.log("dfbefdvfd" + error)
+		}
 		// this.clients.delete(client.id);
 	}
 

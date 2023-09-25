@@ -83,7 +83,7 @@ export class Pong {
 		//countdown 5
 		
 		this.startTimer = (new Date().getTime());
-		this.countdown = 2999;
+		this.countdown = -5000;
 		//gameLoop
 		//send event winner + update players MMR
 	}
@@ -290,8 +290,14 @@ export class Pong {
 				this.updatePaddles();
 				this.updateball();
 			} else {
-				this.countdown -= ((new Date()).getTime() - this.lastUpdate);
-				this.countdown = this.countdown < 0 ? 0 : this.countdown; 
+				if (this.countdown < 0)
+				{
+					this.countdown += ((new Date()).getTime() - this.lastUpdate);
+					this.countdown = this.countdown > -3000 ? -this.countdown : this.countdown;
+				} else {
+					this.countdown -= ((new Date()).getTime() - this.lastUpdate);
+					this.countdown = this.countdown < 0 ? 0 : this.countdown;
+				} 
 			}
 
 			this.lastUpdate = (new Date().getTime());

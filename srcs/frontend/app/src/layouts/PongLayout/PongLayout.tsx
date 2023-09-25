@@ -17,6 +17,7 @@ import { PlayRumbleButton } from "../../components/Play/PlayRumbleButton";
 import PlayPvPButton from "../../components/Play/PlayPvPButton";
 import PlayVSBotButton from "../../components/Play/PlayVSBotButton";
 import { UserContext } from "../../utils/contexts/userContext";
+import QuitQueueButton from "../../components/Play/QuitQueueButton";
 
 function PongLayout() {
 	cookieProtection();
@@ -54,6 +55,7 @@ function PongLayout() {
 		return () => {
 			console.log("removing listeners");
 			sm.removeListener(ServerEvents.GameMessage, onGameMessage);
+			sm.emit({event: ClientEvents.LobbyLeave});
 		};
 	}, [userHook.user.mmr]);
 
@@ -68,6 +70,7 @@ function PongLayout() {
 					<PlayVSBotButton />
 					<PlayPvPButton />
 					<PlayRumbleButton />
+					<QuitQueueButton />
 				</div>
 			)}
 		</>
