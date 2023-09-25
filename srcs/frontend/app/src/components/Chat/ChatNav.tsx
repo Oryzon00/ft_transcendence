@@ -23,6 +23,7 @@ function ChatNav({
 	current,
 	direct,
 	setDirect,
+	directChannel,
 	setCreation,
 	setCommunity,
 	setCurrent
@@ -38,7 +39,7 @@ function ChatNav({
 				communityvalue={community}
 			/>
 			<ChannelBoard
-				channels={channel}
+				channels={direct ? directChannel : channel}
 				setCurrent={setCurrent}
 				current={current}
 				direct={direct}

@@ -11,7 +11,11 @@ function Input({ enter, setEnter, confirm, setConfirm }: InputType) {
 	const passcss: string =
 		"bg-[#27272a] w-11/12 h-8 rounded-sm text-white outline-none mx-auto px-2"
 	return (
+<<<<<<< HEAD
 		<div className="flex flex-col w-full h-[calc(550px-230px)] justify-evenly items-center">
+=======
+		<div className="flex flex-col w-full h-[calc(550px-230px)] justify-evenly items-center gap-1">
+>>>>>>> main
 			<div className="w-full flex flex-col justify-center">
 				<h3 className={header}>Password :</h3>
 				<input

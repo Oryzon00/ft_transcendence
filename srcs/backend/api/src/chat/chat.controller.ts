@@ -21,12 +21,9 @@ import {
 	ChannelKick,
 	ChannelMute,
 	ListChannel,
-	ListName,
 	MessageWrite
 } from "./dto/chat";
 import UserDatabase from "./database/user";
-import { channel } from "diagnostics_channel";
-
 @UseGuards(JwtGuard)
 @Controller("chat")
 export class ChatController {
@@ -38,6 +35,10 @@ export class ChatController {
 		return await this.ChatService.getData(user);
 	}
 
+	@Get("getDirect")
+	async getDirect(@GetUser() user: User): Promise<ListChannel> {
+		return await this.ChatService.getDirect(user);
+	}
 	// To send a message
 	@Post("message")
 	async message(@GetUser() user: User, @Body() message: MessageWrite) {
@@ -50,17 +51,6 @@ export class ChatController {
 	@Post("/channel/create")
 	create(@GetUser() user: User, @Body() channel: ChannelCreation) {
 		return this.ChatService.createChannel(user, channel);
-	}
-
-	// Get list of channels
-	@Get("/channel/public")
-	async public(@GetUser() user: User) {
-		return await this.ChatService.publicChannel(user);
-	}
-
-	@Get("/channel/protected")
-	protected(@GetUser() user: User) {
-		return this.ChatService.protectedChannel(user);
 	}
 
 	// Join an existing channel
