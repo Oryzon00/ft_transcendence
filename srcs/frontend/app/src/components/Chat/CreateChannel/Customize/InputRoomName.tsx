@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 type InputRoomNameType = {
 	result: string;
 	setResult: any;
@@ -7,7 +5,7 @@ type InputRoomNameType = {
 
 function InputRoomName({ result, setResult }: InputRoomNameType) {
 	return (
-		<div id="name" className="flex flex-col">
+		<div id="name" className="flex flex-col justify-center items-center h-[calc(542px-210px)] w-full my-auto">
 			<h3 className="text-white text-xl text-left w-11/12 mx-auto mb-2">
 				Room name
 			</h3>

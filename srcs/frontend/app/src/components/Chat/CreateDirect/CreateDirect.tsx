@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Header from "./Header";
 import { Friends} from "../../../layouts/ChatLayout/chat.d";
 import apiAddress from "../../../utils/apiAddress";
@@ -35,11 +35,7 @@ function CreateDirect({togglemodal} : CreateDirectType) {
 				return res.json();
 			})
 			.then(function (data : Friends[]): void {
-				console.log('salut')
-				if (data.length > 0 && data[0].id != undefined)
-				{
-					friends = (data);
-				}
+				if (data.length > 0 && data[0].id != undefined) { friends = (data); }
 			})
 			.catch(function (error) {
 				notifyError(error.message);
@@ -51,9 +47,7 @@ function CreateDirect({togglemodal} : CreateDirectType) {
     }, [])
 
     return (
-		<div
-			className="flex flex-col bg-zinc-700 border-4 w-[440px] h-[550px] relative rounded"
-		>
+		<div className="flex flex-col bg-zinc-700 border-4 w-[440px] h-[550px] relative rounded">
             <Header />
             <Content friends={friends} togglemodal={togglemodal} />
         </div>

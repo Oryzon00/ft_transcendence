@@ -7,6 +7,7 @@ import { ChannelUser } from "../../../../../layouts/ChatLayout/chat.d";
 import Ban from "./Ban";
 import Kick from "./Kick";
 import Mute from "./Mute";
+import Modo from "./Modo";
 
 // Images
 
@@ -45,13 +46,14 @@ function Moderation({ id }: ModerationType) {
 	}, []);
 
 	return (
-		<div className="mx-auto w-full h-[80%] bg-slate-500">
+		<div className="mx-auto w-full h-[80%]">
 			<Header />
-			<div className=" bg-blue-500 w-[80%] m-auto mt-2 h-[90%] overflow-y-auto">
+			<div className="w-[80%] m-auto mt-2 h-[90%] overflow-y-auto">
 				{list?.map((e) => (
-					<div className="flex flex-row justify-between items-center bg-[#282b30] text-white border-b-[#1e2124] w-full  h-18 border-2 border-white">
+					<div className="flex flex-row justify-between items-center bg-[#282b30] text-white w-full  h-18 border-2 border-white">
 						<h2 className="text-2xl">{e.user.name}</h2>
 						<div className="flex flex-row">
+							<Modo id={e.user.id} channelId={id} />
 							<Mute id={e.user.id} channelId={id} />
 							<Kick id={e.user.id} channelId={id} />
 							<Ban id={e.user.id} channelId={id} />

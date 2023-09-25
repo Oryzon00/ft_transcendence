@@ -66,13 +66,13 @@ function Modo({ id }: ModoType) {
 		return (
 			<div className="w-full h-[calc(100%-4rem)]">
 				<ButtonHeader vue={vue} setVue={setVue} />
-				{vue ? <Moderation /> : <Settings id={id} />}
+				{vue ? <Moderation id={id}/> : <Settings id={id} />}
 			</div>
 		);
 	} else if (isModo) {
 		return (
 			<div className="w-full h-[calc(100%-4rem)]">
-				<Moderation />
+				<Moderation id={id}/>
 			</div>
 		);
 	} else return <div className="w-full h-[calc(100%-4rem)]">No modo</div>;

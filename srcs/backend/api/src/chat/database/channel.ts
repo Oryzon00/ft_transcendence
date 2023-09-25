@@ -9,7 +9,7 @@ import {
 	MessageSend
 } from "../dto/chat.d";
 import { Status } from "@prisma/client";
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 
 @Injectable()
 class ChannelDatabase {
@@ -149,7 +149,6 @@ class ChannelDatabase {
 		user: number,
 		admin = false
 	): Promise<Member> {
-		console.log(channel, user);
 		if (
 			(await this.prisma.member.findFirst({
 				where: {
@@ -186,7 +185,7 @@ class ChannelDatabase {
 		}
 	}
 
-	async banChannel(channel: string, user: number, reason = ""): Promise<Ban> {
+	async banChannel(channel: string, user: number, reason : string = ""): Promise<Ban> {
 		try {
 			return await this.prisma.ban.create({
 				data: {
@@ -277,7 +276,6 @@ class ChannelDatabase {
 	// Do not take all the user blocked
 	async getChannelMessage(
 		id: string,
-		blocked: number[]
 	): Promise<MessageSend[]> {
 		let res: MessageSend[] = [];
 		const messages: Message[] = await this.prisma.message.findMany({
@@ -296,7 +294,7 @@ class ChannelDatabase {
 				avatar: "",
 				username: ""
 			};
-			if (!(messages[i].authorId in blocked)) {
+			try {
 				let user: User = await this.prisma.user.findFirst({
 					where: {
 						id: messages[i].authorId
@@ -304,16 +302,19 @@ class ChannelDatabase {
 				});
 				add.username = user.name;
 				add.avatar = user.image;
-				res.push(add);
 			}
+			catch {
+				throw new NotFoundException();
+			}
+			res.push(add);
 		}
 		return res;
 	}
 
 	async getChannelUser(
 		id: string
-	): Promise<{ user: { id: number; name: string } }[]> {
-		return await this.prisma.member.findMany({
+	): Promise<{ user: { id: number; name: string, image: string } }[]> {
+		const res : { user: { id: number; name: string; image: string } }[] = await this.prisma.member.findMany({
 			where: {
 				channelId: id
 			},
@@ -321,11 +322,13 @@ class ChannelDatabase {
 				user: {
 					select: {
 						id: true,
-						name: true
+						name: true,
+						image: true
 					}
 				}
 			}
 		});
+		return (res);
 	}
 }
 

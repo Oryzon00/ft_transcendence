@@ -9,7 +9,6 @@ import { notifyError } from "../../../../../utils/notify";
 import { ChannelAllInfo } from "../../../../../layouts/ChatLayout/chat.d";
 import Status from "./Status";
 import Save from "./Save";
-import Password from "../../../CreateChannel/Password/Password";
 
 type SettingsType = {
 	id: string;
@@ -19,7 +18,6 @@ export default function Settings({ id }: SettingsType) {
 	const [name, setName] = useState("");
 	const [description, setDescription] = useState("");
 	const [status, setStatus] = useState("");
-	const [icon, setIcon] = useState("");
 	const [password, setPassword] = useState("");
 
 	const InfoChannel = () => {

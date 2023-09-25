@@ -1,5 +1,5 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { Block, Channel, Member, Message, Status, User } from "@prisma/client";
+import { HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { Channel, Member, Message, Status, User } from "@prisma/client";
 import UserDatabase from "./database/user";
 import ChannelDatabase from "./database/channel";
 import {
@@ -7,7 +7,6 @@ import {
 	ChannelChangement,
 	ChannelCreation,
 	ChannelInfo,
-	ChannelInvitation,
 	ChannelJoin,
 	ChannelKick,
 	ChannelMute,
@@ -15,11 +14,11 @@ import {
 	ChannelPayload,
 	ListChannel,
 	ListName,
-	MessagePayload,
 	MessageWrite
 } from "./dto/chat";
 import { PrismaService } from "src/prisma/prisma.service";
 import { ChatGateway } from "./chat.gateway";
+import { NotFoundError } from "rxjs";
 
 @Injectable()
 export class ChatService {
@@ -30,26 +29,14 @@ export class ChatService {
 		private prisma: PrismaService
 	) {}
 
-	listBlocked(blocked: Block[]): number[] {
-		if (blocked == undefined) return [];
-		let res: number[] = [];
-		for (let i = 0; i < blocked.length; i++) res.push(blocked[i].isBlockId);
-		return res;
-	}
-
-	// Get all data of one user on connection
 	async getData(user: User): Promise<ListChannel> {
 		const members: Member[] = await this.userdb.getMembers(user.id);
-		const blocked: number[] = this.listBlocked(
-			await this.userdb.listBlockedUser(user.id)
-		);
 		let res: ListChannel = {};
 
 		if (members != undefined) {
 			for (let i: number = 0; i < members.length; i++)
 				res[members[i].channelId] = await this.getChannel(
 					members[i].channelId,
-					blocked,
 					user.id
 				);
 		}
@@ -58,9 +45,6 @@ export class ChatService {
 
 	async getDirect(user: User): Promise<ListChannel> {
 		const members: Member[] = await this.userdb.getMembers(user.id);
-		const blocked: number[] = this.listBlocked(
-			await this.userdb.listBlockedUser(user.id)
-		);
 		let res: ListChannel = {};
 
 		if (members != undefined) {
@@ -70,7 +54,6 @@ export class ChatService {
 
 	async getChannel(
 		channelId: string,
-		blocked: number[],
 		userId: number
 	): Promise<ChannelPayload> {
 		const channel: Channel = await this.channeldb.getChannelInfoId(
@@ -79,7 +62,6 @@ export class ChatService {
 		);
 		const messages: Message[] = await this.channeldb.getChannelMessage(
 			channelId,
-			blocked
 		);
 		return await {
 			id: channel.id,
@@ -187,13 +169,6 @@ export class ChatService {
 		return res;
 	}
 
-	/*
-	async allChannel(user: User) {
-		const publicChannel: Channel[] = await this.publicChannel(user);
-		const privateChannel: Channel[] = await this.protectedChannel(user);
-		return publicChannel.concat(privateChannel);
-	}
-	*/
 	async searchChannel(
 		user: User,
 		body: { name: string }
@@ -206,22 +181,6 @@ export class ChatService {
 		res = this.fusionSameName(user.id, body.name, publicChannel, res);
 		res = this.fusionSameName(user.id, body.name, protectChannel, res);
 		return await res;
-	}
-
-	async getBlocked(user: User): Promise<string[]> {
-		const listblocked: number[] = this.listBlocked(
-			await this.userdb.listBlockedUser(user.id)
-		);
-		if (listblocked == undefined || listblocked.length == 0) return [];
-		return await this.userdb.getUserFromId(listblocked);
-	}
-
-	async block(user: User, body: ListName) {
-		this.userdb.addBlock(user.id, body.name);
-	}
-
-	async unblock(user: User, body: ListName) {
-		this.userdb.unBlock(user.id, body.name);
 	}
 
 	async joinChannel(
@@ -237,39 +196,31 @@ export class ChatService {
 			(searchChannel.status == Status.PROTECT &&
 				searchChannel.password != channel.password)
 		) {
-			console.log("joinNull");
 			throw new UnauthorizedException();
 		}
 		if (this.channeldb.findBanChannel(channel.id, user.id) == undefined) {
-			console.log("joinBan");
 			throw new UnauthorizedException();
 		}
 		await this.channeldb.joinChannel(searchChannel.id, user.id);
 		return this.getChannel(
 			searchChannel.id,
-			this.listBlocked(await this.userdb.listBlockedUser(user.id)),
 			user.id
 		);
 	}
 
-	async invite(user: User, channel: ChannelInvitation) {
-		if ((await this.userdb.findMember(user.id, channel.id)) == undefined)
-			throw new UnauthorizedException();
-		if (
-			this.channeldb.findBanChannel(channel.id, channel.invited) ==
-			undefined
-		)
-			throw new UnauthorizedException();
-		this.channeldb.joinChannel(channel.id, channel.invited);
-	}
 
 	async deleteMember(channelId: string, userId: number) {
-		const channel: Channel = await this.prisma.channel.findFirst({
-			where: {
-				id: channelId
-			}
-		});
-		if (channel.direct) return;
+		try {
+			const channel: Channel = await this.prisma.channel.findFirst({
+				where: {
+					id: channelId
+				}
+			});
+			if (channel.direct) return;
+		}
+		catch (error){
+			throw new UnauthorizedException();
+		}
 		const find: Member = await this.userdb.findMember(userId, channelId);
 		if (find == undefined) throw new UnauthorizedException();
 		await this.prisma.member.delete({
@@ -278,13 +229,11 @@ export class ChatService {
 	}
 
 	async quitChannel(user: User, channelId: { id: string }) {
-		console.log(channelId.id);
 		this.deleteMember(channelId.id, user.id);
 	}
 
 	// it's just quit with a1C274C check if you are a modo
 	async kick(user: User, body: ChannelKick) {
-		console.log();
 		if (!(await this.userdb.isModo(user.id, body.id)))
 			throw new UnauthorizedException();
 		this.deleteMember(body.id, body.invited);
@@ -309,20 +258,29 @@ export class ChatService {
 		if (!(await this.userdb.isModo(user.id, body.id)))
 			throw new UnauthorizedException();
 		const find: Member = await this.userdb.findMember(body.muted, body.id);
-		this.prisma.member.update({
-			where: {
-				id: find.id
-			},
-			data: {
-				mute: false
-			}
-		});
+		try {
+			this.prisma.member.update({
+				where: {
+					id: find.id
+				},
+				data: {
+					mute: false
+				}
+			});
+		}
+		catch {
+			throw new NotFoundException();
+		}
 	}
 
 	async ban(user: User, body: ChannelBan) {
 		const banned: User = await this.userdb.getUser(body.invited);
-		if (!(await this.userdb.isModo(user.id, body.id)))
-			throw new UnauthorizedException();
+		/*
+		if (await this.userdb.isModo(banned.id, body.id)) {
+			return ;
+			//throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+		}
+		*/
 		this.channeldb.banChannel(body.id, body.invited);
 		this.deleteMember(body.id, body.invited);
 	}
@@ -364,7 +322,6 @@ export class ChatService {
 
 	async createDirect(user: number[]): Promise<ChannelPayload> {
 		if ((await this.channeldb.findDirectChannel(user)) != null) return null;
-		console.log("salut");
 		const channel: Channel = await this.channeldb.createDirect(user);
 		let res: ChannelPayload = {
 			id: channel.id,
@@ -387,7 +344,12 @@ export class ChatService {
 					channelId: channelId
 				}
 			});
-			if (member.length > 1) member.pop();
+			if (member.length > 1)
+			{
+				(member[0].userId == userId) ?
+					member[0] =  member[1] :
+					member[1] = member[0]
+			}
 			return await this.prisma.user.findFirst({
 				where: { id: member[0].userId }
 			});

@@ -15,13 +15,12 @@ function Ban({ id, channelId }: BanType) {
 				Authorization: "Bearer " + getJwtTokenFromCookie(),
 				"Content-type": "application/json"
 			},
-			body: JSON.stringify({ id: id, invited: channelId })
+			body: JSON.stringify({ id: channelId, invited: id })
 		})
 			.then(function (res: Response) {
 				if (!res.ok) {
 					throw new Error("Request failed with status " + res.status);
 				}
-				return res.json();
 			})
 			.catch(function (error) {
 				notifyError(error.message);

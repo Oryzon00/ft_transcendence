@@ -1,4 +1,4 @@
-import { ChannelPayload, ListChannel } from "../../layouts/ChatLayout/chat.d";
+import { ListChannel } from "../../layouts/ChatLayout/chat.d";
 import Community from "./Community/Community";
 import CreateChannel from "./CreateChannel/CreateChannel";
 import CreateDirect from "./CreateDirect/CreateDirect";
@@ -18,7 +18,6 @@ function OverlayPopup({
 	togglecreation,
 	community,
 	togglecommunity,
-	channel,
 	setChannel,
 	direct
 }: OverlayPopupType) {

@@ -28,7 +28,7 @@ function Content({ channels, clickedChannel }: ContentType) {
 	if (channels.length == 0)
 		return (
 			<div className="flex flex-col items-center justify-center h-[90%]">
-				<p className="text-black text-3xl">No channel</p>
+				<p className="text-white text-3xl">No channel</p>
 			</div>
 		);
 	return (
