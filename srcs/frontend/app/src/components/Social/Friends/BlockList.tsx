@@ -1,27 +1,26 @@
 import { useEffect, useState } from "react";
 import apiAddress from "../../../utils/apiAddress.ts";
 import getJwtTokenFromCookie from "../../../utils/getJWT.ts";
-import {throwErrorMessage} from "../../../utils/throwErrorMessage.ts";
-import {notifyError} from "../../../utils/notify.ts";
+import { throwErrorMessage } from "../../../utils/throwErrorMessage.ts";
+import { notifyError } from "../../../utils/notify.ts";
 import { Link } from "react-router-dom";
 import UnblockButton from "./UnblockButton.tsx";
 
-function BlockList () {
-	const [data, setData]:any = useState(null); // Utiliser un array
+function BlockList() {
+	const [data, setData]: any = useState(null); // Utiliser un array
 	let listFriend = null;
 
-	function getBlocked () {
+	function getBlocked() {
 		let url = apiAddress + "/user/getBlocked";
-		fetch (url, {
+		fetch(url, {
 			method: "GET",
 			headers: {
 				Authorization: "Bearer " + getJwtTokenFromCookie(),
 				"Content-Type": "application/json"
-			},
+			}
 		})
 			.then(function (response) {
-				if (!response.ok)
-					throwErrorMessage(response);
+				if (!response.ok) throwErrorMessage(response);
 				return response.json();
 			})
 			.then(function (result) {
@@ -32,39 +31,41 @@ function BlockList () {
 			});
 	}
 
- 	useEffect (() => {
+	useEffect(() => {
 		getBlocked();
 		const interval = window.setInterval(() => {
-			getBlocked()
+			getBlocked();
 		}, 1000);
 
 		return () => window.clearInterval(interval);
 	}, []);
 
-	 if (data !== null) {
-		 listFriend = data.friends.map((friend :any) => (
-			 <li key={friend.id}>
-				 <div className="friends-friendlist-component">
+	if (data !== null) {
+		listFriend = data.friends.map((friend: any) => (
+			<li key={friend.id}>
+				<div className="friends-friendlist-component">
 					<div>
-						<Link to={'/profile/' + friend.name}>
-				        	<img src={friend.image}></img>
+						<Link
+							to={"/profile/" + friend.name}
+							className="shrink-0"
+						>
+							<img src={friend.image}></img>
 						</Link>
 					</div>
 					<div className="friends-friendlist-name">
 						<p>{friend.name}</p>
 					</div>
 					<UnblockButton username={friend.name} />
-				 </div>
-			 </li>
-		 ));
-	 }
+				</div>
+			</li>
+		));
+	}
 
 	return (
 		<div className="social-list">
 			<ul>{listFriend}</ul>
 		</div>
-
-	)
+	);
 }
 
 export default BlockList;

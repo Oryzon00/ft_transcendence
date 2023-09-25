@@ -205,7 +205,7 @@ export class UserService {
 					friends: true
 				}
 			});
-			return { friends: fullUser.friends }; //ARRAY PAS SAFE LEAK D'INFO PRIVE
+			return { friends: fullUser.friends };  
 		} catch {
 			throw new NotFoundException();
 		}
@@ -221,7 +221,7 @@ export class UserService {
 					pendingFriends: true
 				}
 			});
-			return { friends: fullUser.pendingFriends }; //ARRAY PAS SAFE LEAK D'INFO PRIVE
+			return { friends: fullUser.pendingFriends };  
 		} catch {
 			throw new NotFoundException();
 		}
@@ -237,7 +237,7 @@ export class UserService {
 					blockedUsers: true
 				},
 			});
-			return ({friends: fullUser.blockedUsers}); //ARRAY PAS SAFE LEAK D'INFO PRIVE
+			return ({friends: fullUser.blockedUsers});  
 		} catch {
 			throw new NotFoundException();
 		}
@@ -360,7 +360,7 @@ export class UserService {
 				},
 				take: 3
 			});
-			return { leaderboard: fullUser }; //ARRAY PAS SAFE LEAK D'INFO PRIVE
+			return { leaderboard: fullUser };  
 		} catch {
 			throw new NotFoundException();
 		}
@@ -374,7 +374,7 @@ export class UserService {
 				},
 				skip: 3
 			});
-			return ({leaderboard: fullUser}); //ARRAY PAS SAFE LEAK D'INFO PRIVE
+			return ({leaderboard: fullUser});  
 		} catch {
 			throw new NotFoundException();
 		}
