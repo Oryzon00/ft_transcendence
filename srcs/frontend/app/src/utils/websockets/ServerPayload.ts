@@ -43,4 +43,12 @@ export type ServerPayload = {
     [ServerEvents.Pong]: {
         message: string;
     }
+
+	[ServerEvents.QueueJoined]: {
+
+	}
+
+	[ServerEvents.QueueLeft]: {
+		
+	}
 }

@@ -6,7 +6,9 @@ function LeaderboardLayout() {
 	return (
 		<div className="leaderboard-main">
 			<LeaderboardFirsts />
-			<span className="leaderboard-mc">Meow t'es trop Low Bebou Nyaa~</span>
+			<div style={{width: '100vw', textAlign: 'center', overflow: 'hidden'}}>
+				<span className="leaderboard-mc">Meow t'es trop Low Bebou Nyaa~</span>
+			</div>
 			<LeaderboardOthers />
 		</div>
 	)

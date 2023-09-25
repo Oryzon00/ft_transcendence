@@ -4,7 +4,7 @@ import SocketWrapper, {
 } from "../../utils/websockets/SocketWrapper";
 import { ClientEvents } from "../../utils/websockets/types";
 
-export function QuitQueueButton() {
+export function QuitQueueButton({ show }: { show: boolean }) {
 	const sm: SocketWrapper = useContext(SocketWrapperContext);
 
 	function QuitQueue() {
@@ -14,15 +14,18 @@ export function QuitQueueButton() {
 		});
 	}
 
-	return (
-			 <button className="bg-[#1a1a1a] hover:bg-[#323232] text-white font-bold py-2 px-4 border-2 border-amber-800" onClick={QuitQueue}>
-				<div className="PVE-button">
-					<h1>
-						Quit Queue
-					</h1>
-				</div>
-  			</button>
-	);
+	if (!show) {
+		return null;
+	} else {
+		return (
+			<button
+				className=" my-2 px-5 py-3 rounded-md hover:bg-red-800 text-white text border-white text-4xl font-semibold border-4 bg-zinc-500"
+				onClick={QuitQueue}
+			>
+				Quit Queue
+			</button>
+		);
+	}
 }
 
 export default QuitQueueButton;

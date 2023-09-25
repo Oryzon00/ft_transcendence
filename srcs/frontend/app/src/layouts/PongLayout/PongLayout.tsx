@@ -17,13 +17,14 @@ import { PlayRumbleButton } from "../../components/Play/PlayRumbleButton";
 import PlayPvPButton from "../../components/Play/PlayPvPButton";
 import PlayVSBotButton from "../../components/Play/PlayVSBotButton";
 import { UserContext } from "../../utils/contexts/userContext";
-import QuitQueueButton from "../../components/Play/QuitQueueButton";
+import { QuitQueueButton } from "../../components/Play/QuitQueueButton";
 
 function PongLayout() {
 	cookieProtection();
 	let userHook: UserHook = useContext(UserContext);
 	const sm: SocketWrapper = useContext(SocketWrapperContext);
 	const [inLobby, setInLobby] = useState("");
+	const [inQueue, setInQueue] = useState(false);
 
 	useEffect(() => {
 		const onGameMessage: Listener<
@@ -49,12 +50,23 @@ function PongLayout() {
 			console.log(message);
 		};
 
+		const onQueueJoined: Listener<ServerPayload[ServerEvents.QueueJoined]>
+		 = () => {setInQueue(true)};
+
+		const onQueueLeft: Listener<ServerPayload[ServerEvents.QueueLeft]>
+		 = () => {setInQueue(false)};
+
+
 		console.log("adding listeners");
 		sm.addListener(ServerEvents.GameMessage, onGameMessage);
+		sm.addListener(ServerEvents.QueueJoined, onQueueJoined);
+		sm.addListener(ServerEvents.QueueLeft, onQueueLeft);
 
 		return () => {
 			console.log("removing listeners");
 			sm.removeListener(ServerEvents.GameMessage, onGameMessage);
+			sm.removeListener(ServerEvents.QueueJoined, onQueueJoined);
+			sm.removeListener(ServerEvents.QueueLeft, onQueueLeft);
 			sm.emit({event: ClientEvents.LobbyLeave});
 		};
 	}, [userHook.user.mmr]);
@@ -66,12 +78,16 @@ function PongLayout() {
 					<Pong />
 				</div>
 			)) || (
-				<div className="play-page">
-					<PlayVSBotButton />
-					<PlayPvPButton />
-					<PlayRumbleButton />
-					<QuitQueueButton />
-				</div>
+				<>
+					<div className="play-page">
+						<PlayVSBotButton />
+						<PlayPvPButton />
+						<PlayRumbleButton />
+					</div>
+					<div className="flex flex-row justify-center items-center">
+						<QuitQueueButton show={inQueue} />
+					</div>
+				</>
 			)}
 		</>
 	);

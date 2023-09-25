@@ -166,26 +166,31 @@ export class AuthService {
 	}
 
 	async getUserData42(token: any): Promise<UserData42Dto> {
-		const requestConfig: AxiosRequestConfig = {
-			headers: {
-				Authorization: `Bearer ${token.access_token}`
-			}
-		};
-		const responseData = await lastValueFrom(
-			this.httpService
-				.get("https://api.intra.42.fr/v2/me", requestConfig)
-				.pipe(
-					map((response: AxiosResponse) => {
-						return response.data;
-					})
-				)
-		);
+		try {
+			const requestConfig: AxiosRequestConfig = {
+				headers: {
+					Authorization: `Bearer ${token.access_token}`
+				}
+			};
+			const responseData = await lastValueFrom(
+				this.httpService
+					.get("https://api.intra.42.fr/v2/me", requestConfig)
+					.pipe(
+						map((response: AxiosResponse) => {
+							return response.data;
+						})
+					)
+			);
+
 		const userData42: UserData42Dto = {
 			id: responseData.id,
 			login: responseData.login,
 			image: responseData.image.link
 		};
 		return userData42;
+		} catch (error) {
+			throw new BadGatewayException();
+		}
 	}
 
 	async login(userData42: UserData42Dto): Promise<User> {
