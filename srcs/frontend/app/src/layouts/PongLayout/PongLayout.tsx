@@ -17,12 +17,14 @@ import { PlayRumbleButton } from "../../components/Play/PlayRumbleButton";
 import PlayPvPButton from "../../components/Play/PlayPvPButton";
 import PlayVSBotButton from "../../components/Play/PlayVSBotButton";
 import { UserContext } from "../../utils/contexts/userContext";
+import { QuitQueueButton } from "../../components/Play/QuitQueueButton";
 
 function PongLayout() {
 	cookieProtection();
 	let userHook: UserHook = useContext(UserContext);
 	const sm: SocketWrapper = useContext(SocketWrapperContext);
 	const [inLobby, setInLobby] = useState("");
+	const [inQueue, setInQueue] = useState(true);
 
 	useEffect(() => {
 		const onGameMessage: Listener<
@@ -64,11 +66,16 @@ function PongLayout() {
 					<Pong />
 				</div>
 			)) || (
-				<div className="play-page">
-					<PlayVSBotButton />
-					<PlayPvPButton />
-					<PlayRumbleButton />
-				</div>
+				<>
+					<div className="play-page">
+						<PlayVSBotButton />
+						<PlayPvPButton />
+						<PlayRumbleButton />
+					</div>
+					<div className="flex flex-row justify-center items-center">
+						<QuitQueueButton show={inQueue} />
+					</div>
+				</>
 			)}
 		</>
 	);

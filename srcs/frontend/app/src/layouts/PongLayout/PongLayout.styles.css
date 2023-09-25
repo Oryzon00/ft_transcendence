@@ -43,16 +43,21 @@
 	flex-direction: column;
 	align-items: flex-start;
 	padding: 25px;
-	font-size: 28px;
+	font-size: 24px;
 }
 
 .PVE-button-li li {
 	padding: 20px;
+	text-align: start;
 }
 
 .play-page {
 	display: flex;
-	flex-direction: row;
 	justify-content: space-around;
 	padding-top: 50px;
+	flex-wrap: wrap;
+}
+
+.play-page h1 {
+	font-size: 35px;
 }
