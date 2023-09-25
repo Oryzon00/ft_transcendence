@@ -150,7 +150,6 @@ export class ChatController {
 			user.id,
 			body.id
 		);
-		console.log(oUser);
 		return { name: oUser.name, image: oUser.image };
 	}
 

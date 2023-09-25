@@ -1,27 +1,27 @@
 import { useEffect } from "react";
 import Header from "./Header";
-import { Friends} from "../../../layouts/ChatLayout/chat.d";
+import { Friends } from "../../../layouts/ChatLayout/chat.d";
 import apiAddress from "../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../utils/getJWT";
 import { notifyError } from "../../../utils/notify";
-import Content from "./Content"
+import Content from "./Content";
 import useUser from "../../../utils/hooks/useUser";
 import { UserHook } from "../../../utils/hooks/TuseUser";
 
 type CreateDirectType = {
-    togglemodal: any;
-}
-function CreateDirect({togglemodal} : CreateDirectType) {
+	togglemodal: any;
+};
+function CreateDirect({ togglemodal }: CreateDirectType) {
 	const user: UserHook = useUser();
-	let friends : Friends[] = [
-					{
-						id: user.user.id,
-						name: user.user.name,
-						image: user.user.image
-					}
+	let friends: Friends[] = [
+		{
+			id: user.user.id,
+			name: user.user.name,
+			image: user.user.image
+		}
 	];
 
-    const listFriends = () => {
+	const listFriends = () => {
 		fetch(apiAddress + "/user/friends/get", {
 			method: "GET",
 			headers: {
@@ -34,24 +34,26 @@ function CreateDirect({togglemodal} : CreateDirectType) {
 				}
 				return res.json();
 			})
-			.then(function (data : Friends[]): void {
-				if (data.length > 0 && data[0].id != undefined) { friends = (data); }
+			.then(function (data: Friends[]): void {
+				if (data.length > 0 && data[0].id != undefined) {
+					friends = data;
+				}
 			})
 			.catch(function (error) {
 				notifyError(error.message);
 			});
-    }
+	};
 
-    useEffect(() => {
-        listFriends();
-    }, [])
+	useEffect(() => {
+		listFriends();
+	}, []);
 
-    return (
+	return (
 		<div className="flex flex-col bg-zinc-700 border-4 w-[440px] h-[550px] relative rounded">
-            <Header />
-            <Content friends={friends} togglemodal={togglemodal} />
-        </div>
-    );
+			<Header />
+			<Content friends={friends} togglemodal={togglemodal} />
+		</div>
+	);
 }
 
 export default CreateDirect;

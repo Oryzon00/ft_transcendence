@@ -1,4 +1,4 @@
-import { ChannelPayload, ListChannel } from "../../layouts/ChatLayout/chat.d";
+import { ListChannel } from "../../layouts/ChatLayout/chat.d";
 import ChannelBoard from "./ChannelBoard/ChannelBoard";
 import ChannelBoardButton from "./ChannelBoard/ChannelBoardButton";
 

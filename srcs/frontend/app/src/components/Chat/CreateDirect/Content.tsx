@@ -21,9 +21,7 @@ const createDirectMessage = (id: number) => {
 			if (!res.ok) {
 				throw new Error("Request failed with status " + res.status);
 			}
-			return res.json();
 		})
-		.then(function () {})
 		.catch(function (error) {
 			notifyError(error.message);
 		});
@@ -42,7 +40,7 @@ function Content({ friends, togglemodal }: ContentType) {
 				>
 					<img
 						src={friend.image}
-						className="h-12 w-12 rounded-full mb-2 cursor-pointer"
+						className="h-12 w-12 rounded-full ml-2 m-auto cursor-pointer"
 					/>
 					<p className="text-3xl font-bold text-center w-full">
 						{friend.name}

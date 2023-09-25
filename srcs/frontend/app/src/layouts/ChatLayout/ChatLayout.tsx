@@ -19,6 +19,7 @@ function ChatLayout() {
 	// Info on room
 	const [current, setCurrent] = useState("");
 	const [channel, setChannel] = useState<ListChannel>({});
+	const [init, setInit] = useState(false);
 
 	const [creation, setCreation] = useState(false);
 	const [community, setCommunity] = useState(false);
@@ -58,8 +59,10 @@ function ChatLayout() {
 	};
 
 	useEffect(() => {
-		getChatData();
-		console.log(channel);
+		if (!init) {
+			getChatData();
+			setInit(true);
+		}
 
 		// Create new channel
 		sockets.on("onChannel", (data: any) => {

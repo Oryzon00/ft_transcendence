@@ -52,11 +52,9 @@ export default function Settings({ id }: SettingsType) {
 	return (
 		<div className="w-full h-[calc(100%-8.5rem)]">
 			<div className="flex w-full">
-				<Upload />
 				<Name name={name} setName={setName} />
+				<Delete />
 			</div>
-			<Description value={description} setValue={setDescription} />
-			<Delete />
 			<Status
 				setStatus={setStatus}
 				status={status}

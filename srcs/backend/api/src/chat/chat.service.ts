@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import {
+	HttpException,
+	HttpStatus,
+	Injectable,
+	NotFoundException,
+	UnauthorizedException
+} from "@nestjs/common";
 import { Channel, Member, Message, Status, User } from "@prisma/client";
 import UserDatabase from "./database/user";
 import ChannelDatabase from "./database/channel";
@@ -61,7 +67,7 @@ export class ChatService {
 			userId
 		);
 		const messages: Message[] = await this.channeldb.getChannelMessage(
-			channelId,
+			channelId
 		);
 		return await {
 			id: channel.id,
@@ -202,12 +208,8 @@ export class ChatService {
 			throw new UnauthorizedException();
 		}
 		await this.channeldb.joinChannel(searchChannel.id, user.id);
-		return this.getChannel(
-			searchChannel.id,
-			user.id
-		);
+		return this.getChannel(searchChannel.id, user.id);
 	}
-
 
 	async deleteMember(channelId: string, userId: number) {
 		try {
@@ -217,8 +219,7 @@ export class ChatService {
 				}
 			});
 			if (channel.direct) return;
-		}
-		catch (error){
+		} catch (error) {
 			throw new UnauthorizedException();
 		}
 		const find: Member = await this.userdb.findMember(userId, channelId);
@@ -267,8 +268,7 @@ export class ChatService {
 					mute: false
 				}
 			});
-		}
-		catch {
+		} catch {
 			throw new NotFoundException();
 		}
 	}
@@ -322,7 +322,8 @@ export class ChatService {
 
 	async createDirect(user: number[]): Promise<ChannelPayload> {
 		if ((await this.channeldb.findDirectChannel(user)) != null) return null;
-		const channel: Channel = await this.channeldb.createDirect(user);
+		let channel: Channel = await this.channeldb.findDirectChannel(user);
+		if (channel == null) channel = await this.channeldb.createDirect(user);
 		let res: ChannelPayload = {
 			id: channel.id,
 			name: channel.name,
@@ -344,11 +345,10 @@ export class ChatService {
 					channelId: channelId
 				}
 			});
-			if (member.length > 1)
-			{
-				(member[0].userId == userId) ?
-					member[0] =  member[1] :
-					member[1] = member[0]
+			if (member.length > 1) {
+				member[0].userId == userId
+					? (member[0] = member[1])
+					: (member[1] = member[0]);
 			}
 			return await this.prisma.user.findFirst({
 				where: { id: member[0].userId }

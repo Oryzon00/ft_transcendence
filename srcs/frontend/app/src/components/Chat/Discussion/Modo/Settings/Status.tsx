@@ -7,7 +7,7 @@ type StatusType = {
 
 function Status({ status, setStatus, password, setPassword }: StatusType) {
 	return (
-		<div>
+		<div className="flex w-full">
 			<select name="selectedStatus" defaultValue={status}>
 				<option value="public" onClick={setStatus("public")}>
 					Public

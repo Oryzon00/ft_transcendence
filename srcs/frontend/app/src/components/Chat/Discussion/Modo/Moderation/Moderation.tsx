@@ -51,7 +51,7 @@ function Moderation({ id }: ModerationType) {
 			<div className="w-[80%] m-auto mt-2 h-[90%] overflow-y-auto">
 				{list?.map((e) => (
 					<div className="flex flex-row justify-between items-center bg-[#282b30] text-white w-full  h-18 border-2 border-white">
-						<h2 className="text-2xl">{e.user.name}</h2>
+						<h2 className="text-2xl px-2">{e.user.name}</h2>
 						<div className="flex flex-row">
 							<Modo id={e.user.id} channelId={id} />
 							<Mute id={e.user.id} channelId={id} />
