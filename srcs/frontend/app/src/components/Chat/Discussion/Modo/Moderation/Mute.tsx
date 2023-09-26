@@ -30,8 +30,12 @@ function Mute({ id, channelId }: MuteType) {
 			});
 	};
 	return isClicked ? (
-		<div>
-			<input type="text" />
+		<div className="flex">
+			<div>
+			<input type="time" name="time" placeholder="hrs:mins"/>
+			<input type="date" />
+			</div>
+			<button>Mute</button>
 		</div>
 	) : (
 		<button

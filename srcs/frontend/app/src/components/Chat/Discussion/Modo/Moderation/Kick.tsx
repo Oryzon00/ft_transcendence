@@ -21,7 +21,6 @@ function Kick({ id, channelId }: KickType) {
 				if (!res.ok) {
 					throw new Error("Request failed with status " + res.status);
 				}
-				return res.json();
 			})
 			.catch(function (error) {
 				notifyError(error.message);

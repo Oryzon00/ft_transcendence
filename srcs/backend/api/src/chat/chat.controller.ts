@@ -168,4 +168,12 @@ export class ChatController {
 	): Promise<boolean> {
 		return await this.User.isModo(user.id, body.id);
 	}
+
+	@Post("/fight")
+	async Fight(
+		@GetUser() user: User,
+		@Body() body: {id: string}
+	) {
+		this.ChatService.message(user, {channelId: body.id, authorId: user.id, content: "here for the fight"})
+	}
 }
