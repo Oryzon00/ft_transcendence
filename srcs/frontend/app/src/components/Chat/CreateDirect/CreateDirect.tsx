@@ -1,25 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Header from "./Header";
 import { Friends } from "../../../layouts/ChatLayout/chat.d";
 import apiAddress from "../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../utils/getJWT";
 import { notifyError } from "../../../utils/notify";
 import Content from "./Content";
-import useUser from "../../../utils/hooks/useUser";
-import { UserHook } from "../../../utils/hooks/TuseUser";
 
 type CreateDirectType = {
 	togglemodal: any;
 };
 function CreateDirect({ togglemodal }: CreateDirectType) {
-	const user: UserHook = useUser();
-	let friends: Array<Friends> = [
-		{
-			id: user.user.id,
-			image: user.user.image,
-			name: user.user.name
-		}
-	];
+	const [friends, setFriends] = useState<Friends[]>([]);
 
 	const listFriends = () => {
 		fetch(apiAddress + "/user/friends/get", {
@@ -35,14 +26,7 @@ function CreateDirect({ togglemodal }: CreateDirectType) {
 				return res.json();
 			})
 			.then(function (data): void {
-				if (data.length == undefined || data.length <= 0) return;
-				data.map((value: Friends) => {
-					friends.push({
-						id: value.id,
-						image: value.image,
-						name: value.name
-					});
-				});
+				setFriends(data.friends);
 			})
 			.catch(function (error) {
 				notifyError(error.message);
