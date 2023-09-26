@@ -32,6 +32,7 @@ class GameInfo {
 	myScore: number | undefined = 0;
 	OpponentScore: number | undefined = 0;
 	opponentName: string = "";
+	timer: number = 0;
 }
 
 function Pong() {
@@ -41,6 +42,7 @@ function Pong() {
 	const [GameState] = useState<GameInfo>(new GameInfo());
 	const [MyScoreState, setMyScoreState] = useState(0);
 	const [OppScoreState, setOppScoreState] = useState(0);
+	const [TimerState, setTimerState] = useState(0);
 	const clientId: string | null = sm.getSocketId();
 	let keyPressed: Array<Boolean> = new Array<Boolean>(false, false);
 	const [sideState, setsideState] = useState(false);
@@ -60,6 +62,7 @@ function Pong() {
 			GameState.powerUpPosition = data.powerUpPosition;
 			GameState.powerUpType = data.powerUpType;
 			GameState.ballSpeedUp = data.ballSpeedUp;
+			setTimerState(data.timeleft);
 
 			for (let [Id, value] of Object.entries(data.scores)) {
 				if (Id === clientId) {
@@ -273,8 +276,8 @@ function Pong() {
 	return (
 		<>
 			<div>
-				{(sideState == false && <PongScores player1={userData.user.name} score1={MyScoreState} player2={GameState.opponentName} score2={OppScoreState}/>)
-				 || <PongScores player2={userData.user.name} score2={MyScoreState} player1={GameState.opponentName} score1={OppScoreState}/>}
+				{(sideState == false && <PongScores player1={userData.user.name} score1={MyScoreState} player2={GameState.opponentName} score2={OppScoreState} timer={TimerState}/>)
+				 || <PongScores player2={userData.user.name} score2={MyScoreState} player1={GameState.opponentName} score1={OppScoreState} timer={TimerState}/>}
 				<canvas ref={canvasRef} width={800} height={800} />
 			</div>
 		</>
