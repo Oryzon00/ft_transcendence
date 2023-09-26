@@ -12,7 +12,7 @@ function Bottom({ setPosition, password, enter, confirm }: BottomType) {
 	return (
 		<div
 			id="bottom"
-			className="absolute w-full h-[18%] bottom-0 inset-x-0 bg-[#eaecee] flex justify-between"
+			className="absolute w-full h-[99px] bottom-0 inset-x-0 bg-[#eaecee] flex justify-between"
 		>
 			<button
 				className={bottom_button_style + " ml-4"}
