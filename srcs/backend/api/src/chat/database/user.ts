@@ -101,6 +101,9 @@ class UserDatabase {
 				}
 			})
 		}
+		catch (error) {
+			console.log(error);
+		}
 	}
 
 	async isOwner(userId: number, channelId: string): Promise<boolean> {
