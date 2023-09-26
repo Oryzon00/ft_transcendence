@@ -5,7 +5,6 @@ import {
 	UseGuards,
 	Patch,
 	Body,
-	Put,
 	UnauthorizedException
 } from "@nestjs/common";
 import { ChatService } from "./chat.service";
@@ -21,11 +20,9 @@ import {
 	ChannelKick,
 	ChannelMute,
 	ListChannel,
-	ListName,
 	MessageWrite
 } from "./dto/chat";
 import UserDatabase from "./database/user";
-import { channel } from "diagnostics_channel";
 
 @UseGuards(JwtGuard)
 @Controller("chat")
@@ -167,6 +164,14 @@ export class ChatController {
 		@Body() body: { id: string }
 	): Promise<boolean> {
 		return await this.User.isModo(user.id, body.id);
+	}
+
+	@Post("/channel/modo/change")
+	async changeModo(
+		@GetUser() user: User,
+		@Body() body: {userId: number, channelId: string}
+	) {
+		this.ChatService.changeModo(user, body);
 	}
 
 	@Post("/fight")

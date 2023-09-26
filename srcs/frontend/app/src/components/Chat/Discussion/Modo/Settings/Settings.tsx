@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import Upload from "./upload-images";
 import Name from "./name";
-import Description from "./Description";
 import Delete from "./Delete";
 import apiAddress from "../../../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../../../utils/getJWT";

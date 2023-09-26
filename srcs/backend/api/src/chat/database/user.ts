@@ -30,6 +30,20 @@ class UserDatabase {
 			return error;
 		}
 	}
+	async specificMember(userId : number, channelId: string) : Promise<Member[]> {
+		try {
+			return await this.prisma.member.findMany({
+				where: {
+					channelId: channelId,
+					userId: userId,
+				}
+			})
+		}
+		catch (error) {
+			return error;
+		}
+	}
+
 	async getAllChannels(userid: number): Promise<{ channelId: string }[]> {
 		try {
 			return await this.prisma.member.findMany({
@@ -71,6 +85,21 @@ class UserDatabase {
 			return res.isAdmin;
 		} catch (error) {
 			return error;
+		}
+	}
+
+
+	async changeModo(userId: number, channelId: string) {
+		try {
+			const member : Member[] = await this.specificMember(userId, channelId);
+			await this.prisma.member.update({
+				where: {
+					id: member[0].id
+				},
+				data: {
+					isAdmin: !member[0].isAdmin
+				}
+			})
 		}
 	}
 

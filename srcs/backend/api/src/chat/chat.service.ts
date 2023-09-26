@@ -1,6 +1,4 @@
 import {
-	HttpException,
-	HttpStatus,
 	Injectable,
 	NotFoundException,
 	UnauthorizedException
@@ -24,7 +22,6 @@ import {
 } from "./dto/chat";
 import { PrismaService } from "src/prisma/prisma.service";
 import { ChatGateway } from "./chat.gateway";
-import { NotFoundError } from "rxjs";
 
 @Injectable()
 export class ChatService {
@@ -331,6 +328,11 @@ export class ChatService {
 			status: this.channeldb.convertString(channel.status),
 			message: []
 		};
+		if (user[0] == user[1])
+		{
+			this.chatGateway.emit(user[0], res, "onChannel");
+			return (res);
+		}
 		res.name = String(user[1]);
 		this.chatGateway.emit(user[0], res, "onChannel");
 		res.name = String(user[0]);
@@ -356,5 +358,11 @@ export class ChatService {
 		} catch (error) {
 			return error;
 		}
+	}
+
+	async changeModo(user: User, body : {userId: number, channelId: string}) {
+		if (!this.userdb.isOwner(user.id, body.channelId))
+			throw new UnauthorizedException();
+		this.userdb.changeModo(body.userId, body.channelId);
 	}
 }

@@ -85,7 +85,8 @@ class ChannelDatabase {
 				}
 			});
 			this.joinChannel(res.id, user[0]);
-			this.joinChannel(res.id, user[1]);
+			if (user[0] != user[1])
+				this.joinChannel(res.id, user[1]);
 			return res;
 		} catch (error) {
 			return error;
