@@ -30,6 +30,7 @@ export type ServerPayload = {
 		padPositions: Record<string, Paddle>,
 		scores: Record<string, number>,
 		playerNames: Record<string, string>,
+		timeleft: number,
 	}
 
 	[ServerEvents.GameMessage]: {

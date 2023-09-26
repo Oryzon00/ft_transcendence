@@ -243,6 +243,7 @@ export class Lobby {
 			padPositions: MapToRecord(this.game.paddles),
 			scores: MapToRecord(this.game.scores),
 			playerNames: MapToRecordName(this.clients, this.gamemode),
+			timeleft: this.game.endTimer - (new Date().getTime() - this.game.startTimer),
 		};
 
 		this.sendEvent<ServerResponseDTO[ServerEvents.LobbyState]>(
