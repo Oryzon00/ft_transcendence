@@ -28,27 +28,30 @@ const createDirectMessage = (id: number) => {
 };
 
 function Content({ friends, togglemodal }: ContentType) {
-	return (
-		<div className="bg-[#27272a] h-[70%] w-[90%] overflow-y-scroll gap-x-2 m-auto">
-			{friends.map((friend) => (
-				<div
-					className="flex flex-row items-center gap-x-3 border-2 cursor-pointer"
-					onClick={() => {
-						createDirectMessage(friend.id);
-						togglemodal();
-					}}
-				>
-					<img
-						src={friend.image}
-						className="h-12 w-12 rounded-full ml-2 m-auto cursor-pointer"
-					/>
-					<p className="text-3xl font-bold text-center w-full">
-						{friend.name}
-					</p>
-				</div>
-			))}
-		</div>
-	);
+	if (friends === undefined) return;
+	else {
+		return (
+			<div className="bg-[#27272a] h-[70%] w-[90%] overflow-y-scroll gap-x-2 m-auto">
+				{friends.map((friend: Friends) => (
+					<div
+						className="flex flex-row items-center gap-x-3 border-2 cursor-pointer"
+						onClick={() => {
+							createDirectMessage(friend.id);
+							togglemodal();
+						}}
+					>
+						<img
+							src={friend.image}
+							className="h-12 w-12 rounded-full ml-2 m-auto cursor-pointer"
+						/>
+						<p className="text-3xl font-bold text-center w-full">
+							{friend.name}
+						</p>
+					</div>
+				))}
+			</div>
+		);
+	}
 }
 
 export default Content;

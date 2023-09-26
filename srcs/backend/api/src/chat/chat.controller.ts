@@ -103,9 +103,8 @@ export class ChatController {
 	}
 
 	@Patch("/channel/settings")
-	password(@GetUser() user: User, @Body() body: ChannelChangement) {
+	settings(@GetUser() user: User, @Body() body: ChannelChangement) {
 		this.ChatService.channelChangement(user, body);
-		return null;
 	}
 
 	@Patch("/channel/kick")
@@ -169,16 +168,17 @@ export class ChatController {
 	@Post("/channel/modo/change")
 	async changeModo(
 		@GetUser() user: User,
-		@Body() body: {userId: number, channelId: string}
+		@Body() body: { userId: number; channelId: string }
 	) {
 		this.ChatService.changeModo(user, body);
 	}
 
 	@Post("/fight")
-	async Fight(
-		@GetUser() user: User,
-		@Body() body: {id: string}
-	) {
-		this.ChatService.message(user, {channelId: body.id, authorId: user.id, content: "here for the fight"})
+	async Fight(@GetUser() user: User, @Body() body: { id: string }) {
+		this.ChatService.message(user, {
+			channelId: body.id,
+			authorId: user.id,
+			content: "here for the fight"
+		});
 	}
 }
