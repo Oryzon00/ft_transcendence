@@ -31,7 +31,7 @@ function Content({ friends, togglemodal }: ContentType) {
 	if (friends === undefined) return;
 	else {
 		return (
-			<div className="bg-[#27272a] h-[70%] w-[90%] overflow-y-scroll gap-x-2 m-auto">
+			<div className="h-[70%] w-[90%] overflow-y-scroll gap-x-2 m-auto">
 				{friends.map((friend: Friends) => (
 					<div
 						className="flex flex-row items-center gap-x-3 border-2 cursor-pointer"

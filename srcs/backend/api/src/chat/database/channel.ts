@@ -24,6 +24,7 @@ class ChannelDatabase {
 			const res: Message = await this.prisma.message.create({
 				data: {
 					content: message.content,
+					link: message.link,
 					channel: {
 						connect: { id: message.channelId }
 					},
@@ -294,7 +295,8 @@ class ChannelDatabase {
 				content: messages[i].content,
 				channelId: messages[i].channelId,
 				avatar: "",
-				username: ""
+				username: "",
+				link: messages[i].link
 			};
 			try {
 				let user: User = await this.prisma.user.findFirst({

@@ -7,6 +7,7 @@ export type MessagePayload = {
 	content: string;
 	username: string;
 	avatar: string;
+	link: string;
 };
 
 export type ChannelPayload = {

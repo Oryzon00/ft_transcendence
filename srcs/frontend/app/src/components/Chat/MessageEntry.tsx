@@ -7,8 +7,6 @@ import { notifyError } from "../../utils/notify";
 import Picker from "@emoji-mart/react";
 import data from "@emoji-mart/data";
 
-import Send from "../../assets/chat/send.png";
-
 type MessageEntryType = {
 	current: string;
 	sockets: Socket;

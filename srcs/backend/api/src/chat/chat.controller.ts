@@ -178,7 +178,8 @@ export class ChatController {
 		this.ChatService.message(user, {
 			channelId: body.id,
 			authorId: user.id,
-			content: "here for the fight"
+			content: "here for the fight",
+			link: "louis put it here your link"
 		});
 	}
 }
