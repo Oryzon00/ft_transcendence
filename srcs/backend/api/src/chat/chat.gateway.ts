@@ -65,7 +65,8 @@ export class ChatGateway
 			authorId: message.authorId,
 			content: message.content,
 			username: user.name,
-			avatar: user.image
+			avatar: user.image,
+			link: message.link
 		};
 
 		users.map((user) => {

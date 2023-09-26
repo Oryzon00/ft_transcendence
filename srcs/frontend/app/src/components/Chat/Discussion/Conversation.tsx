@@ -22,7 +22,20 @@ function Conversation({ message }: ConversationType) {
 								{e.username}
 							</p>
 						</a>
-						<p>{e.content}</p>
+						{!(
+							e.link == undefined ||
+							e.link == null ||
+							e.link == ""
+						) ? (
+							<a
+								href={e.link}
+								className=" hover:underline text-blue-400"
+							>
+								{e.content}
+							</a>
+						) : (
+							<p>{e.content}</p>
+						)}
 					</div>
 				</div>
 			))}

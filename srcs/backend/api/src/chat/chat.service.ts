@@ -366,7 +366,7 @@ export class ChatService {
 		this.userdb.changeModo(body.userId, body.channelId);
 	}
 
-	async fight(user: User, channelId: string) :Promise<boolean> {
+	async fight(user: User, channelId: string) :Promise<string> {
 		let otherUser = await this.getOtherInfo(user.id, channelId);
 		
 		const realFirstUser = await this.prisma.gameProfile.findUnique ({
@@ -389,9 +389,19 @@ export class ChatService {
 				}
 			});
 
-			let gameId = prismGame.id;
 
 			await this.prisma.gameProfile.update({
+				where: {
+					userId: user.id
+				},
+				data: {
+					lobby: prismGame.id
+				}
+			});
+
+			return (prismGame.id);
+
+			/*await this.prisma.gameProfile.update({
 				where: {
 					userId: user.id
 				},
@@ -410,6 +420,8 @@ export class ChatService {
 			});
 			return (true);
 		}
-		return (false);
+		return (false);*/
+		}
+		return ('');
 	}
 }
