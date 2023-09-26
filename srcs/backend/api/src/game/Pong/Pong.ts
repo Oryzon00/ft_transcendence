@@ -220,9 +220,6 @@ export class Pong {
 					pad.upKey = false;
 				}
 			}
-			else {
-				console.log(this.paddles);
-			}
 		}
 	}
 
