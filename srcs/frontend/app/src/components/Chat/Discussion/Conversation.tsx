@@ -27,7 +27,12 @@ function Conversation({ message }: ConversationType) {
 							e.link == null ||
 							e.link == ""
 						) ? (
-							<a href={e.link}>{e.content}</a>
+							<a
+								href={e.link}
+								className=" hover:underline text-blue-400"
+							>
+								{e.content}
+							</a>
 						) : (
 							<p>{e.content}</p>
 						)}
