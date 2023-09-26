@@ -1,6 +1,7 @@
-import { ChannelPayload, ListChannel } from "../../layouts/ChatLayout/chat.d";
+import { ListChannel } from "../../layouts/ChatLayout/chat.d";
 import Community from "./Community/Community";
 import CreateChannel from "./CreateChannel/CreateChannel";
+import CreateDirect from "./CreateDirect/CreateDirect";
 
 type OverlayPopupType = {
 	creation: boolean;
@@ -9,6 +10,7 @@ type OverlayPopupType = {
 	togglecommunity: any;
 	channel: ListChannel;
 	setChannel: any;
+	direct: boolean;
 };
 
 function OverlayPopup({
@@ -16,8 +18,8 @@ function OverlayPopup({
 	togglecreation,
 	community,
 	togglecommunity,
-	channel,
 	setChannel,
+	direct
 }: OverlayPopupType) {
 	const overlay: string =
 		"w-screen h-screen fixed top-0 left-0 bg-opacity-30 bg-[#313131cc] flex justify-center items-center";
@@ -27,7 +29,14 @@ function OverlayPopup({
 			<div className="flex justify-center items-center absolute w-full h-[90%]">
 				<div className={overlay} onClick={togglecreation} />
 				<div className="absolute">
-					<CreateChannel togglemodal={togglecreation} setChannel={setChannel} />
+					{direct ? (
+						<CreateDirect togglemodal={togglecreation} />
+					) : (
+						<CreateChannel
+							togglemodal={togglecreation}
+							setChannel={setChannel}
+						/>
+					)}
 				</div>
 			</div>
 		);
@@ -36,7 +45,10 @@ function OverlayPopup({
 			<div className="flex justify-center items-center absolute w-full h-[90%]">
 				<div className={overlay} onClick={togglecommunity} />
 				<div className="absolute">
-					<Community togglemodal={togglecommunity} channel={channel} setChannel={setChannel}/>
+					<Community
+						togglemodal={togglecommunity}
+						setChannel={setChannel}
+					/>
 				</div>
 			</div>
 		);

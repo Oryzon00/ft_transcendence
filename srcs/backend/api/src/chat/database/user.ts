@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { Ban, Block, Member, User } from "@prisma/client";
-import { channel } from "diagnostics_channel";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
@@ -31,6 +30,20 @@ class UserDatabase {
 			return error;
 		}
 	}
+	async specificMember(userId : number, channelId: string) : Promise<Member[]> {
+		try {
+			return await this.prisma.member.findMany({
+				where: {
+					channelId: channelId,
+					userId: userId,
+				}
+			})
+		}
+		catch (error) {
+			return error;
+		}
+	}
+
 	async getAllChannels(userid: number): Promise<{ channelId: string }[]> {
 		try {
 			return await this.prisma.member.findMany({
@@ -75,6 +88,24 @@ class UserDatabase {
 		}
 	}
 
+
+	async changeModo(userId: number, channelId: string) {
+		try {
+			const member : Member[] = await this.specificMember(userId, channelId);
+			await this.prisma.member.update({
+				where: {
+					id: member[0].id
+				},
+				data: {
+					isAdmin: !member[0].isAdmin
+				}
+			})
+		}
+		catch (error) {
+			console.log(error);
+		}
+	}
+
 	async isOwner(userId: number, channelId: string): Promise<boolean> {
 		try {
 			const res = await this.prisma.channel.findFirst({
@@ -89,7 +120,6 @@ class UserDatabase {
 	}
 
 	async isMember(userId: number, channelId: string): Promise<boolean> {
-		console.log((await this.findMember(userId, channelId)) != null);
 		return (await this.findMember(userId, channelId)) != null;
 	}
 
@@ -171,7 +201,6 @@ class UserDatabase {
 				}
 			});
 		} catch (error) {
-			console.log(error);
 			return error;
 		}
 	}
@@ -189,11 +218,6 @@ class UserDatabase {
 			return error;
 		}
 	}
-	/*
-    joinChannel
-    quitChannel
-    blockUser
-    */
 }
 
 export default UserDatabase;

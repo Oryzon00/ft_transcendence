@@ -14,7 +14,6 @@ import ProtectedChannel from "./ProtectedPassword/ProtectedPassword";
 
 type CommunityType = {
 	togglemodal: any;
-	channel: ChannelPayload[];
 	setChannel: any;
 };
 
@@ -41,7 +40,7 @@ const fetchJoinChannel = (room: ChannelJoin, setChannel: any) => {
 		});
 };
 
-function Community({ togglemodal, channel, setChannel }: CommunityType) {
+function Community({ togglemodal, setChannel }: CommunityType) {
 	const [publicChannel, setPublic] = useState([]);
 	const [protectedChannel, setProtected] = useState([]);
 
@@ -49,6 +48,7 @@ function Community({ togglemodal, channel, setChannel }: CommunityType) {
 		id: "",
 		name: "",
 		description: "",
+		direct: false,
 		status: "",
 		message: []
 	});
@@ -98,17 +98,17 @@ function Community({ togglemodal, channel, setChannel }: CommunityType) {
 			});
 	};
 
-	const refresh = (): void => {
+	const refresh = () => {
 		ListPublicChannel();
 		ListProtectedChannel();
 	};
 
 	useEffect(() => {
 		refresh();
-	}, [current]);
+	}, []);
 
 	return (
-		<div className="flex flex-col bg-white h-[550px] w-[650px] rounded-md ">
+		<div className="flex flex-col bg-zinc-700 h-[550px] w-[650px] rounded-md border-4">
 			<Header togglemodal={togglemodal} refresh={refresh} />
 			{isClickProtected ? (
 				<ProtectedChannel
@@ -119,6 +119,7 @@ function Community({ togglemodal, channel, setChannel }: CommunityType) {
 							id: "",
 							name: "",
 							description: "",
+							direct: false,
 							status: "",
 							message: []
 						});
@@ -132,6 +133,7 @@ function Community({ togglemodal, channel, setChannel }: CommunityType) {
 							id: "",
 							name: "",
 							description: "",
+							direct: false,
 							status: "",
 							message: []
 						});
@@ -143,10 +145,15 @@ function Community({ togglemodal, channel, setChannel }: CommunityType) {
 				<Content
 					channels={publicChannel.concat(protectedChannel)}
 					clickedChannel={(e: ChannelPayload) => {
-						console.log(e.status);
-						setCurrent(e);
 						if (e.status == "PROTECT") {
+							setCurrent(e);
 							setClickProtected(!isClickProtected);
+						} else {
+							fetchJoinChannel(
+								{ id: e.id, password: "" },
+								setChannel
+							);
+							refresh();
 						}
 					}}
 				/>

@@ -5,10 +5,11 @@ import {
 	ChannelPayload,
 	ChannelCreation,
 	MessageWrite,
-	ChannelChangement
+	ChannelChangement,
+	MessageSend
 } from "../dto/chat.d";
 import { Status } from "@prisma/client";
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 
 @Injectable()
 class ChannelDatabase {
@@ -67,7 +68,43 @@ class ChannelDatabase {
 					password: channel.password
 				}
 			});
-			this.joinChannel(res.id, res.ownerId, true);
+			this.joinChannel(res.id, user, true);
+			return res;
+		} catch (error) {
+			return error;
+		}
+	}
+
+	async createDirect(user: number[]): Promise<Channel> {
+		try {
+			const res: Channel = await this.prisma.channel.create({
+				data: {
+					name: "DIRECT",
+					direct: true,
+					status: Status.PRIVATE
+				}
+			});
+			this.joinChannel(res.id, user[0]);
+			if (user[0] != user[1])
+				this.joinChannel(res.id, user[1]);
+			return res;
+		} catch (error) {
+			return error;
+		}
+	}
+
+	async findDirectChannel(user: number[]): Promise<Channel> {
+		try {
+			const res: Channel = await this.prisma.channel.findFirst({
+				where: {
+					name: "DIRECT",
+					members: {
+						every: {
+							userId: { in: user }
+						}
+					}
+				}
+			});
 			return res;
 		} catch (error) {
 			return error;
@@ -87,6 +124,8 @@ class ChannelDatabase {
 						id: channelId
 					},
 					data: {
+						name: body.name,
+						description: body.description,
 						status: this.convertStatus(body.status),
 						password: body.password
 					}
@@ -111,7 +150,6 @@ class ChannelDatabase {
 		user: number,
 		admin = false
 	): Promise<Member> {
-		console.log(channel, user);
 		if (
 			(await this.prisma.member.findFirst({
 				where: {
@@ -148,7 +186,7 @@ class ChannelDatabase {
 		}
 	}
 
-	async banChannel(channel: string, user: number, reason = ""): Promise<Ban> {
+	async banChannel(channel: string, user: number, reason : string = ""): Promise<Ban> {
 		try {
 			return await this.prisma.ban.create({
 				data: {
@@ -199,12 +237,31 @@ class ChannelDatabase {
 		});
 	}
 
-	async getChannelInfoId(id: string): Promise<Channel> {
-		return await this.prisma.channel.findUnique({
+	async getChannelInfoId(id: string, userId: number = 0): Promise<Channel> {
+		let res: Channel = await this.prisma.channel.findUnique({
 			where: {
 				id: id
 			}
 		});
+		if (res.direct && userId != 0) {
+			const member = await this.prisma.member.findMany({
+				where: {
+					channelId: id
+				},
+				include: {
+					user: true
+				}
+			});
+			if (member.length > 1) {
+				res.name =
+					member[0].user.id == userId
+						? member[1].user.name
+						: member[0].user.name;
+			} else {
+				res.name = member[0].user.name;
+			}
+		}
+		return res;
 	}
 
 	/*	
@@ -218,23 +275,47 @@ class ChannelDatabase {
 	*/
 
 	// Do not take all the user blocked
-	async getChannelMessage(id: string, blocked: number[]): Promise<Message[]> {
-		let res: Message[] = [];
+	async getChannelMessage(
+		id: string,
+	): Promise<MessageSend[]> {
+		let res: MessageSend[] = [];
 		const messages: Message[] = await this.prisma.message.findMany({
 			where: {
 				channelId: id
 			}
 		});
 		for (let i = 0; i < messages.length; i++) {
-			if (!(messages[i].authorId in blocked)) res.push(messages[i]);
+			let add: MessageSend = {
+				id: messages[i].id,
+				createdAt: messages[i].createdAt,
+				updateAt: messages[i].updateAt,
+				authorId: messages[i].authorId,
+				content: messages[i].content,
+				channelId: messages[i].channelId,
+				avatar: "",
+				username: ""
+			};
+			try {
+				let user: User = await this.prisma.user.findFirst({
+					where: {
+						id: messages[i].authorId
+					}
+				});
+				add.username = user.name;
+				add.avatar = user.image;
+			}
+			catch {
+				throw new NotFoundException();
+			}
+			res.push(add);
 		}
 		return res;
 	}
 
 	async getChannelUser(
 		id: string
-	): Promise<{ user: { id: number; name: string } }[]> {
-		return await this.prisma.member.findMany({
+	): Promise<{ user: { id: number; name: string, image: string } }[]> {
+		const res : { user: { id: number; name: string; image: string } }[] = await this.prisma.member.findMany({
 			where: {
 				channelId: id
 			},
@@ -242,11 +323,13 @@ class ChannelDatabase {
 				user: {
 					select: {
 						id: true,
-						name: true
+						name: true,
+						image: true
 					}
 				}
 			}
 		});
+		return (res);
 	}
 }
 

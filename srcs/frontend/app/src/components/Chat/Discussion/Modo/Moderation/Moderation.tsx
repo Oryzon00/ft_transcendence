@@ -4,17 +4,28 @@ import getJwtTokenFromCookie from "../../../../../utils/getJWT";
 import { notifyError } from "../../../../../utils/notify";
 import Header from "./Header";
 import { ChannelUser } from "../../../../../layouts/ChatLayout/chat.d";
+import Ban from "./Ban";
+import Kick from "./Kick";
+import Mute from "./Mute";
+import Modo from "./Modo";
 
-function Moderation() {
+// Images
+
+type ModerationType = {
+	id: string;
+};
+
+function Moderation({ id }: ModerationType) {
 	let [list, setList] = useState<ChannelUser[]>([]);
 
 	const getListUser = () => {
 		fetch(apiAddress + "/chat/channel/list", {
-			method: "GET",
+			method: "PATCH",
 			headers: {
 				Authorization: "Bearer " + getJwtTokenFromCookie(),
 				"Content-Type": "application/json"
-			}
+			},
+			body: JSON.stringify({ channelId: id })
 		})
 			.then(function (res: Response) {
 				if (!res.ok) {
@@ -31,15 +42,23 @@ function Moderation() {
 	};
 
 	useEffect(() => {
-		console.log("value : ", list);
+		getListUser();
 	}, []);
 
 	return (
-		<div className="mx-auto w-full ">
+		<div className="mx-auto w-full h-[80%]">
 			<Header />
-			<div className="bg-blue-500">
+			<div className="w-[80%] m-auto mt-2 h-[90%] overflow-y-auto">
 				{list?.map((e) => (
-					<div className="w-full flex">{e.user.name}</div>
+					<div className="flex flex-row justify-between items-center bg-[#282b30] text-white w-full  h-18 border-2 border-white">
+						<h2 className="text-2xl px-2">{e.user.name}</h2>
+						<div className="flex flex-row">
+							<Modo id={e.user.id} channelId={id} />
+							<Mute id={e.user.id} channelId={id} />
+							<Kick id={e.user.id} channelId={id} />
+							<Ban id={e.user.id} channelId={id} />
+						</div>
+					</div>
 				))}
 			</div>
 		</div>
