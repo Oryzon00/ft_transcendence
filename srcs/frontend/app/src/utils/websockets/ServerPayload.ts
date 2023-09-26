@@ -34,7 +34,7 @@ export type ServerPayload = {
 
 	[ServerEvents.GameMessage]: {
 		message: string,
-        mode: 'PvE' | 'PvP' | 'Rumble',
+        mode: 'PvE' | 'PvP' | 'Rumble' | 'Private',
 		lobbyId: string,
 		player1MMR: string,
 		player2MMR: string,
@@ -43,4 +43,12 @@ export type ServerPayload = {
     [ServerEvents.Pong]: {
         message: string;
     }
+
+	[ServerEvents.QueueJoined]: {
+
+	}
+
+	[ServerEvents.QueueLeft]: {
+		
+	}
 }

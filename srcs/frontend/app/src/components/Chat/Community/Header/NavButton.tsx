@@ -1,5 +1,5 @@
 type NavButtonType = {
-	Image: String;
+	Image: string;
 	description: string;
 	action: () => void;
 };
@@ -9,7 +9,7 @@ function NavButton({ Image, description, action = () => {} }: NavButtonType) {
 
 	return (
 		<button className={button_style} onClick={action}>
-			<img src={Image} alt={description} />
+			<img src={Image} alt={description} className=" w-6 h-6" />
 		</button>
 	);
 }

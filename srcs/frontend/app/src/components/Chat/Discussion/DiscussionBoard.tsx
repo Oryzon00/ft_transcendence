@@ -20,7 +20,6 @@ type CurrentChannel = {
 	setChannel: any;
 	current: string;
 	setCurrent: any;
-	me: UserHook;
 	sockets: Socket;
 };
 
@@ -29,7 +28,6 @@ function DiscussionBoard({
 	setChannel,
 	current,
 	setCurrent,
-	me,
 	sockets
 }: CurrentChannel) {
 	const base_css: string = "w-full h-full bg-[#282b30]";
@@ -45,13 +43,13 @@ function DiscussionBoard({
 				setChannel={setChannel}
 				setCurrent={setCurrent}
 				modoValue={modo}
-				modo={() => setModo(!modo)}
+				modo={setModo}
 			/>
 			{modo ? (
-				<Modo />
+				<Modo id={current} />
 			) : (
 				<>
-					<Conversation message={channel[current].message} me={me} />
+					<Conversation message={channel[current].message}  />
 					<MessageEntry current={current} sockets={sockets} />
 				</>
 			)}

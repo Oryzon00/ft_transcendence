@@ -155,7 +155,7 @@ function Pong() {
 			}
 
 			function drawCountdown(ctx: CanvasRenderingContext2D) {
-				if (GameState.countdown > 0) {
+				if (GameState.countdown != 0) {
 					ctx.beginPath();
 					ctx.font = 'bold 60px serif'
 					ctx.textAlign = 'center'
@@ -163,6 +163,10 @@ function Pong() {
 					if (GameState.countdown > 3000) {
 						ctx.fillStyle = 'white'
 						ctx.fillText('GOAL !', 400, 200);
+					}
+					else if (GameState.countdown < -3000) {
+						ctx.fillStyle = 'red'
+						ctx.fillText('waiting', 400, 200);
 					}
 					else if (GameState.countdown > 2000) {
 						ctx.fillStyle = 'red'

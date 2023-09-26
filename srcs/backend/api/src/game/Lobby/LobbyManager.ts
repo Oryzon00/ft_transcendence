@@ -26,10 +26,12 @@ export class LobbyManager {
 		await this.gameService.updateSocket(client);
 	}
 
-	public endSocket(client: AuthenticatedSocket): void {
+	public async endSocket(client: AuthenticatedSocket): Promise<void> {
 		for(let lobby of this.lobbies.values()) {
 			if (lobby.clients.has(client.id)) {
-				lobby.removeClient(client);
+				await lobby.removeClient(client);
+				if (!lobby.clients.size)
+					this.lobbies.delete(lobby.Id);
 			}
 		}
 	}
@@ -45,7 +47,7 @@ export class LobbyManager {
 		return lobby;
 	}
 
-	public joinLobby(client: AuthenticatedSocket, id: string): void {
+	public async joinLobby(client: AuthenticatedSocket, id: string): Promise<void> {
 		const lobby: Lobby | undefined = this.lobbies.get(id);
 
 		try {
@@ -56,7 +58,7 @@ export class LobbyManager {
 			if (lobby.clients.size >= lobby.maxClients) {
 				throw new WsException("lobby is already full.");
 			}
-			lobby.addClient(client);
+			await lobby.addClient(client);
 		} catch(error) {
 			console.log(error);
 		}

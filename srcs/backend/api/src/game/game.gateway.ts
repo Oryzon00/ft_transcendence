@@ -72,7 +72,7 @@ export class GameGateway
 			
 			let lobby = this.lobbyManager.findLobby(client.id, data.mode);
 			if (lobby) {
-				this.lobbyManager.joinLobby(client, lobby.Id);
+				await this.lobbyManager.joinLobby(client, lobby.Id);
 
 				return {
 					event: ServerEvents.GameMessage,
@@ -87,6 +87,8 @@ export class GameGateway
 			} else {
 				lobby = await this.lobbyManager.createLobby(data.mode);
 				lobby.addClient(client);
+
+				lobby.sendEvent<ServerResponseDTO[ServerEvents.QueueJoined]>(ServerEvents.QueueJoined, {});
 
 				return {
 					event: ServerEvents.GameMessage,
@@ -128,7 +130,8 @@ export class GameGateway
 	}
 
 	@SubscribeMessage(ClientEvents.LobbyLeave)
-	onLobbyLeave(client: AuthenticatedSocket): void {
-		this.lobbyManager.endSocket(client);
+	async onLobbyLeave(client: AuthenticatedSocket): Promise<void> {
+		client.emit(ServerEvents.QueueLeft);
+		await this.lobbyManager.endSocket(client);
 	}
 }
