@@ -175,10 +175,18 @@ export class ChatController {
 
 	@Post("/fight")
 	async Fight(@GetUser() user: User, @Body() body: { id: string }) {
-		this.ChatService.message(user, {
-			channelId: body.id,
-			authorId: user.id,
-			content: "here for the fight"
-		});
+		if(!await this.ChatService.fight(user, body.id)) {
+			this.ChatService.message(user, {
+				channelId: body.id,
+				authorId: user.id,
+				content: "Ntm jveux jouer"
+			});
+		} else {
+			this.ChatService.message(user, {
+				channelId: body.id,
+				authorId: user.id,
+				content: "here for the fight /play"
+			});
+		}
 	}
 }
