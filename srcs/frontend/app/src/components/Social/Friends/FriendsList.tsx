@@ -44,7 +44,6 @@ function FriendList() {
 		listFriend = data.friends.map((friend: any) => (
 			<li key={friend.id}>
 				<div className="friends-friendlist-component">
-					<div>
 						<Link
 							to={"/profile/" + friend.name}
 							className="shrink-0"
@@ -56,7 +55,6 @@ function FriendList() {
 								src={friend.image}
 							></img>
 						</Link>
-					</div>
 					<div className="friends-friendlist-name">
 						<p>{friend.name}</p>
 						<span
