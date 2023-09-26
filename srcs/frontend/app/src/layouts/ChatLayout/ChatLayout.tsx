@@ -17,15 +17,15 @@ import OverlayPopup from "../../components/Chat/OverlayPopup";
 
 function ChatLayout() {
 	// Info on room
-	const [current, setCurrent] = useState("");
+	const [current, setCurrent] = useState<string>("");
 	const [channel, setChannel] = useState<ListChannel>({});
-	const [init, setInit] = useState(false);
+	const [init, setInit] = useState<boolean>(false);
 
-	const [creation, setCreation] = useState(false);
-	const [community, setCommunity] = useState(false);
-	const [direct, setDirect] = useState(false);
+	const [creation, setCreation] = useState<boolean>(false);
+	const [community, setCommunity] = useState<boolean>(false);
+	const [direct, setDirect] = useState<boolean>(false);
 
-	const [refresh, setRefresh] = useState(false);
+	const [refresh, setRefresh] = useState<boolean>(false);
 
 	const sockets = useContext(WebsocketContext);
 

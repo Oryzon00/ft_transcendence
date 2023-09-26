@@ -9,13 +9,28 @@ function Status({ status, setStatus, password, setPassword }: StatusType) {
 	return (
 		<div className="flex w-full">
 			<select name="selectedStatus" defaultValue={status}>
-				<option value="public" onClick={setStatus("public")}>
+				<option
+					value="public"
+					onClick={() => {
+						setStatus("public");
+					}}
+				>
 					Public
 				</option>
-				<option value="private" onClick={setStatus("private")}>
+				<option
+					value="private"
+					onClick={() => {
+						setStatus("private");
+					}}
+				>
 					Private
 				</option>
-				<option value="protect" onClick={setStatus("protect")}>
+				<option
+					value="protect"
+					onClick={() => {
+						setStatus("protect");
+					}}
+				>
 					Protect
 				</option>
 			</select>

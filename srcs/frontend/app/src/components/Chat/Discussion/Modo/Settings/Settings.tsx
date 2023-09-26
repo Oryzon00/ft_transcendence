@@ -12,11 +12,10 @@ type SettingsType = {
 	id: string;
 };
 
-export default function Settings({ id }: SettingsType) {
-	const [name, setName] = useState("");
-	const [description, setDescription] = useState("");
-	const [status, setStatus] = useState("");
-	const [password, setPassword] = useState("");
+function Settings({ id }: SettingsType) {
+	const [name, setName] = useState<string>("");
+	const [status, setStatus] = useState<string>("");
+	const [password, setPassword] = useState<string>("");
 
 	const InfoChannel = () => {
 		fetch(apiAddress + "/chat/channel/get", {
@@ -36,7 +35,6 @@ export default function Settings({ id }: SettingsType) {
 			.then(function (e: ChannelAllInfo) {
 				setName(e.name);
 				setStatus(e.status.toLowerCase());
-				setDescription(e.description);
 			})
 			.catch(function (error) {
 				notifyError(error.message);
@@ -66,13 +64,9 @@ export default function Settings({ id }: SettingsType) {
 			>
 				RESET
 			</button>
-			<Save
-				id={id}
-				name={name}
-				description={description}
-				status={status}
-				password={password}
-			/>
+			<Save id={id} name={name} status={status} password={password} />
 		</div>
 	);
 }
+
+export default Settings;

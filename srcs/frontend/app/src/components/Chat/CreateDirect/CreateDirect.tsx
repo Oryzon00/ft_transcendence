@@ -13,11 +13,11 @@ type CreateDirectType = {
 };
 function CreateDirect({ togglemodal }: CreateDirectType) {
 	const user: UserHook = useUser();
-	let friends: Friends[] = [
+	let friends: Array<Friends> = [
 		{
 			id: user.user.id,
-			name: user.user.name,
-			image: user.user.image
+			image: user.user.image,
+			name: user.user.name
 		}
 	];
 
@@ -34,10 +34,15 @@ function CreateDirect({ togglemodal }: CreateDirectType) {
 				}
 				return res.json();
 			})
-			.then(function (data: Friends[]): void {
-				if (data.length > 0 && data[0].id != undefined) {
-					friends = data;
-				}
+			.then(function (data): void {
+				if (data.length == undefined || data.length <= 0) return;
+				data.map((value: Friends) => {
+					friends.push({
+						id: value.id,
+						image: value.image,
+						name: value.name
+					});
+				});
 			})
 			.catch(function (error) {
 				notifyError(error.message);
