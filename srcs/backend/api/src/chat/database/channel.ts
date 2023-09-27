@@ -1,8 +1,6 @@
-import { Message, Channel, Member, Ban, User, Block } from "@prisma/client";
+import { Message, Channel, Member, Ban, User } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 import {
-	MessagePayload,
-	ChannelPayload,
 	ChannelCreation,
 	MessageWrite,
 	ChannelChangement,
@@ -268,17 +266,6 @@ class ChannelDatabase {
 		return res;
 	}
 
-	/*	
-	async getChannelInfoName(name: string) : Promise<Channel> {
-		return (await this.prisma.channel.findUnique({
-			where: {
-				name: name,
-			}
-		}))
-	}
-	*/
-
-	// Do not take all the user blocked
 	async getChannelMessage(id: string): Promise<MessageSend[]> {
 		let res: MessageSend[] = [];
 		const messages: Message[] = await this.prisma.message.findMany({

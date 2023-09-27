@@ -1,44 +1,20 @@
 import { MessagePayload } from "../../../layouts/ChatLayout/chat.d";
+import Message from "./Message";
 
 type ConversationType = {
-	message: MessagePayload[];
+	messages: MessagePayload[];
+	blocked: number[];
 };
 
-function Conversation({ message }: ConversationType) {
+function Conversation({ messages, blocked }: ConversationType) {
+	if (blocked === undefined) return;
 	return (
 		<div className="w-full h-[79%] overflow-y-scroll gap-x-2">
-			{message.map((e) => (
-				<div className="flex gap-x-1 hover:bg-[#23262A] w-full">
-					<a href={"/profile/" + e.username}>
-						<img
-							src={e.avatar}
-							alt=""
-							className="h-12 w-12 rounded-full mb-2 cursor-pointer"
-						/>
-					</a>
-					<div>
-						<a href={"/profile/" + e.username}>
-							<p className="text-base font-bold hover:underline cursor-pointer">
-								{e.username}
-							</p>
-						</a>
-						{!(
-							e.link == undefined ||
-							e.link == null ||
-							e.link == ""
-						) ? (
-							<a
-								href={e.link}
-								className=" hover:underline text-blue-400"
-							>
-								{e.content}
-							</a>
-						) : (
-							<p>{e.content}</p>
-						)}
-					</div>
-				</div>
-			))}
+			{messages.map((message: MessagePayload) =>
+				blocked.includes(message.authorId) ? null : (
+					<Message element={message} />
+				)
+			)}
 		</div>
 	);
 }

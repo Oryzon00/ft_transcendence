@@ -7,7 +7,7 @@ import apiAddress from "../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../utils/getJWT";
 import { notifyError } from "../../../utils/notify";
 import { useEffect, useState } from "react";
-import Fight from "./Fight";
+import FightButton from "./FightButton";
 
 type HeaderType = {
 	channel: { [key: string]: ChannelPayload };
@@ -139,7 +139,7 @@ function Header({
 					</button>
 				) : null}
 				{channel[current].direct ? (
-					<Fight channelId={current}/>
+					<FightButton channelId={current} />
 				) : null}
 				<button
 					className="bg-[#282b30] h-full"

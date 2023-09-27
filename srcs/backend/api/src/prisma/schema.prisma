@@ -56,21 +56,9 @@ model User {
   channelOwner	Channel[]	@relation("owners")
   isBan			Ban[]		@relation("bans")
 
-  hasBlock		Block[]		@relation("block")
-  isBlock		Block[]		@relation("blocked")
-
   message		Message[]
 
   @@map("users")
-}
-
-model Block {
-  isBlock    User @relation("block", fields: [isBlockId], references: [id])
-  isBlockId  Int
-  hasBlock   User @relation("blocked", fields: [hasBlockId], references: [id])
-  hasBlockId Int
-
-  @@id([isBlockId, hasBlockId])
 }
 
 model GameProfile {

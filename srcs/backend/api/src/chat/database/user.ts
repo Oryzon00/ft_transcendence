@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Ban, Block, Member, User } from "@prisma/client";
+import { Ban, Member, User } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
@@ -30,16 +30,15 @@ class UserDatabase {
 			return error;
 		}
 	}
-	async specificMember(userId : number, channelId: string) : Promise<Member[]> {
+	async specificMember(userId: number, channelId: string): Promise<Member[]> {
 		try {
 			return await this.prisma.member.findMany({
 				where: {
 					channelId: channelId,
-					userId: userId,
+					userId: userId
 				}
-			})
-		}
-		catch (error) {
+			});
+		} catch (error) {
 			return error;
 		}
 	}
@@ -88,10 +87,12 @@ class UserDatabase {
 		}
 	}
 
-
 	async changeModo(userId: number, channelId: string) {
 		try {
-			const member : Member[] = await this.specificMember(userId, channelId);
+			const member: Member[] = await this.specificMember(
+				userId,
+				channelId
+			);
 			await this.prisma.member.update({
 				where: {
 					id: member[0].id
@@ -99,9 +100,8 @@ class UserDatabase {
 				data: {
 					isAdmin: !member[0].isAdmin
 				}
-			})
-		}
-		catch (error) {
+			});
+		} catch (error) {
 			console.log(error);
 		}
 	}
@@ -147,62 +147,6 @@ class UserDatabase {
 				userId: userId
 			}
 		});
-	}
-
-	async addBlock(userId: number, blockName: string): Promise<Block> {
-		try {
-			return await this.prisma.block.create({
-				data: {
-					isBlock: {
-						connect: {
-							name: blockName
-						}
-					},
-					hasBlock: {
-						connect: {
-							id: userId
-						}
-					}
-				}
-			});
-		} catch (error) {
-			return error;
-		}
-	}
-
-	async unBlock(userId: number, blockName: string) {
-		const blocked = await this.prisma.block.findFirst({
-			where: {
-				isBlock: {},
-				hasBlockId: userId
-			}
-		});
-		if (blocked != undefined) {
-			try {
-				return await this.prisma.block.delete({
-					where: {
-						isBlockId_hasBlockId: {
-							isBlockId: blocked.isBlockId,
-							hasBlockId: blocked.hasBlockId
-						}
-					}
-				});
-			} catch (error) {
-				return error;
-			}
-		}
-	}
-
-	async listBlockedUser(userId: number): Promise<Block[]> {
-		try {
-			return await this.prisma.block.findMany({
-				where: {
-					hasBlockId: userId
-				}
-			});
-		} catch (error) {
-			return error;
-		}
 	}
 
 	async getUserFromId(userId: number[]) {
