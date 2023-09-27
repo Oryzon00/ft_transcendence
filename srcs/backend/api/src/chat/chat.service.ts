@@ -365,4 +365,63 @@ export class ChatService {
 			throw new UnauthorizedException();
 		this.userdb.changeModo(body.userId, body.channelId);
 	}
+
+	async fight(user: User, channelId: string) :Promise<string> {
+		let otherUser = await this.getOtherInfo(user.id, channelId);
+		
+		const realFirstUser = await this.prisma.gameProfile.findUnique ({
+			where: {
+				userId: user.id
+			}
+		})
+
+		const realSecondUser = await this.prisma.gameProfile.findUnique ({
+			where: {
+				userId: otherUser.id
+			}
+		})
+		
+		if (realFirstUser.lobby == '' && realFirstUser.status == 'IDLE' && realSecondUser.lobby == '' && realSecondUser.status == 'IDLE') {
+
+			const prismGame: any = await this.prisma.game.create({
+				data: {
+					gamemode: 'Private'
+				}
+			});
+
+
+			await this.prisma.gameProfile.update({
+				where: {
+					userId: user.id
+				},
+				data: {
+					lobby: prismGame.id
+				}
+			});
+
+			return (prismGame.id);
+
+			/*await this.prisma.gameProfile.update({
+				where: {
+					userId: user.id
+				},
+				data: {
+					lobby: gameId
+				}
+			});
+
+			await this.prisma.gameProfile.update({
+				where: {
+					userId: otherUser.id
+				},
+				data: {
+					lobby: gameId
+				}
+			});
+			return (true);
+		}
+		return (false);*/
+		}
+		return ('');
+	}
 }
