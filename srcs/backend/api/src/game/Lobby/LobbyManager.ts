@@ -47,6 +47,31 @@ export class LobbyManager {
 		return lobby;
 	}
 
+	public async findLobbyByID(id: string): Promise<Lobby> {
+		let lobby = this.lobbies.get(id);
+		
+		if (lobby) {
+			return lobby;
+		} else {
+			let prismGame = await this.gameService.prisma.game.findFirst({
+				where: {
+					id : id,
+				},
+			});
+			if (!prismGame)
+				throw new WsException("Game does not exists");
+			else if (prismGame.isStarted)
+				throw new WsException("Game has already started");
+			else {
+				const lobby = new Lobby(this.server, 2, 'Private', this.gameService.prisma);
+
+				lobby.Id = prismGame.id;
+				this.lobbies.set(lobby.Id, lobby);
+				return lobby;
+			}
+		}
+	}
+
 	public async joinLobby(client: AuthenticatedSocket, id: string): Promise<void> {
 		const lobby: Lobby | undefined = this.lobbies.get(id);
 

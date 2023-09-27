@@ -323,6 +323,7 @@ export class Pong {
 			}
 		}
 
+
 		this.lobby.sendEvent<ServerResponseDTO[ServerEvents.GameMessage]>(
 			ServerEvents.GameMessage,
 			{

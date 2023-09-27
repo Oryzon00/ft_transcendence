@@ -44,4 +44,16 @@ export type ServerResponseDTO = {
 	[ServerEvents.QueueLeft]: {
 		
 	}
+
+	[ServerEvents.LobbyError]: {
+		message: string;
+	}
+
+	[ServerEvents.PrivateJoined]: {
+
+	}
+
+	[ServerEvents.PrivateLeft]: {
+		
+	}
 }

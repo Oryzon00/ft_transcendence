@@ -10,7 +10,9 @@ export enum ClientEvents
   LobbyJoin = 'client.lobby.join',
   LobbyLeave = 'client.lobby.leave',
 
-  MovePaddle = 'client.game.movePaddle'
+  MovePaddle = 'client.game.movePaddle',
+
+  PrivateLeave = 'client.private.leave'
 }
 
 export enum ServerEvents
@@ -28,4 +30,13 @@ export enum ServerEvents
 
   // Game
   GameMessage = 'server.game.message',
+
+  // Error
+  LobbyError = 'server.lobby.error',
+
+
+  PrivateJoined = 'server.private.join',
+
+
+  PrivateLeft = 'server.private.left',
 }
