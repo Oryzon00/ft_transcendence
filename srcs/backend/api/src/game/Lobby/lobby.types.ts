@@ -9,7 +9,9 @@ export class LobbyCreateDto
 export class LobbyJoinDto
 {
 	@IsString()
-	lobbyId: string
+	lobbyId: string;
+
+	mode: LobbyMode;
 }
 
 export type LobbyMode = 'PvE' | 'PvP' | 'Rumble' | 'Private';

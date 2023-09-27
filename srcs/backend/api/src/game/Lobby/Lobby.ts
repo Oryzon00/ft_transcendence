@@ -107,32 +107,36 @@ export class Lobby {
 				});
 
 				// console.log(loser);
+				if (this.gamemode === "PvP") {
+					let mmrUpdate: number =
+						25 +
+						(Math.round((loser.mmr - winner.mmr) / 50) > 15
+							? 15
+							: Math.round((loser.mmr - winner.mmr) / 50) < -15
+							? -15
+							: Math.round((loser.mmr - winner.mmr) / 50));
 
-				let mmrUpdate: number =
-					25 +
-					(Math.round((loser.mmr - winner.mmr) / 50) > 15
-						? 15
-						: Math.round((loser.mmr - winner.mmr) / 50) < -15
-						? -15
-						: Math.round((loser.mmr - winner.mmr) / 50));
 
-				await this.prisma.user.update({
-					where: {
-						id: loser.id
-					},
-					data: {
-						mmr: loser.mmr - mmrUpdate,
-					}
-				});
-
-				await this.prisma.user.update({
-					where: {
-						id: winner.id
-					},
-					data: {
-						mmr: winner.mmr + mmrUpdate
-					}
-				});
+				
+					await this.prisma.user.update({
+						where: {
+							id: loser.id
+						},
+						data: {
+							mmr: loser.mmr - mmrUpdate,
+						}
+					});
+	
+					await this.prisma.user.update({
+						where: {
+							id: winner.id
+						},
+						data: {
+							mmr: winner.mmr + mmrUpdate
+						}
+					});
+	
+				}
 
 				await this.prisma.gameProfile.update({
 					where: {
@@ -175,11 +179,12 @@ export class Lobby {
 
 						},
 						scores: Array.from(this.game.scores.values()),
+						isStarted: true,
 						timerMS: new Date().getTime() - this.game.startTimer
 					}
 				});
-				this.setStatus(winnerId, "ONLINE");
-				this.setStatus(loserId, "ONLINE");
+				await this.setStatus(winnerId, "ONLINE");
+				await this.setStatus(loserId, "ONLINE");
 			}
 		} catch (err) {
 			console.log(err);
@@ -188,7 +193,7 @@ export class Lobby {
 
 	public async removeClient(client: AuthenticatedSocket): Promise<void> {
 		if (this.game.hasStarted)
-			this.game.defWin(client.id);
+			await this.game.defWin(client.id);
 		
 		this.clients.delete(client.id);
 		try {
@@ -198,6 +203,7 @@ export class Lobby {
 				},
 				data: {
 					status: GameStatus.IDLE,
+					lobby: "",
 				}
 			})
 		} catch(error) {
@@ -260,8 +266,16 @@ export class Lobby {
 		return (await this.prisma.user.findUnique({where: {id: client.userId}})).mmr; 
 	}
 
-	private startGame() {
-		this.game.start();
+	private async startGame() {
+		await this.prisma.game.update({
+			where : {
+				id: this.Id
+			},
+			data: {
+				isStarted: true
+			}
+		});
+		await this.game.start();
 		this.startedAt = new Date().getTime();
 	}
 
@@ -271,7 +285,7 @@ export class Lobby {
 		client.data.lobby = this;
 
 		if (this.clients.size >= this.maxClients) {
-			this.startGame();
+			await this.startGame();
 		}
 	}
 }

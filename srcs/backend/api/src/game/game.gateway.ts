@@ -108,30 +108,59 @@ export class GameGateway
 	async onLobbyJoin(
 		client: AuthenticatedSocket,
 		data: LobbyJoinDto
-	): Promise<WsResponse<ServerResponseDTO[ServerEvents.GameMessage]> > {
-		this.lobbyManager.joinLobby(client, data.lobbyId);
+	): Promise<WsResponse<ServerResponseDTO[ServerEvents]> > {
+		try {
 
-		return {
-			event: ServerEvents.GameMessage,
-			data: {
-				message: "Lobby Joined " + client.data.lobby.Id,
-				mode: "PvE",
-				lobbyId: client.data.lobby.Id,
-				player1MMR: "",
-				player2MMR: "",
+			let lobby = await this.lobbyManager.findLobbyByID(data.lobbyId);
+			if (lobby)
+			{
+
+				await this.lobbyManager.joinLobby(client, data.lobbyId);
+				lobby.sendEvent<ServerResponseDTO[ServerEvents.PrivateJoined]>(ServerEvents.PrivateJoined, {});
+
+
+				return {
+					event: ServerEvents.GameMessage,
+					data: {
+						message: "Lobby Joined " + client.data.lobby.Id,
+						mode: data.mode,
+						lobbyId: client.data.lobby.Id,
+						player1MMR: "",
+						player2MMR: "",
+					}
+				};
 			}
-		};
+		} catch(error) {
+			return {
+				event: ServerEvents.LobbyError,
+				data: {
+					message: error.getError()
+				}
+			};
+		}
+		
 	}
 
 	@SubscribeMessage(ClientEvents.MovePaddle)
 	onMovePaddle(client: AuthenticatedSocket, data: MovePaddleDTO): void {
-		if (!client.data.lobby) throw new WsException("You are not in a lobby");
-		client.data.lobby.game.movePaddle(data);
+		try {
+			if (!client.data.lobby) 
+				throw new WsException("You are not in a lobby");
+			client.data.lobby.game.movePaddle(data);
+		} catch(error) {
+			console.log(error);
+		}
 	}
 
 	@SubscribeMessage(ClientEvents.LobbyLeave)
 	async onLobbyLeave(client: AuthenticatedSocket): Promise<void> {
 		client.emit(ServerEvents.QueueLeft);
+		await this.lobbyManager.endSocket(client);
+	}
+
+	@SubscribeMessage(ClientEvents.PrivateLeave)
+	async onPrivateLeave(client: AuthenticatedSocket): Promise<void> {
+		client.emit(ServerEvents.PrivateLeft);	
 		await this.lobbyManager.endSocket(client);
 	}
 }
