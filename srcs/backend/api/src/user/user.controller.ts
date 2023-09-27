@@ -73,7 +73,7 @@ export class UserController {
 
 	@Get("getBlocked")
 	async getBlockedUsers(@GetUser() user: User): Promise<{friends: Array<User>}> {
-		return this.userService.getBlockedUsers(user); //ATTENTION ARRAY PAS SAFE
+		return this.userService.getBlockedUsers(user);   
 	}
 
 	@Post("friends/add")
@@ -86,14 +86,14 @@ export class UserController {
 
 	@Get("friends/get")
 	async getFriends(@GetUser() user: User): Promise<{ friends: Array<User> }> {
-		return this.userService.getFriends(user); //ATTENTION ARRAY PAS SAFE
+		return this.userService.getFriends(user);   
 	}
 
 	@Get("friends/getPending")
 	async getPendingFriends(
 		@GetUser() user: User
 	): Promise<{ friends: Array<User> }> {
-		return this.userService.getPendingFriends(user); //ATTENTION ARRAY PAS SAFE
+		return this.userService.getPendingFriends(user);   
 	}
 
 	@Post("friends/accept")
@@ -122,12 +122,12 @@ export class UserController {
 
 	@Get("leaderboard/firsts")
 	async getLeaderboardFirsts(@GetUser() user: User): Promise<{leaderboard: Array<User>}> {
-		return this.userService.getLeaderboardFirsts(user); //ATTENTION ARRAY PAS SAFE
+		return this.userService.getLeaderboardFirsts(user);   
 	}
 
 	@Get("leaderboard/others")
 	async getLeaderboardOthers(@GetUser() user: User): Promise<{leaderboard: Array<User>}> {
-		return this.userService.getLeaderboardOthers(user); //ATTENTION ARRAY PAS SAFE
+		return this.userService.getLeaderboardOthers(user);   
 	}
 
 }

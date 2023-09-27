@@ -8,7 +8,6 @@ export function QuitPrivateButton({ show }: { show: boolean }) {
 	const sm: SocketWrapper = useContext(SocketWrapperContext);
 
 	function QuitPrivate() {
-		console.log("emitting");
 		sm.emit({
 			event: ClientEvents.PrivateLeave,
 		});

@@ -61,7 +61,7 @@ export class LobbyManager {
 			if (!prismGame)
 				throw new WsException("Game does not exists");
 			else if (prismGame.isStarted)
-				throw new WsException("Game has already started");
+				throw new WsException("Game Unavailable");
 			else {
 				const lobby = new Lobby(this.server, 2, 'Private', this.gameService.prisma);
 
@@ -102,7 +102,7 @@ export class LobbyManager {
 	public refreshGame()
 	{
 		for(let lobby of this.lobbies.values()) {
-			if (lobby.game.hasStarted && !lobby.game.hasFinished)
+			if (lobby.game.hasStarted && !lobby.game.hasFinished && lobby.game.startTimer !== 0)
 				lobby.game.loop();
 		}
 	}

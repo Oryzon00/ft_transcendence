@@ -136,7 +136,7 @@ export class Lobby {
 						}
 					});
 	
-				}		
+				}
 
 				await this.prisma.gameProfile.update({
 					where: {
@@ -193,7 +193,7 @@ export class Lobby {
 
 	public async removeClient(client: AuthenticatedSocket): Promise<void> {
 		if (this.game.hasStarted)
-			this.game.defWin(client.id);
+			await this.game.defWin(client.id);
 		
 		this.clients.delete(client.id);
 		try {
@@ -275,7 +275,7 @@ export class Lobby {
 				isStarted: true
 			}
 		});
-		this.game.start();
+		await this.game.start();
 		this.startedAt = new Date().getTime();
 	}
 

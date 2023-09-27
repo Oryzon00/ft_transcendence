@@ -8,7 +8,6 @@ export function QuitQueueButton({ show }: { show: boolean }) {
 	const sm: SocketWrapper = useContext(SocketWrapperContext);
 
 	function QuitQueue() {
-		console.log("emitting");
 		sm.emit({
 			event: ClientEvents.LobbyLeave,
 		});

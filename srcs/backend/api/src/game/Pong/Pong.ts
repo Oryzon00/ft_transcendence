@@ -21,7 +21,7 @@ export class Pong {
 
 	public countdown: number = 0;
 
-	public startTimer: number;
+	public startTimer: number = 0;
 	public endTimer: number = 300000;
 
 	private lastUpdate: number = (new Date()).getTime();
@@ -48,6 +48,8 @@ export class Pong {
 	//Methods
 	public async start(): Promise<void> {
 		if (this.hasStarted) return;
+
+		this.countdown = 3000;
 
 		this.hasStarted = true;
 
@@ -81,22 +83,20 @@ export class Pong {
 		);
 
 		//countdown 5
-		
 		this.startTimer = (new Date().getTime());
-		this.countdown = -5000;
+		this.lastUpdate = (new Date().getTime());
 		//gameLoop
 		//send event winner + update players MMR
 	}
 
 	
 	public loop(): void {
-		if (this.hasStarted !== true || this.hasFinished) return;
+		if (this.hasStarted === false || this.hasFinished) return;
 		this.nextFrame();
 		this.lobby.sendLobbyState();
 		if ((new Date()).getTime() - this.startTimer >= this.endTimer)
 		{
 			if (this.lobby.gamemode === "PvE") {
-				this.hasFinished = true;
 				this.endgame("");
 				return ;
 			}
@@ -112,15 +112,12 @@ export class Pong {
 			}
 			if (this.scores.get(id1) === this.scores.get(id2))
 			{
-				this.hasFinished = true;
 				this.endgame("");
 				this.lobby.quitQueue(this.lobby.clients.get(id1).userId);
 				this.lobby.quitQueue(this.lobby.clients.get(id2).userId);
 			} else if (this.scores.get(id1) > this.scores.get(id2)) {
-				this.hasFinished = true;
 				this.endgame(id1);
 			} else {
-				this.hasFinished = true;
 				this.endgame(id2);
 			}
 			return ;
@@ -128,24 +125,24 @@ export class Pong {
 		
 		for (const id of this.lobby.clients.keys()) {
 			if (this.scores.get(id) >= 2) {
-				this.hasFinished = true;
 				this.endgame(id);
 			}
 		}
 		if (this.lobby.gamemode === "PvE" && (this.scores.get("bot") >= 2)) {
-				this.hasFinished = true;
 				this.endgame("");
 		}
 	}
 
 	private async endgame(winnerId: string): Promise<void> {
-		if (winnerId !== "")
+		if (winnerId !== "" && this.hasFinished === false)
 		{
+			this.hasFinished = true;
 			for (const id of this.lobby.clients.keys()) {
 				if (id != winnerId)
 					await this.lobby.endInstance(this.lobby.clients.get(winnerId).userId, this.lobby.clients.get(id).userId);
 			}
 		}
+		this.hasFinished = true;
 		await this.end();
 	}
 
@@ -220,9 +217,9 @@ export class Pong {
 					pad.upKey = false;
 				}
 			}
-			else {
-				console.log(this.paddles);
-			}
+			// else {
+			// 	// console.log(this.paddles);
+			// }
 		}
 	}
 
@@ -268,12 +265,13 @@ export class Pong {
 		}
 	}
 
-	public defWin(idLoser: string) {
+	public async defWin(idLoser: string) {
 		if (this.hasStarted && this.hasFinished === false) {
 			for (const id of this.lobby.clients.keys()) {
 				if (id !== idLoser) {
 					// console.log(id);
 					this.scores.set(id, 42);
+					await this.endgame(id);
 				}
 			}
 			if (this.lobby.gamemode === "PvE")
@@ -282,7 +280,7 @@ export class Pong {
 	}
 
 	private nextFrame() {
-		if (this.isPaused === false) {
+		if (this.isPaused === false && this.hasStarted) {
 			if (this.countdown === 0) {
 				if (this.lobby.gamemode == 'Rumble' && Math.floor(Math.random() * 600) == 1)
 					this.newPowerUp();
@@ -290,14 +288,8 @@ export class Pong {
 				this.updatePaddles();
 				this.updateball();
 			} else {
-				if (this.countdown < 0)
-				{
-					this.countdown += ((new Date()).getTime() - this.lastUpdate);
-					this.countdown = this.countdown > -3000 ? -this.countdown : this.countdown;
-				} else {
-					this.countdown -= ((new Date()).getTime() - this.lastUpdate);
-					this.countdown = this.countdown < 0 ? 0 : this.countdown;
-				} 
+				this.countdown -= ((new Date()).getTime() - this.lastUpdate);
+				this.countdown = this.countdown < 0 ? 0 : this.countdown;
 			}
 
 			this.lastUpdate = (new Date().getTime());

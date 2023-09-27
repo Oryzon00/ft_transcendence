@@ -160,8 +160,7 @@ export class GameGateway
 
 	@SubscribeMessage(ClientEvents.PrivateLeave)
 	async onPrivateLeave(client: AuthenticatedSocket): Promise<void> {
-		client.emit(ServerEvents.PrivateLeft);
-		
+		client.emit(ServerEvents.PrivateLeft);	
 		await this.lobbyManager.endSocket(client);
 	}
 }

@@ -38,6 +38,8 @@ function PongLayout() {
 				setInLobby(lobbyId);
 			}
 			else if (message === "Game is Finished") {
+				setInPrivate(false);
+				setInQueue(false);
 				setInLobby("");
 				if (mode === "PvP") {
 					userHook.setUser({
@@ -51,30 +53,30 @@ function PongLayout() {
 					notifyInfo("Game ended, rank updated.");
 				}
 			}
-			console.log(message);
+			// console.log(message);
 		};
 
 
 		const onLobbyError: Listener<ServerPayload[ServerEvents.LobbyError]>
 		 = ({message}) => {
-			console.log("error: " + message);
+			// console.log("error: " + message);
 			notifyError(message)
 		};
 
 		const onQueueJoined: Listener<ServerPayload[ServerEvents.QueueJoined]>
-		 = () => {console.log("queue joined "); setInQueue(true)};
+		 = () => { setInQueue(true)};
 
 		const onQueueLeft: Listener<ServerPayload[ServerEvents.QueueLeft]>
-		 = () => {console.log("queue left "); setInQueue(false)};
+		 = () => { setInQueue(false)};
 
 		const onPrivateJoined: Listener<ServerPayload[ServerEvents.PrivateJoined]>
-		 = () => {console.log("Private joined "); setInPrivate(true)};
+		 = () => { setInPrivate(true)};
 
 		const onPrivateLeft: Listener<ServerPayload[ServerEvents.PrivateLeft]>
-		 = () => {console.log("Private left "); setInPrivate(false)};
+		 = () => { setInPrivate(false)};
 
 
-		console.log("adding listeners");
+		// console.log("adding listeners");
 		sm.addListener(ServerEvents.GameMessage, onGameMessage);
 		sm.addListener(ServerEvents.QueueJoined, onQueueJoined);
 		sm.addListener(ServerEvents.QueueLeft, onQueueLeft);
@@ -86,7 +88,7 @@ function PongLayout() {
 		}
 
 		return () => {
-			console.log("removing listeners");
+			// console.log("removing listeners");
 			sm.removeListener(ServerEvents.LobbyError, onLobbyError);
 			sm.removeListener(ServerEvents.GameMessage, onGameMessage);
 			sm.removeListener(ServerEvents.QueueJoined, onQueueJoined);
