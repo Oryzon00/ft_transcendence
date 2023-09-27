@@ -18,8 +18,10 @@ function SocialLayout () {
 			</div>
 		</div>
 		<div className="friends-friends-demand">
-			<span>Friends demand column</span>
-			<PendingFriendList />
+			<div style={{width: 425, display:'flex', flexDirection: 'column', alignItems:'center'}}>
+				<span>Friends demand column</span>
+				<PendingFriendList />
+			</div>
 		</div>
 	</div>
 	)

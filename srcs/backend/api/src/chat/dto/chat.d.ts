@@ -5,6 +5,7 @@ export type MessagePayload = {
 	channelId: string;
 	authorId: number;
 	content: string;
+	link: string | null;
 };
 
 export type ChannelAllInfo = {
@@ -22,6 +23,7 @@ export type MessageWrite = {
 	channelId: string;
 	authorId: number;
 	content: string;
+	link: string;
 };
 
 export type ChannelCreation = {
@@ -97,4 +99,5 @@ export type MessageSend = {
 	username: string;
 	avatar: string;
 	content: string;
+	link: string;
 };

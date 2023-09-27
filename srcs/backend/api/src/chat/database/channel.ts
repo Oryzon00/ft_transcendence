@@ -24,6 +24,7 @@ class ChannelDatabase {
 			const res: Message = await this.prisma.message.create({
 				data: {
 					content: message.content,
+					link: message.link,
 					channel: {
 						connect: { id: message.channelId }
 					},
@@ -85,8 +86,7 @@ class ChannelDatabase {
 				}
 			});
 			this.joinChannel(res.id, user[0]);
-			if (user[0] != user[1])
-				this.joinChannel(res.id, user[1]);
+			if (user[0] != user[1]) this.joinChannel(res.id, user[1]);
 			return res;
 		} catch (error) {
 			return error;
@@ -186,7 +186,11 @@ class ChannelDatabase {
 		}
 	}
 
-	async banChannel(channel: string, user: number, reason : string = ""): Promise<Ban> {
+	async banChannel(
+		channel: string,
+		user: number,
+		reason: string = ""
+	): Promise<Ban> {
 		try {
 			return await this.prisma.ban.create({
 				data: {
@@ -275,9 +279,7 @@ class ChannelDatabase {
 	*/
 
 	// Do not take all the user blocked
-	async getChannelMessage(
-		id: string,
-	): Promise<MessageSend[]> {
+	async getChannelMessage(id: string): Promise<MessageSend[]> {
 		let res: MessageSend[] = [];
 		const messages: Message[] = await this.prisma.message.findMany({
 			where: {
@@ -293,7 +295,8 @@ class ChannelDatabase {
 				content: messages[i].content,
 				channelId: messages[i].channelId,
 				avatar: "",
-				username: ""
+				username: "",
+				link: messages[i].link
 			};
 			try {
 				let user: User = await this.prisma.user.findFirst({
@@ -303,8 +306,7 @@ class ChannelDatabase {
 				});
 				add.username = user.name;
 				add.avatar = user.image;
-			}
-			catch {
+			} catch {
 				throw new NotFoundException();
 			}
 			res.push(add);
@@ -314,22 +316,23 @@ class ChannelDatabase {
 
 	async getChannelUser(
 		id: string
-	): Promise<{ user: { id: number; name: string, image: string } }[]> {
-		const res : { user: { id: number; name: string; image: string } }[] = await this.prisma.member.findMany({
-			where: {
-				channelId: id
-			},
-			select: {
-				user: {
-					select: {
-						id: true,
-						name: true,
-						image: true
+	): Promise<{ user: { id: number; name: string; image: string } }[]> {
+		const res: { user: { id: number; name: string; image: string } }[] =
+			await this.prisma.member.findMany({
+				where: {
+					channelId: id
+				},
+				select: {
+					user: {
+						select: {
+							id: true,
+							name: true,
+							image: true
+						}
 					}
 				}
-			}
-		});
-		return (res);
+			});
+		return res;
 	}
 }
 

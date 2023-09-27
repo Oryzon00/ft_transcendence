@@ -188,6 +188,7 @@ model Message {
   authorId Int
 
   content String @db.VarChar(2000)
+  link    String? @db.VarChar(2000)
 
   @@map("messages")
 }

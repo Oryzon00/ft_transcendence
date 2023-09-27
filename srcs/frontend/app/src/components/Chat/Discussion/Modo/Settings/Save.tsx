@@ -4,12 +4,11 @@ import getJwtTokenFromCookie from "../../../../../utils/getJWT";
 type SaveType = {
 	id: string;
 	name: string;
-	description: string;
 	status: string;
 	password: string;
 };
 
-function Save({ id, name, description, status, password }: SaveType) {
+function Save({ id, name, status, password }: SaveType) {
 	const sendSetting = () => {
 		fetch(apiAddress + "/chat/channel/settings", {
 			method: "PATCH",
@@ -20,7 +19,6 @@ function Save({ id, name, description, status, password }: SaveType) {
 			body: JSON.stringify({
 				id: id,
 				name: name,
-				description: description,
 				status: status,
 				password: password
 			})
