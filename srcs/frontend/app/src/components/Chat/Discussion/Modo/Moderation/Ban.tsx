@@ -23,7 +23,7 @@ function Ban({ id, channelId }: BanType) {
 				}
 			})
 			.catch(function (error) {
-				notifyError(error.message);
+				notifyError("You are not allowed to ban this user.");
 			});
 	};
 	return (

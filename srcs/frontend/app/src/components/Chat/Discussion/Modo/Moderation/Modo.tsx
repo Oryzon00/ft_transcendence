@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import apiAddress from "../../../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../../../utils/getJWT";
 import { notifyError } from "../../../../../utils/notify";
@@ -6,15 +6,14 @@ import { notifyError } from "../../../../../utils/notify";
 type ModoType = {
 	id: number;
 	channelId: string;
+	isOwner: boolean;
+	isModo: boolean;
 };
 
-function Modo({ id, channelId }: ModoType) {
-	const [isOwner, setOwner] = useState<boolean>(false);
-	const [isModo, setModo] = useState<boolean>(false);
-
+function Modo({ id, channelId, isOwner, isModo }: ModoType) {
 	const changeModo = () => {
-		fetch(apiAddress + "/chat/modo/change", {
-			method: "PATCH",
+		fetch(apiAddress + "/chat/channel/modo/change", {
+			method: "POST",
 			headers: {
 				Authorization: "Bearer " + getJwtTokenFromCookie(),
 				"Content-Type": "application/json"
@@ -41,19 +40,16 @@ function Modo({ id, channelId }: ModoType) {
 			{isOwner ? (
 				<svg
 					viewBox="0 0 24 24"
-					version="1.1"
 					xmlns="http://www.w3.org/2000/svg"
-					fill="#000000"
+					fill="#92400e"
+					width="32px"
+					height="32px"
 				>
-					<path
-						d="M17.0016031,15.2440856 L17.0009052,21.2451182 C17.0009052,21.8527788 16.3161092,22.2081862 15.8192057,21.8584172 L12.0007623,19.1706254 L8.18435794,21.8583162 C7.68747081,22.2082475 7.00251516,21.8528589 7.00251516,21.2451182 L7.00069412,15.2459273 C8.37018531,16.3435035 10.1084262,17 12,17 C13.8926316,17 15.6317588,16.3427691 17.0016031,15.2440856 Z M12,2 C15.8659932,2 19,5.13400675 19,9 C19,12.8659932 15.8659932,16 12,16 C8.13400675,16 5,12.8659932 5,9 C5,5.13400675 8.13400675,2 12,2 Z"
-						id="🎨-Color"
-					/>
+					<path d="M17.0016031,15.2440856 L17.0009052,21.2451182 C17.0009052,21.8527788 16.3161092,22.2081862 15.8192057,21.8584172 L12.0007623,19.1706254 L8.18435794,21.8583162 C7.68747081,22.2082475 7.00251516,21.8528589 7.00251516,21.2451182 L7.00069412,15.2459273 C8.37018531,16.3435035 10.1084262,17 12,17 C13.8926316,17 15.6317588,16.3427691 17.0016031,15.2440856 Z M12,2 C15.8659932,2 19,5.13400675 19,9 C19,12.8659932 15.8659932,16 12,16 C8.13400675,16 5,12.8659932 5,9 C5,5.13400675 8.13400675,2 12,2 Z" />
 				</svg>
 			) : (
 				<svg
-					fill="#ffffff"
-					version="1.1"
+					fill={isModo ? "#92400e" : "#ffffff"}
 					xmlns="http://www.w3.org/2000/svg"
 					viewBox="0 0 232.211 232.211"
 					enable-background="new 0 0 232.211 232.211"

@@ -45,8 +45,8 @@ export class ChatController {
 
 	// Create a new channel
 	@Post("/channel/create")
-	create(@GetUser() user: User, @Body() channel: ChannelCreation) {
-		return this.ChatService.createChannel(user, channel);
+	async create(@GetUser() user: User, @Body() channel: ChannelCreation) {
+		return await this.ChatService.createChannel(user, channel);
 	}
 
 	// Get list of channels
@@ -56,26 +56,34 @@ export class ChatController {
 	}
 
 	@Get("/channel/protected")
-	protected(@GetUser() user: User) {
-		return this.ChatService.protectedChannel(user);
+	async protected(@GetUser() user: User) {
+		return await this.ChatService.protectedChannel(user);
 	}
 
 	// Join an existing channel
 	@Post("/channel/join")
-	join(@GetUser() user: User, @Body() channel: ChannelJoin) {
-		return this.ChatService.joinChannel(user, channel);
+	async join(@GetUser() user: User, @Body() channel: ChannelJoin) {
+		return await this.ChatService.joinChannel(user, channel);
 	}
 
 	@Patch("/channel/quit")
-	quit(@GetUser() user: User, @Body() channel: { id: string }) {
-		return this.ChatService.quitChannel(user, channel);
+	async quit(@GetUser() user: User, @Body() channel: { id: string }) {
+		return await this.ChatService.quitChannel(user, channel);
 	}
 
 	@Patch("/channel/list")
 	async list(
 		@GetUser() user: User,
 		@Body() body: { channelId: string }
-	): Promise<{ user: { id: number; name: string } }[]> {
+	): Promise<
+		{
+			isAdmin: boolean;
+			mute: boolean;
+			muteEnd: Date;
+			user: { id: number; name: string; image: string };
+			channel: { ownerId: number };
+		}[]
+	> {
 		return await this.ChatService.listUser(user, body.channelId);
 	}
 
@@ -89,7 +97,7 @@ export class ChatController {
 			channel.id
 		);
 		if (res != null)
-			return {
+			return await {
 				id: res.id,
 				createdAt: res.createdAt,
 				updateAt: res.updateAt,
@@ -99,42 +107,43 @@ export class ChatController {
 				status: res.status,
 				messagesId: res.messagesId
 			};
-		return res;
+		return await res;
 	}
 
 	@Patch("/channel/settings")
-	settings(@GetUser() user: User, @Body() body: ChannelChangement) {
-		this.ChatService.channelChangement(user, body);
+	async settings(@GetUser() user: User, @Body() body: ChannelChangement) {
+		await this.ChatService.channelChangement(user, body);
 	}
 
 	@Patch("/channel/kick")
-	kick(@GetUser() user: User, @Body() body: ChannelKick) {
-		this.ChatService.kick(user, body);
+	async kick(@GetUser() user: User, @Body() body: ChannelKick) {
+		console.log("in kick controller");
+		await this.ChatService.kick(user, body);
 	}
 
 	@Patch("/channel/ban")
-	ban(@GetUser() user: User, @Body() body: ChannelBan) {
-		this.ChatService.ban(user, body);
+	async ban(@GetUser() user: User, @Body() body: ChannelBan) {
+		await this.ChatService.ban(user, body);
 	}
 
 	@Patch("/channel/unban")
-	unban(@GetUser() user: User, @Body() body: ChannelBan) {
-		this.ChatService.unban(user, body);
+	async unban(@GetUser() user: User, @Body() body: ChannelBan) {
+		await this.ChatService.unban(user, body);
 	}
 
 	@Patch("/channel/mute")
-	mute(@GetUser() user: User, @Body() body: ChannelMute) {
-		this.ChatService.mute(user, body);
+	async mute(@GetUser() user: User, @Body() body: ChannelMute) {
+		await this.ChatService.mute(user, body);
 	}
 
 	@Patch("/channel/unmute")
-	unmute(@GetUser() user: User, @Body() body: ChannelMute) {
-		this.ChatService.unmute(user, body);
+	async unmute(@GetUser() user: User, @Body() body: ChannelMute) {
+		await this.ChatService.unmute(user, body);
 	}
 
 	@Post("/channel/direct")
-	direct_message(@GetUser() user: User, @Body() body: { id: string }) {
-		this.ChatService.createDirect([user.id, Number(body.id)]);
+	async direct_message(@GetUser() user: User, @Body() body: { id: string }) {
+		await this.ChatService.createDirect([user.id, Number(body.id)]);
 	}
 
 	@Post("/channel/direct/other")
@@ -146,13 +155,13 @@ export class ChatController {
 			user.id,
 			body.id
 		);
-		return { name: oUser.name, image: oUser.image };
+		return await { name: oUser.name, image: oUser.image };
 	}
 
 	@Post("/channel/owner")
 	async isOwner(
 		@GetUser() user: User,
-		@Body() body: { id: string }
+		@Body() body: { id: string; other: string }
 	): Promise<boolean> {
 		return await this.User.isOwner(user.id, body.id);
 	}
@@ -170,12 +179,12 @@ export class ChatController {
 		@GetUser() user: User,
 		@Body() body: { userId: number; channelId: string }
 	) {
-		this.ChatService.changeModo(user, body);
+		await this.ChatService.changeModo(user, body);
 	}
 
 	@Post("/fight")
 	async Fight(@GetUser() user: User, @Body() body: { id: string }) {
-		this.ChatService.message(user, {
+		await this.ChatService.message(user, {
 			channelId: body.id,
 			authorId: user.id,
 			content: "here for the fight",

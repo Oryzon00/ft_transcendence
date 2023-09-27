@@ -23,7 +23,7 @@ function Kick({ id, channelId }: KickType) {
 				}
 			})
 			.catch(function (error) {
-				notifyError(error.message);
+				notifyError("You are not allowed to kick this user.");
 			});
 	};
 	return (

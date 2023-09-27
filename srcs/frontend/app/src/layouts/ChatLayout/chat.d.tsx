@@ -25,9 +25,16 @@ export type ChannelId = {
 };
 
 export type ChannelUser = {
+	isAdmin: boolean;
+	mute: boolean;
+	muteEnd: Date;
 	user: {
 		id: number;
 		name: string;
+		image: string;
+	};
+	channel: {
+		ownerId: number;
 	};
 };
 

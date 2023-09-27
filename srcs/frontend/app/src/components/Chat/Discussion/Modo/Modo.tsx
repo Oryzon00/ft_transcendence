@@ -11,9 +11,9 @@ type ModoType = {
 };
 
 function Modo({ id }: ModoType) {
-	const [vue, setVue] = useState(false);
-	const [isOwner, setOwner] = useState(false);
-	const [isModo, setModo] = useState(false);
+	const [vue, setVue] = useState<boolean>(false);
+	const [isOwner, setOwner] = useState<boolean>(false);
+	const [isModo, setModo] = useState<boolean>(false);
 
 	const getInfo = () => {
 		fetch(apiAddress + "/chat/channel/owner", {
@@ -30,7 +30,7 @@ function Modo({ id }: ModoType) {
 				}
 				return res.json();
 			})
-			.then(function (e) {
+			.then(function (e: boolean) {
 				setOwner(e);
 			})
 			.catch(function (error) {
@@ -66,13 +66,13 @@ function Modo({ id }: ModoType) {
 		return (
 			<div className="w-full h-[calc(100%-4rem)]">
 				<ButtonHeader vue={vue} setVue={setVue} />
-				{vue ? <Moderation id={id}/> : <Settings id={id} />}
+				{vue ? <Moderation id={id} /> : <Settings id={id} />}
 			</div>
 		);
 	} else if (isModo) {
 		return (
 			<div className="w-full h-[calc(100%-4rem)]">
-				<Moderation id={id}/>
+				<Moderation id={id} />
 			</div>
 		);
 	} else return <div className="w-full h-[calc(100%-4rem)]">No modo</div>;

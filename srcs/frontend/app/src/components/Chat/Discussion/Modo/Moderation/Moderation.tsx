@@ -15,8 +15,19 @@ type ModerationType = {
 	id: string;
 };
 
+function searchElements(list: ChannelUser[], query: string): ChannelUser[] {
+	let res: ChannelUser[] = [];
+
+	for (let key in list) {
+		if (query == "" || key.includes(query)) res.push(key);
+	}
+	return res;
+}
+
 function Moderation({ id }: ModerationType) {
-	let [list, setList] = useState<ChannelUser[]>([]);
+	const [list, setList] = useState<ChannelUser[]>([]);
+	let allMembers: ChannelUser[] = [];
+	const [query, setQuery] = useState<string>("");
 
 	const getListUser = () => {
 		fetch(apiAddress + "/chat/channel/list", {
@@ -47,13 +58,25 @@ function Moderation({ id }: ModerationType) {
 
 	return (
 		<div className="mx-auto w-full h-[80%]">
-			<Header />
+			<Header query={query} setQuery={setQuery} />
 			<div className="w-[80%] m-auto mt-2 h-[90%] overflow-y-auto">
 				{list?.map((e) => (
 					<div className="flex flex-row justify-between items-center bg-[#282b30] text-white w-full  h-18 border-2 border-white">
-						<h2 className="text-2xl px-2">{e.user.name}</h2>
+						<div className="flex flex-row items-center p-2">
+							<img
+								src={e.user.image}
+								alt=""
+								className="h-12 w-12 rounded-full"
+							/>
+							<h2 className="text-2xl px-2">{e.user.name}</h2>
+						</div>
 						<div className="flex flex-row">
-							<Modo id={e.user.id} channelId={id} />
+							<Modo
+								id={e.user.id}
+								channelId={id}
+								isOwner={e.channel.ownerId == e.user.id}
+								isModo={e.isAdmin}
+							/>
 							<Mute id={e.user.id} channelId={id} />
 							<Kick id={e.user.id} channelId={id} />
 							<Ban id={e.user.id} channelId={id} />

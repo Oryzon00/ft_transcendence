@@ -94,7 +94,7 @@ export class ChatService {
 		};
 	}
 
-	fusionSameName(
+	async fusionSameName(
 		userId: number,
 		name: string,
 		channel: Channel[],
@@ -102,9 +102,7 @@ export class ChatService {
 	) {
 		let res = old;
 		for (let i: number = 0; i < channel.length; i++) {
-			let member = this.userdb.findMember(userId, channel[i].id);
 			if (name == "" || channel[i].name.startsWith(name)) {
-				// && member == undefined){
 				res.push({
 					id: channel[i].id,
 					name: channel[i].name,
@@ -181,8 +179,13 @@ export class ChatService {
 		const protectChannel: Channel[] =
 			await this.channeldb.getProtectChannel();
 		let res: ChannelInfo[] = [];
-		res = this.fusionSameName(user.id, body.name, publicChannel, res);
-		res = this.fusionSameName(user.id, body.name, protectChannel, res);
+		res = await this.fusionSameName(user.id, body.name, publicChannel, res);
+		res = await this.fusionSameName(
+			user.id,
+			body.name,
+			protectChannel,
+			res
+		);
 		return await res;
 	}
 
@@ -208,7 +211,7 @@ export class ChatService {
 		return this.getChannel(searchChannel.id, user.id);
 	}
 
-	async deleteMember(channelId: string, userId: number) {
+	async deleteMember(channelId: string, userId: number): Promise<boolean> {
 		try {
 			const channel: Channel = await this.prisma.channel.findFirst({
 				where: {
@@ -217,39 +220,70 @@ export class ChatService {
 			});
 			if (channel.direct) return;
 		} catch (error) {
-			throw new UnauthorizedException();
+			return false;
 		}
 		const find: Member = await this.userdb.findMember(userId, channelId);
 		if (find == undefined) throw new UnauthorizedException();
 		await this.prisma.member.delete({
 			where: { id: find.id }
 		});
+		let number = await this.prisma.member.count({
+			where: {
+				channelId: channelId
+			}
+		});
+		console.log(number);
+		if (number === 0) {
+			this.prisma.channel.delete({
+				where: {
+					id: channelId
+				}
+			});
+		}
+		return true;
 	}
 
 	async quitChannel(user: User, channelId: { id: string }) {
-		this.deleteMember(channelId.id, user.id);
+		await this.deleteMember(channelId.id, user.id);
 	}
 
 	// it's just quit with a1C274C check if you are a modo
 	async kick(user: User, body: ChannelKick) {
-		if (!(await this.userdb.isModo(user.id, body.id)))
+		if (
+			(await this.userdb.isModo(user.id, body.id)) &&
+			!(await this.userdb.isOwner(body.invited, body.id))
+		) {
+			if (
+				(await this.userdb.isModo(body.invited, body.id)) &&
+				!(await this.userdb.isOwner(user.id, body.id))
+			)
+				throw new UnauthorizedException();
+			await this.deleteMember(body.id, body.invited);
+		} else {
 			throw new UnauthorizedException();
-		this.deleteMember(body.id, body.invited);
+		}
 	}
 
 	async mute(user: User, body: ChannelMute) {
-		if (!(await this.userdb.isModo(user.id, body.id)))
+		if (
+			!(await this.userdb.isModo(user.id, body.id)) &&
+			(await this.userdb.isOwner(body.muted, body.id))
+		)
 			throw new UnauthorizedException();
 		const find: Member = await this.userdb.findMember(body.muted, body.id);
-		this.prisma.member.update({
-			where: {
-				id: find.id
-			},
-			data: {
-				mute: true,
-				muteEnd: body.until
-			}
-		});
+		try {
+			await this.prisma.member.update({
+				where: {
+					id: find.id
+				},
+				data: {
+					mute: true,
+					muteEnd: body.until
+				}
+			});
+		} catch (error) {
+			throw new NotFoundException();
+		}
 	}
 
 	async unmute(user: User, body: ChannelMute) {
@@ -257,7 +291,7 @@ export class ChatService {
 			throw new UnauthorizedException();
 		const find: Member = await this.userdb.findMember(body.muted, body.id);
 		try {
-			this.prisma.member.update({
+			await this.prisma.member.update({
 				where: {
 					id: find.id
 				},
@@ -271,27 +305,30 @@ export class ChatService {
 	}
 
 	async ban(user: User, body: ChannelBan) {
-		const banned: User = await this.userdb.getUser(body.invited);
-		/*
-		if (await this.userdb.isModo(banned.id, body.id)) {
-			return ;
-			//throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-		}
-		*/
-		this.channeldb.banChannel(body.id, body.invited);
-		this.deleteMember(body.id, body.invited);
+		if (
+			(await this.userdb.isModo(user.id, body.id)) &&
+			!(await this.userdb.isOwner(body.invited, body.id))
+		) {
+			if (
+				(await this.userdb.isModo(body.invited, body.id)) &&
+				!(await this.userdb.isOwner(user.id, body.id))
+			)
+				throw new UnauthorizedException();
+			await this.channeldb.banChannel(body.id, body.invited);
+			await this.deleteMember(body.id, body.invited);
+		} else throw new UnauthorizedException();
 	}
 
 	async unban(user: User, body: ChannelBan) {
 		if (!(await this.userdb.isModo(user.id, body.id)))
 			throw new UnauthorizedException();
-		this.channeldb.unbanChannel(body.id, body.invited);
+		await this.channeldb.unbanChannel(body.id, body.invited);
 	}
 
 	async password(user: User, body: ChannelNewPassword) {
 		if (!(await this.userdb.isModo(user.id, body.id)))
 			throw new UnauthorizedException();
-		this.prisma.channel.update({
+		await this.prisma.channel.update({
 			where: { id: body.id },
 			data: {
 				password: body.password
@@ -299,7 +336,18 @@ export class ChatService {
 		});
 	}
 
-	async listUser(user: User, channelId: string) {
+	async listUser(
+		user: User,
+		channelId: string
+	): Promise<
+		{
+			isAdmin: boolean;
+			mute: boolean;
+			muteEnd: Date;
+			user: { id: number; name: string; image: string };
+			channel: { ownerId: number };
+		}[]
+	> {
 		if (this.userdb.isMember(user.id, channelId))
 			return await this.channeldb.getChannelUser(channelId);
 		throw new UnauthorizedException();
@@ -312,7 +360,8 @@ export class ChatService {
 	}
 
 	async channelChangement(user: User, body: ChannelChangement) {
-		if (this.userdb.isOwner(user.id, body.id))
+		console.log(body);
+		if (await this.userdb.isOwner(user.id, body.id))
 			return await this.channeldb.setChannel(user.id, body.id, body);
 		return null;
 	}
@@ -328,15 +377,23 @@ export class ChatService {
 			status: this.channeldb.convertString(channel.status),
 			message: []
 		};
-		if (user[0] == user[1])
-		{
+		if (user[0] == user[1]) {
 			this.chatGateway.emit(user[0], res, "onChannel");
-			return (res);
+			return res;
 		}
-		res.name = String(user[1]);
-		this.chatGateway.emit(user[0], res, "onChannel");
-		res.name = String(user[0]);
-		this.chatGateway.emit(user[1], res, "onChannel");
+		try {
+			let users: User[] = await this.prisma.user.findMany({
+				where: {
+					id: { in: user }
+				}
+			});
+			res.name = String(users[1].name);
+			this.chatGateway.emit(users[0].id, res, "onChannel");
+			res.name = String(users[0].name);
+			this.chatGateway.emit(users[1].id, res, "onChannel");
+		} catch (error) {
+			throw new NotFoundException();
+		}
 		return res;
 	}
 
@@ -360,7 +417,7 @@ export class ChatService {
 		}
 	}
 
-	async changeModo(user: User, body : {userId: number, channelId: string}) {
+	async changeModo(user: User, body: { userId: number; channelId: string }) {
 		if (!this.userdb.isOwner(user.id, body.channelId))
 			throw new UnauthorizedException();
 		this.userdb.changeModo(body.userId, body.channelId);

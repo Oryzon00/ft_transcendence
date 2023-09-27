@@ -134,6 +134,7 @@ class ChannelDatabase {
 						id: channelId
 					},
 					data: {
+						name: body.name,
 						status: this.convertStatus(body.status)
 					}
 				});
@@ -301,25 +302,41 @@ class ChannelDatabase {
 		return res;
 	}
 
-	async getChannelUser(
-		id: string
-	): Promise<{ user: { id: number; name: string; image: string } }[]> {
-		const res: { user: { id: number; name: string; image: string } }[] =
-			await this.prisma.member.findMany({
+	async getChannelUser(id: string): Promise<
+		{
+			isAdmin: boolean;
+			mute: boolean;
+			muteEnd: Date;
+			user: { id: number; name: string; image: string };
+			channel: { ownerId: number };
+		}[]
+	> {
+		try {
+			return await this.prisma.member.findMany({
 				where: {
 					channelId: id
 				},
 				select: {
+					isAdmin: true,
+					mute: true,
+					muteEnd: true,
 					user: {
 						select: {
 							id: true,
 							name: true,
 							image: true
 						}
+					},
+					channel: {
+						select: {
+							ownerId: true
+						}
 					}
 				}
 			});
-		return res;
+		} catch (error) {
+			return error;
+		}
 	}
 }
 
