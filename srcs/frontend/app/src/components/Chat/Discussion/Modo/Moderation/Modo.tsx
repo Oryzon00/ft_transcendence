@@ -52,7 +52,6 @@ function Modo({ id, channelId, isOwner, isModo }: ModoType) {
 					fill={isModo ? "#92400e" : "#ffffff"}
 					xmlns="http://www.w3.org/2000/svg"
 					viewBox="0 0 232.211 232.211"
-					enable-background="new 0 0 232.211 232.211"
 					width="32px"
 					height="32px"
 				>

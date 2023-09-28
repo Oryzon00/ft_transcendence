@@ -9,7 +9,7 @@ type ConversationType = {
 function Conversation({ messages, blocked }: ConversationType) {
 	if (blocked === undefined) return;
 	return (
-		<div className="w-full h-[79%] overflow-y-scroll gap-x-2">
+		<div className="w-full h-[79%] overflow-y-scroll gap-x-2 no-scrollbar">
 			<ul>
 				{messages.map((message: MessagePayload) => (
 					<li key={message.id}>

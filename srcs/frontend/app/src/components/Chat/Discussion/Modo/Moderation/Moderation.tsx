@@ -60,29 +60,35 @@ function Moderation({ id }: ModerationType) {
 		<div className="mx-auto w-full h-[80%]">
 			<Header query={query} setQuery={setQuery} />
 			<div className="w-[80%] m-auto mt-2 h-[90%] overflow-y-auto">
-				{list?.map((e) => (
-					<div className="flex flex-row justify-between items-center bg-[#282b30] text-white w-full  h-18 border-2 border-white">
-						<div className="flex flex-row items-center p-2">
-							<img
-								src={e.user.image}
-								alt=""
-								className="h-12 w-12 rounded-full"
-							/>
-							<h2 className="text-2xl px-2">{e.user.name}</h2>
-						</div>
-						<div className="flex flex-row">
-							<Modo
-								id={e.user.id}
-								channelId={id}
-								isOwner={e.channel.ownerId == e.user.id}
-								isModo={e.isAdmin}
-							/>
-							<Mute id={e.user.id} channelId={id} />
-							<Kick id={e.user.id} channelId={id} />
-							<Ban id={e.user.id} channelId={id} />
-						</div>
-					</div>
-				))}
+				<ul>
+					{list?.map((e) => (
+						<li key={e.user.id}>
+							<div className="flex flex-row justify-between items-center bg-[#282b30] text-white w-full  h-18 border-2 border-white">
+								<div className="flex flex-row items-center p-2">
+									<img
+										src={e.user.image}
+										alt=""
+										className="h-12 w-12 rounded-full"
+									/>
+									<h2 className="text-2xl px-2">
+										{e.user.name}
+									</h2>
+								</div>
+								<div className="flex flex-row">
+									<Modo
+										id={e.user.id}
+										channelId={id}
+										isOwner={e.channel.ownerId == e.user.id}
+										isModo={e.isAdmin}
+									/>
+									<Mute id={e.user.id} channelId={id} />
+									<Kick id={e.user.id} channelId={id} />
+									<Ban id={e.user.id} channelId={id} />
+								</div>
+							</div>
+						</li>
+					))}
+				</ul>
 			</div>
 		</div>
 	);
