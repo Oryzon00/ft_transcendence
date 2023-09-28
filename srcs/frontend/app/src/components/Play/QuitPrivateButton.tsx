@@ -4,12 +4,12 @@ import SocketWrapper, {
 } from "../../utils/websockets/SocketWrapper";
 import { ClientEvents } from "../../utils/websockets/types";
 
-export function QuitQueueButton({ show }: { show: boolean }) {
+export function QuitPrivateButton({ show }: { show: boolean }) {
 	const sm: SocketWrapper = useContext(SocketWrapperContext);
 
-	function QuitQueue() {
+	function QuitPrivate() {
 		sm.emit({
-			event: ClientEvents.LobbyLeave,
+			event: ClientEvents.PrivateLeave,
 		});
 	}
 
@@ -19,12 +19,12 @@ export function QuitQueueButton({ show }: { show: boolean }) {
 		return (
 			<button
 				className=" my-2 px-5 py-3 rounded-md hover:bg-red-800 text-white text border-white text-4xl font-semibold border-4 bg-zinc-500"
-				onClick={QuitQueue}
+				onClick={QuitPrivate}
 			>
-				Quit Queue
+				Quit Private
 			</button>
 		);
 	}
 }
 
-export default QuitQueueButton;
+export default QuitPrivateButton;

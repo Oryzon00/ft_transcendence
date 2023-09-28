@@ -52,4 +52,16 @@ export type ServerPayload = {
 	[ServerEvents.QueueLeft]: {
 		
 	}
+
+	[ServerEvents.LobbyError]: {
+		message: string,
+	}
+
+	[ServerEvents.PrivateJoined]: {
+
+	}
+
+	[ServerEvents.PrivateLeft]: {
+		
+	}
 }

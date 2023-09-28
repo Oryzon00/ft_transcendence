@@ -1,4 +1,5 @@
 
+import { useNavigate } from "react-router";
 import apiAddress from "../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../utils/getJWT";
 import { notifyError } from "../../../utils/notify";
@@ -8,6 +9,8 @@ type FightType = {
 };
 
 function Fight({channelId} : FightType ) {
+    const navigate = useNavigate();
+
     const FightSend = () => {
         fetch(apiAddress + "/chat/fight", {
             method: "POST",
@@ -21,6 +24,12 @@ function Fight({channelId} : FightType ) {
                 if (!res.ok) {
                     throw new Error("Request failed with status " + res.status);
                 }
+                return res.json();
+            })
+            .then (function (data) {
+                if (data === undefined)
+                    throw new Error("Error while creating private game :(")
+                navigate("/play?gameId=" + data.gameId);
             })
             .catch(function (error) {
                 notifyError(error.message);

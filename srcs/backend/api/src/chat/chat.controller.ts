@@ -174,10 +174,10 @@ export class ChatController {
 	}
 
 	@Post("/fight")
-	async Fight(@GetUser() user: User, @Body() body: { id: string }) {
+	async Fight(@GetUser() user: User, @Body() body: { id: string }) : Promise<{gameId: string}> {
 		const msg = await this.ChatService.fight(user, body.id);
 		if(msg == '') {
-			return ;
+			return undefined;
 		} else {
 			this.ChatService.message(user, {
 				channelId: body.id,
@@ -185,6 +185,7 @@ export class ChatController {
 				content: "Come here for the fight",
 				link: "/play?gameId=" + msg
 			});
+			return ({gameId: msg});
 		}
 
 	}
