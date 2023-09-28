@@ -22,6 +22,7 @@ import {
 } from "./dto/chat";
 import { PrismaService } from "src/prisma/prisma.service";
 import { ChatGateway } from "./chat.gateway";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class ChatService {
@@ -189,6 +190,18 @@ export class ChatService {
 		return await res;
 	}
 
+	async checkPassword(
+		searchChannel: Channel,
+		channelJoin: ChannelJoin
+	): Promise<Boolean> {
+		const isMatch = await bcrypt.compare(
+			channelJoin.password,
+			searchChannel.password
+		);
+		console.log(`isMatch = ${isMatch}\n\n`);
+		return isMatch;
+	}
+
 	async joinChannel(
 		user: User,
 		channel: ChannelJoin
@@ -200,7 +213,7 @@ export class ChatService {
 		if (
 			searchChannel == null ||
 			(searchChannel.status == Status.PROTECT &&
-				searchChannel.password != channel.password)
+				!(await this.checkPassword(searchChannel, channel)))
 		) {
 			throw new UnauthorizedException();
 		}
