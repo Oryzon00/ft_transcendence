@@ -8,19 +8,23 @@ function RoomInput({ query, setQuery, direct }: RoomInputType) {
 	return (
 		<div className="flex w-11/12 h-12 space-x-4 my-2 mx-auto bg-[#2b2a33] rounded items-center">
 			<svg
-				viewBox="0 0 22 22"
-				fill="none"
+				stroke="currentColor"
+				fill="currentColor"
+				stroke-width="0"
+				viewBox="0 0 512 512"
+				className="w-5 h-5"
 				xmlns="http://www.w3.org/2000/svg"
-				className="bg-[#2b2a33] w-[24px] h-[24px] ml-2 "
 			>
-				<path d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z" />
+				<path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path>
 			</svg>
 			<input
 				type="text"
 				value={query}
 				onChange={(e) => setQuery(e.target.value)}
-				className="rounded h-full w-full outline-none"
-				placeholder={direct ? "Search for a DM" : "Search for a room"}
+				className="rounded h-full w-full outline-none px-2"
+				placeholder={
+					direct ? "Search for a DM..." : "Search for a room..."
+				}
 			/>
 		</div>
 	);

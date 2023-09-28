@@ -227,18 +227,26 @@ export class ChatService {
 		await this.prisma.member.delete({
 			where: { id: find.id }
 		});
-		let number = await this.prisma.member.count({
+		let number: number = await this.prisma.member.count({
 			where: {
 				channelId: channelId
 			}
 		});
-		console.log(number);
-		if (number === 0) {
-			this.prisma.channel.delete({
-				where: {
-					id: channelId
-				}
-			});
+		if (number == 0) {
+			try {
+				await this.prisma.message.deleteMany({
+					where: {
+						channelId: channelId
+					}
+				});
+				await this.prisma.channel.delete({
+					where: {
+						id: channelId
+					}
+				});
+			} catch (error) {
+				return error;
+			}
 		}
 		return true;
 	}
@@ -423,29 +431,32 @@ export class ChatService {
 		this.userdb.changeModo(body.userId, body.channelId);
 	}
 
-	async fight(user: User, channelId: string) :Promise<string> {
+	async fight(user: User, channelId: string): Promise<string> {
 		let otherUser = await this.getOtherInfo(user.id, channelId);
-		
-		const realFirstUser = await this.prisma.gameProfile.findUnique ({
+
+		const realFirstUser = await this.prisma.gameProfile.findUnique({
 			where: {
 				userId: user.id
 			}
-		})
+		});
 
-		const realSecondUser = await this.prisma.gameProfile.findUnique ({
+		const realSecondUser = await this.prisma.gameProfile.findUnique({
 			where: {
 				userId: otherUser.id
 			}
-		})
-		
-		if (realFirstUser.lobby == '' && realFirstUser.status == 'IDLE' && realSecondUser.lobby == '' && realSecondUser.status == 'IDLE') {
+		});
 
+		if (
+			realFirstUser.lobby == "" &&
+			realFirstUser.status == "IDLE" &&
+			realSecondUser.lobby == "" &&
+			realSecondUser.status == "IDLE"
+		) {
 			const prismGame: any = await this.prisma.game.create({
 				data: {
-					gamemode: 'Private'
+					gamemode: "Private"
 				}
 			});
-
 
 			await this.prisma.gameProfile.update({
 				where: {
@@ -456,7 +467,7 @@ export class ChatService {
 				}
 			});
 
-			return (prismGame.id);
+			return prismGame.id;
 
 			/*await this.prisma.gameProfile.update({
 				where: {
@@ -479,6 +490,6 @@ export class ChatService {
 		}
 		return (false);*/
 		}
-		return ('');
+		return "";
 	}
 }
