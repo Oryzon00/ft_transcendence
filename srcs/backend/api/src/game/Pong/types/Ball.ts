@@ -126,10 +126,8 @@ export class Ball {
 		if (this.speed.angle > Math.PI / 2 || this.speed.angle < -Math.PI / 2) {
 			if (pad && pad.pos) {		
 				let PaddleX: number = pad.pos.x + pad.width;
-				if (
-					this.pos.x - this.rad >= PaddleX &&
-					this.nextPos("x") - this.rad < PaddleX
-				) {
+				//checks if ball and paddle are aligned X wise
+				if ( this.pos.x - this.rad >= PaddleX && this.nextPos("x") - this.rad < PaddleX ) {
 					let reboundPoint: Point = this.reboundPoint("-", PaddleX);
 					if (
 						reboundPoint.y >= pad.pos.y - this.rad &&
@@ -138,8 +136,7 @@ export class Ball {
 						this.bounce(reboundPoint, pad);
 					else this.bounceCanvas();
 				} else if (
-					this.pos.x - this.rad >= pad.pos.x &&
-					this.pos.x + this.rad <= pad.pos.x + pad.width &&
+					(this.pos.x - pad.pos.x < this.rad + pad.width && this.pos.x - pad.pos.x >= 0) &&
 					this.pos.y >= pad.pos.y - this.rad &&
 					this.pos.y <= pad.pos.y + pad.height + this.rad
 				) {
@@ -161,8 +158,7 @@ export class Ball {
 						this.bounce(reboundPoint, pad);
 					else this.bounceCanvas();
 				} else if (
-					this.pos.x - this.rad >= pad.pos.x &&
-					this.pos.x + this.rad <= pad.pos.x + pad.width &&
+					(pad.pos.x + pad.width - this.pos.x < this.rad + pad.width && pad.pos.x + pad.width - this.pos.x >= 0) &&
 					this.pos.y >= pad.pos.y - this.rad &&
 					this.pos.y <= pad.pos.y + pad.height + this.rad
 				) {

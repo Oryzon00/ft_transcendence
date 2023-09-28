@@ -14,9 +14,31 @@ export function PongScores({player1, score1, player2, score2, timer}: PongScores
 
 	return(
 		<div className="PongScores">
-			<span>{player1} : {score1}</span>
-			<span>{timerMin > 0 ? timerMin : 0}:{timerSec > 9 ? timerSec : "0" + timerSec}</span>
-			<span>{player2} : {score2}</span>
+			<div className="PongScores-divleft">
+				<div className="PongScores-subdivleft">
+					<span className="PongScores-name">
+						{player1}
+					</span>
+				</div>
+				<span>
+					{" "} : {score1}
+				</span>
+			</div>
+			<div>
+				<span>
+					{timerMin > 0 ? timerMin : 0}:{timerSec > 9 ? timerSec : "0" + timerSec}
+				</span>
+			</div>
+			<div className="PongScores-divright">
+				<div className="PongScores-subdivright">
+					<span className="PongScores-name">
+						{player2}
+					</span>
+				</div>
+				<span>
+					{" "} : {score2}
+				</span>
+			</div>
 		</div>
 	)
 }

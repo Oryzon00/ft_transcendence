@@ -143,7 +143,7 @@ function Pong() {
 			function drawPowerUp(ctx: CanvasRenderingContext2D) {
 				if (GameState.lobbyMode == "Rumble" && GameState.powerUpPosition)
 				{
-					ctx.fillStyle = (GameState.powerUpType == "Freeze") ? "lightblue" : (GameState.powerUpType == "Giant") ? "purple" : "crimson";
+					ctx.fillStyle = (GameState.powerUpType == "Freeze") ? "skyblue" : (GameState.powerUpType == "Giant") ? "lightgreen" : "crimson";
 					ctx.beginPath();
 					ctx.arc(
 						GameState.powerUpPosition.x,

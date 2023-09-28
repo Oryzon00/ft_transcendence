@@ -124,11 +124,11 @@ export class Pong {
 		}
 		
 		for (const id of this.lobby.clients.keys()) {
-			if (this.scores.get(id) >= 2) {
+			if (this.scores.get(id) >= 5) {
 				this.endgame(id);
 			}
 		}
-		if (this.lobby.gamemode === "PvE" && (this.scores.get("bot") >= 2)) {
+		if (this.lobby.gamemode === "PvE" && (this.scores.get("bot") >= 5)) {
 				this.endgame("");
 		}
 	}
@@ -217,9 +217,6 @@ export class Pong {
 					pad.upKey = false;
 				}
 			}
-			// else {
-			// 	// console.log(this.paddles);
-			// }
 		}
 	}
 
