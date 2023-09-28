@@ -46,8 +46,10 @@ function ChatLayout() {
 			.then(function (data): void {
 				setChannel(data);
 			})
-			.catch(function (error) {
-				notifyError(error.message);
+			.catch(function () {
+				notifyError(
+					"Couldn't get the data at the creation of the chat."
+				);
 			});
 	};
 

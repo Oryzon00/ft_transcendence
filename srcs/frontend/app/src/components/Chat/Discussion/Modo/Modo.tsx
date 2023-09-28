@@ -75,6 +75,11 @@ function Modo({ id }: ModoType) {
 				<Moderation id={id} />
 			</div>
 		);
-	} else return <div className="w-full h-[calc(100%-4rem)]">No modo</div>;
+	} else
+		return (
+			<div className="w-full h-[calc(100%-4rem)] m-auto text-xl">
+				You are not a modo
+			</div>
+		);
 }
 export default Modo;

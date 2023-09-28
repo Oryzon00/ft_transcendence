@@ -8,31 +8,17 @@ type StatusType = {
 function Status({ status, setStatus, password, setPassword }: StatusType) {
 	return (
 		<div className="flex w-full">
-			<select name="selectedStatus" defaultValue={status}>
-				<option
-					value="public"
-					onClick={() => {
-						setStatus("public");
-					}}
-				>
-					Public
-				</option>
-				<option
-					value="private"
-					onClick={() => {
-						setStatus("private");
-					}}
-				>
-					Private
-				</option>
-				<option
-					value="protect"
-					onClick={() => {
-						setStatus("protect");
-					}}
-				>
-					Protect
-				</option>
+			<select
+				name="selectedStatus"
+				defaultValue={status}
+				onChange={(e) => {
+					console.log(e.target.value);
+					setStatus(e.target.value);
+				}}
+			>
+				<option value="public">Public</option>
+				<option value="private">Private</option>
+				<option value="protect">Protect</option>
 			</select>
 			{status == "protect" ? (
 				<div>
