@@ -133,6 +133,7 @@ export class ChatController {
 
 	@Patch("/channel/mute")
 	async mute(@GetUser() user: User, @Body() body: ChannelMute) {
+		console.log("a");
 		await this.ChatService.mute(user, body);
 	}
 

@@ -74,7 +74,7 @@ function Moderation({ id }: ModerationType) {
 										{e.user.name}
 									</h2>
 								</div>
-								<div className="flex flex-row">
+								<div className="flex flex-row flex-wrap rounded-none">
 									<Modo
 										id={e.user.id}
 										channelId={id}

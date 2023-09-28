@@ -10,20 +10,26 @@ type MuteType = {
 
 function Mute({ id, channelId }: MuteType) {
 	const [isClicked, setClicked] = useState<boolean>(false);
+	const [time, setTime] = useState<string>("");
+	const [date, setDate] = useState<string>("");
+
 	const MuteFetch = () => {
-		fetch(apiAddress + "/chat/channel/ban", {
+		fetch(apiAddress + "/chat/channel/mute", {
 			method: "PATCH",
 			headers: {
 				Authorization: "Bearer " + getJwtTokenFromCookie(),
 				"Content-type": "application/json"
 			},
-			body: JSON.stringify({ id: id, invited: channelId })
+			body: JSON.stringify({
+				id: id,
+				invited: channelId,
+				until: new Date(`${date}T${time}`)
+			})
 		})
 			.then(function (res: Response) {
 				if (!res.ok) {
 					throw new Error("Request failed with status " + res.status);
 				}
-				return res.json();
 			})
 			.catch(function (error) {
 				notifyError(error.message);
@@ -31,11 +37,30 @@ function Mute({ id, channelId }: MuteType) {
 	};
 	return isClicked ? (
 		<div className="flex">
-			<div>
-				<input type="time" name="time" placeholder="hrs:mins" />
-				<input type="date" />
+			<div className="flex flex-col">
+				<input
+					type="time"
+					name="time"
+					placeholder="hrs:mins"
+					value={time}
+					onChange={(e) => {
+						console.log(e.target.value);
+						setTime(e.target.value);
+					}}
+				/>
+				<input
+					type="date"
+					name="date"
+					value={date}
+					onChange={(e) => {
+						console.log(e.target.value);
+						setDate(e.target.value);
+					}}
+				/>
 			</div>
-			<button>Mute</button>
+			<button onClick={() => MuteFetch()}>
+				{time.length == 0 && date.length == 0 ? "Undefinitely" : "Mute"}
+			</button>
 		</div>
 	) : (
 		<button
