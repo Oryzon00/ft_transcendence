@@ -8,6 +8,7 @@ import {
 } from "../dto/chat.d";
 import { Status } from "@prisma/client";
 import { Injectable, NotFoundException } from "@nestjs/common";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 class ChannelDatabase {
@@ -53,7 +54,11 @@ class ChannelDatabase {
 		channel: ChannelCreation,
 		user: number
 	): Promise<Channel> {
-		if (channel.password.length > 0) channel.status = "protect";
+		let hashPassword = "";
+		if (channel.password.length > 0) {
+			channel.status = "protect";
+			hashPassword = await bcrypt.hash(channel.password, 10);
+		}
 		try {
 			const res: Channel = await this.prisma.channel.create({
 				data: {
@@ -64,7 +69,7 @@ class ChannelDatabase {
 						}
 					},
 					status: this.convertStatus(channel.status.toLowerCase()),
-					password: channel.password
+					password: hashPassword
 				}
 			});
 			this.joinChannel(res.id, user, true);
@@ -117,6 +122,7 @@ class ChannelDatabase {
 		try {
 			let res: Channel;
 			if (body.status == "protect") {
+				const hashPassword = await bcrypt.hash(body.password, 10);
 				res = await this.prisma.channel.update({
 					where: {
 						id: channelId
@@ -125,7 +131,7 @@ class ChannelDatabase {
 						name: body.name,
 						description: body.description,
 						status: this.convertStatus(body.status),
-						password: body.password
+						password: hashPassword
 					}
 				});
 			} else {
