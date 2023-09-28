@@ -21,6 +21,7 @@ function ChannelList({
 			<ul className="w-full flex flex-col items-center">
 				{filtredItems.map((value) => (
 					<li
+						key={value.id}
 						className={
 							both + (current != value.id ? not_clicked : clicked)
 						}
