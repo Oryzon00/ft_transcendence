@@ -6,8 +6,8 @@ type MessageType = {
 
 function Message({ element }: MessageType) {
 	return (
-		<div className="flex gap-x-1 hover:bg-[#23262A] w-full">
-			<a href={"/profile/" + element.username}>
+		<div className="flex gap-x-1 hover:bg-[#23262A]">
+			<a className="shrink-0" href={"/profile/" + element.username}>
 				<img
 					src={element.avatar}
 					alt=""
@@ -15,7 +15,7 @@ function Message({ element }: MessageType) {
 				/>
 			</a>
 			<div>
-				<a href={"/profile/" + element.username}>
+				<a className="shrink-0" href={"/profile/" + element.username}>
 					<p className="text-base font-bold hover:underline cursor-pointer">
 						{element.username}
 					</p>
@@ -25,14 +25,14 @@ function Message({ element }: MessageType) {
 					element.link == null ||
 					element.link == ""
 				) ? (
-					<a
+					<a 
 						href={element.link}
-						className=" hover:underline text-blue-400"
+						className=" hover:underline text-blue-400 shrink-0"
 					>
 						{element.content}
 					</a>
 				) : (
-					<p>{element.content}</p>
+					<p style={{wordBreak: 'break-word'}}>{element.content}</p>
 				)}
 			</div>
 		</div>

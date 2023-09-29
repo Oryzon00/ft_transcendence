@@ -11,7 +11,7 @@ function ChannelBox({ channels, clickedChannel }: ChannelBoxType) {
 		<div className="flex flex-row flex-wrap justify-center overflow-y-scroll scrollbar-thick h-full w-full">
 			{channels.map((value: ChannelPayload) => (
 				<button
-					className="p-1 w-[195px] h-[150px] m-[10px] leading-[150px]"
+					className="p-1 w-[195px] h-[150px] m-[10px] leading-[150px] truncate"
 					onClick={() => {
 						clickedChannel(value);
 					}}
