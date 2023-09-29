@@ -14,7 +14,7 @@ function ChannelList({
 		"bg-[#1e2124] hover:bg-[#23262A] hover:border-[#23262a] cursor-pointer ";
 	const clicked: string = "bg-[#282b30] cursor-default ";
 	const both: string =
-		"w-full h-24 border-0 border-b-2 border-[#282b30] rounded-none text-start flex items-center ";
+		"w-full h-24 border-0 border-b-2 border-[#282b30] rounded-none flex items-center justify-center ";
 
 	return (
 		<div className="h-[calc(100%-4rem)] overflow-y-scroll no-scrollbar">

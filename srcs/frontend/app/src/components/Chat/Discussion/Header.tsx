@@ -113,7 +113,7 @@ function Header({
 	return (
 		<div
 			id="header-discussion-bar"
-			className="flex flex-row justify-between items-center bg-[#282b30] text-white border-b-[#1e2124] border-b-2 border-0 h-16"
+			className="w-full flex flex-row justify-between items-center bg-[#282b30] text-white border-b-[#1e2124] border-b-2 border-0 h-16"
 		>
 			<div className="ml-2">
 				{channel[current].direct ? (
@@ -122,13 +122,13 @@ function Header({
 						<h2 className=" text-2xl px-2">{name}</h2>
 					</div>
 				) : (
-					<h2>{channel[current].name}</h2>
+						<h2>{channel[current].name}</h2>
 				)}
 			</div>
 			<div className="flex flex-row items-center">
 				{isModo ? (
 					<button
-						className="bg-[#282b30] h-full"
+						className="bg-[#282b30] h-full shrink-0"
 						onClick={() => modo(!modoValue)}
 					>
 						{modoValue ? (

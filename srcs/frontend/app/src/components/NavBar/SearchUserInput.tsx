@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { FaSearch } from "react-icons/fa";
-import usernameProtection from "../../utils/regexUsernameProtection";
+import {usernameProtection} from "../../utils/regexUsernameProtection";
 import { notifyError } from "../../utils/notify";
 
 export function SearchUserInput() {
