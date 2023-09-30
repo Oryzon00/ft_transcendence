@@ -231,7 +231,6 @@ class ChannelDatabase {
 	}
 
 	async delete(channelId: string) {
-		console.log("delete");
 		try {
 			await this.prisma.message.deleteMany({
 				where: {
@@ -249,7 +248,6 @@ class ChannelDatabase {
 				}
 			});
 		} catch (error) {
-			console.log(error);
 			return error;
 		}
 	}
@@ -359,6 +357,33 @@ class ChannelDatabase {
 					channel: {
 						select: {
 							ownerId: true
+						}
+					}
+				}
+			});
+		} catch (error) {
+			return error;
+		}
+	}
+
+	async getChannelBan(id: string): Promise<
+		{
+			id: string;
+			user: { id: number; name: string; image: string };
+		}[]
+	> {
+		try {
+			return await this.prisma.ban.findMany({
+				where: {
+					channelId: id
+				},
+				select: {
+					id: true,
+					user: {
+						select: {
+							id: true,
+							name: true,
+							image: true
 						}
 					}
 				}

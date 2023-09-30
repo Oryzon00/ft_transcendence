@@ -74,3 +74,8 @@ export type Friends = {
 	image: string;
 	name: string;
 };
+
+export type Ban = {
+	id: string;
+	user: Friends;
+};

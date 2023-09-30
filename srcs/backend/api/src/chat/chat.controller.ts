@@ -87,6 +87,19 @@ export class ChatController {
 		return await this.ChatService.listUser(user, body.channelId);
 	}
 
+	@Patch("/channel/list/ban")
+	async listBan(
+		@GetUser() user: User,
+		@Body() body: { channelId: string }
+	): Promise<
+		{
+			id: string;
+			user: { id: number; name: string; image: string };
+		}[]
+	> {
+		return await this.ChatService.listBan(user, body.channelId);
+	}
+
 	@Patch("/channel/get")
 	async getChannel(
 		@GetUser() user: User,
@@ -122,7 +135,6 @@ export class ChatController {
 
 	@Patch("/channel/kick")
 	async kick(@GetUser() user: User, @Body() body: ChannelKick) {
-		console.log("in kick controller");
 		await this.ChatService.kick(user, body);
 	}
 

@@ -89,8 +89,8 @@ function ChatLayout() {
 		sockets.on("onInvitation", (data: any) => {});
 
 		sockets.on("onUpdate", (data: any) => {
+			if (current.match(data.id)) setCurrent("");
 			if (data.status === "delete") {
-				if (current === data.id) setCurrent("");
 				setChannel((prev) => {
 					delete prev[data.id];
 					return prev;

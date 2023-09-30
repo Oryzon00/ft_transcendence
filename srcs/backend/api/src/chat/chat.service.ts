@@ -318,7 +318,8 @@ export class ChatService {
 					id: find.id
 				},
 				data: {
-					mute: false
+					mute: false,
+					muteEnd: null
 				}
 			});
 		} catch {
@@ -372,6 +373,20 @@ export class ChatService {
 	> {
 		if (this.userdb.isMember(user.id, channelId))
 			return await this.channeldb.getChannelUser(channelId);
+		throw new UnauthorizedException();
+	}
+
+	async listBan(
+		user: User,
+		channelId: string
+	): Promise<
+		{
+			id: string;
+			user: { id: number; name: string; image: string };
+		}[]
+	> {
+		if (this.userdb.isMember(user.id, channelId))
+			return await this.channeldb.getChannelBan(channelId);
 		throw new UnauthorizedException();
 	}
 

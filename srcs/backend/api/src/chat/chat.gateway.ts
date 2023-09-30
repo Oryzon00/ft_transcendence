@@ -43,7 +43,7 @@ export class ChatGateway
 			);
 			return decoded.sub;
 		} catch (ex) {
-			console.log("ERROR");
+			return ex;
 		}
 	}
 
