@@ -40,16 +40,15 @@ function Settings({ id }: SettingsType) {
 				notifyError(error.message);
 			});
 	};
-
 	useEffect(() => {
 		InfoChannel();
 	}, []);
 
 	return (
-		<div className="w-full h-[calc(100%-8.5rem)]">
+		<div className="w-full h-[calc(100%-5rem)]">
 			<div className="flex w-full">
 				<Name name={name} setName={setName} />
-				<Delete />
+				<Delete id={id} />
 			</div>
 			<Status
 				setStatus={setStatus}
@@ -57,14 +56,16 @@ function Settings({ id }: SettingsType) {
 				password={password}
 				setPassword={setPassword}
 			/>
-			<button
-				onClick={() => {
-					InfoChannel();
-				}}
-			>
-				RESET
-			</button>
-			<Save id={id} name={name} status={status} password={password} />
+			<div>
+				<button
+					onClick={() => {
+						InfoChannel();
+					}}
+				>
+					RESET
+				</button>
+				<Save id={id} name={name} status={status} password={password} />
+			</div>
 		</div>
 	);
 }

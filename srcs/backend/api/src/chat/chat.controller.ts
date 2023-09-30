@@ -115,6 +115,11 @@ export class ChatController {
 		await this.ChatService.channelChangement(user, body);
 	}
 
+	@Patch("/channel/delete")
+	async delete(@GetUser() user: User, @Body() body: { id: string }) {
+		await this.ChatService.deleteChannel(user, body);
+	}
+
 	@Patch("/channel/kick")
 	async kick(@GetUser() user: User, @Body() body: ChannelKick) {
 		console.log("in kick controller");
@@ -133,7 +138,6 @@ export class ChatController {
 
 	@Patch("/channel/mute")
 	async mute(@GetUser() user: User, @Body() body: ChannelMute) {
-		console.log("a");
 		await this.ChatService.mute(user, body);
 	}
 

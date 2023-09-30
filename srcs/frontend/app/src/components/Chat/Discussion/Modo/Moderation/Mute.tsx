@@ -21,8 +21,8 @@ function Mute({ id, channelId }: MuteType) {
 				"Content-type": "application/json"
 			},
 			body: JSON.stringify({
-				id: id,
-				invited: channelId,
+				id: channelId,
+				muted: id,
 				until: new Date(`${date}T${time}`)
 			})
 		})

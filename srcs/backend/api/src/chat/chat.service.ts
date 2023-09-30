@@ -286,12 +286,15 @@ export class ChatService {
 	}
 
 	async mute(user: User, body: ChannelMute) {
+		/*
 		if (
 			!(await this.userdb.isModo(user.id, body.id)) &&
 			(await this.userdb.isOwner(body.muted, body.id))
 		)
 			throw new UnauthorizedException();
+			*/
 		const find: Member = await this.userdb.findMember(body.muted, body.id);
+		console.log(find);
 		try {
 			await this.prisma.member.update({
 				where: {
@@ -385,6 +388,12 @@ export class ChatService {
 		if (await this.userdb.isOwner(user.id, body.id))
 			return await this.channeldb.setChannel(user.id, body.id, body);
 		return null;
+	}
+
+	async deleteChannel(user: User, body: { id: string }) {
+		if (this.userdb.isOwner(user.id, body.id))
+			return await this.channeldb.delete(body.id);
+		return new UnauthorizedException();
 	}
 
 	async createDirect(user: number[]): Promise<ChannelPayload> {

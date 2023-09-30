@@ -230,6 +230,29 @@ class ChannelDatabase {
 		}
 	}
 
+	async delete(channelId: string) {
+		console.log("delete");
+		try {
+			await this.prisma.message.deleteMany({
+				where: {
+					channelId: channelId
+				}
+			});
+			await this.prisma.member.deleteMany({
+				where: {
+					channelId: channelId
+				}
+			});
+			return await this.prisma.channel.delete({
+				where: {
+					id: channelId
+				}
+			});
+		} catch (error) {
+			console.log(error);
+			return error;
+		}
+	}
 	async getPublicChannel(): Promise<Channel[]> {
 		return await this.prisma.channel.findMany({
 			where: {

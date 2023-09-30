@@ -90,6 +90,10 @@ function ChatLayout() {
 			console.log(data);
 		});
 
+		sockets.on("onUpdate", (data: any) => {
+			console.log(data);
+		});
+
 		return () => {
 			console.log("Unregistered events...");
 			sockets.off("onMessage");

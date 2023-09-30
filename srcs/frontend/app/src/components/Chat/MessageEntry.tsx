@@ -32,7 +32,7 @@ function MessageEntry({ current }: MessageEntryType) {
 				.then(function (res: Response) {
 					if (!res.ok) {
 						throw new Error(
-							"Request failed with status " + res.status
+							"Couldn't write a message in this channel."
 						);
 					}
 				})
