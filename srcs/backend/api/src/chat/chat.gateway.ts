@@ -15,6 +15,7 @@ import { AuthSocket } from "./AuthSocket.types";
 import { WsGuard } from "./WsGuard";
 import { JwtPayload } from "src/auth/dto/jwtPayload.dto";
 import UserDatabase from "./database/user";
+import { stat } from "fs";
 
 @Injectable()
 @WebSocketGateway({
@@ -69,8 +70,12 @@ export class ChatGateway
 			link: message.link
 		};
 
+		this.emitToMany(users, res, status);
+	}
+
+	emitToMany(users: Member[], message: any, status: string) {
 		users.map((user) => {
-			this.emit(user.userId, res, status);
+			this.emit(user.userId, message, status);
 		});
 	}
 

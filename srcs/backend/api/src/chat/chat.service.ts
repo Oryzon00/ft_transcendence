@@ -198,7 +198,6 @@ export class ChatService {
 			channelJoin.password,
 			searchChannel.password
 		);
-		console.log(`isMatch = ${isMatch}\n\n`);
 		return isMatch;
 	}
 
@@ -294,7 +293,6 @@ export class ChatService {
 			throw new UnauthorizedException();
 			*/
 		const find: Member = await this.userdb.findMember(body.muted, body.id);
-		console.log(find);
 		try {
 			await this.prisma.member.update({
 				where: {
@@ -384,15 +382,31 @@ export class ChatService {
 	}
 
 	async channelChangement(user: User, body: ChannelChangement) {
-		console.log(body);
-		if (await this.userdb.isOwner(user.id, body.id))
+		if (await this.userdb.isOwner(user.id, body.id)) {
+			const members: Member[] = await this.userdb.getMembersfromChannel(
+				body.id
+			);
+			await this.chatGateway.emitToMany(
+				members,
+				{ status: "channel", id: body.id, name: body.name },
+				"onUpdate"
+			);
 			return await this.channeldb.setChannel(user.id, body.id, body);
-		return null;
+		}
 	}
 
 	async deleteChannel(user: User, body: { id: string }) {
-		if (this.userdb.isOwner(user.id, body.id))
+		if (this.userdb.isOwner(user.id, body.id)) {
+			const members: Member[] = await this.userdb.getMembersfromChannel(
+				body.id
+			);
+			await this.chatGateway.emitToMany(
+				members,
+				{ status: "delete", id: body.id },
+				"onUpdate"
+			);
 			return await this.channeldb.delete(body.id);
+		}
 		return new UnauthorizedException();
 	}
 

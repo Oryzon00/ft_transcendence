@@ -86,12 +86,22 @@ function ChatLayout() {
 		});
 
 		// Preparation for invitation in a room.
-		sockets.on("onInvitation", (data: any) => {
-			console.log(data);
-		});
+		sockets.on("onInvitation", (data: any) => {});
 
 		sockets.on("onUpdate", (data: any) => {
-			console.log(data);
+			if (data.status === "delete") {
+				if (current === data.id) setCurrent("");
+				setChannel((prev) => {
+					delete prev[data.id];
+					return prev;
+				});
+			} else if (data.status === "channel") {
+				setChannel((prev) => {
+					prev[data.id].name = data.name;
+					return prev;
+				});
+			}
+			setRefresh(!refresh);
 		});
 
 		return () => {
