@@ -4,7 +4,7 @@ import apiAddress from "../../../utils/apiAddress.ts";
 import getJwtTokenFromCookie from "../../../utils/getJWT.ts";
 import { notifyError, notifyInfo } from "../../../utils/notify.ts";
 import { throwErrorMessage } from "../../../utils/throwErrorMessage.ts";
-import usernameProtection from "../../../utils/regexUsernameProtection.ts";
+import {usernameProtection} from "../../../utils/regexUsernameProtection.ts";
 
 function UpdateUsernameButton() {
 	const userHook = useContext(UserContext);

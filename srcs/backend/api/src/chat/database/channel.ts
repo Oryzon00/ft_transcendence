@@ -7,7 +7,7 @@ import {
 	MessageSend
 } from "../dto/chat.d";
 import { Status } from "@prisma/client";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 
 @Injectable()
@@ -60,6 +60,8 @@ class ChannelDatabase {
 			hashPassword = await bcrypt.hash(channel.password, 10);
 		}
 		try {
+			const regex = new RegExp('^[a-zA-Z0-9-_ ]{1,30}$')
+			if (!regex.test(channel.name)) throw new UnauthorizedException();
 			const res: Channel = await this.prisma.channel.create({
 				data: {
 					name: channel.name,
