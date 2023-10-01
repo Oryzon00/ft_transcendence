@@ -46,21 +46,22 @@ function Settings({ id }: SettingsType) {
 
 	return (
 		<div className="w-full h-[calc(100%-5rem)]">
-			<div className="flex w-full">
+			<div className="h-5/6 w-full">
 				<Name name={name} setName={setName} />
 				<Delete id={id} />
+				<Status
+					setStatus={setStatus}
+					status={status}
+					password={password}
+					setPassword={setPassword}
+				/>
 			</div>
-			<Status
-				setStatus={setStatus}
-				status={status}
-				password={password}
-				setPassword={setPassword}
-			/>
-			<div>
+			<div className="bottom-0 flex flex-row w-full h-1/6">
 				<button
 					onClick={() => {
 						InfoChannel();
 					}}
+					className="w-full h-full rounded-none text-xl hover:text-[#92400e]"
 				>
 					RESET
 				</button>

@@ -29,6 +29,7 @@ function Save({ id, name, status, password }: SaveType) {
 			onClick={() => {
 				sendSetting();
 			}}
+			className="w-full h-full rounded-none text-xl hover:text-[#92400e]"
 		>
 			SAVE
 		</button>

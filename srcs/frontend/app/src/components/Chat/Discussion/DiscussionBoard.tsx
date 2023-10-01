@@ -16,7 +16,6 @@ import apiAddress from "../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../utils/getJWT";
 import { User } from "../../../utils/hooks/TuseUser";
 import { notifyError } from "../../../utils/notify";
-import { socket } from "../../../utils/contexts/WebsocketContext";
 
 type CurrentChannel = {
 	channel: { [key: string]: ChannelPayload };

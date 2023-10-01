@@ -5,12 +5,13 @@ type NameType = {
 
 function Name({ name, setName }: NameType) {
 	return (
-		<div>
-			<h2>Name Room : </h2>
+		<div className="flex flex-row items-center w-11/12 mx-auto h-1/3">
+			<h2 className="px-1 w-3/12">Name Room :</h2>
 			<input
 				type="text"
-				className="bg-[#424549] rounded-sm w-72 h-6"
+				className="bg-[#424549] rounded-sm w-9/12 h-1/4 text-center"
 				value={name}
+				placeholder="Cannot leave a channel without a name."
 				onChange={(e) => setName(e.target.value)}
 			/>
 		</div>

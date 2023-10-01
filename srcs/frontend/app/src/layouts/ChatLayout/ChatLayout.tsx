@@ -68,10 +68,6 @@ function ChatLayout() {
 
 		// Create new channel
 		sockets.on("onChannel", (data: any) => {
-			setCurrent(() => {
-				return data.id;
-			});
-
 			if (channel[data.id] == undefined) {
 				setChannel((prev) => {
 					prev[data.id] = data;
@@ -85,17 +81,16 @@ function ChatLayout() {
 			setRefresh(!refresh);
 		});
 
-		// Preparation for invitation in a room.
-		sockets.on("onInvitation", (data: any) => {});
-
 		sockets.on("onUpdate", (data: any) => {
-			if (current.match(data.id)) setCurrent("");
-			if (data.status === "delete") {
+			if (current == "" || current.match(data.id)) {
+				setCurrent("");
+			}
+			if (data.status.match("delete")) {
 				setChannel((prev) => {
 					delete prev[data.id];
 					return prev;
 				});
-			} else if (data.status === "channel") {
+			} else if (data.status.match("channel")) {
 				setChannel((prev) => {
 					prev[data.id].name = data.name;
 					return prev;

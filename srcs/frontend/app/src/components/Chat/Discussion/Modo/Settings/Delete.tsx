@@ -27,9 +27,14 @@ function Delete({ id }: DeleteType) {
 	};
 
 	return (
-		<div>
-			<h2>Delete Channel</h2>
-			<button onClick={() => DeleteAction()}>DELETE</button>
+		<div className="flex flex-row items-center w-11/12 h-1/3 mx-auto">
+			<h2 className="px-2 w-3/12">Delete Channel :</h2>
+			<button
+				onClick={() => DeleteAction()}
+				className="w-9/12  hover:text-[#92400e]"
+			>
+				DELETE
+			</button>
 		</div>
 	);
 }

@@ -44,7 +44,7 @@ export default function ChannelBoard({
 
 	return (
 		<div className="rounded h-[calc(100%-3rem)] w-full scroll-smooth hover:scroll-auto">
-			<RoomInput query={query} setQuery={setQuery} direct={direct}/>
+			<RoomInput query={query} setQuery={setQuery} direct={direct} />
 			<ChannelList
 				filtredItems={filtredItems}
 				changeCurrent={changeCurrent}

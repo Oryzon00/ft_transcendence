@@ -7,7 +7,7 @@ type StatusType = {
 
 function Status({ status, setStatus, password, setPassword }: StatusType) {
 	return (
-		<div className="flex w-full">
+		<div className="flex w-full h-1/3">
 			<select
 				name="selectedStatus"
 				defaultValue={status}
