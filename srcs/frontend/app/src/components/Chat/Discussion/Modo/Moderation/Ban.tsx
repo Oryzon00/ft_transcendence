@@ -19,11 +19,11 @@ function Ban({ id, channelId }: BanType) {
 		})
 			.then(function (res: Response) {
 				if (!res.ok) {
-					throw new Error("Request failed with status " + res.status);
+					throw new Error("You are not allowed to ban this user.");
 				}
 			})
 			.catch(function (error) {
-				notifyError("You are not allowed to ban this user.");
+				notifyError(error.message);
 			});
 	};
 	return (

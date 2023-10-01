@@ -92,6 +92,7 @@ function Mute({ id, channelId, isMute, muteUntil }: MuteType) {
 				if (!isMute) setClicked(true);
 				else {
 					UnMuteFetch();
+					setClicked(false);
 				}
 			}}
 			className="bg-[#282b30]"

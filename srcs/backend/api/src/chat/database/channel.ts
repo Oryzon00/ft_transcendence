@@ -213,16 +213,11 @@ class ChannelDatabase {
 		}
 	}
 
-	async unbanChannel(
-		channel: string,
-		user: number,
-		reason = ""
-	): Promise<Ban> {
+	async unbanChannel(id: string): Promise<Ban> {
 		try {
-			const find: Ban = await this.findBanChannel(channel, user);
-			return await this.prisma.ban.delete({
+			await this.prisma.ban.deleteMany({
 				where: {
-					id: find.id
+					id: id
 				}
 			});
 		} catch (error) {

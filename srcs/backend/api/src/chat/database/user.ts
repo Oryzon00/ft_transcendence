@@ -43,6 +43,21 @@ class UserDatabase {
 		}
 	}
 
+	async getModo(channelId: string): Promise<{ userId: number }[]> {
+		try {
+			return await this.prisma.member.findMany({
+				where: {
+					channelId: channelId,
+					isAdmin: true
+				},
+				select: {
+					userId: true
+				}
+			});
+		} catch (error) {
+			return error;
+		}
+	}
 	async getAllChannels(userid: number): Promise<{ channelId: string }[]> {
 		try {
 			return await this.prisma.member.findMany({

@@ -16,6 +16,7 @@ import apiAddress from "../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../utils/getJWT";
 import { User } from "../../../utils/hooks/TuseUser";
 import { notifyError } from "../../../utils/notify";
+import { socket } from "../../../utils/contexts/WebsocketContext";
 
 type CurrentChannel = {
 	channel: { [key: string]: ChannelPayload };
@@ -79,14 +80,14 @@ function DiscussionBoard({
 				modo={setModo}
 			/>
 			{modo ? (
-				<Modo id={current} />
+				<Modo id={current} sockets={sockets} />
 			) : (
 				<>
 					<Conversation
 						messages={channel[current].message}
 						blocked={blocked}
 					/>
-					<MessageEntry current={current} sockets={sockets} />
+					<MessageEntry current={current} />
 				</>
 			)}
 		</div>

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Socket } from "socket.io-client";
 import apiAddress from "../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../utils/getJWT";
 import { notifyError } from "../../utils/notify";
@@ -9,7 +8,6 @@ import data from "@emoji-mart/data";
 
 type MessageEntryType = {
 	current: string;
-	sockets: Socket;
 };
 function MessageEntry({ current }: MessageEntryType) {
 	const [value, setValue] = useState("");

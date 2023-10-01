@@ -1,11 +1,10 @@
 type HeaderType = {
 	query: string;
 	setQuery: any;
-	type: boolean;
 	setType: any;
 };
 
-function Header({ query, setQuery, type, setType }: HeaderType) {
+function Header({ query, setQuery, setType }: HeaderType) {
 	return (
 		<div
 			id="header"

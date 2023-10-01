@@ -109,7 +109,7 @@ function Community({ togglemodal, setChannel }: CommunityType) {
 
 	return (
 		<div className="flex flex-col bg-zinc-700 h-[550px] w-[650px] rounded-md border-4">
-			<Header togglemodal={togglemodal} refresh={refresh} />
+			<Header togglemodal={togglemodal} />
 			{isClickProtected ? (
 				<ProtectedChannel
 					current={current}

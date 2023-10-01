@@ -5,12 +5,14 @@ import Moderation from "./Moderation/Moderation";
 import apiAddress from "../../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../../utils/getJWT";
 import { notifyError } from "../../../../utils/notify";
+import { Socket } from "socket.io-client";
 
 type ModoType = {
 	id: string;
+	sockets: Socket;
 };
 
-function Modo({ id }: ModoType) {
+function Modo({ id, sockets }: ModoType) {
 	const [vue, setVue] = useState<boolean>(false);
 	const [isOwner, setOwner] = useState<boolean>(false);
 	const [isModo, setModo] = useState<boolean>(false);
@@ -66,13 +68,17 @@ function Modo({ id }: ModoType) {
 		return (
 			<div className="w-full h-[calc(100%-4rem)]">
 				<ButtonHeader vue={vue} setVue={setVue} />
-				{vue ? <Moderation id={id} /> : <Settings id={id} />}
+				{vue ? (
+					<Moderation id={id} sockets={sockets} />
+				) : (
+					<Settings id={id} />
+				)}
 			</div>
 		);
 	} else if (isModo) {
 		return (
 			<div className="w-full h-[calc(100%-4rem)]">
-				<Moderation id={id} />
+				<Moderation id={id} sockets={sockets} />
 			</div>
 		);
 	} else

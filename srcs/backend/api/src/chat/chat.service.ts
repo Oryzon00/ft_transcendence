@@ -279,6 +279,16 @@ export class ChatService {
 			)
 				throw new UnauthorizedException();
 			await this.deleteMember(body.id, body.invited);
+			await this.chatGateway.emitToMany(
+				[{ userId: body.invited }],
+				{ status: "delete", id: body.id },
+				"onUpdate"
+			);
+			await this.chatGateway.emitToMany(
+				await this.userdb.getModo(body.id),
+				{ status: "any" },
+				"onModo"
+			);
 		} else {
 			throw new UnauthorizedException();
 		}
@@ -303,6 +313,11 @@ export class ChatService {
 					muteEnd: body.until
 				}
 			});
+			await this.chatGateway.emitToMany(
+				await this.userdb.getModo(body.id),
+				{ status: "any" },
+				"onModo"
+			);
 		} catch (error) {
 			throw new NotFoundException();
 		}
@@ -322,6 +337,11 @@ export class ChatService {
 					muteEnd: null
 				}
 			});
+			await this.chatGateway.emitToMany(
+				await this.userdb.getModo(body.id),
+				{ status: "any" },
+				"onModo"
+			);
 		} catch {
 			throw new NotFoundException();
 		}
@@ -333,19 +353,32 @@ export class ChatService {
 			!(await this.userdb.isOwner(body.invited, body.id))
 		) {
 			if (
-				(await this.userdb.isModo(body.invited, body.id)) &&
-				!(await this.userdb.isOwner(user.id, body.id))
+				((await this.userdb.isModo(body.invited, body.id)) &&
+					!(await this.userdb.isOwner(user.id, body.id))) ||
+				(await this.userdb.findBan(body.invited, body.id)) != null
 			)
 				throw new UnauthorizedException();
 			await this.channeldb.banChannel(body.id, body.invited);
 			await this.deleteMember(body.id, body.invited);
+			await this.chatGateway.emitToMany(
+				await this.userdb.getModo(body.id),
+				{ status: "any" },
+				"onModo"
+			);
 		} else throw new UnauthorizedException();
 	}
 
-	async unban(user: User, body: ChannelBan) {
-		if (!(await this.userdb.isModo(user.id, body.id)))
+	async unban(user: User, body: { id: string; channelId: string }) {
+		if (!(await this.userdb.isModo(user.id, body.channelId))) {
 			throw new UnauthorizedException();
-		await this.channeldb.unbanChannel(body.id, body.invited);
+		}
+		await this.channeldb.unbanChannel(body.id);
+		console.log("unban");
+		await this.chatGateway.emitToMany(
+			await this.userdb.getModo(body.channelId),
+			{ status: "any" },
+			"onModo"
+		);
 	}
 
 	async password(user: User, body: ChannelNewPassword) {

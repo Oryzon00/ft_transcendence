@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { ChannelPayload } from "../../../../layouts/ChatLayout/chat.d";
 
 type ChannelBoxType = {
@@ -8,7 +7,7 @@ type ChannelBoxType = {
 
 function ChannelBox({ channels, clickedChannel }: ChannelBoxType) {
 	return (
-		<div className="flex flex-row flex-wrap justify-center overflow-y-scroll scrollbar-thick h-full w-full">
+		<div className="flex flex-row flex-wrap justify-center overflow-y-scroll scrollbar-none scrollbar-thick h-full w-full">
 			{channels.map((value: ChannelPayload) => (
 				<button
 					className="p-1 w-[195px] h-[150px] m-[10px] leading-[150px]"

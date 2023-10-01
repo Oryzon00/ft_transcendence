@@ -6,11 +6,14 @@ import Header from "./Header";
 import { Ban, ChannelUser } from "../../../../../layouts/ChatLayout/chat.d";
 import Profile from "./Profile";
 import ActionModo from "./ActionModo";
+import Unban from "./Unban";
+import { Socket } from "socket.io-client";
 
 // Images
 
 type ModerationType = {
 	id: string;
+	sockets: Socket;
 };
 
 function searchElements(list: ChannelUser[], query: string): ChannelUser[] {
@@ -22,11 +25,12 @@ function searchElements(list: ChannelUser[], query: string): ChannelUser[] {
 	return res;
 }
 
-function Moderation({ id }: ModerationType) {
+function Moderation({ id, sockets }: ModerationType) {
 	const [list, setList] = useState<ChannelUser[]>([]);
 	const [banList, setBanList] = useState<Ban[]>([]);
-	const [type, setType] = useState<boolean>(false);
+	const [type, setType] = useState<number>(0);
 	const [query, setQuery] = useState<string>("");
+	const [refresh, setRefresh] = useState<boolean>(false);
 
 	const getListUser = () => {
 		fetch(apiAddress + "/chat/channel/list", {
@@ -67,6 +71,7 @@ function Moderation({ id }: ModerationType) {
 				return res.json();
 			})
 			.then(function (res): void {
+				console.log(res);
 				setBanList(res);
 			})
 			.catch(function (error) {
@@ -77,19 +82,22 @@ function Moderation({ id }: ModerationType) {
 	useEffect(() => {
 		getListUser();
 		getListBan();
-	}, []);
+
+		sockets.on("onModo", () => {
+			setRefresh(!refresh);
+		});
+
+		return () => {
+			sockets.off("onModo");
+		};
+	}, [refresh]);
 
 	return (
 		<div className="mx-auto w-full h-[80%]">
-			<Header
-				query={query}
-				setQuery={setQuery}
-				type={type}
-				setType={setType}
-			/>
+			<Header query={query} setQuery={setQuery} setType={setType} />
 			<div className="w-[90%] m-auto mt-2 h-[90%] overflow-y-auto">
 				<ul>
-					{type
+					{type == 0
 						? list?.map((e) => (
 								<li
 									key={e.user.id}
@@ -99,7 +107,15 @@ function Moderation({ id }: ModerationType) {
 									<ActionModo user={e} id={id} />
 								</li>
 						  ))
-						: banList?.map((e) => <li key={e.id}> </li>)}
+						: banList?.map((ban) => (
+								<li
+									key={ban.id}
+									className="flex flex-row justify-between items-center bg-[#282b30] text-white w-full  h-18 border-2 border-white"
+								>
+									<Profile user={ban.user} />
+									<Unban banId={ban.id} channelId={id} />
+								</li>
+						  ))}
 				</ul>
 			</div>
 		</div>

@@ -144,7 +144,10 @@ export class ChatController {
 	}
 
 	@Patch("/channel/unban")
-	async unban(@GetUser() user: User, @Body() body: ChannelBan) {
+	async unban(
+		@GetUser() user: User,
+		@Body() body: { id: string; channelId: string }
+	) {
 		await this.ChatService.unban(user, body);
 	}
 
