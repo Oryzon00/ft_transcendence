@@ -82,10 +82,10 @@ function ChatLayout() {
 		});
 
 		sockets.on("onUpdate", (data: any) => {
-			if (current == "" || current.match(data.id)) {
-				setCurrent("");
-			}
 			if (data.status.match("delete")) {
+				if (current == "" || current.match(data.id)) {
+					setCurrent("");
+				}
 				setChannel((prev) => {
 					delete prev[data.id];
 					return prev;
