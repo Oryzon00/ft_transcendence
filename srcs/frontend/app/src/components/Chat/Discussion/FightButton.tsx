@@ -1,30 +1,41 @@
 import apiAddress from "../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../utils/getJWT";
 import { notifyError } from "../../../utils/notify";
+import { useNavigate } from "react-router";
+
 
 type FightType = {
 	channelId: string;
 };
 
 function FightButton({ channelId }: FightType) {
+    const navigate = useNavigate();
+
 	const FightSend = () => {
-		fetch(apiAddress + "/chat/fight", {
-			method: "POST",
-			headers: {
-				Authorization: "Bearer " + getJwtTokenFromCookie(),
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify({ id: channelId })
-		})
-			.then(function (res: Response) {
-				if (!res.ok) {
-					throw new Error("Request failed with status " + res.status);
-				}
-			})
-			.catch(function (error) {
-				notifyError(error.message);
-			});
-	};
+		console.log(channelId);
+        fetch(apiAddress + "/chat/fight", {
+            method: "POST",
+            headers: {
+                Authorization: "Bearer " + getJwtTokenFromCookie(),
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({id: channelId})
+        })
+            .then(function (res: Response) {
+                if (!res.ok) {
+                    throw new Error("Request failed with status " + res.status);
+                }
+                return res.json();
+            })
+            .then (function (data) {
+                if (data.gameId === undefined)
+                    throw new Error("Error while creating private game :(")
+                navigate("/play?gameId=" + data.gameId);
+            })
+            .catch(function (error) {
+                notifyError(error.message);
+            });
+		};
 
 	return (
 		<button

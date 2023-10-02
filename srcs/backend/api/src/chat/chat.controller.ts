@@ -209,7 +209,7 @@ export class ChatController {
 	): Promise<{ gameId: string }> {
 		const msg = await this.ChatService.fight(user, body.id);
 		if (msg == "") {
-			return undefined;
+			return { gameId: undefined };
 		} else {
 			this.ChatService.message(user, {
 				channelId: body.id,

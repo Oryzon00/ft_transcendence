@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom";
 import { MessagePayload } from "../../../layouts/ChatLayout/chat.d";
 
 type MessageType = {
@@ -25,12 +26,12 @@ function Message({ element }: MessageType) {
 					element.link == null ||
 					element.link == ""
 				) ? (
-					<a 
-						href={element.link}
+					<NavLink
+						to={element.link}
 						className=" hover:underline text-blue-400 shrink-0"
 					>
 						{element.content}
-					</a>
+					</NavLink>
 				) : (
 					<p style={{wordBreak: 'break-word'}}>{element.content}</p>
 				)}
@@ -38,5 +39,10 @@ function Message({ element }: MessageType) {
 		</div>
 	);
 }
+
+<NavLink
+			to="/play"
+			className="text-white text-xl font-bold border-4 bg-zinc-700 hover:bg-amber-800 px-6 py-4 rounded-md"
+		></NavLink>
 
 export default Message;
