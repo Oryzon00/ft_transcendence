@@ -100,10 +100,9 @@ function ChatLayout() {
 		});
 
 		return () => {
-			console.log("Unregistered events...");
 			sockets.off("onMessage");
 			sockets.off("onChannel");
-			sockets.off("onInvitation");
+			sockets.off("onUpdate");
 		};
 	}, [refresh]);
 

@@ -122,7 +122,12 @@ export class ChatService {
 		const members: Member[] = await this.userdb.getMembersfromChannel(
 			message.channelId
 		);
-		if (member == undefined || member.mute) {
+		if (
+			member == undefined ||
+			(member.mute &&
+				(member.muteEnd == null ||
+					member.muteEnd.getTime() > Date.now()))
+		) {
 			return "You cannot send message in this channel, refresh the page";
 		}
 		if (message.content.length == 0) {
@@ -257,7 +262,7 @@ export class ChatService {
 					}
 				});
 			} catch (error) {
-				return error;
+				throw error;
 			}
 		}
 		return true;
@@ -295,13 +300,13 @@ export class ChatService {
 	}
 
 	async mute(user: User, body: ChannelMute) {
-		/*
 		if (
-			!(await this.userdb.isModo(user.id, body.id)) &&
-			(await this.userdb.isOwner(body.muted, body.id))
+			((await this.userdb.isModo(user.id, body.id)) &&
+				!(await this.userdb.isOwner(body.muted, body.id))) ||
+			((await this.userdb.isModo(body.muted, body.id)) &&
+				!(await this.userdb.isOwner(user.id, body.id)))
 		)
 			throw new UnauthorizedException();
-			*/
 		const find: Member = await this.userdb.findMember(body.muted, body.id);
 		try {
 			await this.prisma.member.update({
@@ -324,7 +329,12 @@ export class ChatService {
 	}
 
 	async unmute(user: User, body: ChannelMute) {
-		if (!(await this.userdb.isModo(user.id, body.id)))
+		if (
+			((await this.userdb.isModo(user.id, body.id)) &&
+				!(await this.userdb.isOwner(body.muted, body.id))) ||
+			((await this.userdb.isModo(body.muted, body.id)) &&
+				!(await this.userdb.isOwner(user.id, body.id)))
+		)
 			throw new UnauthorizedException();
 		const find: Member = await this.userdb.findMember(body.muted, body.id);
 		try {
@@ -373,7 +383,6 @@ export class ChatService {
 			throw new UnauthorizedException();
 		}
 		await this.channeldb.unbanChannel(body.id);
-		console.log("unban");
 		await this.chatGateway.emitToMany(
 			await this.userdb.getModo(body.channelId),
 			{ status: "any" },
@@ -434,12 +443,13 @@ export class ChatService {
 			const members: Member[] = await this.userdb.getMembersfromChannel(
 				body.id
 			);
+			const res = await this.channeldb.setChannel(user.id, body.id, body);
 			await this.chatGateway.emitToMany(
 				members,
 				{ status: "channel", id: body.id, name: body.name },
 				"onUpdate"
 			);
-			return await this.channeldb.setChannel(user.id, body.id, body);
+			return res;
 		}
 	}
 
@@ -455,7 +465,7 @@ export class ChatService {
 			);
 			return await this.channeldb.delete(body.id);
 		}
-		return new UnauthorizedException();
+		throw new UnauthorizedException();
 	}
 
 	async createDirect(user: number[]): Promise<ChannelPayload> {

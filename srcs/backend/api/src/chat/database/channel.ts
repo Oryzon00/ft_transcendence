@@ -7,7 +7,11 @@ import {
 	MessageSend
 } from "../dto/chat.d";
 import { Status } from "@prisma/client";
-import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import {
+	Injectable,
+	NotFoundException,
+	UnauthorizedException
+} from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 
 @Injectable()
@@ -34,7 +38,7 @@ class ChannelDatabase {
 			});
 			return res;
 		} catch (error) {
-			return error;
+			throw error;
 		}
 	}
 
@@ -60,7 +64,7 @@ class ChannelDatabase {
 			hashPassword = await bcrypt.hash(channel.password, 10);
 		}
 		try {
-			const regex = new RegExp('^[a-zA-Z0-9-_ ]{1,30}$')
+			const regex = new RegExp("^[a-zA-Z0-9-_ ]{1,30}$");
 			if (!regex.test(channel.name)) throw new UnauthorizedException();
 			const res: Channel = await this.prisma.channel.create({
 				data: {
@@ -77,7 +81,7 @@ class ChannelDatabase {
 			this.joinChannel(res.id, user, true);
 			return res;
 		} catch (error) {
-			return error;
+			throw error;
 		}
 	}
 
@@ -94,7 +98,7 @@ class ChannelDatabase {
 			if (user[0] != user[1]) this.joinChannel(res.id, user[1]);
 			return res;
 		} catch (error) {
-			return error;
+			throw error;
 		}
 	}
 
@@ -112,7 +116,7 @@ class ChannelDatabase {
 			});
 			return res;
 		} catch (error) {
-			return error;
+			throw error;
 		}
 	}
 
@@ -123,6 +127,9 @@ class ChannelDatabase {
 	): Promise<Channel> {
 		try {
 			let res: Channel;
+			console.log(body.name);
+			const regex = new RegExp("^[a-zA-Z0-9-_ ]{1,30}$");
+			if (!regex.test(body.name)) throw new UnauthorizedException();
 			if (body.status == "protect") {
 				const hashPassword = await bcrypt.hash(body.password, 10);
 				res = await this.prisma.channel.update({
@@ -149,7 +156,7 @@ class ChannelDatabase {
 			}
 			return res;
 		} catch (error) {
-			return error;
+			throw error;
 		}
 	}
 	async joinChannel(
@@ -189,7 +196,7 @@ class ChannelDatabase {
 				}
 			});
 		} catch (error) {
-			return error;
+			throw error;
 		}
 	}
 
@@ -211,11 +218,11 @@ class ChannelDatabase {
 				}
 			});
 		} catch (error) {
-			return error;
+			throw error;
 		}
 	}
 
-	async unbanChannel(id: string): Promise<Ban> {
+	async unbanChannel(id: string) {
 		try {
 			await this.prisma.ban.deleteMany({
 				where: {
@@ -223,7 +230,7 @@ class ChannelDatabase {
 				}
 			});
 		} catch (error) {
-			return error;
+			throw error;
 		}
 	}
 
@@ -245,7 +252,7 @@ class ChannelDatabase {
 				}
 			});
 		} catch (error) {
-			return error;
+			throw error;
 		}
 	}
 	async getPublicChannel(): Promise<Channel[]> {
@@ -359,7 +366,7 @@ class ChannelDatabase {
 				}
 			});
 		} catch (error) {
-			return error;
+			throw error;
 		}
 	}
 
@@ -386,7 +393,7 @@ class ChannelDatabase {
 				}
 			});
 		} catch (error) {
-			return error;
+			throw error;
 		}
 	}
 }

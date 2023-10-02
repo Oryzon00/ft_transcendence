@@ -22,7 +22,6 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { User } from "@prisma/client";
 import { GameStatus } from "@prisma/client";
 
-
 @WebSocketGateway({
 	path: "/game"
 })
@@ -60,16 +59,23 @@ export class GameGateway
 	}
 
 	@SubscribeMessage(ClientEvents.LobbyCreate)
-	async onLobbyCreate( client: AuthenticatedSocket, data: LobbyCreateDto ): Promise< WsResponse<ServerResponseDTO[ServerEvents.GameMessage]> > {
-		if ((await this.prisma.user.findUnique({
-			where: {id : client.userId}, 
-			include: {gameProfile: true}
-		})).gameProfile.status === GameStatus.IDLE) {
+	async onLobbyCreate(
+		client: AuthenticatedSocket,
+		data: LobbyCreateDto
+	): Promise<WsResponse<ServerResponseDTO[ServerEvents.GameMessage]>> {
+		if (
+			(
+				await this.prisma.user.findUnique({
+					where: { id: client.userId },
+					include: { gameProfile: true }
+				})
+			).gameProfile.status === GameStatus.IDLE
+		) {
 			await this.prisma.gameProfile.update({
 				where: { userId: client.userId },
-				data: { status: GameStatus.IN_LOBBY },
+				data: { status: GameStatus.IN_LOBBY }
 			});
-			
+
 			let lobby = this.lobbyManager.findLobby(client.id, data.mode);
 			if (lobby) {
 				await this.lobbyManager.joinLobby(client, lobby.Id);
@@ -81,14 +87,17 @@ export class GameGateway
 						mode: data.mode,
 						lobbyId: lobby.Id,
 						player1MMR: "",
-						player2MMR: "",
+						player2MMR: ""
 					}
 				};
 			} else {
 				lobby = await this.lobbyManager.createLobby(data.mode);
 				lobby.addClient(client);
 
-				lobby.sendEvent<ServerResponseDTO[ServerEvents.QueueJoined]>(ServerEvents.QueueJoined, {});
+				lobby.sendEvent<ServerResponseDTO[ServerEvents.QueueJoined]>(
+					ServerEvents.QueueJoined,
+					{}
+				);
 
 				return {
 					event: ServerEvents.GameMessage,
@@ -97,27 +106,26 @@ export class GameGateway
 						mode: data.mode,
 						lobbyId: lobby.Id,
 						player1MMR: "",
-						player2MMR: "",
-						}
-					};
-				}
+						player2MMR: ""
+					}
+				};
 			}
 		}
+	}
 
 	@SubscribeMessage(ClientEvents.LobbyJoin)
 	async onLobbyJoin(
 		client: AuthenticatedSocket,
 		data: LobbyJoinDto
-	): Promise<WsResponse<ServerResponseDTO[ServerEvents]> > {
+	): Promise<WsResponse<ServerResponseDTO[ServerEvents]>> {
 		try {
-
 			let lobby = await this.lobbyManager.findLobbyByID(data.lobbyId);
-			if (lobby)
-			{
-
+			if (lobby) {
 				await this.lobbyManager.joinLobby(client, data.lobbyId);
-				lobby.sendEvent<ServerResponseDTO[ServerEvents.PrivateJoined]>(ServerEvents.PrivateJoined, {});
-
+				lobby.sendEvent<ServerResponseDTO[ServerEvents.PrivateJoined]>(
+					ServerEvents.PrivateJoined,
+					{}
+				);
 
 				return {
 					event: ServerEvents.GameMessage,
@@ -126,11 +134,11 @@ export class GameGateway
 						mode: data.mode,
 						lobbyId: client.data.lobby.Id,
 						player1MMR: "",
-						player2MMR: "",
+						player2MMR: ""
 					}
 				};
 			}
-		} catch(error) {
+		} catch (error) {
 			return {
 				event: ServerEvents.LobbyError,
 				data: {
@@ -138,16 +146,15 @@ export class GameGateway
 				}
 			};
 		}
-		
 	}
 
 	@SubscribeMessage(ClientEvents.MovePaddle)
 	onMovePaddle(client: AuthenticatedSocket, data: MovePaddleDTO): void {
 		try {
-			if (!client.data.lobby) 
+			if (!client.data.lobby)
 				throw new WsException("You are not in a lobby");
 			client.data.lobby.game.movePaddle(data);
-		} catch(error) {
+		} catch (error) {
 			console.log(error);
 		}
 	}
@@ -160,7 +167,7 @@ export class GameGateway
 
 	@SubscribeMessage(ClientEvents.PrivateLeave)
 	async onPrivateLeave(client: AuthenticatedSocket): Promise<void> {
-		client.emit(ServerEvents.PrivateLeft);	
+		client.emit(ServerEvents.PrivateLeft);
 		await this.lobbyManager.endSocket(client);
 	}
 }

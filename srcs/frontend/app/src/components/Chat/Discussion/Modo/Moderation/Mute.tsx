@@ -68,7 +68,6 @@ function Mute({ id, channelId, isMute, muteUntil }: MuteType) {
 					placeholder="hrs:mins"
 					value={time}
 					onChange={(e) => {
-						console.log(e.target.value);
 						setTime(e.target.value);
 					}}
 				/>
@@ -77,7 +76,6 @@ function Mute({ id, channelId, isMute, muteUntil }: MuteType) {
 					name="date"
 					value={date}
 					onChange={(e) => {
-						console.log(e.target.value);
 						setDate(e.target.value);
 					}}
 				/>

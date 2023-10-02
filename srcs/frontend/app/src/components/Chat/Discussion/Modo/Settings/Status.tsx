@@ -12,7 +12,6 @@ function Status({ status, setStatus, password, setPassword }: StatusType) {
 				name="selectedStatus"
 				defaultValue={status}
 				onChange={(e) => {
-					console.log(e.target.value);
 					setStatus(e.target.value);
 				}}
 			>

@@ -1,5 +1,6 @@
 import apiAddress from "../../../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../../../utils/getJWT";
+import { notifyError } from "../../../../../utils/notify";
 
 type SaveType = {
 	id: string;
@@ -22,7 +23,15 @@ function Save({ id, name, status, password }: SaveType) {
 				status: status,
 				password: password
 			})
-		});
+		})
+			.then(function (res: Response) {
+				if (!res.ok) {
+					throw new Error("Request failed with status " + res.status);
+				}
+			})
+			.catch(function () {
+				notifyError("Settings couldn't update.");
+			});
 	};
 	return (
 		<button

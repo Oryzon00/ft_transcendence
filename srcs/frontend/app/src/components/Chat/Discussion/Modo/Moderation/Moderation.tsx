@@ -71,7 +71,6 @@ function Moderation({ id, sockets }: ModerationType) {
 				return res.json();
 			})
 			.then(function (res): void {
-				console.log(res);
 				setBanList(res);
 			})
 			.catch(function (error) {

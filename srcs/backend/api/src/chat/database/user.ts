@@ -15,7 +15,7 @@ class UserDatabase {
 				}
 			});
 		} catch (error) {
-			return error;
+			throw error;
 		}
 	}
 
@@ -27,7 +27,7 @@ class UserDatabase {
 				}
 			});
 		} catch (error) {
-			return error;
+			throw error;
 		}
 	}
 	async specificMember(userId: number, channelId: string): Promise<Member[]> {
@@ -39,7 +39,7 @@ class UserDatabase {
 				}
 			});
 		} catch (error) {
-			return error;
+			throw error;
 		}
 	}
 
@@ -55,7 +55,7 @@ class UserDatabase {
 				}
 			});
 		} catch (error) {
-			return error;
+			throw error;
 		}
 	}
 	async getAllChannels(userid: number): Promise<{ channelId: string }[]> {
@@ -69,7 +69,7 @@ class UserDatabase {
 				}
 			});
 		} catch (error) {
-			return error;
+			throw error;
 		}
 	}
 
@@ -81,7 +81,7 @@ class UserDatabase {
 				}
 			});
 		} catch (error) {
-			return error;
+			throw error;
 		}
 	}
 
@@ -98,7 +98,7 @@ class UserDatabase {
 			});
 			return res.isAdmin;
 		} catch (error) {
-			return error;
+			throw error;
 		}
 	}
 
@@ -117,7 +117,7 @@ class UserDatabase {
 				}
 			});
 		} catch (error) {
-			console.log(error);
+			throw error;
 		}
 	}
 
@@ -130,7 +130,7 @@ class UserDatabase {
 			});
 			return res.ownerId == userId;
 		} catch (error) {
-			return error;
+			throw error;
 		}
 	}
 
@@ -151,7 +151,7 @@ class UserDatabase {
 				}
 			});
 		} catch (error) {
-			return error;
+			throw error;
 		}
 	}
 
@@ -174,7 +174,7 @@ class UserDatabase {
 				}
 			});
 		} catch (error) {
-			return error;
+			throw error;
 		}
 	}
 }

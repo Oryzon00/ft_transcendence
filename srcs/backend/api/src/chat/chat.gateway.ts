@@ -74,7 +74,6 @@ export class ChatGateway
 	}
 
 	emitToMany(users: { userId: number }[], message: any, status: string) {
-		console.log(users);
 		users.map((user) => {
 			this.emit(user.userId, message, status);
 		});
