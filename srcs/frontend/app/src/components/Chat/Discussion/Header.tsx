@@ -122,7 +122,7 @@ function Header({
 						<h2 className=" text-2xl px-2">{name}</h2>
 					</div>
 				) : (
-						<h2>{channel[current].name}</h2>
+					<h2 className="text-3xl font-bold ">{channel[current].name}</h2>
 				)}
 			</div>
 			<div className="flex flex-row items-center">
