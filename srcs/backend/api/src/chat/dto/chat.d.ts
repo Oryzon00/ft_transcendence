@@ -8,6 +8,14 @@ export type MessagePayload = {
 	link: string | null;
 };
 
+export type DirectChannel = {
+	id: string;
+	name: string;
+	status: Status;
+	direct: boolean;
+	Message: Message[];
+};
+
 export type ChannelAllInfo = {
 	id: string;
 	createdAt: Date;

@@ -17,11 +17,11 @@ function ChannelBoardButton({
 	communityvalue
 }: BoardButtonType) {
 	const not_clicked =
-		"w-full bg-[#242424] hover:bg-amber-800 px-5 py-2 rounded-md flex justify-center rounded-none";
+		"w-full bg-[#242424] hover:bg-amber-800 px-5 py-2 rounded-md flex justify-center items-center rounded-none";
 	const clicked =
-		"w-full bg-[#242424] px-5 py-2 rounded-md flex justify-center";
+		"w-full bg-[#242424] px-5 py-2 rounded-md flex justify-center items-center";
 	return (
-		<div className="flex w-full h-12">
+		<div className="flex w-full h-16">
 			<button
 				className={not_clicked}
 				onClick={() => direct(!directvalue)}

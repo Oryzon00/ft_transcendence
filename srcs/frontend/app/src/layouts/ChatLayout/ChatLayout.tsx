@@ -55,7 +55,8 @@ function ChatLayout() {
 
 	const addMessage = (message: MessagePayload) => {
 		setChannel((prev) => {
-			prev[message.channelId].message.push(message);
+			if (prev[message.channelId] != undefined || message != null)
+				prev[message.channelId].message.push(message);
 			return prev;
 		});
 	};
@@ -68,11 +69,14 @@ function ChatLayout() {
 
 		// Create new channel
 		sockets.on("onChannel", (data: any) => {
+			console.log(channel[data.id]);
 			if (channel[data.id] == undefined) {
+				console.log(channel[data.id]);
 				setChannel((prev) => {
 					prev[data.id] = data;
 					return prev;
 				});
+				setRefresh(!refresh);
 			}
 		});
 
@@ -104,7 +108,7 @@ function ChatLayout() {
 			sockets.off("onChannel");
 			sockets.off("onUpdate");
 		};
-	}, [refresh]);
+	}, [refresh, current]);
 
 	return (
 		<WebsocketProvider value={socket}>

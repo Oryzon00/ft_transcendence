@@ -4,7 +4,8 @@ import {
 	ChannelCreation,
 	MessageWrite,
 	ChannelChangement,
-	MessageSend
+	MessageSend,
+	DirectChannel
 } from "../dto/chat.d";
 import { Status } from "@prisma/client";
 import {
@@ -102,9 +103,15 @@ class ChannelDatabase {
 		}
 	}
 
-	async findDirectChannel(user: number[]): Promise<Channel> {
+	async findDirectChannel(user: number[]): Promise<{
+		id: string;
+		name: string;
+		status: Status;
+		direct: boolean;
+		Message: Message[];
+	}> {
 		try {
-			const res: Channel = await this.prisma.channel.findFirst({
+			return await this.prisma.channel.findFirst({
 				where: {
 					name: "DIRECT",
 					members: {
@@ -112,9 +119,15 @@ class ChannelDatabase {
 							userId: { in: user }
 						}
 					}
+				},
+				select: {
+					id: true,
+					name: true,
+					direct: true,
+					status: true,
+					Message: true
 				}
 			});
-			return res;
 		} catch (error) {
 			throw error;
 		}
@@ -127,7 +140,6 @@ class ChannelDatabase {
 	): Promise<Channel> {
 		try {
 			let res: Channel;
-			console.log(body.name);
 			const regex = new RegExp("^[a-zA-Z0-9-_ ]{1,30}$");
 			if (!regex.test(body.name)) throw new UnauthorizedException();
 			if (body.status == "protect") {

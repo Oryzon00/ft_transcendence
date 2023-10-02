@@ -42,7 +42,7 @@ function MessageEntry({ current }: MessageEntryType) {
 	};
 
 	return (
-		<>
+		<div className="h-[21%] justify-center flex items-center">
 			<div className="flex flex-row space-x-1 flex-none w-[98%] h-10 rounded-3xl justify-center bg-[#424549] mx-auto">
 				<input
 					type="text"
@@ -76,7 +76,7 @@ function MessageEntry({ current }: MessageEntryType) {
 					😁
 				</button>
 			</div>
-		</>
+		</div>
 	);
 }
 

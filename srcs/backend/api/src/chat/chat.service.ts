@@ -16,6 +16,7 @@ import {
 	ChannelMute,
 	ChannelNewPassword,
 	ChannelPayload,
+	DirectChannel,
 	ListChannel,
 	ListName,
 	MessageWrite
@@ -371,6 +372,11 @@ export class ChatService {
 			await this.channeldb.banChannel(body.id, body.invited);
 			await this.deleteMember(body.id, body.invited);
 			await this.chatGateway.emitToMany(
+				[{ userId: body.invited }],
+				{ status: "delete", id: body.id },
+				"onUpdate"
+			);
+			await this.chatGateway.emitToMany(
 				await this.userdb.getModo(body.id),
 				{ status: "any" },
 				"onModo"
@@ -468,10 +474,17 @@ export class ChatService {
 		throw new UnauthorizedException();
 	}
 
-	async createDirect(user: number[]): Promise<ChannelPayload> {
-		if ((await this.channeldb.findDirectChannel(user)) != null) return null;
-		let channel: Channel = await this.channeldb.findDirectChannel(user);
-		if (channel == null) channel = await this.channeldb.createDirect(user);
+	async createDirect(me: User, user: number[]) {
+		let check: {
+			id: string;
+			name: string;
+			status: Status;
+			direct: boolean;
+			Message: Message[];
+		} = await this.channeldb.findDirectChannel(user);
+		let channel: Channel;
+		if (check == null) channel = await this.channeldb.createDirect(user);
+		else return;
 		let res: ChannelPayload = {
 			id: channel.id,
 			name: channel.name,
@@ -523,6 +536,12 @@ export class ChatService {
 		if (!this.userdb.isOwner(user.id, body.channelId))
 			throw new UnauthorizedException();
 		this.userdb.changeModo(body.userId, body.channelId);
+		await this.chatGateway.emitToMany(
+			await this.userdb.getModo(body.channelId),
+			{ status: "any" },
+			"onModo"
+		);
+		await this.chatGateway.emit(body.userId, { status: "any" }, "onStatus");
 	}
 
 	async fight(user: User, channelId: string): Promise<string> {

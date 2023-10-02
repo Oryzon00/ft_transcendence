@@ -31,7 +31,7 @@ function Content({ friends, togglemodal }: ContentType) {
 	if (friends === undefined) return <p>You have no friends</p>;
 	else {
 		return (
-			<div className="h-[70%] w-[90%] no-scrollbar overflow-y-scroll gap-x-2 m-auto ">
+			<div className="h-[70%] w-[90%] no-scrollbar overflow-y-scroll gap-x-2 m-auto">
 				{friends.length == 0 ? (
 					<p className="flex justify-center items-center text-center w-full h-full text-3xl">
 						No friends for direct message

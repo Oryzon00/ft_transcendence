@@ -77,18 +77,21 @@ function DiscussionBoard({
 				setCurrent={setCurrent}
 				modoValue={modo}
 				modo={setModo}
+				sockets={sockets}
 			/>
-			{modo ? (
-				<Modo id={current} sockets={sockets} />
-			) : (
-				<>
-					<Conversation
-						messages={channel[current].message}
-						blocked={blocked}
-					/>
-					<MessageEntry current={current} />
-				</>
-			)}
+			<div className="h-[calc(100%-4rem)]">
+				{modo ? (
+					<Modo id={current} sockets={sockets} />
+				) : (
+					<>
+						<Conversation
+							messages={channel[current].message}
+							blocked={blocked}
+						/>
+						<MessageEntry current={current} />
+					</>
+				)}
+			</div>
 		</div>
 	);
 }

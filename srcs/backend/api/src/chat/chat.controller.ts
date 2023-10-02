@@ -163,7 +163,7 @@ export class ChatController {
 
 	@Post("/channel/direct")
 	async direct_message(@GetUser() user: User, @Body() body: { id: string }) {
-		await this.ChatService.createDirect([user.id, Number(body.id)]);
+		await this.ChatService.createDirect(user, [user.id, Number(body.id)]);
 	}
 
 	@Post("/channel/direct/other")

@@ -83,6 +83,8 @@ function Moderation({ id, sockets }: ModerationType) {
 		getListBan();
 
 		sockets.on("onModo", () => {
+			getListUser();
+			getListBan();
 			setRefresh(!refresh);
 		});
 
