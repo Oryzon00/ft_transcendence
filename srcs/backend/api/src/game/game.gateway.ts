@@ -63,14 +63,12 @@ export class GameGateway
 		client: AuthenticatedSocket,
 		data: LobbyCreateDto
 	): Promise<WsResponse<ServerResponseDTO[ServerEvents.GameMessage]>> {
-		if (
-			(
-				await this.prisma.user.findUnique({
-					where: { id: client.userId },
-					include: { gameProfile: true }
-				})
-			).gameProfile.status === GameStatus.IDLE
-		) {
+		let currUser = await this.prisma.user.findUnique({
+			where: { id: client.userId },
+			include: { gameProfile: true }
+		});
+		
+		if (currUser.gameProfile.status === GameStatus.IDLE && currUser.gameProfile.lobby === "") {
 			await this.prisma.gameProfile.update({
 				where: { userId: client.userId },
 				data: { status: GameStatus.IN_LOBBY }
