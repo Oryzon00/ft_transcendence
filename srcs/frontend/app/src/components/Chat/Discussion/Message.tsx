@@ -8,13 +8,16 @@ type MessageType = {
 function Message({ element }: MessageType) {
 	return (
 		<div className="flex gap-x-1 hover:bg-[#23262A]">
-			<a className="shrink-0" href={"/profile/" + element.username}>
+			<NavLink
+				to={"/profile/" + element.username}
+				className="shrink-0"
+			>
 				<img
 					src={element.avatar}
 					alt=""
 					className="h-12 w-12 rounded-full mb-2 cursor-pointer"
 				/>
-			</a>
+			</NavLink>
 			<div>
 				<a className="shrink-0" href={"/profile/" + element.username}>
 					<p className="text-base font-bold hover:underline cursor-pointer">
