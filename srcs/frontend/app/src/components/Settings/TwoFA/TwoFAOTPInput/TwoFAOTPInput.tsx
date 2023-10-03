@@ -4,7 +4,6 @@ import { TwoFAOTPInputProps } from "./TTwoFAOTPInput";
 export function TwoFAOTPInput({ OTP, setOTP, callBack }: TwoFAOTPInputProps) {
 	if (OTP.length === 6) {
 		callBack(OTP);
-		setOTP("");
 	}
 	return (
 		<div className="flex flex-col bg-zinc-800 rounded-md text-white items-center">
