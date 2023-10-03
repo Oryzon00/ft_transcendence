@@ -1,16 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import apiAddress from "../../../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../../../utils/getJWT";
-import { notifyError } from "../../../../../utils/notify";
+import { notifyError, notifySuccess } from "../../../../../utils/notify";
 
 type MuteType = {
 	id: number;
 	channelId: string;
 	isMute: boolean;
-	muteUntil: Date;
 };
 
-function Mute({ id, channelId, isMute, muteUntil }: MuteType) {
+function Mute({ id, channelId, isMute }: MuteType) {
 	const [isClicked, setClicked] = useState<boolean>(false);
 	const [time, setTime] = useState<string>("");
 	const [date, setDate] = useState<string>("");
@@ -33,8 +32,8 @@ function Mute({ id, channelId, isMute, muteUntil }: MuteType) {
 					throw new Error("Request failed with status " + res.status);
 				}
 			})
-			.catch(function (error) {
-				notifyError(error.message);
+			.catch(function () {
+				notifyError("Could not mute");
 			});
 	};
 
@@ -55,10 +54,12 @@ function Mute({ id, channelId, isMute, muteUntil }: MuteType) {
 					throw new Error("Request failed with status " + res.status);
 				}
 			})
-			.catch(function (error) {
-				notifyError(error.message);
+			.catch(function () {
+				notifyError("Could not unmute");
 			});
 	};
+
+	useEffect(() => {}, [isClicked]);
 	return isClicked ? (
 		<div className="flex">
 			<div className="flex flex-col">
@@ -80,18 +81,20 @@ function Mute({ id, channelId, isMute, muteUntil }: MuteType) {
 					}}
 				/>
 			</div>
-			<button onClick={() => MuteFetch()}>
+			<button
+				onClick={() => {
+					setClicked(false);
+					MuteFetch();
+				}}
+			>
 				{time.length == 0 && date.length == 0 ? "Undefinitely" : "Mute"}
 			</button>
 		</div>
 	) : (
 		<button
 			onClick={() => {
-				if (!isMute) setClicked(true);
-				else {
-					UnMuteFetch();
-					setClicked(false);
-				}
+				if (isMute) UnMuteFetch();
+				setClicked(!isMute);
 			}}
 			className="bg-[#282b30]"
 		>

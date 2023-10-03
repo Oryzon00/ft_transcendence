@@ -102,23 +102,21 @@ class UserDatabase {
 		}
 	}
 
-	async changeModo(userId: number, channelId: string) {
-		try {
-			const member: Member[] = await this.specificMember(
-				userId,
-				channelId
-			);
-			await this.prisma.member.update({
-				where: {
-					id: member[0].id
-				},
-				data: {
-					isAdmin: !member[0].isAdmin
-				}
-			});
-		} catch (error) {
-			throw error;
-		}
+	async changeModo(
+		userId: number,
+		channelId: string
+	): Promise<{ isModo: boolean; username: string }> {
+		const member: Member[] = await this.specificMember(userId, channelId);
+		const user: User = await this.getUser(userId);
+		await this.prisma.member.update({
+			where: {
+				id: member[0].id
+			},
+			data: {
+				isAdmin: !member[0].isAdmin
+			}
+		});
+		return { isModo: !member[0].isAdmin, username: user.name };
 	}
 
 	async isOwner(userId: number, channelId: string): Promise<boolean> {

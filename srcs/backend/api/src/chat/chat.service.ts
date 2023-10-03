@@ -16,9 +16,7 @@ import {
 	ChannelMute,
 	ChannelNewPassword,
 	ChannelPayload,
-	DirectChannel,
 	ListChannel,
-	ListName,
 	MessageWrite
 } from "./dto/chat";
 import { PrismaService } from "src/prisma/prisma.service";
@@ -222,11 +220,16 @@ export class ChatService {
 		) {
 			throw new UnauthorizedException();
 		}
-		if (this.channeldb.findBanChannel(channel.id, user.id) == undefined) {
+		if (
+			(await this.channeldb.findBanChannel(channel.id, user.id)) !=
+			undefined
+		) {
 			throw new UnauthorizedException();
 		}
 		await this.channeldb.joinChannel(searchChannel.id, user.id);
-		return this.getChannel(searchChannel.id, user.id);
+		if (searchChannel.ownerId == user.id)
+			await this.userdb.changeModo(user.id, searchChannel.id);
+		return await this.getChannel(searchChannel.id, user.id);
 	}
 
 	async deleteMember(channelId: string, userId: number): Promise<boolean> {
@@ -273,40 +276,46 @@ export class ChatService {
 		await this.deleteMember(channelId.id, user.id);
 	}
 
+	async checkRight(
+		userId: number,
+		channelId: string,
+		victimId: number
+	): Promise<boolean> {
+		// Owner can do anything he want
+		if (await this.userdb.isOwner(userId, channelId))
+			return !(await this.userdb.isOwner(victimId, channelId));
+		else if (await this.userdb.isModo(userId, channelId)) {
+			return !(
+				(await this.userdb.isOwner(victimId, channelId)) ||
+				(await this.userdb.isModo(victimId, channelId))
+			);
+		}
+		return false;
+	}
+
 	// it's just quit with a1C274C check if you are a modo
 	async kick(user: User, body: ChannelKick) {
-		if (
-			(await this.userdb.isModo(user.id, body.id)) &&
-			!(await this.userdb.isOwner(body.invited, body.id))
-		) {
-			if (
-				(await this.userdb.isModo(body.invited, body.id)) &&
-				!(await this.userdb.isOwner(user.id, body.id))
-			)
-				throw new UnauthorizedException();
-			await this.deleteMember(body.id, body.invited);
-			await this.chatGateway.emitToMany(
-				[{ userId: body.invited }],
-				{ status: "delete", id: body.id },
-				"onUpdate"
-			);
-			await this.chatGateway.emitToMany(
-				await this.userdb.getModo(body.id),
-				{ status: "any" },
-				"onModo"
-			);
-		} else {
+		if (!(await this.checkRight(user.id, body.id, body.invited)))
 			throw new UnauthorizedException();
-		}
+		await this.deleteMember(body.id, body.invited);
+		await this.chatGateway.emitToMany(
+			[{ userId: body.invited }],
+			{ status: "delete", id: body.id },
+			"onUpdate"
+		);
+		const banUser: User = await this.userdb.getUser(body.invited);
+		await this.chatGateway.emitToMany(
+			await this.userdb.getModo(body.id),
+			{
+				status: "any",
+				content: `${banUser.name} is kick from this channel`
+			},
+			"onModo"
+		);
 	}
 
 	async mute(user: User, body: ChannelMute) {
-		if (
-			((await this.userdb.isModo(user.id, body.id)) &&
-				!(await this.userdb.isOwner(body.muted, body.id))) ||
-			((await this.userdb.isModo(body.muted, body.id)) &&
-				!(await this.userdb.isOwner(user.id, body.id)))
-		)
+		if (!(await this.checkRight(user.id, body.id, body.muted)))
 			throw new UnauthorizedException();
 		const find: Member = await this.userdb.findMember(body.muted, body.id);
 		try {
@@ -319,9 +328,10 @@ export class ChatService {
 					muteEnd: body.until
 				}
 			});
+			const muteUser: User = await this.userdb.getUser(body.muted);
 			await this.chatGateway.emitToMany(
 				await this.userdb.getModo(body.id),
-				{ status: "any" },
+				{ status: "any", content: `${muteUser.name} mute` },
 				"onModo"
 			);
 		} catch (error) {
@@ -330,12 +340,7 @@ export class ChatService {
 	}
 
 	async unmute(user: User, body: ChannelMute) {
-		if (
-			((await this.userdb.isModo(user.id, body.id)) &&
-				!(await this.userdb.isOwner(body.muted, body.id))) ||
-			((await this.userdb.isModo(body.muted, body.id)) &&
-				!(await this.userdb.isOwner(user.id, body.id)))
-		)
+		if (!(await this.checkRight(user.id, body.id, body.muted)))
 			throw new UnauthorizedException();
 		const find: Member = await this.userdb.findMember(body.muted, body.id);
 		try {
@@ -348,9 +353,10 @@ export class ChatService {
 					muteEnd: null
 				}
 			});
+			const muteUser: User = await this.userdb.getUser(body.muted);
 			await this.chatGateway.emitToMany(
 				await this.userdb.getModo(body.id),
-				{ status: "any" },
+				{ status: "any", content: `${muteUser.name} unmute` },
 				"onModo"
 			);
 		} catch {
@@ -359,45 +365,45 @@ export class ChatService {
 	}
 
 	async ban(user: User, body: ChannelBan) {
-		if (
-			(await this.userdb.isModo(user.id, body.id)) &&
-			!(await this.userdb.isOwner(body.invited, body.id))
-		) {
-			if (
-				((await this.userdb.isModo(body.invited, body.id)) &&
-					!(await this.userdb.isOwner(user.id, body.id))) ||
-				(await this.userdb.findBan(body.invited, body.id)) != null
-			)
-				throw new UnauthorizedException();
-			await this.channeldb.banChannel(body.id, body.invited);
-			await this.deleteMember(body.id, body.invited);
-			await this.chatGateway.emitToMany(
-				[{ userId: body.invited }],
-				{ status: "delete", id: body.id },
-				"onUpdate"
-			);
-			await this.chatGateway.emitToMany(
-				await this.userdb.getModo(body.id),
-				{ status: "any" },
-				"onModo"
-			);
-		} else throw new UnauthorizedException();
+		if (!(await this.checkRight(user.id, body.id, body.invited)))
+			throw new UnauthorizedException();
+		await this.channeldb.banChannel(body.id, body.invited);
+		await this.deleteMember(body.id, body.invited);
+		await this.chatGateway.emitToMany(
+			[{ userId: body.invited }],
+			{ status: "delete", id: body.id },
+			"onUpdate"
+		);
+		const userBan: User = await this.userdb.getUser(body.invited);
+		await this.chatGateway.emitToMany(
+			await this.userdb.getModo(body.id),
+			{ status: "any", content: `${userBan.name} is ban` },
+			"onModo"
+		);
 	}
 
 	async unban(user: User, body: { id: string; channelId: string }) {
-		if (!(await this.userdb.isModo(user.id, body.channelId))) {
+		if (
+			!(
+				(await this.userdb.isOwner(user.id, body.channelId)) ||
+				(await this.userdb.isModo(user.id, body.channelId))
+			)
+		)
 			throw new UnauthorizedException();
-		}
-		await this.channeldb.unbanChannel(body.id);
+
+		const username: string = await this.channeldb.unbanChannel(body.id);
 		await this.chatGateway.emitToMany(
 			await this.userdb.getModo(body.channelId),
-			{ status: "any" },
+			{
+				status: "any",
+				content: `${username} is no longer ban in this channel`
+			},
 			"onModo"
 		);
 	}
 
 	async password(user: User, body: ChannelNewPassword) {
-		if (!(await this.userdb.isModo(user.id, body.id)))
+		if (!(await this.userdb.isOwner(user.id, body.id)))
 			throw new UnauthorizedException();
 		await this.prisma.channel.update({
 			where: { id: body.id },
@@ -419,7 +425,7 @@ export class ChatService {
 			channel: { ownerId: number };
 		}[]
 	> {
-		if (this.userdb.isMember(user.id, channelId))
+		if (await this.userdb.isMember(user.id, channelId))
 			return await this.channeldb.getChannelUser(channelId);
 		throw new UnauthorizedException();
 	}
@@ -433,13 +439,13 @@ export class ChatService {
 			user: { id: number; name: string; image: string };
 		}[]
 	> {
-		if (this.userdb.isMember(user.id, channelId))
+		if (await this.userdb.isMember(user.id, channelId))
 			return await this.channeldb.getChannelBan(channelId);
 		throw new UnauthorizedException();
 	}
 
 	async getChannelInfo(user: User, channelId: string): Promise<Channel> {
-		if (this.userdb.isMember(user.id, channelId))
+		if (await this.userdb.isMember(user.id, channelId))
 			return await this.channeldb.getChannelInfoId(channelId, user.id);
 		throw new UnauthorizedException();
 	}
@@ -460,7 +466,7 @@ export class ChatService {
 	}
 
 	async deleteChannel(user: User, body: { id: string }) {
-		if (this.userdb.isOwner(user.id, body.id)) {
+		if (await this.userdb.isOwner(user.id, body.id)) {
 			const members: Member[] = await this.userdb.getMembersfromChannel(
 				body.id
 			);
@@ -533,12 +539,18 @@ export class ChatService {
 	}
 
 	async changeModo(user: User, body: { userId: number; channelId: string }) {
-		if (!this.userdb.isOwner(user.id, body.channelId))
+		if (!(await this.userdb.isOwner(user.id, body.channelId)))
 			throw new UnauthorizedException();
-		this.userdb.changeModo(body.userId, body.channelId);
+		const modo: { isModo: boolean; username: string } =
+			await this.userdb.changeModo(body.userId, body.channelId);
 		await this.chatGateway.emitToMany(
 			await this.userdb.getModo(body.channelId),
-			{ status: "any" },
+			{
+				status: "any",
+				content: modo.isModo
+					? `${modo.username} became a modo`
+					: `${modo.username} is no longer a modo`
+			},
 			"onModo"
 		);
 		await this.chatGateway.emit(body.userId, { status: "any" }, "onStatus");

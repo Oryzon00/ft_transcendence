@@ -197,6 +197,8 @@ export class Lobby {
 		
 		this.clients.delete(client.id);
 		try {
+			await this.setStatus(client.userId, "ONLINE");
+
 			await this.prisma.gameProfile.update({
 				where: {
 					userId: client.userId,

@@ -63,7 +63,15 @@ function DiscussionBoard({
 
 	useEffect(() => {
 		getBlocked();
-	}, []);
+		setModo(false);
+		sockets.on("onStatus", (data: any) => {
+			setModo(false);
+		});
+
+		return () => {
+			sockets.off("onStatus");
+		};
+	}, [current]);
 
 	if (blocked === undefined) return;
 	if (current == "") return <Default css={base_css} />;
@@ -79,9 +87,11 @@ function DiscussionBoard({
 				modo={setModo}
 				sockets={sockets}
 			/>
-			<div className="h-[calc(100%-4rem)]">
+			<div className="h-[calc(100%-4.5rem)]">
 				{modo ? (
-					<Modo id={current} sockets={sockets} />
+					<>
+						<Modo id={current} sockets={sockets} />
+					</>
 				) : (
 					<>
 						<Conversation

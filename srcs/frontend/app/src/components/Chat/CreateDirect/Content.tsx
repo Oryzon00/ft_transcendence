@@ -44,6 +44,7 @@ function Content({ friends, togglemodal }: ContentType) {
 								createDirectMessage(friend.id);
 								togglemodal();
 							}}
+							key={friend.id}
 						>
 							<img
 								src={friend.image}

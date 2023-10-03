@@ -11,13 +11,13 @@ function ChannelList({
 	current
 }: ChannelListType) {
 	const not_clicked: string =
-		"bg-[#1e2124] hover:bg-[#23262A] hover:border-[#23262a] cursor-pointer ";
-	const clicked: string = "bg-[#282b30] cursor-default ";
+		"bg-[#1e2124] hover:bg-[#23262A] hover:border-[#23262a] cursor-pointer text-2xl font-bold";
+	const clicked: string = "bg-[#282b30] cursor-default text-2xl font-bold";
 	const both: string =
 		"w-full h-24 border-0 border-b-2 border-[#282b30] rounded-none flex items-center justify-center ";
 
 	return (
-		<div className="h-[calc(100%-4rem)] overflow-y-scroll no-scrollbar">
+		<div className="h-[calc(100%-5rem)] overflow-y-scroll no-scrollbar">
 			<ul className="w-full flex flex-col items-center">
 				{filtredItems.map((value) => (
 					<li

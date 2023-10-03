@@ -1,6 +1,6 @@
 import apiAddress from "../../../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../../../utils/getJWT";
-import { notifyError } from "../../../../../utils/notify";
+import { notifyError, notifySuccess } from "../../../../../utils/notify";
 
 type SaveType = {
 	id: string;
@@ -28,6 +28,7 @@ function Save({ id, name, status, password }: SaveType) {
 				if (!res.ok) {
 					throw new Error("Request failed with status " + res.status);
 				}
+				notifySuccess("Update successfull");
 			})
 			.catch(function () {
 				notifyError("Settings couldn't update.");
@@ -38,7 +39,7 @@ function Save({ id, name, status, password }: SaveType) {
 			onClick={() => {
 				sendSetting();
 			}}
-			className="w-full h-full rounded-none text-xl hover:text-[#92400e]"
+			className="w-full mx-8 mb-5 rounded-md hover:bg-amber-800 text-white text border-white text-2xl font-semibold border-4 bg-zinc-500"
 		>
 			SAVE
 		</button>

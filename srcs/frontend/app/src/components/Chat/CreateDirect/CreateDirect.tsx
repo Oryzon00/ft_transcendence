@@ -29,7 +29,7 @@ function CreateDirect({ togglemodal }: CreateDirectType) {
 				setFriends(data.friends);
 			})
 			.catch(function (error) {
-				notifyError(error.message);
+				notifyError("Could not create direct message");
 			});
 	};
 

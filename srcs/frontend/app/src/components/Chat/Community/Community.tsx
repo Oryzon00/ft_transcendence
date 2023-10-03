@@ -41,8 +41,9 @@ const fetchJoinChannel = (room: ChannelJoin, setChannel: any) => {
 };
 
 function Community({ togglemodal, setChannel }: CommunityType) {
-	const [publicChannel, setPublic] = useState([]);
-	const [protectedChannel, setProtected] = useState([]);
+	const [publicChannel, setPublic] = useState<ChannelPayload[]>([]);
+	const [protectedChannel, setProtected] = useState<ChannelPayload[]>([]);
+	const [refresh, setRefresh] = useState<boolean>(false);
 
 	const [current, setCurrent] = useState<ChannelPayload>({
 		id: "",
@@ -98,14 +99,11 @@ function Community({ togglemodal, setChannel }: CommunityType) {
 			});
 	};
 
-	const refresh = () => {
+	useEffect(() => {
 		ListPublicChannel();
 		ListProtectedChannel();
-	};
-
-	useEffect(() => {
-		refresh();
-	}, []);
+		console.log("dreaming");
+	}, [refresh]);
 
 	return (
 		<div className="flex flex-col bg-zinc-700 h-[550px] w-[650px] rounded-md border-4">
@@ -138,7 +136,7 @@ function Community({ togglemodal, setChannel }: CommunityType) {
 							message: []
 						});
 						setClickProtected(!isClickProtected);
-						refresh();
+						setRefresh(!refresh);
 					}}
 				/>
 			) : (
@@ -153,8 +151,8 @@ function Community({ togglemodal, setChannel }: CommunityType) {
 								{ id: e.id, password: "" },
 								setChannel
 							);
-							refresh();
 						}
+						setRefresh(!refresh);
 					}}
 				/>
 			)}

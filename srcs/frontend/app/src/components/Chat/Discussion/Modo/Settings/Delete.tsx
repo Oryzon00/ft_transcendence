@@ -28,12 +28,11 @@ function Delete({ id }: DeleteType) {
 
 	return (
 		<div className="flex flex-row items-center w-11/12 h-1/3 mx-auto">
-			<h2 className="px-2 w-3/12">Delete Channel :</h2>
 			<button
 				onClick={() => DeleteAction()}
-				className="w-9/12  hover:text-[#92400e]"
+				className="w-6/12 mx-2 px-4 py-2 rounded-md hover:bg-red-800 text-white text border-white text-xl font-semibold border-4 bg-zinc-500"
 			>
-				DELETE
+				DELETE CHANNEL
 			</button>
 		</div>
 	);

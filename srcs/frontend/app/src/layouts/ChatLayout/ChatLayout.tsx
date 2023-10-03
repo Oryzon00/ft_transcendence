@@ -76,6 +76,7 @@ function ChatLayout() {
 					prev[data.id] = data;
 					return prev;
 				});
+				setCurrent(data.id);
 				setRefresh(!refresh);
 			}
 		});

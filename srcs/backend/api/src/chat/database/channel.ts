@@ -234,16 +234,26 @@ class ChannelDatabase {
 		}
 	}
 
-	async unbanChannel(id: string) {
-		try {
-			await this.prisma.ban.deleteMany({
+	async unbanChannel(id: string): Promise<string> {
+		const res: { user: { name: string } } =
+			await this.prisma.ban.findUnique({
 				where: {
 					id: id
+				},
+				select: {
+					user: {
+						select: {
+							name: true
+						}
+					}
 				}
 			});
-		} catch (error) {
-			throw error;
-		}
+		await this.prisma.ban.delete({
+			where: {
+				id: id
+			}
+		});
+		return res.user.name;
 	}
 
 	async delete(channelId: string) {
@@ -254,6 +264,11 @@ class ChannelDatabase {
 				}
 			});
 			await this.prisma.member.deleteMany({
+				where: {
+					channelId: channelId
+				}
+			});
+			await this.prisma.ban.deleteMany({
 				where: {
 					channelId: channelId
 				}

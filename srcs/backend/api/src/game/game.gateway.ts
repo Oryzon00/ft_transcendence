@@ -117,7 +117,7 @@ export class GameGateway
 	async onLobbyJoin(
 		client: AuthenticatedSocket,
 		data: LobbyJoinDto
-	): Promise<WsResponse<ServerResponseDTO[ServerEvents]>> {
+    	): Promise< WsResponse<ServerResponseDTO[ServerEvents]> > {
 		try {
 			let lobby = await this.lobbyManager.findLobbyByID(data.lobbyId);
 			if (lobby) {

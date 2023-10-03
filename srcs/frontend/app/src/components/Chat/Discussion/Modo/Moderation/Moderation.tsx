@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import apiAddress from "../../../../../utils/apiAddress";
 import getJwtTokenFromCookie from "../../../../../utils/getJWT";
-import { notifyError } from "../../../../../utils/notify";
+import { notifyError, notifySuccess } from "../../../../../utils/notify";
 import Header from "./Header";
 import { Ban, ChannelUser } from "../../../../../layouts/ChatLayout/chat.d";
 import Profile from "./Profile";
@@ -82,7 +82,8 @@ function Moderation({ id, sockets }: ModerationType) {
 		getListUser();
 		getListBan();
 
-		sockets.on("onModo", () => {
+		sockets.on("onModo", (data: any) => {
+			notifySuccess(data.content);
 			getListUser();
 			getListBan();
 			setRefresh(!refresh);
