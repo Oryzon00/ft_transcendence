@@ -23,6 +23,7 @@
 	height: 60px;
 	width: 60px;
 	border-radius: 50%;
+	flex-shrink: 0;
 }
 
 .leaderboard-main button {
