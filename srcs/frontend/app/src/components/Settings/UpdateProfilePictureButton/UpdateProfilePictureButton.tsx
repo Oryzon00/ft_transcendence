@@ -40,7 +40,7 @@ function updateProfilePictureButton() {
 				});
 			})
 			.catch(function () {
-				notifyError("Image too large");
+				notifyError("Error while uploading new image");
 			});
 	}
 

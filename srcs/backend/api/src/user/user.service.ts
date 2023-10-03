@@ -41,6 +41,9 @@ export class UserService {
 		type: string,
 		base64Data: string
 	): Promise<{ image: string }> {
+		if (type.split("/")[0] != 'image')
+			throw new UnauthorizedException();
+		
 		let buf = Buffer.from(base64Data.split(",")[1], "base64");
 		const oldPath = user.image.split(
 			`http://${process.env.SERVER_HOSTNAME}:3000/images/`
