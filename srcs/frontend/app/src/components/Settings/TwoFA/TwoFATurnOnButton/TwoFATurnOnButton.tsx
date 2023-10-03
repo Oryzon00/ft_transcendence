@@ -34,6 +34,7 @@ function TwoFATurnOnButton() {
 			})
 		})
 			.then(function (response: Response) {
+				setOTP("");
 				if (!response.ok) throwErrorMessage(response);
 				return response.json();
 			})
@@ -58,7 +59,13 @@ function TwoFATurnOnButton() {
 			>
 				Turn on 2FA
 			</button>
-			<Popup modal nested open={open} onClose={closeModal} className="my-popup">
+			<Popup
+				modal
+				nested
+				open={open}
+				onClose={closeModal}
+				className="my-popup"
+			>
 				<div>
 					<TwoFAOTPInput
 						OTP={OTP}

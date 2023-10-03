@@ -47,6 +47,7 @@ function updateProfilePictureButton() {
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		let FR = new FileReader();
 		if (!event.target.files) return;
+		if (event.target.files?.[0] === undefined) return;
 		FR.readAsDataURL(event.target.files?.[0]);
 		FR.onload = () => {
 			if (!event.target.files) return;
