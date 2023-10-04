@@ -102,7 +102,6 @@ function Community({ togglemodal, setChannel }: CommunityType) {
 	useEffect(() => {
 		ListPublicChannel();
 		ListProtectedChannel();
-		console.log("dreaming");
 	}, [refresh]);
 
 	return (

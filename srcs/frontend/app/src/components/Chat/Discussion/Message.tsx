@@ -8,10 +8,7 @@ type MessageType = {
 function Message({ element }: MessageType) {
 	return (
 		<div className="flex gap-x-1 hover:bg-[#23262A]">
-			<NavLink
-				to={"/profile/" + element.username}
-				className="shrink-0"
-			>
+			<NavLink to={"/profile/" + element.username} className="shrink-0">
 				<img
 					src={element.avatar}
 					alt=""
@@ -19,11 +16,14 @@ function Message({ element }: MessageType) {
 				/>
 			</NavLink>
 			<div>
-				<a className="shrink-0" href={"/profile/" + element.username}>
+				<NavLink
+					to={"/profile/" + element.username}
+					className="shrink-0"
+				>
 					<p className="text-base font-bold hover:underline cursor-pointer">
 						{element.username}
 					</p>
-				</a>
+				</NavLink>
 				{!(
 					element.link == undefined ||
 					element.link == null ||
@@ -36,7 +36,7 @@ function Message({ element }: MessageType) {
 						{element.content}
 					</NavLink>
 				) : (
-					<p style={{wordBreak: 'break-word'}}>{element.content}</p>
+					<p style={{ wordBreak: "break-word" }}>{element.content}</p>
 				)}
 			</div>
 		</div>
@@ -44,8 +44,8 @@ function Message({ element }: MessageType) {
 }
 
 <NavLink
-			to="/play"
-			className="text-white text-xl font-bold border-4 bg-zinc-700 hover:bg-amber-800 px-6 py-4 rounded-md"
-		></NavLink>
+	to="/play"
+	className="text-white text-xl font-bold border-4 bg-zinc-700 hover:bg-amber-800 px-6 py-4 rounded-md"
+></NavLink>;
 
 export default Message;

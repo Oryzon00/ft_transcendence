@@ -43,7 +43,7 @@ function MessageEntry({ current }: MessageEntryType) {
 
 	return (
 		<div className="h-[21%] justify-center flex items-center flex-col relative">
-			<div className="absolute right-1 bottom-[20%]">
+			<div className="absolute right-1 bottom-[71%]">
 				{isPickerVisible ? (
 					<Picker
 						data={data}

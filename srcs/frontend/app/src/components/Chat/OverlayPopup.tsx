@@ -27,7 +27,6 @@ function OverlayPopup({
 		"w-screen h-screen fixed top-0 left-0 bg-opacity-30 bg-[#313131cc] flex justify-center items-center";
 
 	if (creation) {
-		setCurrent("");
 		return (
 			<div className="flex justify-center items-center absolute w-full h-[90%]">
 				<div className={overlay} onClick={togglecreation} />
@@ -45,7 +44,6 @@ function OverlayPopup({
 		);
 	}
 	if (community) {
-		setCurrent("");
 		return (
 			<div className="flex justify-center items-center absolute w-full h-[90%]">
 				<div className={overlay} onClick={togglecommunity} />

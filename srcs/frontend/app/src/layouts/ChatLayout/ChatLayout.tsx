@@ -69,9 +69,7 @@ function ChatLayout() {
 
 		// Create new channel
 		sockets.on("onChannel", (data: any) => {
-			console.log(channel[data.id]);
 			if (channel[data.id] == undefined) {
-				console.log(channel[data.id]);
 				setChannel((prev) => {
 					prev[data.id] = data;
 					return prev;
