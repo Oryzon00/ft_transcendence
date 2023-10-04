@@ -127,6 +127,9 @@ export class UserService {
 
 	async findUser(username: string): Promise<UserSafeDTO> {
 		try {
+			const regex = new RegExp('^[a-zA-Z0-9-_]{1,15}$')
+
+			if (!regex.test(username)) return (undefined);
 			const user = await this.prisma.user.findUnique({
 				where: {
 					name: username
