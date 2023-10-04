@@ -11,6 +11,7 @@ type OverlayPopupType = {
 	channel: ListChannel;
 	setChannel: any;
 	direct: boolean;
+	setCurrent: any;
 };
 
 function OverlayPopup({
@@ -19,12 +20,14 @@ function OverlayPopup({
 	community,
 	togglecommunity,
 	setChannel,
-	direct
+	direct,
+	setCurrent
 }: OverlayPopupType) {
 	const overlay: string =
 		"w-screen h-screen fixed top-0 left-0 bg-opacity-30 bg-[#313131cc] flex justify-center items-center";
 
-	if (creation)
+	if (creation) {
+		setCurrent("");
 		return (
 			<div className="flex justify-center items-center absolute w-full h-[90%]">
 				<div className={overlay} onClick={togglecreation} />
@@ -40,7 +43,9 @@ function OverlayPopup({
 				</div>
 			</div>
 		);
-	if (community)
+	}
+	if (community) {
+		setCurrent("");
 		return (
 			<div className="flex justify-center items-center absolute w-full h-[90%]">
 				<div className={overlay} onClick={togglecommunity} />
@@ -52,6 +57,7 @@ function OverlayPopup({
 				</div>
 			</div>
 		);
+	}
 	return null;
 }
 

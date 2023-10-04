@@ -115,6 +115,7 @@ function ChatLayout() {
 		<WebsocketProvider value={socket}>
 			<div className="h-[calc(100%-5rem)] w-auto flex flex-grow justify-center">
 				<OverlayPopup
+					setCurrent={setCurrent}
 					creation={creation}
 					togglecreation={() => setCreation(!creation)}
 					community={community}

@@ -10,8 +10,8 @@ type PasswordType = {
 };
 
 function Password({ setPosition, setPassword, password }: PasswordType) {
-	const [enter, setEnter] = useState("");
-	const [confirm, setConfirm] = useState("");
+	const [enter, setEnter] = useState<string>("");
+	const [confirm, setConfirm] = useState<string>("");
 
 	useEffect(() => {
 		if (enter == confirm) setPassword(enter);

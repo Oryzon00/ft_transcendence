@@ -42,7 +42,19 @@ function MessageEntry({ current }: MessageEntryType) {
 	};
 
 	return (
-		<div className="h-[21%] justify-center flex items-center">
+		<div className="h-[21%] justify-center flex items-center flex-col relative">
+			<div className="absolute right-1 bottom-[20%]">
+				{isPickerVisible ? (
+					<Picker
+						data={data}
+						previewPosition="none"
+						onEmojiSelect={(e: any) => {
+							setValue(value + e.native);
+							setPickerVisible(!isPickerVisible);
+						}}
+					/>
+				) : null}
+			</div>
 			<div className="flex flex-row space-x-1 flex-none w-[98%] h-10 rounded-3xl justify-center bg-[#424549] mx-auto">
 				<input
 					type="text"
@@ -58,17 +70,6 @@ function MessageEntry({ current }: MessageEntryType) {
 							sendMessage();
 					}}
 				/>
-				{isPickerVisible ? (
-					<Picker
-						data={data}
-						previewPosition="none"
-						onEmojiSelect={(e: any) => {
-							setValue(value + e.native);
-							setPickerVisible(!isPickerVisible);
-						}}
-						className=""
-					/>
-				) : null}
 				<button
 					onClick={() => setPickerVisible(!isPickerVisible)}
 					className="bg-[#424549] h-10 flex rounded-3xl"
