@@ -13,7 +13,6 @@ export default class SocketWrapper {
 	private connectionLost: boolean = false;
 
 	constructor() {
-		console.log(`env var -> ${import.meta.env.VITE_SERVER_HOSTNAME}`);
 		this.socket = io(
 			`http://${import.meta.env.VITE_SERVER_HOSTNAME}:3000/`,
 			{

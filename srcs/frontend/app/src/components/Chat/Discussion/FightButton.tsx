@@ -12,7 +12,6 @@ function FightButton({ channelId }: FightType) {
     const navigate = useNavigate();
 
 	const FightSend = () => {
-		console.log(channelId);
         fetch(apiAddress + "/chat/fight", {
             method: "POST",
             headers: {
