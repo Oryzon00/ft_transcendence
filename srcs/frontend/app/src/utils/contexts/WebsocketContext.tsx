@@ -12,6 +12,7 @@ const socketOptions = {
 		}
 	}
 };
+console.log(`env var -> ${import.meta.env.VITE_SERVER_HOSTNAME}`);
 export const socket = io(
 	`http://${import.meta.env.VITE_SERVER_HOSTNAME}:3000`,
 	socketOptions

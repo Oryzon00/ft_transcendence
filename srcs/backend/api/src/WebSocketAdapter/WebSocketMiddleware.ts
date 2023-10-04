@@ -21,6 +21,7 @@ function WebSocketUserMiddleware(prisma: PrismaService): SocketMiddleware {
 			authSocket.userId = user.id;
 			next();
 		} catch (error) {
+			console.log("middeware no!\n")
 			next({
 				name: "Unauthorized",
 				message: "Socket Unauthorized"
